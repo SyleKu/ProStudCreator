@@ -1,0 +1,139 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: Arial;
+    font-size: 16px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="select"] {
+    max-width: 280px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .jumbotron {
+        margin-top: 20px;
+    }
+    .body-content {
+        padding: 0;
+    }
+}
+
+
+/* General Styles*/
+hr {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #EEEEEE -moz-use-text-color #FFFFFF;
+  border-style: solid none;
+  border-width: 1px 0;
+  margin: 18px 0;
+}
+
+.non-selectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* LOGIN.ASPX
+
+body  {
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+
+    padding-top: 50px;
+    padding-bottom: 20px;
+} */
+
+.form-signin {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin: 1em auto 20px;
+    max-width: 38.25em;
+    padding: 19px 29px 29px;
+}
+
+.title-box{
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: 1.5em;
+    font: bold;
+}
+
+/* PROJECTLIST.ASPX */
+.adminSettings {
+    margin-top: 40px;
+    background-color: #f5f5f5;
+}
+
+.usernSettings {
+    margin-top: 40px;
+    background-color: #f5f5f5;
+}
+
+.radioButtonSettings label {
+    margin-top: 10px;
+    padding-left: 5px;
+    margin-right: 20px;
+    font-family: Arial 12px !important;
+}
+
+/* ADDNEWPROJECT.ASPX */
+.newProjectSettings {
+    margin-top: 40px;
+    background-color: #f5f5f5;
+}
+
+.contentDesign div {
+    margin-left: 100px !important;
+}
+
+.contentDesign span {
+    text-align: left !important;
+}
+
+.contentDesign input[type="email"], input[type="submit"] {
+    margin-left: 20px;
+}
+
+.contentDesign textarea {
+    height: 140px;
+    min-height: 140px;
+    max-height: 250px;
+    width: 580px;
+    resize: vertical;
+}
