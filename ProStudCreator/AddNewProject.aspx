@@ -70,7 +70,7 @@
                     <div class="form-group">
                         <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien / Fachliche Schwerpunkte / Referenzen:"></asp:Label>
                         <asp:TextBox runat="server" CssClass="col-sm-9 form-control" placeholder="Technologien / Fachliche Schwerpunkte / Referenzen" TextMode="MultiLine"></asp:TextBox>
-                    </div>
+                    </div> 
                     <hr />
                     <div class="form-group">
                         <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen:"></asp:Label>
