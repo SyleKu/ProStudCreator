@@ -1,4 +1,4 @@
-﻿<%@ Page Title="New Project" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.addNewProject" %>
+﻿ <%@ Page Title="New Project" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.addNewProject" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Stylesheets" runat="server">
 </asp:Content>
@@ -16,7 +16,7 @@
                         <asp:TextBox runat="server" CssClass="col-sm-9 form-control" placeholder="Name des Betreuers"></asp:TextBox>
                         <asp:TextBox runat="server" CssClass="col-sm-9 form-control" placeholder="E-Mail des Betreuers" TextMode="Email"></asp:TextBox>
                         <asp:Button runat="server" CssClass="btn btn-default" Text="+"/>
-                    </div>
+                    </div> 
                     <hr />
                     <div class="form-group">
                         <!--<asp:UpdatePanel runat="server">
