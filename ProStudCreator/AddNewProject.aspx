@@ -84,7 +84,7 @@
                         </asp:DropDownList>
                     </div>
                 </div>
-                <asp:Button runat="server" CssClass="btn btn-default" Text="Speichern" TabIndex="4" Width="113px" ID="saveNewProject"></asp:Button>
+                <asp:Button runat="server" OnClick="saveNewProject_Click" CssClass="btn btn-default" Text="Speichern" TabIndex="4" Width="113px" ID="saveNewProject"></asp:Button>
                 <a class="btn btn-default" href="projectlist.aspx" tabindex="5">Abbrechen</a>
             </div> 
 </asp:Content>

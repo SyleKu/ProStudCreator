@@ -100,11 +100,9 @@ namespace ProStudCreator
 
         protected void saveNewProject_Click(object sender, EventArgs e)
         {
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-            conn.Open();
-            string checkProjectName = "select count(*) from InputStore where Name='" +  ProjectName.Text + "'";
-            conn.Close();
-            DBBigData.ImageUrl = "/pictures/projectTypDBBigData.png";            
+            
+            ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+            InputStore i = db.InputStores.Where(item => item.Id == 1 && item.Importance == ).ToArray();
         }
 
     }

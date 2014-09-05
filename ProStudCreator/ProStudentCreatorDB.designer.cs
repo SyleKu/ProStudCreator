@@ -1308,13 +1308,13 @@ namespace ProStudCreator
 		
 		private string _PTwo;
 		
-		private string _InitialPosition;
+		private string _initialPosition;
 		
 		private System.Data.Linq.Binary _Pictures;
 		
 		private string _Objectiv;
 		
-		private string _ProblemStatement;
+		private string _problemStatement;
 		
 		private string _References;
 		
@@ -1336,14 +1336,14 @@ namespace ProStudCreator
     partial void OnPOneChanged();
     partial void OnPTwoChanging(string value);
     partial void OnPTwoChanged();
-    partial void OnInitialPositionChanging(string value);
-    partial void OnInitialPositionChanged();
+    partial void OninitialPositionChanging(string value);
+    partial void OninitialPositionChanged();
     partial void OnPicturesChanging(System.Data.Linq.Binary value);
     partial void OnPicturesChanged();
     partial void OnObjectivChanging(string value);
     partial void OnObjectivChanged();
-    partial void OnProblemStatementChanging(string value);
-    partial void OnProblemStatementChanged();
+    partial void OnproblemStatementChanging(string value);
+    partial void OnproblemStatementChanged();
     partial void OnReferencesChanging(string value);
     partial void OnReferencesChanged();
     partial void OnRemarksChanging(string value);
@@ -1457,22 +1457,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="initialPosition", Storage="_InitialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string InitialPosition
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_initialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string initialPosition
 		{
 			get
 			{
-				return this._InitialPosition;
+				return this._initialPosition;
 			}
 			set
 			{
-				if ((this._InitialPosition != value))
+				if ((this._initialPosition != value))
 				{
-					this.OnInitialPositionChanging(value);
+					this.OninitialPositionChanging(value);
 					this.SendPropertyChanging();
-					this._InitialPosition = value;
-					this.SendPropertyChanged("InitialPosition");
-					this.OnInitialPositionChanged();
+					this._initialPosition = value;
+					this.SendPropertyChanged("initialPosition");
+					this.OninitialPositionChanged();
 				}
 			}
 		}
@@ -1517,22 +1517,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="problemStatement", Storage="_ProblemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string ProblemStatement
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_problemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string problemStatement
 		{
 			get
 			{
-				return this._ProblemStatement;
+				return this._problemStatement;
 			}
 			set
 			{
-				if ((this._ProblemStatement != value))
+				if ((this._problemStatement != value))
 				{
-					this.OnProblemStatementChanging(value);
+					this.OnproblemStatementChanging(value);
 					this.SendPropertyChanging();
-					this._ProblemStatement = value;
-					this.SendPropertyChanged("ProblemStatement");
-					this.OnProblemStatementChanged();
+					this._problemStatement = value;
+					this.SendPropertyChanged("problemStatement");
+					this.OnproblemStatementChanged();
 				}
 			}
 		}
