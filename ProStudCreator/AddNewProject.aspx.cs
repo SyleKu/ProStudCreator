@@ -102,7 +102,7 @@ namespace ProStudCreator
         {
             
             ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-            InputStore i = db.InputStores.Where(item => item.Id == 1 && item.Importance == ).ToArray();
+            InputStore i = db.InputStores.Where(item => item.Id == 1 && item.Importance == .ToArray();
         }
 
     }
