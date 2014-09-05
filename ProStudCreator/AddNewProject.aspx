@@ -16,7 +16,7 @@
                         <asp:TextBox runat="server" CssClass="col-sm-9 form-control" placeholder="Name des Betreuers"></asp:TextBox>
                         <asp:TextBox runat="server" CssClass="col-sm-9 form-control" placeholder="E-Mail des Betreuers" TextMode="Email"></asp:TextBox>
                         <asp:Button runat="server" CssClass="btn btn-default" Text="+"/>
-                    </div> 
+                    </div>
                     <hr />
                     <div class="form-group">
                         <!--<asp:UpdatePanel runat="server">
