@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="Kennwort verwalten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManagePassword.aspx.cs" Inherits="ProStudCreator.Account.ManagePassword" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="form-horizontal passwordMarginTop">
     <h2><%: Title %>.</h2>
-    <div class="form-horizontal">
         <section id="passwordForm">
             <asp:PlaceHolder runat="server" ID="setPassword" Visible="false">
                 <p>
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <asp:Label runat="server" ID="CurrentPasswordLabel" AssociatedControlID="CurrentPassword" CssClass="col-md-2 control-label">Aktuelles Kennwort</asp:Label>
                         <div class="col-md-10">
-                            <asp:TextBox runat="server" ID="CurrentPassword" TextMode="Password" CssClass="form-control" />
+                            <asp:TextBox runat="server" ID="CurrentPassword" TextMode="Password" CssClass="form-control" placeholder="Aktuelles Kennwort" />
                             <asp:RequiredFieldValidator runat="server" ControlToValidate="CurrentPassword"
                                 CssClass="text-danger" ErrorMessage="Das Feld für das aktuelle Kennwort ist erforderlich."
                                 ValidationGroup="ChangePassword" />
@@ -63,7 +63,7 @@
                     <div class="form-group">
                         <asp:Label runat="server" ID="NewPasswordLabel" AssociatedControlID="NewPassword" CssClass="col-md-2 control-label">Neues Kennwort</asp:Label>
                         <div class="col-md-10">
-                            <asp:TextBox runat="server" ID="NewPassword" TextMode="Password" CssClass="form-control" />
+                            <asp:TextBox runat="server" ID="NewPassword" TextMode="Password" CssClass="form-control" placeholder="Neues Kennwort" />
                             <asp:RequiredFieldValidator runat="server" ControlToValidate="NewPassword"
                                 CssClass="text-danger" ErrorMessage="Das neue Kennwort ist erforderlich."
                                 ValidationGroup="ChangePassword" />
@@ -72,7 +72,7 @@
                     <div class="form-group">
                         <asp:Label runat="server" ID="ConfirmNewPasswordLabel" AssociatedControlID="ConfirmNewPassword" CssClass="col-md-2 control-label">Neues Kennwort bestätigen</asp:Label>
                         <div class="col-md-10">
-                            <asp:TextBox runat="server" ID="ConfirmNewPassword" TextMode="Password" CssClass="form-control" />
+                            <asp:TextBox runat="server" ID="ConfirmNewPassword" TextMode="Password" CssClass="form-control" placeholder="Neues Kennwort bestätigen"/>
                             <asp:RequiredFieldValidator runat="server" ControlToValidate="ConfirmNewPassword"
                                 CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Bestätigen des neuen Kennworts ist erforderlich."
                                 ValidationGroup="ChangePassword" />

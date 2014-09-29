@@ -48,6 +48,9 @@
 </style>
 </head>
 <body>
+    <p class="text-danger">
+        <asp:Literal runat="server" ID="ErrorMessage" />
+    </p>
     <form id="form1" runat="server">
         <div class="form-signin">
             <div class="title-box" >
@@ -62,16 +65,24 @@
                 <div class="form-group">
                     <label for="EnterEMail">E-Mail Adresse</label>
                     <asp:TextBox ID="NewUserEmail" TextMode="Email" CssClass="form-control" runat="server" TabIndex="1" placeholder="E-Mail Adresse"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="Email"
+                    CssClass="text-danger" ErrorMessage="Das E-Mail-Feld ist erforderlich." />
                 </div>
                 <div class="form-group">
                     <label for="EnterPassword">Passwort</label>
                     <asp:TextBox ID="NewUserPassword" CssClass="form-control" TextMode="Password" runat="server" TabIndex="2" placeholder="Passwort"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="Password"
+                    CssClass="text-danger" ErrorMessage="Das Kennwortfeld ist erforderlich." />
                 </div>
                 <div class="form-group">
                     <label for="EnterPassword">Passwort erneut eingeben</label>
                     <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" TabIndex="3" placeholder="Passwort erneut eingeben"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="ConfirmPassword"
+                    CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
+                    <asp:CompareValidator runat="server" ControlToCompare="Password" ControlToValidate="ConfirmPassword"
+                    CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Kennwort stimmt nicht mit dem Bestätigungskennwort überein." />
                 </div>
-                <asp:Button runat="server" CssClass="btn btn-default" Text="Registrieren" TabIndex="4" Width="113px"></asp:Button>
+                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Registrieren" TabIndex="4" Width="113px" OnClick="CreateUser_Click"></asp:Button>
                 <a class="btn btn-default" href="login.aspx" tabindex="5">Abbrechen</a>
             </div>
         </div>

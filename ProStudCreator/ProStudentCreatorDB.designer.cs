@@ -48,9 +48,9 @@ namespace ProStudCreator
     partial void Insert__MigrationHistory(__MigrationHistory instance);
     partial void Update__MigrationHistory(__MigrationHistory instance);
     partial void Delete__MigrationHistory(__MigrationHistory instance);
-    partial void InsertInputStore(InputStore instance);
-    partial void UpdateInputStore(InputStore instance);
-    partial void DeleteInputStore(InputStore instance);
+    partial void InsertProject(Project instance);
+    partial void UpdateProject(Project instance);
+    partial void DeleteProject(Project instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
@@ -131,11 +131,11 @@ namespace ProStudCreator
 			}
 		}
 		
-		public System.Data.Linq.Table<InputStore> InputStores
+		public System.Data.Linq.Table<Project> Projects
 		{
 			get
 			{
-				return this.GetTable<InputStore>();
+				return this.GetTable<Project>();
 			}
 		}
 	}
@@ -1292,8 +1292,8 @@ namespace ProStudCreator
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.InputStore")]
-	public partial class InputStore : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Projects")]
+	public partial class Project : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -1302,25 +1302,51 @@ namespace ProStudCreator
 		
 		private string _Name;
 		
-		private string _Type;
+		private string _Advisor;
+		
+		private string _Advisor2;
+		
+		private string _AdvisorMail;
+		
+		private string _AdvisorMail2;
+		
+		private bool _TypeDesignUX;
+		
+		private bool _TypeHW;
+		
+		private bool _TypeCGIP;
+		
+		private bool _TypeMathAlg;
+		
+		private bool _TypeAppWeb;
+		
+		private bool _TypeDBBigData;
 		
 		private string _POne;
 		
+		private string _POneTeamSize;
+		
 		private string _PTwo;
 		
-		private string _initialPosition;
+		private string _PTwoTeamSize;
+		
+		private string _InitialPosition;
 		
 		private System.Data.Linq.Binary _Pictures;
 		
-		private string _Objectiv;
+		private string _Objective;
 		
-		private string _problemStatement;
+		private string _ProblemStatement;
 		
 		private string _References;
 		
 		private string _Remarks;
 		
-		private string _Importance;
+		private bool _Importance;
+		
+		private bool _Published;
+		
+		private System.DateTime _CreateDate;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1330,34 +1356,60 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnTypeChanging(string value);
-    partial void OnTypeChanged();
+    partial void OnAdvisorChanging(string value);
+    partial void OnAdvisorChanged();
+    partial void OnAdvisor2Changing(string value);
+    partial void OnAdvisor2Changed();
+    partial void OnAdvisorMailChanging(string value);
+    partial void OnAdvisorMailChanged();
+    partial void OnAdvisorMail2Changing(string value);
+    partial void OnAdvisorMail2Changed();
+    partial void OnTypeDesignUXChanging(bool value);
+    partial void OnTypeDesignUXChanged();
+    partial void OnTypeHWChanging(bool value);
+    partial void OnTypeHWChanged();
+    partial void OnTypeCGIPChanging(bool value);
+    partial void OnTypeCGIPChanged();
+    partial void OnTypeMathAlgChanging(bool value);
+    partial void OnTypeMathAlgChanged();
+    partial void OnTypeAppWebChanging(bool value);
+    partial void OnTypeAppWebChanged();
+    partial void OnTypeDBBigDataChanging(bool value);
+    partial void OnTypeDBBigDataChanged();
     partial void OnPOneChanging(string value);
     partial void OnPOneChanged();
+    partial void OnPOneTeamSizeChanging(string value);
+    partial void OnPOneTeamSizeChanged();
     partial void OnPTwoChanging(string value);
     partial void OnPTwoChanged();
-    partial void OninitialPositionChanging(string value);
-    partial void OninitialPositionChanged();
+    partial void OnPTwoTeamSizeChanging(string value);
+    partial void OnPTwoTeamSizeChanged();
+    partial void OnInitialPositionChanging(string value);
+    partial void OnInitialPositionChanged();
     partial void OnPicturesChanging(System.Data.Linq.Binary value);
     partial void OnPicturesChanged();
-    partial void OnObjectivChanging(string value);
-    partial void OnObjectivChanged();
-    partial void OnproblemStatementChanging(string value);
-    partial void OnproblemStatementChanged();
+    partial void OnObjectiveChanging(string value);
+    partial void OnObjectiveChanged();
+    partial void OnProblemStatementChanging(string value);
+    partial void OnProblemStatementChanged();
     partial void OnReferencesChanging(string value);
     partial void OnReferencesChanged();
     partial void OnRemarksChanging(string value);
     partial void OnRemarksChanged();
-    partial void OnImportanceChanging(string value);
+    partial void OnImportanceChanging(bool value);
     partial void OnImportanceChanged();
+    partial void OnPublishedChanging(bool value);
+    partial void OnPublishedChanged();
+    partial void OnCreateDateChanging(System.DateTime value);
+    partial void OnCreateDateChanged();
     #endregion
 		
-		public InputStore()
+		public Project()
 		{
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -1397,22 +1449,202 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
-		public string Type
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Advisor
 		{
 			get
 			{
-				return this._Type;
+				return this._Advisor;
 			}
 			set
 			{
-				if ((this._Type != value))
+				if ((this._Advisor != value))
 				{
-					this.OnTypeChanging(value);
+					this.OnAdvisorChanging(value);
 					this.SendPropertyChanging();
-					this._Type = value;
-					this.SendPropertyChanged("Type");
-					this.OnTypeChanged();
+					this._Advisor = value;
+					this.SendPropertyChanged("Advisor");
+					this.OnAdvisorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Advisor2
+		{
+			get
+			{
+				return this._Advisor2;
+			}
+			set
+			{
+				if ((this._Advisor2 != value))
+				{
+					this.OnAdvisor2Changing(value);
+					this.SendPropertyChanging();
+					this._Advisor2 = value;
+					this.SendPropertyChanged("Advisor2");
+					this.OnAdvisor2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdvisorMail", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string AdvisorMail
+		{
+			get
+			{
+				return this._AdvisorMail;
+			}
+			set
+			{
+				if ((this._AdvisorMail != value))
+				{
+					this.OnAdvisorMailChanging(value);
+					this.SendPropertyChanging();
+					this._AdvisorMail = value;
+					this.SendPropertyChanged("AdvisorMail");
+					this.OnAdvisorMailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AdvisorMail2", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string AdvisorMail2
+		{
+			get
+			{
+				return this._AdvisorMail2;
+			}
+			set
+			{
+				if ((this._AdvisorMail2 != value))
+				{
+					this.OnAdvisorMail2Changing(value);
+					this.SendPropertyChanging();
+					this._AdvisorMail2 = value;
+					this.SendPropertyChanged("AdvisorMail2");
+					this.OnAdvisorMail2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDesignUX", DbType="Bit NOT NULL")]
+		public bool TypeDesignUX
+		{
+			get
+			{
+				return this._TypeDesignUX;
+			}
+			set
+			{
+				if ((this._TypeDesignUX != value))
+				{
+					this.OnTypeDesignUXChanging(value);
+					this.SendPropertyChanging();
+					this._TypeDesignUX = value;
+					this.SendPropertyChanged("TypeDesignUX");
+					this.OnTypeDesignUXChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeHW", DbType="Bit NOT NULL")]
+		public bool TypeHW
+		{
+			get
+			{
+				return this._TypeHW;
+			}
+			set
+			{
+				if ((this._TypeHW != value))
+				{
+					this.OnTypeHWChanging(value);
+					this.SendPropertyChanging();
+					this._TypeHW = value;
+					this.SendPropertyChanged("TypeHW");
+					this.OnTypeHWChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeCGIP", DbType="Bit NOT NULL")]
+		public bool TypeCGIP
+		{
+			get
+			{
+				return this._TypeCGIP;
+			}
+			set
+			{
+				if ((this._TypeCGIP != value))
+				{
+					this.OnTypeCGIPChanging(value);
+					this.SendPropertyChanging();
+					this._TypeCGIP = value;
+					this.SendPropertyChanged("TypeCGIP");
+					this.OnTypeCGIPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeMathAlg", DbType="Bit NOT NULL")]
+		public bool TypeMathAlg
+		{
+			get
+			{
+				return this._TypeMathAlg;
+			}
+			set
+			{
+				if ((this._TypeMathAlg != value))
+				{
+					this.OnTypeMathAlgChanging(value);
+					this.SendPropertyChanging();
+					this._TypeMathAlg = value;
+					this.SendPropertyChanged("TypeMathAlg");
+					this.OnTypeMathAlgChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeAppWeb", DbType="Bit NOT NULL")]
+		public bool TypeAppWeb
+		{
+			get
+			{
+				return this._TypeAppWeb;
+			}
+			set
+			{
+				if ((this._TypeAppWeb != value))
+				{
+					this.OnTypeAppWebChanging(value);
+					this.SendPropertyChanging();
+					this._TypeAppWeb = value;
+					this.SendPropertyChanged("TypeAppWeb");
+					this.OnTypeAppWebChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDBBigData", DbType="Bit NOT NULL")]
+		public bool TypeDBBigData
+		{
+			get
+			{
+				return this._TypeDBBigData;
+			}
+			set
+			{
+				if ((this._TypeDBBigData != value))
+				{
+					this.OnTypeDBBigDataChanging(value);
+					this.SendPropertyChanging();
+					this._TypeDBBigData = value;
+					this.SendPropertyChanged("TypeDBBigData");
+					this.OnTypeDBBigDataChanged();
 				}
 			}
 		}
@@ -1437,6 +1669,26 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneTeamSize", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string POneTeamSize
+		{
+			get
+			{
+				return this._POneTeamSize;
+			}
+			set
+			{
+				if ((this._POneTeamSize != value))
+				{
+					this.OnPOneTeamSizeChanging(value);
+					this.SendPropertyChanging();
+					this._POneTeamSize = value;
+					this.SendPropertyChanged("POneTeamSize");
+					this.OnPOneTeamSizeChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwo", DbType="NVarChar(25) NOT NULL", CanBeNull=false)]
 		public string PTwo
 		{
@@ -1457,22 +1709,42 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_initialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string initialPosition
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoTeamSize", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string PTwoTeamSize
 		{
 			get
 			{
-				return this._initialPosition;
+				return this._PTwoTeamSize;
 			}
 			set
 			{
-				if ((this._initialPosition != value))
+				if ((this._PTwoTeamSize != value))
 				{
-					this.OninitialPositionChanging(value);
+					this.OnPTwoTeamSizeChanging(value);
 					this.SendPropertyChanging();
-					this._initialPosition = value;
-					this.SendPropertyChanged("initialPosition");
-					this.OninitialPositionChanged();
+					this._PTwoTeamSize = value;
+					this.SendPropertyChanged("PTwoTeamSize");
+					this.OnPTwoTeamSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InitialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string InitialPosition
+		{
+			get
+			{
+				return this._InitialPosition;
+			}
+			set
+			{
+				if ((this._InitialPosition != value))
+				{
+					this.OnInitialPositionChanging(value);
+					this.SendPropertyChanging();
+					this._InitialPosition = value;
+					this.SendPropertyChanged("InitialPosition");
+					this.OnInitialPositionChanged();
 				}
 			}
 		}
@@ -1497,42 +1769,42 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Objectiv", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Objectiv
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Objective", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Objective
 		{
 			get
 			{
-				return this._Objectiv;
+				return this._Objective;
 			}
 			set
 			{
-				if ((this._Objectiv != value))
+				if ((this._Objective != value))
 				{
-					this.OnObjectivChanging(value);
+					this.OnObjectiveChanging(value);
 					this.SendPropertyChanging();
-					this._Objectiv = value;
-					this.SendPropertyChanged("Objectiv");
-					this.OnObjectivChanged();
+					this._Objective = value;
+					this.SendPropertyChanged("Objective");
+					this.OnObjectiveChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_problemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string problemStatement
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProblemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string ProblemStatement
 		{
 			get
 			{
-				return this._problemStatement;
+				return this._ProblemStatement;
 			}
 			set
 			{
-				if ((this._problemStatement != value))
+				if ((this._ProblemStatement != value))
 				{
-					this.OnproblemStatementChanging(value);
+					this.OnProblemStatementChanging(value);
 					this.SendPropertyChanging();
-					this._problemStatement = value;
-					this.SendPropertyChanged("problemStatement");
-					this.OnproblemStatementChanged();
+					this._ProblemStatement = value;
+					this.SendPropertyChanged("ProblemStatement");
+					this.OnProblemStatementChanged();
 				}
 			}
 		}
@@ -1577,8 +1849,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Importance", DbType="NVarChar(40) NOT NULL", CanBeNull=false)]
-		public string Importance
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Importance", DbType="Bit NOT NULL")]
+		public bool Importance
 		{
 			get
 			{
@@ -1593,6 +1865,46 @@ namespace ProStudCreator
 					this._Importance = value;
 					this.SendPropertyChanged("Importance");
 					this.OnImportanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Published", DbType="Bit NOT NULL")]
+		public bool Published
+		{
+			get
+			{
+				return this._Published;
+			}
+			set
+			{
+				if ((this._Published != value))
+				{
+					this.OnPublishedChanging(value);
+					this.SendPropertyChanging();
+					this._Published = value;
+					this.SendPropertyChanged("Published");
+					this.OnPublishedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="Date NOT NULL")]
+		public System.DateTime CreateDate
+		{
+			get
+			{
+				return this._CreateDate;
+			}
+			set
+			{
+				if ((this._CreateDate != value))
+				{
+					this.OnCreateDateChanging(value);
+					this.SendPropertyChanging();
+					this._CreateDate = value;
+					this.SendPropertyChanged("CreateDate");
+					this.OnCreateDateChanged();
 				}
 			}
 		}

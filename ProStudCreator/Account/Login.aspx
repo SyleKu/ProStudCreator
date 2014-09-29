@@ -63,22 +63,22 @@
                 </div>
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Password">Passwort</asp:Label>
-                    <asp:TextBox runat="server" ID="Password" CssClass="form-control" TextMode="Password"  TabIndex="2" placeholder="Passwort"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="Password" CssClass="form-control" TextMode="Password" TabIndex="2" placeholder="Passwort"></asp:TextBox>
                 </div>
                 <asp:button runat="server" OnClick="LogIn" Text="Login" CssClass="btn btn-default" Width="61px" value="Login" tabindex="3" type="submit"></asp:button>
             </div>
             <div>
                 <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled"></asp:HyperLink>
-                <a href="register.aspx">Kein Konto? Jetzt registrieren</a>
+                <a href="/Account/Register.aspx">Kein Konto? Jetzt registrieren</a>
             </div>
         </div>
         <div class="checkbox">
-            <asp:CheckBox runat="server" ID="RememberMe" />
-            <asp:Label runat="server" AssociatedControlID="RememberMe">Speichern?</asp:Label>
+            <asp:CheckBox runat="server" ID="RememberMe" Visible="false"/>
+            <asp:Label runat="server" Visible="false" AssociatedControlID="RememberMe">Speichern?</asp:Label>
         </div>
         <div class="col-md-4">
             <section id="socialLoginForm">
-                <uc:OpenAuthProviders runat="server" ID="OpenAuthLogin" />
+                <uc:OpenAuthProviders Visible="false" runat="server" ID="OpenAuthLogin" />
             </section>
         </div>
     </form>
