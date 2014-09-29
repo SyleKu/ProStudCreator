@@ -147,18 +147,5 @@ namespace ProStudCreator
                 CheckProjects.DataBind();
             }
         }
-
-        /*
-        private String checkType()
-        {
-            var path = "pictures/projectTyp";
-            if (db.Projects.Select(i => i.TypeCGIP))
-            {
-                path += "TypeDesignUX";   
-            }
-            path += ".png";
-            return path;
-        }
-         */
     }
 }
