@@ -22,6 +22,24 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label SiteTitle;
         
         /// <summary>
+        /// AdminView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder AdminView;
+        
+        /// <summary>
+        /// CreatorID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label CreatorID;
+        
+        /// <summary>
         /// ProjectName control.
         /// </summary>
         /// <remarks>
@@ -38,6 +56,24 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CompareValidator CompareProjectName;
+        
+        /// <summary>
+        /// Employer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox Employer;
+        
+        /// <summary>
+        /// EmployerMail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox EmployerMail;
         
         /// <summary>
         /// NameBetreuer1 control.
