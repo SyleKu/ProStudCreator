@@ -6,7 +6,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Configuration;
-using System.IO;
 
 namespace ProStudCreator
 {
@@ -14,15 +13,9 @@ namespace ProStudCreator
     {
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         bool[] projectType = new bool[6];
-        private static int id;
-        private Project projects;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.Identity.Name == "test@testEmail.ch")
-            {
-                AdminView.Visible = true;
-            }
             if (IsPostBack)
             {
                 projectType = (bool[])ViewState["Types"];
@@ -33,162 +26,93 @@ namespace ProStudCreator
                 AddPictureLabel.Text = "Bild hinzufügen";
                 SiteTitle.Text = "Neues Projekt erstellen:";
                 saveNewProject.Text = "Speichern";
+            }
 
-                if (Request.QueryString["id"] != null)
-                {
-                    id = int.Parse(Request.QueryString["id"]);
-                    getDataToEdit();
-                }
+            if (Request.QueryString["id"] != null)
+            {
+                var id = int.Parse(Request.QueryString["id"]);
+                var proj = db.Projects.Single(i => i.Id == id);
 
                 if (Request.QueryString["show"] != null)
                 {
                     showOnlyContent();
+                } 
+                else {
+                    SiteTitle.Text = "Projekt bearbeiten:";
+                    saveNewProject.Text = "Änderungen speichern";
+                    AddPictureLabel.Text = "Bild ändern";   
+                    saveNewProject.Width = 175;
                 }
-            }
-        }
 
-        private void getDataToEdit()
-        {
-            var proj = db.Projects.Single(i => i.Id == id);
-
-            /*
-            if (proj.Creator != User.Identity.Name)
-            {
-                Response.Redirect("/projectlist");
-            }
-            */
-            SiteTitle.Text = "Projekt bearbeiten:";
-            CreatorID.Text = "Ersteller: " + proj.Creator;
-            saveNewProject.Text = "Änderungen speichern";
-            AddPictureLabel.Text = "Bild ändern";
-            saveNewProject.Width = 175;
-
-            if (User.Identity.Name == "test@testEmail.ch" && !proj.Published && Request.QueryString["show"] != null)
-            {
                 publishProject.Visible = true;
-            }
 
-            ProjectName.Text = proj.Name;
-            Employer.Text = proj.Employer;
-            EmployerMail.Text = proj.EmployerEmail;
-            NameBetreuer1.Text = proj.Advisor;
-            EMail1.Text = proj.AdvisorMail;
-            NameBetreuer2.Text = proj.Advisor2;
-            EMail2.Text = proj.AdvisorMail2;
+                ProjectName.Text = proj.Name.ToString();
+                NameBetreuer1.Text = proj.Advisor;
+                EMail1.Text = proj.AdvisorMail;
+                NameBetreuer2.Text = proj.Advisor2;
+                EMail2.Text = proj.AdvisorMail2;
 
-            if (proj.TypeDesignUX)
-            {
-                DesignUX.ImageUrl = "/pictures/projectTypDesignUX.png";
-                projectType[0] = true;
-            }
+                if (proj.TypeDesignUX)
+                {
+                    DesignUX.ImageUrl = "/pictures/projectTypDesignUX.png";
+                }
 
-            if (proj.TypeHW)
-            {
-                HW.ImageUrl = "/pictures/projectTypHW.png";
-                projectType[1] = true;
-            }
+                if (proj.TypeHW)
+                {
+                    HW.ImageUrl = "/pictures/projectTypHW.png";
+                }
 
-            if (proj.TypeCGIP)
-            {
-                CGIP.ImageUrl = "/pictures/projectTypCGIP.png";
-                projectType[2] = true;
-            }
+                if (proj.TypeCGIP)
+                {
+                    CGIP.ImageUrl = "/pictures/projectTypCGIP.png";
+                }
 
-            if (proj.TypeMathAlg)
-            {
-                MathAlg.ImageUrl = "/pictures/projectTypMathAlg.png";
-                projectType[3] = true;
-            }
+                if (proj.TypeMathAlg)
+                {
+                    MathAlg.ImageUrl = "/pictures/projectTypMathAlg.png";
+                }
 
-            if (proj.TypeAppWeb)
-            {
-                AppWeb.ImageUrl = "/pictures/projectTypAppWeb.png";
-                projectType[4] = true;
-            }
+                if (proj.TypeAppWeb)
+                {
+                    AppWeb.ImageUrl = "/pictures/projectTypAppWeb.png";
+                }
 
-            if (proj.TypeDBBigData)
-            {
-                DBBigData.ImageUrl = "/pictures/projectTypDBBigData.png";
-                projectType[5] = true;
-            }
+                if (proj.TypeDBBigData)
+                {
+                    DBBigData.ImageUrl = "/pictures/projectTypDBBigData.png";
+                }
 
+                POneContent.Text = proj.POne;
+                PTwoContent.Text = proj.PTwo;
+                InitialPositionContent.Text = proj.InitialPosition;
+                
 
-            if (proj.POneP5 && proj.POneP6)
-            {
-                POneContent.Text = "P5 oder P6";
+                Image1.Visible = true;
+                Image1.ImageUrl = "/pictures/projectTypDesignUXUnchecked.png";
 
-            }
-            else if (proj.POneP5)
-            {
-                POneContent.Text = "P5 (180h pro Student)";
-            }
-            else
-            {
-                POneContent.Text = "P6 (360h pro Student)";
-            }
-
-
-            if (proj.PTwoP5 && proj.PTwoP6)
-            {
-                PTwoContent.Text = "P5 oder P6";
-            }
-            else if (proj.PTwoP5)
-            {
-                PTwoContent.Text = "P5 (180h pro Student)";
-            }
-            else if (proj.PTwoP6)
-            {
-                PTwoContent.Text = "P6 (360h pro Student)";
-            }
-            else
-            {
-                PTwoContent.Text = "------";
-            }
-
-            InitialPositionContent.Text = proj.InitialPosition;
-
-            Image1.Visible = true;
-
-            if (proj.Picture != null)
-            {
-                Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(proj.Picture.ToArray());
-            }
-            else
-            {
-                ImageLabel.Visible = false;
-                Image1.Visible = false;
-            }
-
-            ObjectivContent.Text = proj.Objective;
-            ProblemStatementContent.Text = proj.ProblemStatement;
-            ReferencesContent.Text = proj.References;
-            RemarksContent.Text = proj.Remarks;
-
-            if (proj.Importance)
-            {
-                ImportanceContent.Text = "wichtig aus Sicht Institut oder FHNW";
-            }
-            else
-            {
-                ImportanceContent.Text = "Normal";
-            }
+                ObjectivContent.Text = proj.Objective;
+                ProblemStatementContent.Text = proj.ProblemStatement;
+                ReferencesContent.Text = proj.References;
+                RemarksContent.Text = proj.Remarks;
+                if (proj.Importance)
+                {
+                    ImportanceContent.Text = "wichtig aus Sicht Institut oder FHNW";
+                }
+                else
+                {
+                    ImportanceContent.Text = "Normal";
+                }
+            }            
         }
 
         private void showOnlyContent()
         {
-            var proj = db.Projects.Single(i => i.Id == id);
-
             SiteTitle.Text = "Projekt Ansicht:";
             saveNewProject.Text = "Bearbeiten";
             saveNewProject.Width = 100;
-            if (User.Identity.Name == "test@testEmail.ch" && !proj.Published)
-            {
-                publishProject.Visible = true;
-            }
+            publishProject.Visible = true;
 
             ProjectName.ReadOnly = true;
-            Employer.ReadOnly = true;
-            EmployerMail.ReadOnly = true;
             NameBetreuer1.ReadOnly = true;
             EMail1.ReadOnly = true;
             NameBetreuer2.ReadOnly = true;
@@ -216,12 +140,12 @@ namespace ProStudCreator
             ProblemStatementContent.ReadOnly = true;
             ReferencesContent.ReadOnly = true;
             RemarksContent.ReadOnly = true;
-            ImportanceContent.Enabled = false;
+            ImportanceContent.Enabled = false; 
         }
 
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
         {
-            if (DesignUX.ImageUrl == "/pictures/projectTypDesignUXUnchecked.png")
+            if (DesignUX.ImageUrl=="/pictures/projectTypDesignUXUnchecked.png")
             {
                 DesignUX.ImageUrl = "/pictures/projectTypDesignUX.png";
                 projectType[0] = true;
@@ -308,7 +232,46 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+        
+        /*
+        protected void AddPicture_Click(object sender, ImageClickEventArgs e)
+        {
+            /*
+            Dictionary<string, int> b;
+            b["huhu"] = 7;
+            b["hasduhu"] = 700;
+            b.Remove("huhu");
 
+
+
+            var t = new Dictionary<string, List<Dictionary<int, int>>>();
+
+
+            // var str = "huhu";
+
+            // str = 7;
+
+
+
+            List<string> a;
+            a.Add("5");
+            a.Add("50");
+            a.Add("5");
+            a.Add("5");
+
+            a.RemoveAt(2);
+            
+            
+
+
+            var img = new ImageButton();
+            img.ImageUrl = "/pictures/addPicture.png";
+            img.ID = "AddPicture";
+            img.Height = 100;
+            img.OnClientClick = "AddPicture_Click";
+            PlaceHolder1.Controls.Add(img);
+        }
+        */
         protected void saveProject(object sender, EventArgs e)
         {
             if (Request.QueryString["show"] != null)
@@ -317,26 +280,14 @@ namespace ProStudCreator
                 Response.Redirect("/AddNewProject?id=" + id);
             }
 
-            else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" && EmailAvailable() || Request.QueryString["id"] != null)
+            else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" && EmailAvailable())
             {
-                if (Request.QueryString["id"] != null)
-                {
-                    projects = db.Projects.Single(i => i.Id == id);
-                }
-                else
-                {
-                    projects = new Project();
-                }
-
+                // var i = db.InputStores.Where(item => item.Id == 1) && item.Importance == 1); //.ToArray();            
+                var projects = new Project();
                 projects.Name = ProjectName.Text;
-                projects.Employer = Employer.Text;
-                projects.EmployerEmail = EmployerMail.Text;
-                projects.Creator = User.Identity.Name;
                 projects.Advisor = NameBetreuer1.Text;
                 projects.AdvisorMail = EMail1.Text;
 
-
-                // TO DO
                 if (NameBetreuer1.Text != "" && EMail2.Text != "")
                 {
 
@@ -354,43 +305,9 @@ namespace ProStudCreator
                 }
 
                 applyProjectType(projects);
-
-                if (POneContent.Text == "P5 (180h pro Student)")
-                {
-                    projects.POneP5 = true;
-                    projects.POneP6 = false;
-                }
-                else if (POneContent.Text == "P6 (360h pro Student)")
-                {
-
-                    projects.POneP5 = false;
-                    projects.POneP6 = true;
-                }
-                else
-                {
-                    projects.POneP5 = true;
-                    projects.POneP6 = true;
-                }
-
-
-                if (PTwoContent.Text == "P5 (180h pro Student)")
-                {
-                    projects.PTwoP5 = true;
-                    projects.PTwoP6 = false;
-                }
-                else if (POneContent.Text == "P6 (360h pro Student)")
-                {
-
-                    projects.PTwoP5 = false;
-                    projects.PTwoP6 = true;
-                }
-                else
-                {
-                    projects.PTwoP5 = true;
-                    projects.PTwoP6 = true;
-                }
-
+                projects.POne = POneContent.Text;
                 projects.POneTeamSize = POneTeamSize.Text;
+                projects.PTwo = PTwoContent.Text;
                 projects.PTwoTeamSize = PTwoTeamSize.Text;
 
                 projects.InitialPosition = InitialPositionContent.Text;
@@ -415,17 +332,18 @@ namespace ProStudCreator
 
                             offset += read;
                         }
-                        projects.Picture = new System.Data.Linq.Binary(data);
+
+                        projects.Pictures = new System.Data.Linq.Binary(data);
                     }
                 }
-                if (Request.QueryString["id"] == null)
-                {
-                    db.Projects.InsertOnSubmit(projects);
-                }
+                db.Projects.InsertOnSubmit(projects);
                 db.SubmitChanges();
+
+
+
+
                 Response.Redirect("/Projectlist");
             }
-            // TO DO
             else if (ProjectNameAvailable() && !projectType.Any())
             {
 
@@ -477,32 +395,6 @@ namespace ProStudCreator
                             break;
                         case 5:
                             _is.TypeDBBigData = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            _is.TypeDesignUX = false;
-                            break;
-                        case 1:
-                            _is.TypeHW = false;
-                            break;
-                        case 2:
-                            _is.TypeCGIP = false;
-                            break;
-                        case 3:
-                            _is.TypeMathAlg = false;
-                            break;
-                        case 4:
-                            _is.TypeAppWeb = false;
-                            break;
-                        case 5:
-                            _is.TypeDBBigData = false;
                             break;
                         default:
                             break;

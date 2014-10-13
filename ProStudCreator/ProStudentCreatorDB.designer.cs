@@ -1302,12 +1302,6 @@ namespace ProStudCreator
 		
 		private string _Name;
 		
-		private string _Creator;
-		
-		private string _Employer;
-		
-		private string _EmployerEmail;
-		
 		private string _Advisor;
 		
 		private string _Advisor2;
@@ -1328,21 +1322,17 @@ namespace ProStudCreator
 		
 		private bool _TypeDBBigData;
 		
-		private bool _POneP5;
-		
-		private bool _POneP6;
+		private string _POne;
 		
 		private string _POneTeamSize;
 		
-		private bool _PTwoP5;
-		
-		private bool _PTwoP6;
+		private string _PTwo;
 		
 		private string _PTwoTeamSize;
 		
 		private string _InitialPosition;
 		
-		private System.Data.Linq.Binary _Picture;
+		private System.Data.Linq.Binary _Pictures;
 		
 		private string _Objective;
 		
@@ -1366,12 +1356,6 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnCreatorChanging(string value);
-    partial void OnCreatorChanged();
-    partial void OnEmployerChanging(string value);
-    partial void OnEmployerChanged();
-    partial void OnEmployerEmailChanging(string value);
-    partial void OnEmployerEmailChanged();
     partial void OnAdvisorChanging(string value);
     partial void OnAdvisorChanged();
     partial void OnAdvisor2Changing(string value);
@@ -1392,22 +1376,18 @@ namespace ProStudCreator
     partial void OnTypeAppWebChanged();
     partial void OnTypeDBBigDataChanging(bool value);
     partial void OnTypeDBBigDataChanged();
-    partial void OnPOneP5Changing(bool value);
-    partial void OnPOneP5Changed();
-    partial void OnPOneP6Changing(bool value);
-    partial void OnPOneP6Changed();
+    partial void OnPOneChanging(string value);
+    partial void OnPOneChanged();
     partial void OnPOneTeamSizeChanging(string value);
     partial void OnPOneTeamSizeChanged();
-    partial void OnPTwoP5Changing(bool value);
-    partial void OnPTwoP5Changed();
-    partial void OnPTwoP6Changing(bool value);
-    partial void OnPTwoP6Changed();
+    partial void OnPTwoChanging(string value);
+    partial void OnPTwoChanged();
     partial void OnPTwoTeamSizeChanging(string value);
     partial void OnPTwoTeamSizeChanged();
     partial void OnInitialPositionChanging(string value);
     partial void OnInitialPositionChanged();
-    partial void OnPictureChanging(System.Data.Linq.Binary value);
-    partial void OnPictureChanged();
+    partial void OnPicturesChanging(System.Data.Linq.Binary value);
+    partial void OnPicturesChanged();
     partial void OnObjectiveChanging(string value);
     partial void OnObjectiveChanged();
     partial void OnProblemStatementChanging(string value);
@@ -1465,66 +1445,6 @@ namespace ProStudCreator
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Creator", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Creator
-		{
-			get
-			{
-				return this._Creator;
-			}
-			set
-			{
-				if ((this._Creator != value))
-				{
-					this.OnCreatorChanging(value);
-					this.SendPropertyChanging();
-					this._Creator = value;
-					this.SendPropertyChanged("Creator");
-					this.OnCreatorChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Employer", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Employer
-		{
-			get
-			{
-				return this._Employer;
-			}
-			set
-			{
-				if ((this._Employer != value))
-				{
-					this.OnEmployerChanging(value);
-					this.SendPropertyChanging();
-					this._Employer = value;
-					this.SendPropertyChanged("Employer");
-					this.OnEmployerChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployerEmail", DbType="NVarChar(MAX)")]
-		public string EmployerEmail
-		{
-			get
-			{
-				return this._EmployerEmail;
-			}
-			set
-			{
-				if ((this._EmployerEmail != value))
-				{
-					this.OnEmployerEmailChanging(value);
-					this.SendPropertyChanging();
-					this._EmployerEmail = value;
-					this.SendPropertyChanged("EmployerEmail");
-					this.OnEmployerEmailChanged();
 				}
 			}
 		}
@@ -1729,42 +1649,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneP5", DbType="Bit NOT NULL")]
-		public bool POneP5
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POne", DbType="NVarChar(25) NOT NULL", CanBeNull=false)]
+		public string POne
 		{
 			get
 			{
-				return this._POneP5;
+				return this._POne;
 			}
 			set
 			{
-				if ((this._POneP5 != value))
+				if ((this._POne != value))
 				{
-					this.OnPOneP5Changing(value);
+					this.OnPOneChanging(value);
 					this.SendPropertyChanging();
-					this._POneP5 = value;
-					this.SendPropertyChanged("POneP5");
-					this.OnPOneP5Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneP6", DbType="Bit NOT NULL")]
-		public bool POneP6
-		{
-			get
-			{
-				return this._POneP6;
-			}
-			set
-			{
-				if ((this._POneP6 != value))
-				{
-					this.OnPOneP6Changing(value);
-					this.SendPropertyChanging();
-					this._POneP6 = value;
-					this.SendPropertyChanged("POneP6");
-					this.OnPOneP6Changed();
+					this._POne = value;
+					this.SendPropertyChanged("POne");
+					this.OnPOneChanged();
 				}
 			}
 		}
@@ -1789,42 +1689,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoP5", DbType="Bit NOT NULL")]
-		public bool PTwoP5
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwo", DbType="NVarChar(25) NOT NULL", CanBeNull=false)]
+		public string PTwo
 		{
 			get
 			{
-				return this._PTwoP5;
+				return this._PTwo;
 			}
 			set
 			{
-				if ((this._PTwoP5 != value))
+				if ((this._PTwo != value))
 				{
-					this.OnPTwoP5Changing(value);
+					this.OnPTwoChanging(value);
 					this.SendPropertyChanging();
-					this._PTwoP5 = value;
-					this.SendPropertyChanged("PTwoP5");
-					this.OnPTwoP5Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoP6", DbType="Bit NOT NULL")]
-		public bool PTwoP6
-		{
-			get
-			{
-				return this._PTwoP6;
-			}
-			set
-			{
-				if ((this._PTwoP6 != value))
-				{
-					this.OnPTwoP6Changing(value);
-					this.SendPropertyChanging();
-					this._PTwoP6 = value;
-					this.SendPropertyChanged("PTwoP6");
-					this.OnPTwoP6Changed();
+					this._PTwo = value;
+					this.SendPropertyChanged("PTwo");
+					this.OnPTwoChanged();
 				}
 			}
 		}
@@ -1869,22 +1749,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Picture", DbType="Image", UpdateCheck=UpdateCheck.Never)]
-		public System.Data.Linq.Binary Picture
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pictures", DbType="Image", UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary Pictures
 		{
 			get
 			{
-				return this._Picture;
+				return this._Pictures;
 			}
 			set
 			{
-				if ((this._Picture != value))
+				if ((this._Pictures != value))
 				{
-					this.OnPictureChanging(value);
+					this.OnPicturesChanging(value);
 					this.SendPropertyChanging();
-					this._Picture = value;
-					this.SendPropertyChanged("Picture");
-					this.OnPictureChanged();
+					this._Pictures = value;
+					this.SendPropertyChanged("Pictures");
+					this.OnPicturesChanged();
 				}
 			}
 		}
