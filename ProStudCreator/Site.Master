@@ -30,7 +30,6 @@
             <Scripts>
                 <%--Weitere Informationen zum Bundling von Skripts in ScriptManager finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=301884". --%>
                 <%--Framework-Skripts--%>
-                <asp:ScriptReference Name="MsAjaxBundle" />
                 <asp:ScriptReference Name="jquery" />
                 <asp:ScriptReference Name="bootstrap" />
                 <asp:ScriptReference Name="respond" />
