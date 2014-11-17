@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using iTextSharp.text.html;
 
 namespace ProStudCreator
 {
@@ -181,7 +182,7 @@ namespace ProStudCreator
             {
                 using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
                 {
-                    //var output = new MemoryStream();
+                    // var output = new MemoryStream();
 
                     PdfWriter writer = PdfWriter.GetInstance(document, output);
 
@@ -193,10 +194,207 @@ namespace ProStudCreator
                     {
                         ImageHeader = imageHeader
                     };
+
                     // and add it to the PdfWriter
                     writer.PageEvent = ef;
                     document.Open();
 
+
+                    int id = 11;
+                    var proj = db.Projects.Single(i => i.Id == id);
+                    Paragraph text;
+
+                    Paragraph title = new Paragraph("i4Ds: " + proj.Name, FontFactory.GetFont("Arial", 18, Font.BOLD));
+                    title.SpacingBefore = 8f;
+                    title.SpacingAfter = 8f;
+                    document.Add(title);
+
+                    byte[] imageBytes = proj.Picture.ToArray();
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imageBytes);
+                    // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
+                    // image.ScaleAbsoluteWidth(160f);
+                    float h = image.ScaledHeight;
+                    float w = image.ScaledWidth;
+                    image.Alignment = 6;
+                    float scalePercent;
+
+                    Rectangle defaultPageSize = PageSize.A4;
+                    float width = defaultPageSize.Width - document.RightMargin - document.LeftMargin;
+                    float height = defaultPageSize.Height - document.TopMargin - document.BottomMargin;
+
+                    if (h >= 300 || w >= 200)
+                    {
+                        image.ScaleToFit(200f, 300f);
+                    }
+
+                    else if (h > w)
+                    {
+                        // only scale image if it's height is __greater__ than
+                        // the document's height, accounting for margins
+                        if (h > height)
+                        {
+                            scalePercent = height / h;
+                            image.ScaleAbsolute(w * scalePercent, h * scalePercent);
+                        }
+                    }
+                    else
+                    {
+                        // same for image width        
+                        if (w > width)
+                        {
+                            scalePercent = width / w;
+                            image.ScaleAbsolute(w * scalePercent, h * scalePercent);
+                        }
+                    }
+
+                    //image.SetAbsolutePosition(380, defaultPageSize.Height - document.TopMargin - image.ScaledHeight - 35);
+
+                    //document.Add(image);
+                    PdfPTable cellProject = new PdfPTable(3);
+                    cellProject.DefaultCell.Border = Rectangle.NO_BORDER;
+                    cellProject.HorizontalAlignment = Element.ALIGN_LEFT;
+                    cellProject.WidthPercentage = 100f;
+                    float[] widthProject = new float[] { 20, 40, 30 };
+                    cellProject.SetWidths(widthProject);
+
+                    PdfPTable nested = new PdfPTable(1);
+                    nested.DefaultCell.Border = Rectangle.NO_BORDER;
+                    text = new Paragraph("Betreuer:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested.AddCell(text);
+                    text = new Paragraph("Betreuer 2:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested.AddCell(text);
+                    text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested.AddCell(text);
+                    nested.AddCell(" ");
+                    nested.AddCell(" ");
+                    text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested.AddCell(text);
+                    text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested.AddCell(text);
+                    PdfPCell nesthousing = new PdfPCell(nested);
+                    nesthousing.Border = Rectangle.NO_BORDER;
+                    nesthousing.Padding = 0f;
+                    cellProject.AddCell(nesthousing);
+
+                    PdfPTable nested2 = new PdfPTable(1);
+                    nested2.DefaultCell.Border = Rectangle.NO_BORDER;
+                    text = new Paragraph("Name des Betreuers", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2.AddCell(text);
+                    text = new Paragraph("Name des Betreuers2", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2.AddCell(text);
+                    text = new Paragraph("Auftraggeber XYZ", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2.AddCell(text);
+                    nested2.AddCell(" "); 
+
+                    PdfPTable nested2A = new PdfPTable(2);
+                    nested2A.DefaultCell.Border = Rectangle.NO_BORDER;                    
+                    text = new Paragraph("Priorität 1", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested2A.AddCell(text);
+                    text = new Paragraph("Priorität 2", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    nested2A.AddCell(text);
+
+                    text = new Paragraph("P5 & P6", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2A.AddCell(text);
+                    text = new Paragraph("P5 & P6 2", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2A.AddCell(text);
+
+                    text = new Paragraph("Einzelarbeit", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2A.AddCell(text);
+                    text = new Paragraph("1er oder 2er Team", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                    nested2A.AddCell(text);
+                    nested2.AddCell(nested2A);
+
+                    PdfPCell nesthousing2 = new PdfPCell(nested2);
+                    nesthousing2.Border = Rectangle.NO_BORDER;
+                    nesthousing2.Padding = 0f;
+                    cellProject.AddCell(nesthousing2);
+
+                    PdfPTable nested3 = new PdfPTable(1);
+                    nested3.DefaultCell.Border = Rectangle.NO_BORDER;
+                    PdfPCell cell = new PdfPCell(image);
+                    cell.Border = Rectangle.NO_BORDER;
+                    cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                    nested3.AddCell(cell);
+                    PdfPCell nesthousing3 = new PdfPCell(nested3);
+                    nesthousing3.Border = Rectangle.NO_BORDER;
+                    nesthousing3.Padding = 0f;
+                    cellProject.AddCell(nesthousing3);
+
+                    document.Add(cellProject);
+                    cellProject.SpacingAfter = 8f;
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        PdfPTable table = new PdfPTable(2);
+                        table.DefaultCell.Border = Rectangle.NO_BORDER;
+                        table.HorizontalAlignment = Element.ALIGN_LEFT;
+                        table.WidthPercentage = 100f;
+                        float[] widthsContent = new float[] { 26, 94 };
+                        table.SetWidths(widthsContent);
+                        PdfPCell cellContent = new PdfPCell();
+                        cellContent.Border = Rectangle.NO_BORDER;
+                        cellContent.Colspan = 2;
+                        cellContent.HorizontalAlignment = 0; //0=Left, 1=Centre, 2=Right
+                        table.AddCell(cellContent);
+                        table.SpacingBefore = 8f;
+                        switch (i)
+                        {
+                            case 0:
+                                text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                text.SetLeading(0.0f, 2.0f);
+                                table.AddCell(text);
+                                break;
+                            case 1:
+                                text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                text.SetLeading(0.0f, 2.0f);
+                                table.AddCell(text);
+                                break;
+                            case 2:
+                                text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                text.SetLeading(0.0f, 2.0f);
+                                table.AddCell(text);
+                                break;
+                            case 3:
+                                text = new Paragraph("Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                text.SetLeading(0.0f, 2.0f);
+                                table.AddCell(text);
+                                break;
+                            case 4:
+                                text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                text.SetLeading(0.0f, 2.0f);
+                                table.AddCell(text);
+                                break;
+                            case 5:
+                                text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                                table.AddCell(text);
+                                if (proj.Importance)
+                                {
+                                    text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                }
+                                else
+                                {
+                                    text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                                }
+                                table.AddCell(text);
+                                break;
+                            default:
+                                break;
+                        }
+                        document.Add(table);
+                    }
+
+
+                    /*
                     // finally we add some pages with text to show the headers are working
                     string text = "Test";
                     for (int k = 0; k < 10; ++k)
@@ -206,10 +404,11 @@ namespace ProStudCreator
                         p.SpacingBefore = 8f;
                         document.Add(p);
                     }
+                    */
                 }
             }
 
-            
+
 
             //var pdfDokument=output.ToArray();
 
@@ -304,31 +503,23 @@ namespace ProStudCreator
 
                 // create two column table
                 PdfPTable head = new PdfPTable(1);
-                head.TotalWidth = page.Width;
+                head.TotalWidth = page.Width + 2;
 
                 // add image; PdfPCell() overload sizes image to fit cell
                 PdfPCell c = new PdfPCell(ImageHeader, true);
                 c.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 c.FixedHeight = cellHeight - 15;
                 c.PaddingLeft = 35;
-                c.PaddingTop = 8;
+                c.PaddingTop = 5;
                 c.PaddingBottom = 5;
                 c.Border = PdfPCell.ALIGN_BOTTOM;
                 head.AddCell(c);
 
-                /*
-                // add the header text
-                c = new PdfPCell(new Phrase(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + " GMT", new Font(Font.FontFamily.COURIER, 8)));
-                c.Border = PdfPCell.ALIGN_BOTTOM;
-                c.VerticalAlignment = Element.ALIGN_BOTTOM;
-                c.FixedHeight = cellHeight;
-                head.AddCell(c);
-                */
                 // since the table header is implemented using a PdfPTable, we call
                 // WriteSelectedRows(), which requires absolute positions!
                 head.WriteSelectedRows(
                   0, -1,  // first/last row; -1 flags all write all rows
-                  0,      // left offset
+                  -1,      // left offset
                     // ** bottom** yPos of the table
                   page.Height - cellHeight + head.TotalHeight,
                   writer.DirectContent
@@ -338,31 +529,24 @@ namespace ProStudCreator
                 // FOOTER 
                 //////////////////////////////////////////////////////
 
-                DateTime today = DateTime.Now;
-                String footerText = "Studiengang Informatik / i4Ds / Studierendenprojekte HS" + today.ToString("yy");
-                Paragraph footer = new Paragraph(footerText, FontFactory.GetFont("Arial", 8, iTextSharp.text.Font.NORMAL));
-                // footer.Alignment = Element.ALIGN_RIGHT;
+                // cell height 
+                float cellHeightFooter = document.TopMargin;
+                // PDF document size      
+                Rectangle page2 = document.PageSize;
 
-                PdfPTable footerTbl = new PdfPTable(2);
-                footerTbl.TotalWidth = page.Width;
+                // create two column table
+                PdfPTable head2 = new PdfPTable(1);
+                head2.TotalWidth = page2.Width + 2;
 
-                PdfPCell cell = new PdfPCell(footer);
+                // add image; PdfPCell() overload sizes image to fit cell
+                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik / i4DS / Studierendenprojekte HS14", new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
-                cell.FixedHeight = cellHeight - 15;
-                cell.PaddingLeft = 35;
+                cell.FixedHeight = cellHeightFooter - 15;
+                cell.PaddingLeft = 58;
                 cell.PaddingTop = 8;
-                cell.PaddingBottom = 5;
-                cell.Border = PdfPCell.ALIGN_TOP;
-                footerTbl.AddCell(cell);
-
-                String footerText2 = today.ToString("MMMM yyyy");
-                Paragraph footer2 = new Paragraph(footerText2, FontFactory.GetFont("Arial", 8, iTextSharp.text.Font.NORMAL));
-                cell = new PdfPCell(footer2);
-                cell.Border = PdfPCell.ALIGN_TOP;
-                cell.VerticalAlignment = Element.ALIGN_BOTTOM;
-
-                footerTbl.AddCell(cell);
-                footerTbl.WriteSelectedRows(0, -1, 20, 30, writer.DirectContent);
+                cell.PaddingBottom = 0;
+                head2.AddCell(cell);
+                head2.WriteSelectedRows(0, -1, -1, 40, writer.DirectContent);
             }
         }
     }
