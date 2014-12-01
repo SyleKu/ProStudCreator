@@ -13,7 +13,7 @@
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.Peter" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" Width="1200px" AutoGenerateColumns="False" OnRowCommand="CheckProjectsEvent">
                     <AlternatingRowStyle BackColor="White" />
                     <Columns>
-                        <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" ItemStyle-Width="200px" />
+                        <asp:BoundField DataField="advisorName" HeaderText="BetreuerIn" SortExpression="Advisor" ItemStyle-Width="200px" />
                         <asp:BoundField DataField="advisorEmail" HeaderText="E-Mail" SortExpression="Advisor" ItemStyle-Width="200px" />
                         <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="Advisor" ItemStyle-Width="250px" />
                         <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="Advisor" />
@@ -25,6 +25,7 @@
                                 <asp:LinkButton runat="server" CommandName="showProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open"></asp:LinkButton>
                                 <asp:LinkButton runat="server" CommandName="editProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton>
                                 <asp:LinkButton runat="server" CommandName="deleteProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                                <asp:LinkButton runat="server" CommandName="SinglePDF" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-save"></asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -61,7 +62,7 @@
             <asp:GridView ID="AllProjects" ItemType="ProStudCreator.Peter" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" Width="1200px" AutoGenerateColumns="False" OnRowCommand="AllProjectsEvent">
                 <AlternatingRowStyle BackColor="White" />
                 <Columns>
-                    <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" ItemStyle-Width="200px" />
+                    <asp:BoundField DataField="advisorName" HeaderText="BetreuerIn" SortExpression="Advisor" ItemStyle-Width="200px" />
                     <asp:BoundField DataField="advisorEmail" HeaderText="E-Mail" SortExpression="Advisor" ItemStyle-Width="200px" />
                     <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="Advisor" ItemStyle-Width="250px" />
                     <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="Advisor" />
@@ -73,8 +74,9 @@
                             <asp:LinkButton runat="server" CommandName="showProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open"></asp:LinkButton>
                             <asp:LinkButton runat="server" CommandName="editProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton>
                             <asp:LinkButton runat="server" CommandName="deleteProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                            <asp:LinkButton runat="server" CommandName="SinglePDF" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-save"></asp:LinkButton>
                         </ItemTemplate>
-                    </asp:TemplateField>
+                    </asp:TemplateField> 
                 </Columns>
                 <EditRowStyle BackColor="#2461BF" />
                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

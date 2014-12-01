@@ -21,7 +21,7 @@ namespace ProStudCreator.Account
         protected void CreateUser_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = new ApplicationUser() { UserName = NewUserEmail.Text, Email = NewUserEmail.Text };
+            var user = new ApplicationUser() { UserName = NewUserEmail.Text + FixEmailEnding.Text, Email = NewUserEmail.Text + FixEmailEnding.Text };
             IdentityResult result = manager.Create(user, NewUserPassword.Text);
             if (result.Succeeded)
             {

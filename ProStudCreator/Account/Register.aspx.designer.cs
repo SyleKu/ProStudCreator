@@ -40,6 +40,15 @@ namespace ProStudCreator.Account {
         protected global::System.Web.UI.WebControls.TextBox NewUserEmail;
         
         /// <summary>
+        /// FixEmailEnding control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox FixEmailEnding;
+        
+        /// <summary>
         /// NewUserPassword control.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace ProStudCreator.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox NewUserPasswordValidate;
+        
+        /// <summary>
+        /// Department control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList Department;
         
         /// <summary>
         /// CreateUser control.

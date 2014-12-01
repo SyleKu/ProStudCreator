@@ -33,9 +33,6 @@ namespace ProStudCreator
     partial void InsertAspNetRole(AspNetRole instance);
     partial void UpdateAspNetRole(AspNetRole instance);
     partial void DeleteAspNetRole(AspNetRole instance);
-    partial void InsertAspNetUser(AspNetUser instance);
-    partial void UpdateAspNetUser(AspNetUser instance);
-    partial void DeleteAspNetUser(AspNetUser instance);
     partial void InsertAspNetUserClaim(AspNetUserClaim instance);
     partial void UpdateAspNetUserClaim(AspNetUserClaim instance);
     partial void DeleteAspNetUserClaim(AspNetUserClaim instance);
@@ -51,6 +48,9 @@ namespace ProStudCreator
     partial void InsertProject(Project instance);
     partial void UpdateProject(Project instance);
     partial void DeleteProject(Project instance);
+    partial void InsertAspNetUser(AspNetUser instance);
+    partial void UpdateAspNetUser(AspNetUser instance);
+    partial void DeleteAspNetUser(AspNetUser instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
@@ -91,14 +91,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		public System.Data.Linq.Table<AspNetUser> AspNetUsers
-		{
-			get
-			{
-				return this.GetTable<AspNetUser>();
-			}
-		}
-		
 		public System.Data.Linq.Table<AspNetUserClaim> AspNetUserClaims
 		{
 			get
@@ -136,6 +128,14 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<Project>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AspNetUser> AspNetUsers
+		{
+			get
+			{
+				return this.GetTable<AspNetUser>();
 			}
 		}
 	}
@@ -251,416 +251,6 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.AspNetRole = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AspNetUsers")]
-	public partial class AspNetUser : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _Id;
-		
-		private string _Email;
-		
-		private bool _EmailConfirmed;
-		
-		private string _PasswordHash;
-		
-		private string _SecurityStamp;
-		
-		private string _PhoneNumber;
-		
-		private bool _PhoneNumberConfirmed;
-		
-		private bool _TwoFactorEnabled;
-		
-		private System.Nullable<System.DateTime> _LockoutEndDateUtc;
-		
-		private bool _LockoutEnabled;
-		
-		private int _AccessFailedCount;
-		
-		private string _UserName;
-		
-		private EntitySet<AspNetUserClaim> _AspNetUserClaims;
-		
-		private EntitySet<AspNetUserLogin> _AspNetUserLogins;
-		
-		private EntitySet<AspNetUserRole> _AspNetUserRoles;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(string value);
-    partial void OnIdChanged();
-    partial void OnEmailChanging(string value);
-    partial void OnEmailChanged();
-    partial void OnEmailConfirmedChanging(bool value);
-    partial void OnEmailConfirmedChanged();
-    partial void OnPasswordHashChanging(string value);
-    partial void OnPasswordHashChanged();
-    partial void OnSecurityStampChanging(string value);
-    partial void OnSecurityStampChanged();
-    partial void OnPhoneNumberChanging(string value);
-    partial void OnPhoneNumberChanged();
-    partial void OnPhoneNumberConfirmedChanging(bool value);
-    partial void OnPhoneNumberConfirmedChanged();
-    partial void OnTwoFactorEnabledChanging(bool value);
-    partial void OnTwoFactorEnabledChanged();
-    partial void OnLockoutEndDateUtcChanging(System.Nullable<System.DateTime> value);
-    partial void OnLockoutEndDateUtcChanged();
-    partial void OnLockoutEnabledChanging(bool value);
-    partial void OnLockoutEnabledChanged();
-    partial void OnAccessFailedCountChanging(int value);
-    partial void OnAccessFailedCountChanged();
-    partial void OnUserNameChanging(string value);
-    partial void OnUserNameChanged();
-    #endregion
-		
-		public AspNetUser()
-		{
-			this._AspNetUserClaims = new EntitySet<AspNetUserClaim>(new Action<AspNetUserClaim>(this.attach_AspNetUserClaims), new Action<AspNetUserClaim>(this.detach_AspNetUserClaims));
-			this._AspNetUserLogins = new EntitySet<AspNetUserLogin>(new Action<AspNetUserLogin>(this.attach_AspNetUserLogins), new Action<AspNetUserLogin>(this.detach_AspNetUserLogins));
-			this._AspNetUserRoles = new EntitySet<AspNetUserRole>(new Action<AspNetUserRole>(this.attach_AspNetUserRoles), new Action<AspNetUserRole>(this.detach_AspNetUserRoles));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="NVarChar(128) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="NVarChar(256)")]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this.OnEmailChanging(value);
-					this.SendPropertyChanging();
-					this._Email = value;
-					this.SendPropertyChanged("Email");
-					this.OnEmailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailConfirmed", DbType="Bit NOT NULL")]
-		public bool EmailConfirmed
-		{
-			get
-			{
-				return this._EmailConfirmed;
-			}
-			set
-			{
-				if ((this._EmailConfirmed != value))
-				{
-					this.OnEmailConfirmedChanging(value);
-					this.SendPropertyChanging();
-					this._EmailConfirmed = value;
-					this.SendPropertyChanged("EmailConfirmed");
-					this.OnEmailConfirmedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="NVarChar(MAX)")]
-		public string PasswordHash
-		{
-			get
-			{
-				return this._PasswordHash;
-			}
-			set
-			{
-				if ((this._PasswordHash != value))
-				{
-					this.OnPasswordHashChanging(value);
-					this.SendPropertyChanging();
-					this._PasswordHash = value;
-					this.SendPropertyChanged("PasswordHash");
-					this.OnPasswordHashChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SecurityStamp", DbType="NVarChar(MAX)")]
-		public string SecurityStamp
-		{
-			get
-			{
-				return this._SecurityStamp;
-			}
-			set
-			{
-				if ((this._SecurityStamp != value))
-				{
-					this.OnSecurityStampChanging(value);
-					this.SendPropertyChanging();
-					this._SecurityStamp = value;
-					this.SendPropertyChanged("SecurityStamp");
-					this.OnSecurityStampChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="NVarChar(MAX)")]
-		public string PhoneNumber
-		{
-			get
-			{
-				return this._PhoneNumber;
-			}
-			set
-			{
-				if ((this._PhoneNumber != value))
-				{
-					this.OnPhoneNumberChanging(value);
-					this.SendPropertyChanging();
-					this._PhoneNumber = value;
-					this.SendPropertyChanged("PhoneNumber");
-					this.OnPhoneNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumberConfirmed", DbType="Bit NOT NULL")]
-		public bool PhoneNumberConfirmed
-		{
-			get
-			{
-				return this._PhoneNumberConfirmed;
-			}
-			set
-			{
-				if ((this._PhoneNumberConfirmed != value))
-				{
-					this.OnPhoneNumberConfirmedChanging(value);
-					this.SendPropertyChanging();
-					this._PhoneNumberConfirmed = value;
-					this.SendPropertyChanged("PhoneNumberConfirmed");
-					this.OnPhoneNumberConfirmedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwoFactorEnabled", DbType="Bit NOT NULL")]
-		public bool TwoFactorEnabled
-		{
-			get
-			{
-				return this._TwoFactorEnabled;
-			}
-			set
-			{
-				if ((this._TwoFactorEnabled != value))
-				{
-					this.OnTwoFactorEnabledChanging(value);
-					this.SendPropertyChanging();
-					this._TwoFactorEnabled = value;
-					this.SendPropertyChanged("TwoFactorEnabled");
-					this.OnTwoFactorEnabledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEndDateUtc", DbType="DateTime")]
-		public System.Nullable<System.DateTime> LockoutEndDateUtc
-		{
-			get
-			{
-				return this._LockoutEndDateUtc;
-			}
-			set
-			{
-				if ((this._LockoutEndDateUtc != value))
-				{
-					this.OnLockoutEndDateUtcChanging(value);
-					this.SendPropertyChanging();
-					this._LockoutEndDateUtc = value;
-					this.SendPropertyChanged("LockoutEndDateUtc");
-					this.OnLockoutEndDateUtcChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEnabled", DbType="Bit NOT NULL")]
-		public bool LockoutEnabled
-		{
-			get
-			{
-				return this._LockoutEnabled;
-			}
-			set
-			{
-				if ((this._LockoutEnabled != value))
-				{
-					this.OnLockoutEnabledChanging(value);
-					this.SendPropertyChanging();
-					this._LockoutEnabled = value;
-					this.SendPropertyChanged("LockoutEnabled");
-					this.OnLockoutEnabledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccessFailedCount", DbType="Int NOT NULL")]
-		public int AccessFailedCount
-		{
-			get
-			{
-				return this._AccessFailedCount;
-			}
-			set
-			{
-				if ((this._AccessFailedCount != value))
-				{
-					this.OnAccessFailedCountChanging(value);
-					this.SendPropertyChanging();
-					this._AccessFailedCount = value;
-					this.SendPropertyChanged("AccessFailedCount");
-					this.OnAccessFailedCountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="NVarChar(256) NOT NULL", CanBeNull=false)]
-		public string UserName
-		{
-			get
-			{
-				return this._UserName;
-			}
-			set
-			{
-				if ((this._UserName != value))
-				{
-					this.OnUserNameChanging(value);
-					this.SendPropertyChanging();
-					this._UserName = value;
-					this.SendPropertyChanged("UserName");
-					this.OnUserNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserClaim", Storage="_AspNetUserClaims", ThisKey="Id", OtherKey="UserId")]
-		public EntitySet<AspNetUserClaim> AspNetUserClaims
-		{
-			get
-			{
-				return this._AspNetUserClaims;
-			}
-			set
-			{
-				this._AspNetUserClaims.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserLogin", Storage="_AspNetUserLogins", ThisKey="Id", OtherKey="UserId")]
-		public EntitySet<AspNetUserLogin> AspNetUserLogins
-		{
-			get
-			{
-				return this._AspNetUserLogins;
-			}
-			set
-			{
-				this._AspNetUserLogins.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserRole", Storage="_AspNetUserRoles", ThisKey="Id", OtherKey="UserId")]
-		public EntitySet<AspNetUserRole> AspNetUserRoles
-		{
-			get
-			{
-				return this._AspNetUserRoles;
-			}
-			set
-			{
-				this._AspNetUserRoles.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_AspNetUserClaims(AspNetUserClaim entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = this;
-		}
-		
-		private void detach_AspNetUserClaims(AspNetUserClaim entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = null;
-		}
-		
-		private void attach_AspNetUserLogins(AspNetUserLogin entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = this;
-		}
-		
-		private void detach_AspNetUserLogins(AspNetUserLogin entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = null;
-		}
-		
-		private void attach_AspNetUserRoles(AspNetUserRole entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = this;
-		}
-		
-		private void detach_AspNetUserRoles(AspNetUserRole entity)
-		{
-			this.SendPropertyChanging();
-			entity.AspNetUser = null;
 		}
 	}
 	
@@ -1356,6 +946,8 @@ namespace ProStudCreator
 		
 		private bool _Published;
 		
+		private bool _InProgress;
+		
 		private System.DateTime _CreateDate;
 		
     #region Extensibility Method Definitions
@@ -1420,6 +1012,8 @@ namespace ProStudCreator
     partial void OnImportanceChanged();
     partial void OnPublishedChanging(bool value);
     partial void OnPublishedChanged();
+    partial void OnInProgressChanging(bool value);
+    partial void OnInProgressChanged();
     partial void OnCreateDateChanging(System.DateTime value);
     partial void OnCreateDateChanged();
     #endregion
@@ -2009,6 +1603,26 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InProgress", DbType="Bit NOT NULL")]
+		public bool InProgress
+		{
+			get
+			{
+				return this._InProgress;
+			}
+			set
+			{
+				if ((this._InProgress != value))
+				{
+					this.OnInProgressChanging(value);
+					this.SendPropertyChanging();
+					this._InProgress = value;
+					this.SendPropertyChanged("InProgress");
+					this.OnInProgressChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="Date NOT NULL")]
 		public System.DateTime CreateDate
 		{
@@ -2047,6 +1661,440 @@ namespace ProStudCreator
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AspNetUsers")]
+	public partial class AspNetUser : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Id;
+		
+		private string _Email;
+		
+		private bool _EmailConfirmed;
+		
+		private string _PasswordHash;
+		
+		private string _SecurityStamp;
+		
+		private string _PhoneNumber;
+		
+		private bool _PhoneNumberConfirmed;
+		
+		private bool _TwoFactorEnabled;
+		
+		private System.Nullable<System.DateTime> _LockoutEndDateUtc;
+		
+		private bool _LockoutEnabled;
+		
+		private int _AccessFailedCount;
+		
+		private string _UserName;
+		
+		private string _Department;
+		
+		private EntitySet<AspNetUserClaim> _AspNetUserClaims;
+		
+		private EntitySet<AspNetUserLogin> _AspNetUserLogins;
+		
+		private EntitySet<AspNetUserRole> _AspNetUserRoles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(string value);
+    partial void OnIdChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnEmailConfirmedChanging(bool value);
+    partial void OnEmailConfirmedChanged();
+    partial void OnPasswordHashChanging(string value);
+    partial void OnPasswordHashChanged();
+    partial void OnSecurityStampChanging(string value);
+    partial void OnSecurityStampChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnPhoneNumberConfirmedChanging(bool value);
+    partial void OnPhoneNumberConfirmedChanged();
+    partial void OnTwoFactorEnabledChanging(bool value);
+    partial void OnTwoFactorEnabledChanged();
+    partial void OnLockoutEndDateUtcChanging(System.Nullable<System.DateTime> value);
+    partial void OnLockoutEndDateUtcChanged();
+    partial void OnLockoutEnabledChanging(bool value);
+    partial void OnLockoutEnabledChanged();
+    partial void OnAccessFailedCountChanging(int value);
+    partial void OnAccessFailedCountChanged();
+    partial void OnUserNameChanging(string value);
+    partial void OnUserNameChanged();
+    partial void OnDepartmentChanging(string value);
+    partial void OnDepartmentChanged();
+    #endregion
+		
+		public AspNetUser()
+		{
+			this._AspNetUserClaims = new EntitySet<AspNetUserClaim>(new Action<AspNetUserClaim>(this.attach_AspNetUserClaims), new Action<AspNetUserClaim>(this.detach_AspNetUserClaims));
+			this._AspNetUserLogins = new EntitySet<AspNetUserLogin>(new Action<AspNetUserLogin>(this.attach_AspNetUserLogins), new Action<AspNetUserLogin>(this.detach_AspNetUserLogins));
+			this._AspNetUserRoles = new EntitySet<AspNetUserRole>(new Action<AspNetUserRole>(this.attach_AspNetUserRoles), new Action<AspNetUserRole>(this.detach_AspNetUserRoles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="NVarChar(128) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="NVarChar(256)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailConfirmed", DbType="Bit NOT NULL")]
+		public bool EmailConfirmed
+		{
+			get
+			{
+				return this._EmailConfirmed;
+			}
+			set
+			{
+				if ((this._EmailConfirmed != value))
+				{
+					this.OnEmailConfirmedChanging(value);
+					this.SendPropertyChanging();
+					this._EmailConfirmed = value;
+					this.SendPropertyChanged("EmailConfirmed");
+					this.OnEmailConfirmedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="NVarChar(MAX)")]
+		public string PasswordHash
+		{
+			get
+			{
+				return this._PasswordHash;
+			}
+			set
+			{
+				if ((this._PasswordHash != value))
+				{
+					this.OnPasswordHashChanging(value);
+					this.SendPropertyChanging();
+					this._PasswordHash = value;
+					this.SendPropertyChanged("PasswordHash");
+					this.OnPasswordHashChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SecurityStamp", DbType="NVarChar(MAX)")]
+		public string SecurityStamp
+		{
+			get
+			{
+				return this._SecurityStamp;
+			}
+			set
+			{
+				if ((this._SecurityStamp != value))
+				{
+					this.OnSecurityStampChanging(value);
+					this.SendPropertyChanging();
+					this._SecurityStamp = value;
+					this.SendPropertyChanged("SecurityStamp");
+					this.OnSecurityStampChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="NVarChar(MAX)")]
+		public string PhoneNumber
+		{
+			get
+			{
+				return this._PhoneNumber;
+			}
+			set
+			{
+				if ((this._PhoneNumber != value))
+				{
+					this.OnPhoneNumberChanging(value);
+					this.SendPropertyChanging();
+					this._PhoneNumber = value;
+					this.SendPropertyChanged("PhoneNumber");
+					this.OnPhoneNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumberConfirmed", DbType="Bit NOT NULL")]
+		public bool PhoneNumberConfirmed
+		{
+			get
+			{
+				return this._PhoneNumberConfirmed;
+			}
+			set
+			{
+				if ((this._PhoneNumberConfirmed != value))
+				{
+					this.OnPhoneNumberConfirmedChanging(value);
+					this.SendPropertyChanging();
+					this._PhoneNumberConfirmed = value;
+					this.SendPropertyChanged("PhoneNumberConfirmed");
+					this.OnPhoneNumberConfirmedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwoFactorEnabled", DbType="Bit NOT NULL")]
+		public bool TwoFactorEnabled
+		{
+			get
+			{
+				return this._TwoFactorEnabled;
+			}
+			set
+			{
+				if ((this._TwoFactorEnabled != value))
+				{
+					this.OnTwoFactorEnabledChanging(value);
+					this.SendPropertyChanging();
+					this._TwoFactorEnabled = value;
+					this.SendPropertyChanged("TwoFactorEnabled");
+					this.OnTwoFactorEnabledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEndDateUtc", DbType="DateTime")]
+		public System.Nullable<System.DateTime> LockoutEndDateUtc
+		{
+			get
+			{
+				return this._LockoutEndDateUtc;
+			}
+			set
+			{
+				if ((this._LockoutEndDateUtc != value))
+				{
+					this.OnLockoutEndDateUtcChanging(value);
+					this.SendPropertyChanging();
+					this._LockoutEndDateUtc = value;
+					this.SendPropertyChanged("LockoutEndDateUtc");
+					this.OnLockoutEndDateUtcChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEnabled", DbType="Bit NOT NULL")]
+		public bool LockoutEnabled
+		{
+			get
+			{
+				return this._LockoutEnabled;
+			}
+			set
+			{
+				if ((this._LockoutEnabled != value))
+				{
+					this.OnLockoutEnabledChanging(value);
+					this.SendPropertyChanging();
+					this._LockoutEnabled = value;
+					this.SendPropertyChanged("LockoutEnabled");
+					this.OnLockoutEnabledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccessFailedCount", DbType="Int NOT NULL")]
+		public int AccessFailedCount
+		{
+			get
+			{
+				return this._AccessFailedCount;
+			}
+			set
+			{
+				if ((this._AccessFailedCount != value))
+				{
+					this.OnAccessFailedCountChanging(value);
+					this.SendPropertyChanging();
+					this._AccessFailedCount = value;
+					this.SendPropertyChanged("AccessFailedCount");
+					this.OnAccessFailedCountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="NVarChar(256) NOT NULL", CanBeNull=false)]
+		public string UserName
+		{
+			get
+			{
+				return this._UserName;
+			}
+			set
+			{
+				if ((this._UserName != value))
+				{
+					this.OnUserNameChanging(value);
+					this.SendPropertyChanging();
+					this._UserName = value;
+					this.SendPropertyChanged("UserName");
+					this.OnUserNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Department", DbType="NVarChar(10) NOT NULL", CanBeNull=false)]
+		public string Department
+		{
+			get
+			{
+				return this._Department;
+			}
+			set
+			{
+				if ((this._Department != value))
+				{
+					this.OnDepartmentChanging(value);
+					this.SendPropertyChanging();
+					this._Department = value;
+					this.SendPropertyChanged("Department");
+					this.OnDepartmentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserClaim", Storage="_AspNetUserClaims", ThisKey="Id", OtherKey="UserId")]
+		public EntitySet<AspNetUserClaim> AspNetUserClaims
+		{
+			get
+			{
+				return this._AspNetUserClaims;
+			}
+			set
+			{
+				this._AspNetUserClaims.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserLogin", Storage="_AspNetUserLogins", ThisKey="Id", OtherKey="UserId")]
+		public EntitySet<AspNetUserLogin> AspNetUserLogins
+		{
+			get
+			{
+				return this._AspNetUserLogins;
+			}
+			set
+			{
+				this._AspNetUserLogins.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_AspNetUserRole", Storage="_AspNetUserRoles", ThisKey="Id", OtherKey="UserId")]
+		public EntitySet<AspNetUserRole> AspNetUserRoles
+		{
+			get
+			{
+				return this._AspNetUserRoles;
+			}
+			set
+			{
+				this._AspNetUserRoles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AspNetUserClaims(AspNetUserClaim entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = this;
+		}
+		
+		private void detach_AspNetUserClaims(AspNetUserClaim entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = null;
+		}
+		
+		private void attach_AspNetUserLogins(AspNetUserLogin entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = this;
+		}
+		
+		private void detach_AspNetUserLogins(AspNetUserLogin entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = null;
+		}
+		
+		private void attach_AspNetUserRoles(AspNetUserRole entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = this;
+		}
+		
+		private void detach_AspNetUserRoles(AspNetUserRole entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = null;
 		}
 	}
 }

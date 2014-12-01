@@ -2,8 +2,31 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Stylesheets" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+
+        $('#InitialPositionContent').keypress(function (event) {
+
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+
+            if (key == 8 || key == 127 || key == 37 || key == 38 || key == 39 || key == 40) {
+
+                return true;
+
+            } else {
+
+                var textbox = document.getElementById("<%=InitialPositionContent.ClientID%>").value;
+                if (textbox.trim().length >= 1000) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        });
+
+    </script>
     <div class="well newProjectSettings non-selectable">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
@@ -21,7 +44,7 @@
                 <asp:TextBox runat="server" ID="EmployerMail" CssClass="col-sm-9 form-control" placeholder="E-Mail des Auftraggebers" TextMode="Email"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Betreuer:"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="BetreuerIn:"></asp:Label>
                 <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="col-sm-9 form-control" placeholder="Name des ersten Betreuers"></asp:TextBox>
                 <asp:TextBox runat="server" ID="EMail1" CssClass="col-sm-9 form-control" placeholder="E-Mail des ersten Betreuers" TextMode="Email"></asp:TextBox>
             </div>
@@ -78,7 +101,7 @@
                 <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="col-sm-9 form-control" placeholder="Ausgangslage" TextMode="MultiLine"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3 " Text="Bild hinzufügen:"></asp:Label>
+                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <asp:FileUpload runat="server" ID="AddPicture" CssClass="control-label col-sm-4" />
             </div>
             <div class="form-group">
@@ -88,20 +111,20 @@
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
-                <asp:TextBox runat="server" ID="ObjectivContent" CssClass="col-sm-9 form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ObjectivContent" CssClass="col-sm-9 form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
-                <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="col-sm-9 form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="col-sm-9 form-control" placeholder="Problemstellung" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien / Fachliche Schwerpunkte / Referenzen:"></asp:Label>
-                <asp:TextBox runat="server" ID="ReferencesContent" CssClass="col-sm-9 form-control" placeholder="Technologien / Fachliche Schwerpunkte / Referenzen" TextMode="MultiLine"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ReferencesContent" CssClass="col-sm-9 form-control" placeholder="Technologien / Fachliche Schwerpunkte / Referenzen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen:"></asp:Label>
-                <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
+                <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Wichtigkeit:"></asp:Label>
@@ -109,6 +132,10 @@
                     <asp:ListItem>Normal</asp:ListItem>
                     <asp:ListItem>wichtig aus Sicht Institut oder FHNW</asp:ListItem>
                 </asp:DropDownList>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projekt noch in Bearbeitung:"></asp:Label>
+                <asp:CheckBox runat="server" ID="InProgressCheckBox" CssClass="checkbox-inline" />
             </div>
         </div>
         <asp:Button runat="server" ID="saveNewProject" OnClick="saveProject" CssClass="btn btn-default marginLeftZero" TabIndex="4" Width="113px"></asp:Button>

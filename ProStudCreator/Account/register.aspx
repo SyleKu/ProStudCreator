@@ -4,48 +4,57 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>Registrieren</title>
-<style type="text/css">
-    @import url(/Content/bootstrap.css);
-    @import url(/Content/bootstrap.min.css);
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Registrieren</title>
+    <style type="text/css">
+        @import url(/Content/bootstrap.css);
+        @import url(/Content/bootstrap.min.css);
 
-    body {
-        background-color: #f5f5f5;
-        color: #333;
-        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-        font-size: 14px;
-        line-height: 20px;
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
 
-        padding-top: 50px;
-        padding-bottom: 20px;
-    }
-    .loginSize {
-        margin: 1em auto 20px; 
-    }
-    input {
-    width: 100%;
-    }
-    .form-signin {
-        background-color: #fff;
-        border: 1px solid #e5e5e5;
-        border-radius: 5px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        margin: 1em auto 20px;
-        max-width: 38.25em;
-        padding: 19px 29px 29px;
-    }
+        .loginSize {
+            margin: 1em auto 20px;
+        }
 
-    .title-box{
-        margin-bottom: 12px;
-    }
+        input {
+            width: 100%;
+        }
 
-    h2 {
-        font-size: 1.5em;
-        font: bold;
-    }
+        .form-signin {
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin: 1em auto 20px;
+            max-width: 38.25em;
+            padding: 19px 29px 29px;
+        }
 
-</style>
+        .title-box {
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font: bold;
+        }
+
+        .no-bottom {
+            margin-bottom: 0px;
+        }
+
+        .set-marginTop {
+            margin-top: 45px;
+        }
+    </style>
 </head>
 <body>
     <p class="text-danger">
@@ -53,7 +62,7 @@
     </p>
     <form id="form1" runat="server">
         <div class="form-signin">
-            <div class="title-box" >
+            <div class="title-box">
                 <img alt="Fachhochschule Nordwestschweiz" src="/pictures/Logo.png" />
             </div>
             <div class="well" style="background-color: #f5f5f5">
@@ -62,28 +71,38 @@
                     Bitte geben Sie Ihre FHNW E-Mail Adresse und das dazugehörige Passwort ein, um sich zu registrieren.
                     Sie erhalten eine E-Mail, damit Sie sich authentifizieren können.
                 </p>
-                <div class="form-group">
+                <div class="form-group no-bottom">
                     <label for="EnterEMail">E-Mail Adresse</label>
-                    <asp:TextBox ID="NewUserEmail" TextMode="Email" CssClass="form-control" runat="server" TabIndex="1" placeholder="E-Mail Adresse"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="Email"
-                    CssClass="text-danger" ErrorMessage="Das E-Mail-Feld ist erforderlich." />
                 </div>
                 <div class="form-group">
+                    <asp:TextBox ID="NewUserEmail" CssClass="form-control col-sm-3" runat="server" Width="345px" placeholder="E-Mail Adresse"></asp:TextBox>
+                    <asp:TextBox ID="FixEmailEnding" CssClass="form-control col-sm-3" runat="server" Enabled="false" Width="90px" Text="@fhnw.ch"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserEmail" Display="Dynamic" CssClass="text-danger" ErrorMessage="Das E-Mail-Feld ist erforderlich." />
+                </div>
+                <div class="form-group no-bottom set-marginTop">
                     <label for="EnterPassword">Passwort</label>
-                    <asp:TextBox ID="NewUserPassword" CssClass="form-control" TextMode="Password" runat="server" TabIndex="2" placeholder="Passwort"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="Password"
-                    CssClass="text-danger" ErrorMessage="Das Kennwortfeld ist erforderlich." />
                 </div>
                 <div class="form-group">
-                    <label for="EnterPassword">Passwort erneut eingeben</label>
-                    <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" TabIndex="3" placeholder="Passwort erneut eingeben"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="ConfirmPassword"
-                    CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
-                    <asp:CompareValidator runat="server" ControlToCompare="Password" ControlToValidate="ConfirmPassword"
-                    CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Kennwort stimmt nicht mit dem Bestätigungskennwort überein." />
+                    <asp:TextBox ID="NewUserPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Passwort"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPassword" Display="Dynamic" CssClass="text-danger" ErrorMessage="Das Kennwortfeld ist erforderlich." />
                 </div>
-                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Registrieren" TabIndex="4" Width="113px" OnClick="CreateUser_Click"></asp:Button>
-                <a class="btn btn-default" href="login.aspx" tabindex="5">Abbrechen</a>
+                <div class="form-group no-bottom">
+                    <label for="EnterPassword">Passwort erneut eingeben</label>
+                </div>
+                <div class="form-group">
+                    <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" placeholder="Passwort erneut eingeben"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPasswordValidate"
+                        CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
+                </div>
+                <div class="form-group">
+                    <label for="Department">Bitte wählen Sie Ihren Institut aus</label>
+                    <asp:DropDownList runat="server" ID="Department" CssClass="form-control" Width="80px">
+                        <asp:ListItem>i4Ds</asp:ListItem>
+                        <asp:ListItem>IMVS</asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Registrieren" Width="113px" OnClick="CreateUser_Click"></asp:Button>
+                <a class="btn btn-default" href="login.aspx" >Abbrechen</a>
             </div>
         </div>
     </form>

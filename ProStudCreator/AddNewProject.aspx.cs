@@ -172,6 +172,11 @@ namespace ProStudCreator
             {
                 ImportanceContent.Text = "Normal";
             }
+
+            if (proj.InProgress)
+            {
+                InProgressCheckBox.Checked = true;
+            }
         }
 
         private void showOnlyContent()
@@ -217,6 +222,7 @@ namespace ProStudCreator
             ReferencesContent.ReadOnly = true;
             RemarksContent.ReadOnly = true;
             ImportanceContent.Enabled = false;
+            InProgressCheckBox.Enabled = false;
         }
 
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
@@ -400,6 +406,7 @@ namespace ProStudCreator
                 projects.Remarks = RemarksContent.Text;
                 projects.Published = false;
                 applyImportance(projects);
+                projects.InProgress = InProgressCheckBox.Checked;
                 projects.CreateDate = DateTime.Today;
 
                 if (AddPicture.FileName != "")
