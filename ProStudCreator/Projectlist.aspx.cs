@@ -318,30 +318,44 @@ namespace ProStudCreator
         private void CreateSinglePDF(int idPDF)
         {
             float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
+            byte[] bytesInStream;
 
-            using (var output = new FileStream("C:/TestSingle.pdf", FileMode.Create))
+            using (var output = new MemoryStream())
             {
                 using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
                 {
                     CreatePDF(document, output, false, idPDF);
                 }
+                bytesInStream = output.ToArray();
             }
+            Response.Clear();
+            Response.ContentType = "application/force-download";
+            Response.AddHeader("content-disposition", "attachment;    filename=SingleProject.pdf");
+            Response.BinaryWrite(bytesInStream);
+            Response.End();
         }
 
         protected void AllProjectsAsPDF_Click(object sender, EventArgs e)
         {
             float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
+            byte[] bytesInStream;
 
-            using (var output = new FileStream("C:/Test.pdf", FileMode.Create))
+            using (var output = new MemoryStream())
             {
                 using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
                 {
                     CreatePDF(document, output, true, 0);
                 }
+                    bytesInStream= output.ToArray();
             }
+            Response.Clear();
+            Response.ContentType = "application/force-download";
+            Response.AddHeader("content-disposition", "attachment;    filename=AllProjects.pdf");
+            Response.BinaryWrite(bytesInStream);
+            Response.End();
         }
 
-        private void CreatePDF(Document document, FileStream output, bool multiPDF, int idPDF)
+        private void CreatePDF(Document document, MemoryStream output, bool multiPDF, int idPDF)
         {
 
             PdfWriter writer = PdfWriter.GetInstance(document, output);

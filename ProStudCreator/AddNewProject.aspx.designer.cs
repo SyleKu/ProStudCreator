@@ -49,13 +49,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ProjectName;
         
         /// <summary>
-        /// CompareProjectName control.
+        /// ProjectNameValidator control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CompareValidator CompareProjectName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ProjectNameValidator;
         
         /// <summary>
         /// Employer control.
@@ -92,6 +92,24 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox EMail1;
+        
+        /// <summary>
+        /// NameBetreuerValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator NameBetreuerValidator;
+        
+        /// <summary>
+        /// EMail1BetreuerValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator EMail1BetreuerValidator;
         
         /// <summary>
         /// NameBetreuer2 control.

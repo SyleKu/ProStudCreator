@@ -36,7 +36,7 @@
             <div class="form-group" style="margin-top: 15px">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <asp:TextBox runat="server" ID="ProjectName" CssClass="col-sm-9 form-control" MaxLength="100" placeholder="Projektname"></asp:TextBox>
-                <asp:CompareValidator runat="server" ControlToValidate="ProjectName" ID="CompareProjectName" ErrorMessage="Projectname already exists!" Visible="false"></asp:CompareValidator>
+                <asp:RequiredFieldValidator ID="ProjectNameValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Der Projektname darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Auftraggeber:"></asp:Label>
@@ -47,6 +47,8 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="BetreuerIn:"></asp:Label>
                 <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="col-sm-9 form-control" placeholder="Name des ersten Betreuers"></asp:TextBox>
                 <asp:TextBox runat="server" ID="EMail1" CssClass="col-sm-9 form-control" placeholder="E-Mail des ersten Betreuers" TextMode="Email"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="NameBetreuerValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="NameBetreuer1" runat="server" ErrorMessage="Der Name des ersten Betreuers darf nicht leer sein!"></asp:RequiredFieldValidator>
+                <asp:RequiredFieldValidator ID="EMail1BetreuerValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="EMail1" runat="server" ErrorMessage="E-Mail des ersten Betreuers darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
