@@ -19,7 +19,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.Identity.Name == "test@testEmail.ch")
+            if (User.Identity.Name == "test@fhnw.ch")
             {
                 AdminView.Visible = true;
             }
@@ -63,7 +63,7 @@ namespace ProStudCreator
             AddPictureLabel.Text = "Bild ändern";
             saveNewProject.Width = 175;
 
-            if (User.Identity.Name == "test@testEmail.ch" && !proj.Published && Request.QueryString["show"] != null)
+            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && Request.QueryString["show"] != null)
             {
                 publishProject.Visible = true;
             }
@@ -173,6 +173,8 @@ namespace ProStudCreator
                 ImportanceContent.Text = "Normal";
             }
 
+            Department.Text = proj.Department;
+
             if (proj.InProgress)
             {
                 InProgressCheckBox.Checked = true;
@@ -186,7 +188,7 @@ namespace ProStudCreator
             SiteTitle.Text = "Projekt Ansicht:";
             saveNewProject.Text = "Bearbeiten";
             saveNewProject.Width = 100;
-            if (User.Identity.Name == "test@testEmail.ch" && !proj.Published)
+            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published)
             {
                 publishProject.Visible = true;
             }
@@ -222,6 +224,7 @@ namespace ProStudCreator
             ReferencesContent.ReadOnly = true;
             RemarksContent.ReadOnly = true;
             ImportanceContent.Enabled = false;
+            Department.Enabled = false;
             InProgressCheckBox.Enabled = false;
         }
 
@@ -343,7 +346,7 @@ namespace ProStudCreator
 
 
                 // TO DO
-                if (NameBetreuer1.Text != "" && EMail2.Text != "")
+                if (NameBetreuer1.Text != "" && EMail1.Text != "")
                 {
 
                 }
@@ -390,10 +393,16 @@ namespace ProStudCreator
                     projects.PTwoP5 = false;
                     projects.PTwoP6 = true;
                 }
-                else
+                else if (POneContent.Text == "P5 oder P6")
                 {
+
                     projects.PTwoP5 = true;
                     projects.PTwoP6 = true;
+                }
+                else
+                {
+                    projects.PTwoP5 = false;
+                    projects.PTwoP6 = false;
                 }
 
                 projects.POneTeamSize = POneTeamSize.Text;
@@ -406,6 +415,7 @@ namespace ProStudCreator
                 projects.Remarks = RemarksContent.Text;
                 projects.Published = false;
                 applyImportance(projects);
+                projects.Department = Department.Text;
                 projects.InProgress = InProgressCheckBox.Checked;
                 projects.CreateDate = DateTime.Today;
 

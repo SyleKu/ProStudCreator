@@ -36,7 +36,7 @@
             <div class="form-group" style="margin-top: 15px">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <asp:TextBox runat="server" ID="ProjectName" CssClass="col-sm-9 form-control" MaxLength="100" placeholder="Projektname"></asp:TextBox>
-                <asp:CompareValidator runat="server" ID="CompareProjectName" ErrorMessage="Projectname already exists!" Visible="false"></asp:CompareValidator>
+                <asp:CompareValidator runat="server" ControlToValidate="ProjectName" ID="CompareProjectName" ErrorMessage="Projectname already exists!" Visible="false"></asp:CompareValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Auftraggeber:"></asp:Label>
@@ -131,6 +131,13 @@
                 <asp:DropDownList runat="server" ID="ImportanceContent" CssClass="form-control" Width="280px">
                     <asp:ListItem>Normal</asp:ListItem>
                     <asp:ListItem>wichtig aus Sicht Institut oder FHNW</asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Abteilung:"></asp:Label>
+                <asp:DropDownList runat="server" ID="Department" CssClass="form-control" Width="80px">
+                    <asp:ListItem>i4Ds</asp:ListItem>
+                    <asp:ListItem>IMVS</asp:ListItem>
                 </asp:DropDownList>
             </div>
             <div class="form-group">

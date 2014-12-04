@@ -58,40 +58,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button AllProjectsAsPDF;
         
         /// <summary>
-        /// rdoAllProjects control.
+        /// ProjectsFilterAllProjects control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton rdoAllProjects;
-        
-        /// <summary>
-        /// rdoMyProjects control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton rdoMyProjects;
-        
-        /// <summary>
-        /// rdoAvailable control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton rdoAvailable;
-        
-        /// <summary>
-        /// rdoNotAvailable control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton rdoNotAvailable;
+        protected global::System.Web.UI.WebControls.RadioButtonList ProjectsFilterAllProjects;
         
         /// <summary>
         /// AllProjects control.

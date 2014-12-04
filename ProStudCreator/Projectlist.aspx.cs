@@ -28,19 +28,41 @@ namespace ProStudCreator
     public partial class projectlist : System.Web.UI.Page
     {
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        bool[] projectFilter = new bool[4];
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.Identity.Name == "test@testEmail.ch")
+            if (IsPostBack)
+            {
+                projectFilter = (bool[])ViewState["Filter"];
+            }
+            else
+            {
+                ViewState["Filter"] = projectFilter;
+            }
+
+            if (User.Identity.Name == "test@fhnw.ch")
             {
                 AdminView.Visible = true;
                 AdminViewPDF.Visible = true;
 
-                /*
-                 * SELECT * FROM Projects p INNER JOIN AspNetUsers u ON u.EMail==p.AdvisorMail WHERE u.EmailConfirmed = 1;
-                 * db.Projects.Join(db.AspNetUsers, p => p.AdvisorMail, u => u.Email, (p, u) => Tuple.Create(p, u)).Where(both => both.Item2.EmailConfirmed);
-                 * projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png"
-                 * i.POne + " " + i.PTwo,
-                 */
+                if (!IsPostBack)
+                {
+                    ProjectsFilterAllProjects.Items[0].Selected = true;
+                }
+                int counter = 0;
+                foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
+                {
+                    if (item.Selected)
+                    {
+                        projectFilter[counter] = true;
+                    }
+                    else
+                    {
+                        projectFilter[counter] = false;
+                    }
+                    counter++;
+                }
 
                 CheckProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new Peter()
                 {
@@ -59,69 +81,180 @@ namespace ProStudCreator
                     (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
                 });
 
-                AllProjects.DataSource = db.Projects.Select(i => new Peter()
+                // All Projects
+                if (projectFilter[0])
                 {
-                    id = i.Id,
-                    advisorName = i.Advisor + " " + i.Advisor2,
-                    advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                    projectName = i.Name,
-                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                    projectType2 = "pictures/projectTyp" +
-                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                });
+                    AllProjects.DataSource = db.Projects.Where(item => !item.InProgress).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+                }
+                // My Projects
+                else if (projectFilter[1])
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+
+                }
+                // Published all Users
+                else if (projectFilter[2])
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => item.Published).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+                }
+                // Not published all Users
+                else
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+                }
             }
             else
             {
-                /* var projects = db.Projects.Select(i => new Peter() */
-                // p = i,
-                AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new Peter()
+                if (ProjectsFilterAllProjects.Items[0].Text.Contains("Alle Projekte"))
                 {
-                    id = i.Id,
-                    advisorName = i.Advisor + " " + i.Advisor2,
-                    advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                    projectName = i.Name,
-                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                    projectType2 = "pictures/projectTyp" +
-                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                });
-                //.ToList();
+                    ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
+                }
 
-                /*
-                projects.ForEach(updateProject);
-            
-                AllProjects.DataSource = projects;
-                */
+                if (!IsPostBack)
+                {
+                    ProjectsFilterAllProjects.Items[1].Selected = true;
+                }
+
+                int counter = 0;
+                foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
+                {
+                    if (item.Selected)
+                    {
+                        projectFilter[counter] = true;
+                    }
+                    else
+                    {
+                        projectFilter[counter] = false;
+                    }
+                    counter++;
+                }
+
+                // My Projects
+                if (projectFilter[1])
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+
+                }
+                // Published
+                else if (projectFilter[2])
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && item.Published && !item.InProgress).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+                }
+                // Not published
+                else
+                {
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress).Select(i => new Peter()
+                    {
+                        id = i.Id,
+                        advisorName = i.Advisor + " " + i.Advisor2,
+                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                        projectName = i.Name,
+                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                        projectType2 = "pictures/projectTyp" +
+                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                    });
+                }
             }
 
             CheckProjects.DataBind();
             AllProjects.DataBind();
         }
-        /*
-        private void updateProject(Peter p)
-        {
-            if(p.p.)
-            {
-                p.Image1 = sadpaosdipaosdi
-
-            }
-            else
-            {
-                p.Image2 = asdalsduaosdiu
-            }
-        }
-        */
 
         protected void newProject_Click(object sender, EventArgs e)
         {
@@ -174,7 +307,7 @@ namespace ProStudCreator
                     Response.Redirect(Request.RawUrl);
                     break;
                 case "SinglePDF":
-                    var idPDF = Convert.ToInt32(e.CommandArgument);                    
+                    var idPDF = Convert.ToInt32(e.CommandArgument);
                     CreateSinglePDF(idPDF);
                     break;
                 default:
@@ -262,7 +395,7 @@ namespace ProStudCreator
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            Paragraph title = new Paragraph("i4Ds " + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 18, Font.BOLD));
+            Paragraph title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 18, Font.BOLD));
             title.SpacingBefore = 8f;
             title.SpacingAfter = 8f;
             document.Add(title);
@@ -303,11 +436,6 @@ namespace ProStudCreator
                     image.ScaleAbsolute(w * scalePercent, h * scalePercent);
                 }
             }
-
-            //image.SetAbsolutePosition(380, defaultPageSize.Height - document.TopMargin - image.ScaledHeight - 35);
-
-            //document.Add(image);
-
 
             Paragraph text = new Paragraph();
             text.SetLeading(150, 0);
