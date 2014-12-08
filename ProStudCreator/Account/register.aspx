@@ -57,9 +57,7 @@
     </style>
 </head>
 <body>
-    <p class="text-danger">
-        <asp:Literal runat="server" ID="ErrorMessage" />
-    </p>
+
     <form id="form1" runat="server">
         <div class="form-signin">
             <div class="title-box">
@@ -93,6 +91,7 @@
                     <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" placeholder="Passwort erneut eingeben"></asp:TextBox>
                     <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPasswordValidate"
                         CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
+                    <asp:CompareValidator ID="ComparePasswortsValidator" CssClass="text-danger" Display="Dynamic" ControlToCompare="NewUserPassword" ControlToValidate="NewUserPasswordValidate" runat="server" ErrorMessage="Diese Passwörter stimmen nicht überein."></asp:CompareValidator>
                 </div>
                 <div class="form-group">
                     <label for="Department">Bitte wählen Sie Ihren Institut aus</label>
@@ -101,8 +100,11 @@
                         <asp:ListItem>IMVS</asp:ListItem>
                     </asp:DropDownList>
                 </div>
+                <p class="text-danger">
+                    <asp:Literal runat="server" ID="ErrorMessage" />
+                </p>
                 <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Registrieren" Width="113px" OnClick="CreateUser_Click"></asp:Button>
-                <a class="btn btn-default" href="login.aspx" >Abbrechen</a>
+                <a class="btn btn-default" href="login.aspx">Abbrechen</a>
             </div>
         </div>
     </form>

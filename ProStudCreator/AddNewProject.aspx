@@ -4,29 +4,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <script type="text/javascript">
-
-        $('#InitialPositionContent').keypress(function (event) {
-
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-
-            if (key == 8 || key == 127 || key == 37 || key == 38 || key == 39 || key == 40) {
-
-                return true;
-
-            } else {
-
-                var textbox = document.getElementById("<%=InitialPositionContent.ClientID%>").value;
-                if (textbox.trim().length >= 1000) {
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            }
-        });
-
-    </script>
     <div class="well newProjectSettings non-selectable">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">

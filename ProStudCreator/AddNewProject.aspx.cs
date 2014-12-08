@@ -145,6 +145,32 @@ namespace ProStudCreator
                 PTwoContent.Text = "------";
             }
 
+            if (proj.POneTeamSize == "Einzelarbeit")
+            {
+                POneTeamSize.Text = "Einzelarbeit";
+            }
+            else if (proj.POneTeamSize == "2er Team")
+            {
+                POneTeamSize.Text = "2er Team";
+            }
+            else
+            {
+                POneTeamSize.Text = "1er oder 2er Team";
+            }
+
+            if (proj.PTwoTeamSize == "Einzelarbeit")
+            {
+                PTwoTeamSize.Text = "Einzelarbeit";
+            }
+            else if (proj.PTwoTeamSize == "2er Team")
+            {
+                PTwoTeamSize.Text = "2er Team";
+            }
+            else
+            {
+                PTwoTeamSize.Text = "1er oder 2er Team";
+            }
+
             InitialPositionContent.Text = proj.InitialPosition;
 
             Image1.Visible = true;
@@ -326,7 +352,8 @@ namespace ProStudCreator
                 Response.Redirect("/AddNewProject?id=" + id);
             }
 
-            else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" && EmailAvailable() || Request.QueryString["id"] != null)
+            //else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" && EmailAvailable() || Request.QueryString["id"] != null)
+            else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" || Request.QueryString["id"] != null)
             {
                 if (Request.QueryString["id"] != null)
                 {
@@ -387,13 +414,13 @@ namespace ProStudCreator
                     projects.PTwoP5 = true;
                     projects.PTwoP6 = false;
                 }
-                else if (POneContent.Text == "P6 (360h pro Student)")
+                else if (PTwoContent.Text == "P6 (360h pro Student)")
                 {
 
                     projects.PTwoP5 = false;
                     projects.PTwoP6 = true;
                 }
-                else if (POneContent.Text == "P5 oder P6")
+                else if (PTwoContent.Text == "P5 oder P6")
                 {
 
                     projects.PTwoP5 = true;

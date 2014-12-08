@@ -12,7 +12,7 @@ using iTextSharp.text.html;
 namespace ProStudCreator
 {
 
-    public class Peter
+    public class ProjectSingleElement
     {
         public int id { get; set; }
         public string advisorName { get; set; }
@@ -53,18 +53,25 @@ namespace ProStudCreator
                 int counter = 0;
                 foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
                 {
-                    if (item.Selected)
-                    {
-                        projectFilter[counter] = true;
-                    }
-                    else
-                    {
-                        projectFilter[counter] = false;
-                    }
+                    projectFilter[counter] = item.Selected;
                     counter++;
                 }
 
-                CheckProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new Peter()
+
+
+
+                var projects = db.Projects.Where(i => true);
+                if (projectFilter[0])
+                    projects = projects.Where(item => !item.Published && !item.InProgress);
+
+                if (projectFilter[1])
+                    projects = projects.Where(item => !item.Published && !item.InProgress);
+
+
+
+
+
+                CheckProjects.DataSource = projects.Select(i => new ProjectSingleElement()
                 {
                     id = i.Id,
                     advisorName = i.Advisor + " " + i.Advisor2,
@@ -84,7 +91,7 @@ namespace ProStudCreator
                 // All Projects
                 if (projectFilter[0])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => !item.InProgress).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => !item.InProgress).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -104,7 +111,7 @@ namespace ProStudCreator
                 // My Projects
                 else if (projectFilter[1])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -125,7 +132,7 @@ namespace ProStudCreator
                 // Published all Users
                 else if (projectFilter[2])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Published).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => item.Published).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -145,7 +152,7 @@ namespace ProStudCreator
                 // Not published all Users
                 else
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -192,7 +199,7 @@ namespace ProStudCreator
                 // My Projects
                 if (projectFilter[1])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -213,7 +220,7 @@ namespace ProStudCreator
                 // Published
                 else if (projectFilter[2])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && item.Published && !item.InProgress).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -233,7 +240,7 @@ namespace ProStudCreator
                 // Not published
                 else
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress).Select(i => new Peter()
+                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
                     {
                         id = i.Id,
                         advisorName = i.Advisor + " " + i.Advisor2,
@@ -346,7 +353,7 @@ namespace ProStudCreator
                 {
                     CreatePDF(document, output, true, 0);
                 }
-                    bytesInStream= output.ToArray();
+                bytesInStream = output.ToArray();
             }
             Response.Clear();
             Response.ContentType = "application/force-download";
@@ -398,18 +405,18 @@ namespace ProStudCreator
             currentProjectType = getCurrentProjectTypeOne(proj);
 
             iTextSharp.text.Image projectTypeImage = iTextSharp.text.Image.GetInstance(Request.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(375, defaultPageSize.Height - document.TopMargin + 10);
+            projectTypeImage.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin + 10);
 
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
             currentProjectType = getCurrentProjectTypeTwo(proj);
             projectTypeImage = iTextSharp.text.Image.GetInstance(Request.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(430, defaultPageSize.Height - document.TopMargin + 10);
+            projectTypeImage.SetAbsolutePosition(443, defaultPageSize.Height - document.TopMargin + 10);
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            Paragraph title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 18, Font.BOLD));
+            Paragraph title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
             title.SpacingBefore = 8f;
             title.SpacingAfter = 8f;
             document.Add(title);
@@ -428,7 +435,7 @@ namespace ProStudCreator
 
             if (h >= 300 || w >= 200)
             {
-                image.ScaleToFit(200f, 300f);
+                image.ScaleToFit(150f, 250f);
             }
 
             else if (h > w)
@@ -452,84 +459,69 @@ namespace ProStudCreator
             }
 
             Paragraph text = new Paragraph();
-            text.SetLeading(150, 0);
-            PdfPTable cellProject = new PdfPTable(3);
-            cellProject.DefaultCell.Border = Rectangle.NO_BORDER;
-            cellProject.HorizontalAlignment = Element.ALIGN_LEFT;
-            cellProject.WidthPercentage = 100f;
-            float[] widthProject = new float[] { 20, 40, 30 };
-            cellProject.SetWidths(widthProject);
+            PdfPTable projectTable = new PdfPTable(2);
+            projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectTable.HorizontalAlignment = Element.ALIGN_LEFT;
+            projectTable.WidthPercentage = 100f;
+            float[] widthProject = new float[] { 60, 30 };
+            projectTable.SetWidths(widthProject);
 
-            PdfPTable nested = new PdfPTable(1);
-            nested.DefaultCell.Border = Rectangle.NO_BORDER;
+            PdfPTable projectContent = new PdfPTable(1);
+            projectContent.DefaultCell.Border = Rectangle.NO_BORDER;
+            PdfPTable projectPersons = new PdfPTable(2);
+            projectPersons.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectPersons.WidthPercentage = 100f;
+            float[] widthProjectPersons = new float[] { 30, 60 };
+            projectPersons.SetWidths(widthProjectPersons);
+
             text = new Paragraph("BetreuerIn:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested.AddCell(text);
+            projectPersons.AddCell(text);
+            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            projectPersons.AddCell(text);
             if (proj.Advisor2 != "")
             {
-                nested.AddCell(" ");
+                projectPersons.AddCell(" ");
+                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                projectPersons.AddCell(text);
             }
             text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested.AddCell(text);
-            nested.AddCell(" ");
-            nested.AddCell(" ");
-            text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested.AddCell(text);
-            text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested.AddCell(text);
-            PdfPCell nesthousing = new PdfPCell(nested);
-            nesthousing.Border = Rectangle.NO_BORDER;
-            nesthousing.Padding = 0f;
-            cellProject.AddCell(nesthousing);
-
-            PdfPTable nested2 = new PdfPTable(1);
-            nested2.DefaultCell.Border = Rectangle.NO_BORDER;
-            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2.AddCell(text);
-            if (proj.Advisor2 != "")
-            {
-                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                nested2.AddCell(text);
-            }
+            projectPersons.AddCell(text);
             text = new Paragraph(proj.Employer + ", " + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2.AddCell(text);
-            nested2.AddCell(" ");
+            projectPersons.AddCell(text);
+            projectContent.AddCell(projectPersons);
 
-            PdfPTable nested2A = new PdfPTable(2);
-            nested2A.DefaultCell.Border = Rectangle.NO_BORDER;
+            PdfPTable projectDetails = new PdfPTable(3);
+            projectDetails.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectDetails.AddCell(" ");
             text = new Paragraph("Priorität 1", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested2A.AddCell(text);
+            projectDetails.AddCell(text);
             text = new Paragraph("Priorität 2", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-            nested2A.AddCell(text);
-
+            projectDetails.AddCell(text);
+            text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            projectDetails.AddCell(text);
             text = new Paragraph(checkPriorityOne(proj), FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2A.AddCell(text);
+            projectDetails.AddCell(text);
             text = new Paragraph(checkPriorityTwo(proj), FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2A.AddCell(text);
-
+            projectDetails.AddCell(text);
+            text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            projectDetails.AddCell(text);
             text = new Paragraph(proj.POneTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2A.AddCell(text);
+            projectDetails.AddCell(text);
             text = new Paragraph(proj.PTwoTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-            nested2A.AddCell(text);
-            nested2.AddCell(nested2A);
+            projectDetails.AddCell(text);
+            projectContent.AddCell(projectDetails);
 
-            PdfPCell nesthousing2 = new PdfPCell(nested2);
-            nesthousing2.Border = Rectangle.NO_BORDER;
-            nesthousing2.Padding = 0f;
-            cellProject.AddCell(nesthousing2);
+            projectTable.AddCell(projectContent);
 
-            PdfPTable nested3 = new PdfPTable(1);
-            nested3.DefaultCell.Border = Rectangle.NO_BORDER;
+            PdfPTable imageTable = new PdfPTable(1);
             PdfPCell cell = new PdfPCell(image);
             cell.Border = Rectangle.NO_BORDER;
             cell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            nested3.AddCell(cell);
-            PdfPCell nesthousing3 = new PdfPCell(nested3);
-            nesthousing3.Border = Rectangle.NO_BORDER;
-            nesthousing3.Padding = 0f;
-            cellProject.AddCell(nesthousing3);
+            imageTable.AddCell(cell);
+            projectTable.AddCell(imageTable);
 
-            document.Add(cellProject);
-            cellProject.SpacingAfter = 8f;
+            document.Add(projectTable);
+            projectTable.SpacingAfter = 8f;
 
             for (int i = 0; i < 6; i++)
             {
@@ -549,42 +541,42 @@ namespace ProStudCreator
                 {
                     case 0:
                         text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                        text.SetLeading(0.0f, 2.0f);
-                        table.AddCell(text);
+                        //text.SetLeading(0.0f, 2.0f);
+                        document.Add(text);
                         break;
                     case 1:
                         text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                        text.SetLeading(0.0f, 2.0f);
-                        table.AddCell(text);
+                        //text.SetLeading(0.0f, 2.0f);
+                        document.Add(text);
                         break;
                     case 2:
                         text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                        text.SetLeading(0.0f, 2.0f);
-                        table.AddCell(text);
+                        //text.SetLeading(0.0f, 2.0f);
+                        document.Add(text);
                         break;
                     case 3:
                         text = new Paragraph("Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                        text.SetLeading(0.0f, 2.0f);
-                        table.AddCell(text);
+                        //text.SetLeading(0.0f, 2.0f);
+                        document.Add(text);
                         break;
                     case 4:
                         text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 12));
-                        text.SetLeading(0.0f, 2.0f);
-                        table.AddCell(text);
+                        //text.SetLeading(0.0f, 2.0f);
+                        document.Add(text);
                         break;
                     case 5:
                         text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                        table.AddCell(text);
+                        document.Add(text);
                         if (proj.Importance)
                         {
                             text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 12));
@@ -593,7 +585,7 @@ namespace ProStudCreator
                         {
                             text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 12));
                         }
-                        table.AddCell(text);
+                        document.Add(text);
                         break;
                     default:
                         break;
@@ -722,11 +714,11 @@ namespace ProStudCreator
             }
             else if (proj.POneP5)
             {
-                priorityOne = "P5 (180h pro Student)";
+                priorityOne = "P5";
             }
             else
             {
-                priorityOne = "P6 (360h pro Student)";
+                priorityOne = "P6";
             }
 
             return priorityOne;
@@ -741,11 +733,11 @@ namespace ProStudCreator
             }
             else if (proj.PTwoP5)
             {
-                priorityTwo = "P5 (180h pro Student)";
+                priorityTwo = "P5";
             }
             else if (proj.PTwoP6)
             {
-                priorityTwo = "P6 (360h pro Student)";
+                priorityTwo = "P6";
             }
             else
             {
