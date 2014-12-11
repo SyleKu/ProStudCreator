@@ -93,13 +93,6 @@
                         CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
                     <asp:CompareValidator ID="ComparePasswortsValidator" CssClass="text-danger" Display="Dynamic" ControlToCompare="NewUserPassword" ControlToValidate="NewUserPasswordValidate" runat="server" ErrorMessage="Diese Passwörter stimmen nicht überein."></asp:CompareValidator>
                 </div>
-                <div class="form-group">
-                    <label for="Department">Bitte wählen Sie Ihren Institut aus</label>
-                    <asp:DropDownList runat="server" ID="Department" CssClass="form-control" Width="80px">
-                        <asp:ListItem>i4Ds</asp:ListItem>
-                        <asp:ListItem>IMVS</asp:ListItem>
-                    </asp:DropDownList>
-                </div>
                 <p class="text-danger">
                     <asp:Literal runat="server" ID="ErrorMessage" />
                 </p>

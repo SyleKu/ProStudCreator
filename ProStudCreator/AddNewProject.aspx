@@ -106,8 +106,8 @@
                 <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Wichtigkeit:"></asp:Label>
-                <asp:DropDownList runat="server" ID="ImportanceContent" CssClass="form-control" Width="280px">
+                <asp:Label Visible="false" runat="server" CssClass="control-label col-sm-3" Text="Wichtigkeit:"></asp:Label>
+                <asp:DropDownList Visible="false" runat="server" ID="ImportanceContent" CssClass="form-control" Width="280px">
                     <asp:ListItem>Normal</asp:ListItem>
                     <asp:ListItem>wichtig aus Sicht Institut oder FHNW</asp:ListItem>
                 </asp:DropDownList>
@@ -119,13 +119,11 @@
                     <asp:ListItem>IMVS</asp:ListItem>
                 </asp:DropDownList>
             </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projekt noch in Bearbeitung:"></asp:Label>
-                <asp:CheckBox runat="server" ID="InProgressCheckBox" CssClass="checkbox-inline" />
-            </div>
         </div>
         <asp:Button runat="server" ID="saveNewProject" OnClick="saveProject" CssClass="btn btn-default marginLeftZero" TabIndex="4" Width="113px"></asp:Button>
-        <asp:Button runat="server" ID="cancelNewProject" CssClass="btn btn-default marginLeftZero" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" />
-        <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default pull-right" Width="113px" Text="Publish" OnClick="publishProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="cancelNewProject" CssClass="btn btn-default marginLeftZero" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="submitProject" Visible="false" CssClass="btn btn-default marginLeftZero" Text="Projekt einreichen" OnClick="submitProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject pull-right" Width="113px" Text="Publish" OnClick="publishProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="refuseNewProject" Visible="false" CssClass="btn btn-default refuseProject pull-right" Width="113px" Text="Refuse" OnClick="refuseProject_Click"></asp:Button>
     </div>
 </asp:Content>

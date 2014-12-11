@@ -173,6 +173,26 @@ marginLeftZero input[type="email"], input[type="submit"] {
     max-width: 580px !important;
 }
 
+.publishProject {
+    background-color: #A9F5A9;
+}
+
+.publishProject:hover {
+    background-color: #58FA82;
+    border-color: #58FA58;
+}
+
+.refuseProject {
+    background-color: #F5A9A9;
+    margin-right: 5px;
+}
+
+.refuseProject:hover {
+    background-color: #F78181;
+    border-color: #FE2E2E;
+    margin-right: 5px;
+}
+
 /* MANAGEPASSWORT.ASPX */
 
 .passwordMarginTop {

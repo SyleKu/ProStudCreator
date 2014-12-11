@@ -319,15 +319,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList Department;
         
         /// <summary>
-        /// InProgressCheckBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox InProgressCheckBox;
-        
-        /// <summary>
         /// saveNewProject control.
         /// </summary>
         /// <remarks>
@@ -346,6 +337,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button cancelNewProject;
         
         /// <summary>
+        /// submitProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button submitProject;
+        
+        /// <summary>
         /// publishProject control.
         /// </summary>
         /// <remarks>
@@ -353,5 +353,14 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button publishProject;
+        
+        /// <summary>
+        /// refuseNewProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button refuseNewProject;
     }
 }

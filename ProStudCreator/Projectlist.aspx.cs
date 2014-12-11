@@ -45,7 +45,7 @@ namespace ProStudCreator
             {
                 AdminView.Visible = true;
                 AdminViewPDF.Visible = true;
-
+                
                 if (!IsPostBack)
                 {
                     ProjectsFilterAllProjects.Items[0].Selected = true;
@@ -57,21 +57,9 @@ namespace ProStudCreator
                     counter++;
                 }
 
-
-
-
                 var projects = db.Projects.Where(i => true);
-                if (projectFilter[0])
-                    projects = projects.Where(item => !item.Published && !item.InProgress);
 
-                if (projectFilter[1])
-                    projects = projects.Where(item => !item.Published && !item.InProgress);
-
-
-
-
-
-                CheckProjects.DataSource = projects.Select(i => new ProjectSingleElement()
+                CheckProjects.DataSource = projects.Where(item => !item.Published && !item.InProgress && !item.StateDeleted).Select(i => new ProjectSingleElement()
                 {
                     id = i.Id,
                     advisorName = i.Advisor + " " + i.Advisor2,
@@ -88,88 +76,40 @@ namespace ProStudCreator
                     (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
                 });
 
-                // All Projects
                 if (projectFilter[0])
-                {
-                    AllProjects.DataSource = db.Projects.Where(item => !item.InProgress).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
-                }
-                // My Projects
+                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted);
+
                 else if (projectFilter[1])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
-
+                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
                 }
-                // Published all Users
                 else if (projectFilter[2])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Published).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
+                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
+                    
                 }
-                // Not published all Users
                 else
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => !item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
+                    projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
                 }
+                AllProjects.DataSource = projects.Select(i => new ProjectSingleElement()
+                {
+                    id = i.Id,
+                    advisorName = i.Advisor + " " + i.Advisor2,
+                    advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                    projectName = i.Name,
+                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                    projectType2 = "pictures/projectTyp" +
+                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                });
             }
+
             else
             {
                 if (ProjectsFilterAllProjects.Items[0].Text.Contains("Alle Projekte"))
@@ -185,83 +125,47 @@ namespace ProStudCreator
                 int counter = 0;
                 foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
                 {
-                    if (item.Selected)
-                    {
-                        projectFilter[counter] = true;
-                    }
-                    else
-                    {
-                        projectFilter[counter] = false;
-                    }
+                    projectFilter[counter] = item.Selected;
                     counter++;
                 }
 
-                // My Projects
+                var projects = db.Projects.Where(i => true);
+
                 if (projectFilter[1])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
-
+                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
                 }
-                // Published
                 else if (projectFilter[2])
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
+                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
+
                 }
-                // Not published
                 else
                 {
-                    AllProjects.DataSource = db.Projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress).Select(i => new ProjectSingleElement()
-                    {
-                        id = i.Id,
-                        advisorName = i.Advisor + " " + i.Advisor2,
-                        advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                        projectName = i.Name,
-                        p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                        p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                        projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                        projectType2 = "pictures/projectTyp" +
-                        ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                        (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                        (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                        (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                        (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                    });
+                    projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
                 }
-            }
 
+                AllProjects.DataSource = projects.Select(i => new ProjectSingleElement()
+                {
+                    id = i.Id,
+                    advisorName = i.Advisor + " " + i.Advisor2,
+                    advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
+                    projectName = i.Name,
+                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
+                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
+                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                    projectType2 = "pictures/projectTyp" +
+                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+                });
+            }
             CheckProjects.DataBind();
             AllProjects.DataBind();
         }
+
 
         protected void newProject_Click(object sender, EventArgs e)
         {
@@ -281,10 +185,9 @@ namespace ProStudCreator
                     break;
                 case "deleteProject":
                     var id = Convert.ToInt32(e.CommandArgument);
-                    var details = db.Projects.Where(item => item.Id == id);
-                    db.Projects.DeleteAllOnSubmit(details);
+                    Project projects = db.Projects.Single(i => i.Id == id);
+                    projects.StateDeleted = true;
                     db.SubmitChanges();
-                    CheckProjects.DataBind();
                     Response.Redirect(Request.RawUrl);
                     break;
                 case "SinglePDF":
@@ -295,6 +198,7 @@ namespace ProStudCreator
                     break;
             }
         }
+
         protected void AllProjectsEvent(object sender, GridViewCommandEventArgs e)
         {
             switch (e.CommandName)
@@ -307,10 +211,9 @@ namespace ProStudCreator
                     break;
                 case "deleteProject":
                     var id = Convert.ToInt32(e.CommandArgument);
-                    var details = db.Projects.Where(item => item.Id == id);
-                    db.Projects.DeleteAllOnSubmit(details);
+                    Project projects = db.Projects.Single(i => i.Id == id);
+                    projects.StateDeleted = true;
                     db.SubmitChanges();
-                    AllProjects.DataBind();
                     Response.Redirect(Request.RawUrl);
                     break;
                 case "SinglePDF":
@@ -421,43 +324,48 @@ namespace ProStudCreator
             title.SpacingAfter = 8f;
             document.Add(title);
 
-            byte[] imageBytes = proj.Picture.ToArray();
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imageBytes);
-            // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
-            // image.ScaleAbsoluteWidth(160f);
-            float h = image.ScaledHeight;
-            float w = image.ScaledWidth;
-            image.Alignment = 6;
-            float scalePercent;
-
-            float width = defaultPageSize.Width - document.RightMargin - document.LeftMargin;
-            float height = defaultPageSize.Height - document.TopMargin - document.BottomMargin;
-
-            if (h >= 300 || w >= 200)
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(Request.MapPath("~/pictures/projectTypTransparent.png"));
+            if (proj.Picture != null)
             {
-                image.ScaleToFit(150f, 250f);
-            }
 
-            else if (h > w)
-            {
-                // only scale image if it's height is __greater__ than
-                // the document's height, accounting for margins
-                if (h > height)
+
+                byte[] imageBytes = proj.Picture.ToArray();
+                image = iTextSharp.text.Image.GetInstance(imageBytes);
+                // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
+                // image.ScaleAbsoluteWidth(160f);
+                float h = image.ScaledHeight;
+                float w = image.ScaledWidth;
+                image.Alignment = 6;
+                float scalePercent;
+
+                float width = defaultPageSize.Width - document.RightMargin - document.LeftMargin;
+                float height = defaultPageSize.Height - document.TopMargin - document.BottomMargin;
+
+                if (h >= 300 || w >= 200)
                 {
-                    scalePercent = height / h;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
+                    image.ScaleToFit(150f, 250f);
+                }
+
+                else if (h > w)
+                {
+                    // only scale image if it's height is __greater__ than
+                    // the document's height, accounting for margins
+                    if (h > height)
+                    {
+                        scalePercent = height / h;
+                        image.ScaleAbsolute(w * scalePercent, h * scalePercent);
+                    }
+                }
+                else
+                {
+                    // same for image width        
+                    if (w > width)
+                    {
+                        scalePercent = width / w;
+                        image.ScaleAbsolute(w * scalePercent, h * scalePercent);
+                    }
                 }
             }
-            else
-            {
-                // same for image width        
-                if (w > width)
-                {
-                    scalePercent = width / w;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
-                }
-            }
-
             Paragraph text = new Paragraph();
             PdfPTable projectTable = new PdfPTable(2);
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
@@ -468,160 +376,135 @@ namespace ProStudCreator
 
             PdfPTable projectContent = new PdfPTable(1);
             projectContent.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectContent.HorizontalAlignment = Element.ALIGN_LEFT;
+
             PdfPTable projectPersons = new PdfPTable(2);
             projectPersons.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectPersons.HorizontalAlignment = Element.ALIGN_LEFT;
             projectPersons.WidthPercentage = 100f;
             float[] widthProjectPersons = new float[] { 30, 60 };
             projectPersons.SetWidths(widthProjectPersons);
 
-            text = new Paragraph("BetreuerIn:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("BetreuerIn:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectPersons.AddCell(text);
-            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectPersons.AddCell(text);
             if (proj.Advisor2 != "")
             {
                 projectPersons.AddCell(" ");
-                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                 projectPersons.AddCell(text);
             }
-            text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectPersons.AddCell(text);
-            text = new Paragraph(proj.Employer + ", " + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(proj.Employer + ", " + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectPersons.AddCell(text);
             projectContent.AddCell(projectPersons);
 
             PdfPTable projectDetails = new PdfPTable(3);
+            projectDetails.HorizontalAlignment = Element.ALIGN_LEFT;
             projectDetails.DefaultCell.Border = Rectangle.NO_BORDER;
+            projectDetails.WidthPercentage = 100f;
             projectDetails.AddCell(" ");
-            text = new Paragraph("Priorität 1", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("Priorität 1", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph("Priorität 2", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("Priorität 2", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph(checkPriorityOne(proj), FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(checkPriorityOne(proj), FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph(checkPriorityTwo(proj), FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(checkPriorityTwo(proj), FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+            text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph(proj.POneTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(proj.POneTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectDetails.AddCell(text);
-            text = new Paragraph(proj.PTwoTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+            text = new Paragraph(proj.PTwoTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectDetails.AddCell(text);
             projectContent.AddCell(projectDetails);
 
             projectTable.AddCell(projectContent);
 
-            PdfPTable imageTable = new PdfPTable(1);
-            PdfPCell cell = new PdfPCell(image);
-            cell.Border = Rectangle.NO_BORDER;
-            cell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            imageTable.AddCell(cell);
-            projectTable.AddCell(imageTable);
-
-            document.Add(projectTable);
-            projectTable.SpacingAfter = 8f;
-
-            for (int i = 0; i < 6; i++)
+            if (proj.Picture != null)
             {
-                PdfPTable table = new PdfPTable(2);
-                table.DefaultCell.Border = Rectangle.NO_BORDER;
-                table.HorizontalAlignment = Element.ALIGN_LEFT;
-                table.WidthPercentage = 100f;
-                float[] widthsContent = new float[] { 26, 94 };
-                table.SetWidths(widthsContent);
-                PdfPCell cellContent = new PdfPCell();
-                cellContent.Border = Rectangle.NO_BORDER;
-                cellContent.Colspan = 2;
-                cellContent.HorizontalAlignment = 0; //0=Left, 1=Centre, 2=Right
-                table.AddCell(cellContent);
-                table.SpacingBefore = 8f;
+                PdfPTable imageTable = new PdfPTable(1);
+                imageTable.WidthPercentage = 100f;
+                PdfPCell cell = new PdfPCell(image);
+                cell.Border = Rectangle.NO_BORDER;
+                cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                imageTable.AddCell(cell);
+                projectTable.AddCell(imageTable);
+            }
+            else
+            {
+                PdfPTable imageTable = new PdfPTable(1);
+                imageTable.WidthPercentage = 100f;
+                projectTable.AddCell(imageTable);
+            }
+            document.Add(projectTable);
+
+            for (int i = 0; i < 5; i++)
+            {
                 switch (i)
                 {
                     case 0:
-                        text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
-                        text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                        text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         //text.SetLeading(0.0f, 2.0f);
                         document.Add(text);
                         break;
                     case 1:
-                        text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
-                        text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                        text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         //text.SetLeading(0.0f, 2.0f);
                         document.Add(text);
                         break;
                     case 2:
-                        text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
-                        text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                        text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         //text.SetLeading(0.0f, 2.0f);
                         document.Add(text);
                         break;
                     case 3:
-                        text = new Paragraph("Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
-                        text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                        text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         //text.SetLeading(0.0f, 2.0f);
                         document.Add(text);
                         break;
                     case 4:
-                        text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
-                        text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                        text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         //text.SetLeading(0.0f, 2.0f);
                         document.Add(text);
                         break;
+
+                        /* CANCELED PART!
                     case 5:
-                        text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                        text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                         document.Add(text);
                         if (proj.Importance)
                         {
-                            text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                            text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         }
                         else
                         {
-                            text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 12));
+                            text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 10));
                         }
                         document.Add(text);
                         break;
+                         */
                     default:
                         break;
                 }
-                document.Add(table);
             }
             document.NewPage();
         }
-
-        ///////////////////////////////////////////////////////
-        // SAVE AS PROMPT 
-        //////////////////////////////////////////////////////
-        /*
-        string FilePath = "C:/";
-        string FileName = "i4DsFS14Projekte.pdf";
-
-        // Creates the file on server
-        File.WriteAllText(FilePath + FileName, "hello");
-
-        // Prompts user to save file
-        System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
-        response.ClearContent();
-        response.Clear();
-        response.ContentType = "application/pdf";
-        response.AddHeader("Content-Disposition", "attachment; filename=" + FileName + ";");
-        response.TransmitFile(FilePath + FileName);
-        response.Flush();
-
-        // Deletes the file on server
-        File.Delete(FilePath + FileName);
-
-        response.End();
-        */
-
-
-
 
         private class MyPageEventHandler : PdfPageEventHelper
         {

@@ -1362,6 +1362,10 @@ namespace ProStudCreator
 		
 		private System.DateTime _CreateDate;
 		
+		private bool _Refused;
+		
+		private bool _StateDeleted;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1430,6 +1434,10 @@ namespace ProStudCreator
     partial void OnDepartmentChanged();
     partial void OnCreateDateChanging(System.DateTime value);
     partial void OnCreateDateChanged();
+    partial void OnRefusedChanging(bool value);
+    partial void OnRefusedChanged();
+    partial void OnStateDeletedChanging(bool value);
+    partial void OnStateDeletedChanged();
     #endregion
 		
 		public Project()
@@ -2073,6 +2081,46 @@ namespace ProStudCreator
 					this._CreateDate = value;
 					this.SendPropertyChanged("CreateDate");
 					this.OnCreateDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Refused", DbType="Bit NOT NULL")]
+		public bool Refused
+		{
+			get
+			{
+				return this._Refused;
+			}
+			set
+			{
+				if ((this._Refused != value))
+				{
+					this.OnRefusedChanging(value);
+					this.SendPropertyChanging();
+					this._Refused = value;
+					this.SendPropertyChanged("Refused");
+					this.OnRefusedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StateDeleted", DbType="Bit NOT NULL")]
+		public bool StateDeleted
+		{
+			get
+			{
+				return this._StateDeleted;
+			}
+			set
+			{
+				if ((this._StateDeleted != value))
+				{
+					this.OnStateDeletedChanging(value);
+					this.SendPropertyChanging();
+					this._StateDeleted = value;
+					this.SendPropertyChanged("StateDeleted");
+					this.OnStateDeletedChanged();
 				}
 			}
 		}

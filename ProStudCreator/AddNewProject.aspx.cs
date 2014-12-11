@@ -66,6 +66,7 @@ namespace ProStudCreator
             if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && Request.QueryString["show"] != null)
             {
                 publishProject.Visible = true;
+                refuseNewProject.Visible = true;
             }
 
             ProjectName.Text = proj.Name;
@@ -189,7 +190,9 @@ namespace ProStudCreator
             ProblemStatementContent.Text = proj.ProblemStatement;
             ReferencesContent.Text = proj.References;
             RemarksContent.Text = proj.Remarks;
+            submitProject.Visible = false;
 
+            /* CANCELED PART!
             if (proj.Importance)
             {
                 ImportanceContent.Text = "wichtig aus Sicht Institut oder FHNW";
@@ -198,13 +201,8 @@ namespace ProStudCreator
             {
                 ImportanceContent.Text = "Normal";
             }
-
+            */
             Department.Text = proj.Department;
-
-            if (proj.InProgress)
-            {
-                InProgressCheckBox.Checked = true;
-            }
         }
 
         private void showOnlyContent()
@@ -214,9 +212,27 @@ namespace ProStudCreator
             SiteTitle.Text = "Projekt Ansicht:";
             saveNewProject.Text = "Bearbeiten";
             saveNewProject.Width = 100;
-            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published)
+            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && !proj.InProgress)
             {
                 publishProject.Visible = true;
+                refuseNewProject.Visible = true;
+                submitProject.Visible = false;
+            }
+            else if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && proj.InProgress)
+            {
+                publishProject.Visible = false;
+                refuseNewProject.Visible = false;
+                submitProject.Visible = true;
+            }
+            else if (!proj.Published && proj.InProgress)
+            {
+                submitProject.Visible = true;
+            }
+            else
+            {
+                publishProject.Visible = false;
+                refuseNewProject.Visible = false;
+                submitProject.Visible = false;
             }
 
             ProjectName.ReadOnly = true;
@@ -251,7 +267,6 @@ namespace ProStudCreator
             RemarksContent.ReadOnly = true;
             ImportanceContent.Enabled = false;
             Department.Enabled = false;
-            InProgressCheckBox.Enabled = false;
         }
 
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
@@ -352,7 +367,6 @@ namespace ProStudCreator
                 Response.Redirect("/AddNewProject?id=" + id);
             }
 
-            //else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" && EmailAvailable() || Request.QueryString["id"] != null)
             else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" || Request.QueryString["id"] != null)
             {
                 if (Request.QueryString["id"] != null)
@@ -362,12 +376,17 @@ namespace ProStudCreator
                 else
                 {
                     projects = new Project();
+                    projects.Creator = User.Identity.Name;
+                    projects.InProgress = true;
+                    projects.Published = false;
+                    projects.CreateDate = DateTime.Today;
+                    projects.StateDeleted = false;
+                    projects.Refused = false;
                 }
 
                 projects.Name = ProjectName.Text;
                 projects.Employer = Employer.Text;
-                projects.EmployerEmail = EmployerMail.Text;
-                projects.Creator = User.Identity.Name;
+                projects.EmployerEmail = EmployerMail.Text;                
                 projects.Advisor = NameBetreuer1.Text;
                 projects.AdvisorMail = EMail1.Text;
 
@@ -440,11 +459,13 @@ namespace ProStudCreator
                 projects.ProblemStatement = ProblemStatementContent.Text;
                 projects.References = ReferencesContent.Text;
                 projects.Remarks = RemarksContent.Text;
-                projects.Published = false;
+                
+                /* CANCELLED PART!
                 applyImportance(projects);
+                */
                 projects.Department = Department.Text;
-                projects.InProgress = InProgressCheckBox.Checked;
-                projects.CreateDate = DateTime.Today;
+                
+                
 
                 if (AddPicture.FileName != "")
                 {
@@ -555,6 +576,7 @@ namespace ProStudCreator
             }
         }
 
+        /* CANCELED PART!
         private void applyImportance(Project _is)
         {
             if (ImportanceContent.Text == "Normal")
@@ -564,7 +586,7 @@ namespace ProStudCreator
             else
                 _is.Importance = true;
         }
-
+        */
         protected void cancelNewProject_Click(object sender, EventArgs e)
         {
             Response.Redirect("/projectlist.aspx");
@@ -575,6 +597,28 @@ namespace ProStudCreator
             var id = int.Parse(Request.QueryString["id"]);
             var proj = db.Projects.Single(i => i.Id == id);
             proj.Published = true;
+            db.SubmitChanges();
+            Response.Redirect("/Projectlist");
+        }
+
+        protected void refuseProject_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+            proj.Published = false;
+            proj.InProgress = true;
+            proj.Refused = true;
+            db.SubmitChanges();
+            Response.Redirect("/Projectlist");
+        }
+
+        protected void submitProject_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+            proj.Published = false;
+            proj.InProgress = false;
+            proj.Refused = false;
             db.SubmitChanges();
             Response.Redirect("/Projectlist");
         }
