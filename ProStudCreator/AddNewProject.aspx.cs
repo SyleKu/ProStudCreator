@@ -179,6 +179,7 @@ namespace ProStudCreator
             if (proj.Picture != null)
             {
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(proj.Picture.ToArray());
+                DeleteImageButton.Visible = true;
             }
             else
             {
@@ -367,11 +368,13 @@ namespace ProStudCreator
                 Response.Redirect("/AddNewProject?id=" + id);
             }
 
-            else if (ProjectNameAvailable() && projectType.Any() && NameBetreuer1.Text != "" || Request.QueryString["id"] != null)
+            else if (projectType.Any() && NameBetreuer1.Text != "" || Request.QueryString["id"] != null)
             {
                 if (Request.QueryString["id"] != null)
                 {
                     projects = db.Projects.Single(i => i.Id == id);
+                    projects.ModificationDate = DateTime.Now;
+                    projects.LastEditedBy = User.Identity.Name;
                 }
                 else
                 {
@@ -379,7 +382,9 @@ namespace ProStudCreator
                     projects.Creator = User.Identity.Name;
                     projects.InProgress = true;
                     projects.Published = false;
-                    projects.CreateDate = DateTime.Today;
+                    projects.CreateDate = DateTime.Now;
+                    projects.ModificationDate = DateTime.Now;
+                    projects.LastEditedBy = User.Identity.Name;
                     projects.StateDeleted = false;
                     projects.Refused = false;
                 }
@@ -389,13 +394,6 @@ namespace ProStudCreator
                 projects.EmployerEmail = EmployerMail.Text;                
                 projects.Advisor = NameBetreuer1.Text;
                 projects.AdvisorMail = EMail1.Text;
-
-
-                // TO DO
-                if (NameBetreuer1.Text != "" && EMail1.Text != "")
-                {
-
-                }
 
                 if (NameBetreuer2.Text != "" && EMail2.Text != "")
                 {
@@ -490,26 +488,6 @@ namespace ProStudCreator
                 db.SubmitChanges();
                 Response.Redirect("/Projectlist");
             }
-            // TO DO
-            else if (ProjectNameAvailable() && !projectType.Any())
-            {
-
-            }
-            else if (!ProjectNameAvailable())
-            {
-
-            }
-
-            else if (!projectType.Any())
-            {
-
-            }
-
-        }
-
-        private bool ProjectNameAvailable()
-        {
-            return !db.Projects.Any(item => item.Name == ProjectName.Text);
         }
 
         private bool EmailAvailable()
@@ -621,6 +599,15 @@ namespace ProStudCreator
             proj.Refused = false;
             db.SubmitChanges();
             Response.Redirect("/Projectlist");
+        }
+
+        protected void deleteImage_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+            proj.Picture = null;
+            db.SubmitChanges();
+            Response.Redirect(Request.RawUrl);
         }
     }
 }

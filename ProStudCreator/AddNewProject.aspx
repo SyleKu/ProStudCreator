@@ -34,8 +34,6 @@
             </div>
             <hr />
             <div class="form-group">
-                <!--<asp:UpdatePanel runat="server">
-                            <ContentTemplate>-->
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projekttyp:"></asp:Label>
                 <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ImageUrl="/pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" />
                 <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ImageUrl="/pictures/projectTypHWUnchecked.png" OnClick="HW_Click" />
@@ -43,8 +41,6 @@
                 <asp:ImageButton CssClass="img-rounded" ID="MathAlg" Height="60px" runat="server" ImageUrl="/pictures/projectTypMathAlgUnchecked.png" OnClick="MathAlg_Click" />
                 <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ImageUrl="/pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" />
                 <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ImageUrl="/pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" />
-                <!--</ContentTemplate>
-                        </asp:UpdatePanel>-->
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1"></asp:Label>
@@ -82,9 +78,10 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <asp:FileUpload runat="server" ID="AddPicture" CssClass="control-label col-sm-4" />
+                <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Wollen Sie wirklich dieses Bild löschen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3 " Text=""></asp:Label>
+                <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="false" />
             </div>
             <hr />

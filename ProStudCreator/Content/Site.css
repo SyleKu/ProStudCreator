@@ -130,6 +130,11 @@ h2 {
 }
 
 /* ADDNEWPROJECT.ASPX */
+
+.imageRemoveMargin {
+    margin-left: 205px;
+}
+
 .newProjectSettings {
     margin-top: 40px;
     background-color: #f5f5f5;

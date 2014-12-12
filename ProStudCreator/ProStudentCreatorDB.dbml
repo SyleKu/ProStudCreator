@@ -92,7 +92,9 @@
       <Column Name="Published" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="InProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Department" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="CreateDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ModificationDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Refused" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="StateDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </Type>

@@ -1362,6 +1362,10 @@ namespace ProStudCreator
 		
 		private System.DateTime _CreateDate;
 		
+		private System.DateTime _ModificationDate;
+		
+		private string _LastEditedBy;
+		
 		private bool _Refused;
 		
 		private bool _StateDeleted;
@@ -1434,6 +1438,10 @@ namespace ProStudCreator
     partial void OnDepartmentChanged();
     partial void OnCreateDateChanging(System.DateTime value);
     partial void OnCreateDateChanged();
+    partial void OnModificationDateChanging(System.DateTime value);
+    partial void OnModificationDateChanged();
+    partial void OnLastEditedByChanging(string value);
+    partial void OnLastEditedByChanged();
     partial void OnRefusedChanging(bool value);
     partial void OnRefusedChanged();
     partial void OnStateDeletedChanging(bool value);
@@ -2065,7 +2073,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="Date NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="DateTime NOT NULL")]
 		public System.DateTime CreateDate
 		{
 			get
@@ -2081,6 +2089,46 @@ namespace ProStudCreator
 					this._CreateDate = value;
 					this.SendPropertyChanged("CreateDate");
 					this.OnCreateDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ModificationDate", DbType="DateTime NOT NULL")]
+		public System.DateTime ModificationDate
+		{
+			get
+			{
+				return this._ModificationDate;
+			}
+			set
+			{
+				if ((this._ModificationDate != value))
+				{
+					this.OnModificationDateChanging(value);
+					this.SendPropertyChanging();
+					this._ModificationDate = value;
+					this.SendPropertyChanged("ModificationDate");
+					this.OnModificationDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastEditedBy", DbType="NVarChar(MAX)")]
+		public string LastEditedBy
+		{
+			get
+			{
+				return this._LastEditedBy;
+			}
+			set
+			{
+				if ((this._LastEditedBy != value))
+				{
+					this.OnLastEditedByChanging(value);
+					this.SendPropertyChanging();
+					this._LastEditedBy = value;
+					this.SendPropertyChanged("LastEditedBy");
+					this.OnLastEditedByChanged();
 				}
 			}
 		}
