@@ -4,7 +4,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well newProjectSettings non-selectable">
+    <div id="newProjectDiv" class="well newProjectSettings non-selectable" runat="server">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
@@ -119,7 +119,7 @@
         </div>
         <asp:Button runat="server" ID="saveNewProject" OnClick="saveProject" CssClass="btn btn-default marginLeftZero" TabIndex="4" Width="113px"></asp:Button>
         <asp:Button runat="server" ID="cancelNewProject" CssClass="btn btn-default marginLeftZero" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="submitProject" Visible="false" CssClass="btn btn-default marginLeftZero" Text="Projekt einreichen" OnClick="submitProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="submitProject" Visible="false" CssClass="btn btn-default marginLeftZero" Text="Projekt einreichen" OnClientClick="return confirm('Wollen Sie wirklich dieses Projekt einreichen?');" OnClick="submitProject_Click"></asp:Button>
         <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject pull-right" Width="113px" Text="Publish" OnClick="publishProject_Click"></asp:Button>
         <asp:Button runat="server" ID="refuseNewProject" Visible="false" CssClass="btn btn-default refuseProject pull-right" Width="113px" Text="Refuse" OnClick="refuseProject_Click"></asp:Button>
     </div>

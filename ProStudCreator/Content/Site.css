@@ -198,6 +198,15 @@ marginLeftZero input[type="email"], input[type="submit"] {
     margin-right: 5px;
 }
 
+.publishedProjectBackground {
+    background-color: #A9F5A9 !important;
+    border-color: #58FA58 !important;
+}
+
+.refusedProjectBackground {
+    background-color: #F5A9A9 !important;
+    border-color: #FE2E2E !important;
+}
 /* MANAGEPASSWORT.ASPX */
 
 .passwordMarginTop {

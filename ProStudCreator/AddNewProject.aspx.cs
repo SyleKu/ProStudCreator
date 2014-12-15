@@ -113,6 +113,7 @@ namespace ProStudCreator
                 projectType[5] = true;
             }
 
+            // Priority 1
 
             if (proj.POneP5 && proj.POneP6)
             {
@@ -128,6 +129,7 @@ namespace ProStudCreator
                 POneContent.Text = "P6 (360h pro Student)";
             }
 
+            //  Priority 2
 
             if (proj.PTwoP5 && proj.PTwoP6)
             {
@@ -146,6 +148,8 @@ namespace ProStudCreator
                 PTwoContent.Text = "------";
             }
 
+            // Teamsize Priority 1
+
             if (proj.POneTeamSize == "Einzelarbeit")
             {
                 POneTeamSize.Text = "Einzelarbeit";
@@ -159,7 +163,13 @@ namespace ProStudCreator
                 POneTeamSize.Text = "1er oder 2er Team";
             }
 
-            if (proj.PTwoTeamSize == "Einzelarbeit")
+            // Teamsize Priority 2
+
+            if (proj.PTwoTeamSize == "------")
+            {
+                PTwoTeamSize.Text = "------";
+            }
+            else if (proj.PTwoTeamSize == "Einzelarbeit")
             {
                 PTwoTeamSize.Text = "Einzelarbeit";
             }
@@ -261,6 +271,7 @@ namespace ProStudCreator
             AddPictureLabel.Visible = false;
             ImageLabel.Text = "Bild:";
             AddPicture.Visible = false;
+            DeleteImageButton.Visible = false;
 
             ObjectivContent.ReadOnly = true;
             ProblemStatementContent.ReadOnly = true;
@@ -268,6 +279,18 @@ namespace ProStudCreator
             RemarksContent.ReadOnly = true;
             ImportanceContent.Enabled = false;
             Department.Enabled = false;
+
+            if (proj.Published)
+            {
+                newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
+                saveNewProject.Visible = false;
+            }
+
+            if (proj.Refused)
+            {
+                newProjectDiv.Attributes.Add("class", "refusedProjectBackground well newProjectSettings non-selectable");
+
+            }
         }
 
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
