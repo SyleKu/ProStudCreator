@@ -29,9 +29,9 @@ namespace ProStudCreator.Account
                 }
                 // Weitere Informationen zum Aktivieren der Kontobestätigung und Kennwortzurücksetzung finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=320771".
                 // E-Mail mit dem Code und die Umleitung zur Seite zum Zurücksetzen des Kennworts senden
-                //string code = manager.GeneratePasswordResetToken(user.Id);
-                //string callbackUrl = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
-                //manager.SendEmail(user.Id, "Kennwort zurücksetzen", "Bitte setzen Sie Ihr Kennwort zurück. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>.");
+                string code = manager.GeneratePasswordResetToken(user.Id);
+                string callbackUrl = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
+                manager.SendEmail(user.Id, "Kennwort zurücksetzen", "Bitte setzen Sie Ihr Kennwort zurück. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>.");
                 loginForm.Visible = false;
                 DisplayEmail.Visible = true;
             }

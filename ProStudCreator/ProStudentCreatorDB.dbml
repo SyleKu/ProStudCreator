@@ -88,6 +88,8 @@
       <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ReservationNameOne" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="ReservationNameTwo" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Importance" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Published" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="InProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />

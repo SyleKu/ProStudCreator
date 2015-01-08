@@ -129,6 +129,10 @@ h2 {
     height: 30px;
 }
 
+.passwordForgotLogin {
+    margin-top: 100px !important;
+}
+
 /* ADDNEWPROJECT.ASPX */
 
 .imageRemoveMargin {
@@ -158,7 +162,7 @@ h2 {
     text-align: left !important;
 }
 
-.contentDesign input[type="email"], input[type="submit"] {
+.contentDesign input[type="email"], input[type="submit"], .contentReservation {
     margin-left: 20px;
 }
 
@@ -209,6 +213,6 @@ marginLeftZero input[type="email"], input[type="submit"] {
 }
 /* MANAGEPASSWORT.ASPX */
 
-.passwordMarginTop {
+.passwordMarginTop, .passwordForgotTop {
     margin-top: 90px;
 }

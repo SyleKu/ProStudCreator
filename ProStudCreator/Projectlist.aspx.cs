@@ -166,6 +166,40 @@ namespace ProStudCreator
             AllProjects.DataBind();
         }
 
+        protected void AllProjects_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (projectFilter[2] || projectFilter[3])
+            {
+                e.Row.Cells[9].Visible = false;
+                e.Row.Cells[10].Visible = false;
+            }
+
+            Project projects;
+            foreach (GridViewRow row in AllProjects.Rows)
+            {
+                int rowProjectID = Int32.Parse(row.Cells[0].Text);
+                projects = db.Projects.Single(item => item.Id == rowProjectID);
+                if (projects.Published)
+                {
+                    for (int j = 0; j < AllProjects.Columns.Count; j++)
+                    {
+                        row.Cells[j].BackColor = System.Drawing.ColorTranslator.FromHtml("#A9F5A9");
+                    }
+                }
+                else if (projects.Refused)
+                {
+                    for (int j = 0; j < AllProjects.Columns.Count; j++)
+                    {
+                        row.Cells[j].BackColor = System.Drawing.ColorTranslator.FromHtml("#F5A9A9");
+                    }
+                }
+                else
+                {
+                    // DO NOTHING !!
+                }
+            }
+            e.Row.Cells[0].Visible = false;
+        }
 
         protected void newProject_Click(object sender, EventArgs e)
         {
@@ -322,7 +356,18 @@ namespace ProStudCreator
             PdfPTable tableTitle = new PdfPTable(1);
             tableTitle.SpacingAfter = 8f;
 
-            Paragraph title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+            Paragraph title;
+
+            if (projectCounter < 10)
+            {
+                title = new Paragraph(proj.Department + "0" + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+            }
+            else
+            {
+
+                title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+            }
+
             title.SpacingBefore = 8f;
             tableTitle.DefaultCell.Border = Rectangle.NO_BORDER;
             title.Alignment = Element.ALIGN_JUSTIFIED;
@@ -521,7 +566,7 @@ namespace ProStudCreator
                         }
                         break;
 
-                    /* CANCELED PART!
+                    /* CANCELLED PART!
                     case 5:
                     text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                     document.Add(text);
@@ -539,6 +584,23 @@ namespace ProStudCreator
                     default:
                         break;
                 }
+            }
+            if (proj.ReservationNameOne != "")
+            {
+                text = new Paragraph("Reservation:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                text.SetLeading(1.0f, 2.0f);
+                text.Add("");
+                document.Add(text);
+
+                if (proj.ReservationNameTwo != "")
+                {
+                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " und " + proj.ReservationNameTwo + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                }
+                else
+                {
+                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                }
+                document.Add(text);
             }
             document.NewPage();
         }

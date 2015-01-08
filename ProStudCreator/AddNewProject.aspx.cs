@@ -203,7 +203,7 @@ namespace ProStudCreator
             RemarksContent.Text = proj.Remarks;
             submitProject.Visible = false;
 
-            /* CANCELED PART!
+            /* CANCELLED PART!
             if (proj.Importance)
             {
                 ImportanceContent.Text = "wichtig aus Sicht Institut oder FHNW";
@@ -213,6 +213,12 @@ namespace ProStudCreator
                 ImportanceContent.Text = "Normal";
             }
             */
+            ReservationNameOne.Text = proj.ReservationNameOne;
+            if (proj.ReservationNameTwo != "")
+            {
+                ReservationNameTwo.Text = proj.ReservationNameTwo;
+                ReservationNameTwo.Visible = true;
+            }
             Department.Text = proj.Department;
         }
 
@@ -278,6 +284,8 @@ namespace ProStudCreator
             ReferencesContent.ReadOnly = true;
             RemarksContent.ReadOnly = true;
             ImportanceContent.Enabled = false;
+            ReservationNameOne.Enabled = false;
+            ReservationNameTwo.Enabled = false;
             Department.Enabled = false;
 
             if (proj.Published)
@@ -289,7 +297,6 @@ namespace ProStudCreator
             if (proj.Refused)
             {
                 newProjectDiv.Attributes.Add("class", "refusedProjectBackground well newProjectSettings non-selectable");
-
             }
         }
 
@@ -414,7 +421,7 @@ namespace ProStudCreator
 
                 projects.Name = ProjectName.Text;
                 projects.Employer = Employer.Text;
-                projects.EmployerEmail = EmployerMail.Text;                
+                projects.EmployerEmail = EmployerMail.Text;
                 projects.Advisor = NameBetreuer1.Text;
                 projects.AdvisorMail = EMail1.Text;
 
@@ -480,13 +487,24 @@ namespace ProStudCreator
                 projects.ProblemStatement = ProblemStatementContent.Text;
                 projects.References = ReferencesContent.Text;
                 projects.Remarks = RemarksContent.Text;
-                
+                projects.ReservationNameOne = ReservationNameOne.Text;
+                if (ReservationNameTwo.Visible)
+                {
+                    projects.ReservationNameTwo = ReservationNameTwo.Text;
+
+                }
+                else
+                {
+                    projects.ReservationNameTwo = "";
+                }
+
                 /* CANCELLED PART!
                 applyImportance(projects);
                 */
+
                 projects.Department = Department.Text;
-                
-                
+
+
 
                 if (AddPicture.FileName != "")
                 {
@@ -577,7 +595,7 @@ namespace ProStudCreator
             }
         }
 
-        /* CANCELED PART!
+        /* CANCELLED PART!
         private void applyImportance(Project _is)
         {
             if (ImportanceContent.Text == "Normal")
@@ -632,5 +650,30 @@ namespace ProStudCreator
             db.SubmitChanges();
             Response.Redirect(Request.RawUrl);
         }
+
+        protected void POneTeamSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "Einzelarbeit" || POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "------")
+            {
+                ReservationNameTwo.Visible = false;
+            }
+            else
+            {
+                ReservationNameTwo.Visible = true;
+            }
+        }
+
+        protected void PTwoTeamSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "Einzelarbeit" || POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "------")
+            {
+                ReservationNameTwo.Visible = false;
+            }
+            else
+            {
+                ReservationNameTwo.Visible = true;
+            }
+        }
+
     }
 }

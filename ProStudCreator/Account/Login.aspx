@@ -66,10 +66,10 @@
                     <asp:TextBox runat="server" ID="Password" CssClass="form-control" TextMode="Password" TabIndex="2" placeholder="Passwort"></asp:TextBox>
                 </div>
                 <asp:button runat="server" OnClick="LogIn" Text="Login" CssClass="btn btn-default" Width="61px" value="Login" tabindex="3" type="submit"></asp:button>
+                <a class="pull-right" href="/Account/Forgot.aspx">Passwort vergessen?</a>
             </div>
             <div>
-                <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled"></asp:HyperLink>
-                <a href="/Account/Register.aspx">Kein Konto? Jetzt registrieren</a>
+                <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled">Kein Konto? Jetzt registrieren</asp:HyperLink>
             </div>
         </div>
         <div class="checkbox">

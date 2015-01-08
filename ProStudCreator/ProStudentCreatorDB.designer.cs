@@ -1352,6 +1352,10 @@ namespace ProStudCreator
 		
 		private string _Remarks;
 		
+		private string _ReservationNameOne;
+		
+		private string _ReservationNameTwo;
+		
 		private bool _Importance;
 		
 		private bool _Published;
@@ -1428,6 +1432,10 @@ namespace ProStudCreator
     partial void OnReferencesChanged();
     partial void OnRemarksChanging(string value);
     partial void OnRemarksChanged();
+    partial void OnReservationNameOneChanging(string value);
+    partial void OnReservationNameOneChanged();
+    partial void OnReservationNameTwoChanging(string value);
+    partial void OnReservationNameTwoChanged();
     partial void OnImportanceChanging(bool value);
     partial void OnImportanceChanged();
     partial void OnPublishedChanging(bool value);
@@ -1989,6 +1997,46 @@ namespace ProStudCreator
 					this._Remarks = value;
 					this.SendPropertyChanged("Remarks");
 					this.OnRemarksChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReservationNameOne", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string ReservationNameOne
+		{
+			get
+			{
+				return this._ReservationNameOne;
+			}
+			set
+			{
+				if ((this._ReservationNameOne != value))
+				{
+					this.OnReservationNameOneChanging(value);
+					this.SendPropertyChanging();
+					this._ReservationNameOne = value;
+					this.SendPropertyChanged("ReservationNameOne");
+					this.OnReservationNameOneChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReservationNameTwo", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string ReservationNameTwo
+		{
+			get
+			{
+				return this._ReservationNameTwo;
+			}
+			set
+			{
+				if ((this._ReservationNameTwo != value))
+				{
+					this.OnReservationNameTwoChanging(value);
+					this.SendPropertyChanging();
+					this._ReservationNameTwo = value;
+					this.SendPropertyChanged("ReservationNameTwo");
+					this.OnReservationNameTwoChanged();
 				}
 			}
 		}
