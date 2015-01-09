@@ -448,10 +448,9 @@ namespace ProStudCreator
             text = new Paragraph("BetreuerIn:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             advisorCell = new PdfPCell(text);
             advisorCell.Border = Rectangle.NO_BORDER;
-            advisorCell.Rowspan = 2;
             projectTable.AddCell(advisorCell);
 
-            text = new Paragraph(proj.Advisor + ", " + Environment.NewLine + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectTable.AddCell(text);
 
             projectTable.AddCell(" ");
@@ -462,8 +461,25 @@ namespace ProStudCreator
 
             if (proj.Advisor2 != "")
             {
-                text = new Paragraph(proj.Advisor2 + "," + Environment.NewLine + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                projectTable.AddCell(" ");
+                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                 projectTable.AddCell(text);
+            }
+            else
+            {
+                text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                projectTable.AddCell(text);
+
+                if (proj.EmployerEmail != "")
+                {
+                    text = new Paragraph(proj.Employer + ", " + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                    projectTable.AddCell(text);
+                }
+                else
+                {
+                    text = new Paragraph(proj.Employer, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                    projectTable.AddCell(text);
+                }
             }
 
             text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
@@ -474,14 +490,14 @@ namespace ProStudCreator
             projectTable.AddCell(text);
 
 
-            if (proj.Employer != "")
+            if (proj.Employer != "" && proj.Advisor2 != "")
             {
                 text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                 projectTable.AddCell(text);
 
                 if (proj.EmployerEmail != "")
                 {
-                    text = new Paragraph(proj.Employer + ", " + Environment.NewLine + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                    text = new Paragraph(proj.Employer + ", " + proj.EmployerEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
                     projectTable.AddCell(text);
                 }
                 else
