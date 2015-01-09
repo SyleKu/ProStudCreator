@@ -79,7 +79,7 @@
 
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:LinkButton runat="server" ID="deleteProjectButton" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie wirklich dieses Projekt löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove pull-right"></asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="deleteProjectButton" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie wirklich dieses Projekt löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
 
