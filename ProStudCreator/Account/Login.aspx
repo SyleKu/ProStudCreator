@@ -59,7 +59,7 @@
                 </p>
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Email" >E-Mail Adresse</asp:Label>
-                    <asp:TextBox runat="server" ID="Email" TextMode="Email" CssClass="form-control" TabIndex="1" placeholder="E-Mail Adresse"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="Email" TextMode="Email" CssClass="form-control" TabIndex="1" placeholder="vorname.nachname@fhnw.ch"></asp:TextBox>
                 </div>
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Password">Passwort</asp:Label>

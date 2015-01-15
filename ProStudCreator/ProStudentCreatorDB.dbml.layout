@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 12.5" name="ProStudentCreatorDB">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 12.625" name="ProStudentCreatorDB">
   <DataContextMoniker Name="/ProStudentCreatorDBDataContext" />
   <nestedChildShapes>
     <classShape Id="820eb6bb-b4af-469a-a83c-54e0291d3eab" absoluteBounds="7.25, 0.625, 2, 1.1939925130208335">
@@ -66,10 +66,10 @@
         <classShapeMoniker Id="45031cad-4113-455d-b1a8-d03e472da3db" />
       </nodes>
     </associationConnector>
-    <classShape Id="00d364fe-fbc9-46ff-b7b1-4848b16f8ae3" absoluteBounds="0.5, 4.125, 2, 8.1168440755208326">
+    <classShape Id="2d2f1669-c6cf-4bbc-813b-779293a26534" absoluteBounds="0.5, 4.125, 2, 8.3091455078125">
       <DataClassMoniker Name="/ProStudentCreatorDBDataContext/Project" />
       <nestedChildShapes>
-        <elementListCompartment Id="7e3ca79d-1de6-4bd4-ac6a-7f433f4bda40" absoluteBounds="0.51500000000000012, 4.585, 1.9700000000000002, 7.556844075520833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="5bf44d38-0315-4ce7-b7c4-58e0b83e515e" absoluteBounds="0.51500000000000012, 4.585, 1.9700000000000002, 7.7491455078125009" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

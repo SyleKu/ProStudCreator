@@ -73,7 +73,7 @@
                     <label for="EnterEMail">E-Mail Adresse</label>
                 </div>
                 <div class="form-group">
-                    <asp:TextBox ID="NewUserEmail" CssClass="form-control col-sm-3" runat="server" Width="345px" placeholder="E-Mail Adresse"></asp:TextBox>
+                    <asp:TextBox ID="NewUserEmail" CssClass="form-control col-sm-3" runat="server" Width="345px" placeholder="vorname.nachname"></asp:TextBox>
                     <asp:TextBox ID="FixEmailEnding" CssClass="form-control col-sm-3" runat="server" Enabled="false" Width="90px" Text="@fhnw.ch"></asp:TextBox>
                     <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserEmail" Display="Dynamic" CssClass="text-danger" ErrorMessage="Das E-Mail-Feld ist erforderlich." />
                 </div>

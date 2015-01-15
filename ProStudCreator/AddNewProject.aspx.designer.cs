@@ -238,6 +238,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox InitialPositionContent;
         
         /// <summary>
+        /// InitialPositionContentValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator InitialPositionContentValidator;
+        
+        /// <summary>
         /// AddPictureLabel control.
         /// </summary>
         /// <remarks>
@@ -292,6 +301,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ObjectivContent;
         
         /// <summary>
+        /// ObjectivContentValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ObjectivContentValidator;
+        
+        /// <summary>
         /// ProblemStatementContent control.
         /// </summary>
         /// <remarks>
@@ -301,6 +319,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ProblemStatementContent;
         
         /// <summary>
+        /// ProblemStatementContentValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ProblemStatementContentValidator;
+        
+        /// <summary>
         /// ReferencesContent control.
         /// </summary>
         /// <remarks>
@@ -308,6 +335,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ReferencesContent;
+        
+        /// <summary>
+        /// ReferencesContentValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ReferencesContentValidator;
         
         /// <summary>
         /// RemarksContent control.

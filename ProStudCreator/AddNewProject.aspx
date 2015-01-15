@@ -74,6 +74,7 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="col-sm-9 form-control" placeholder="Ausgangslage" TextMode="MultiLine"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="InitialPositionContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="InitialPositionContent" runat="server" ErrorMessage="Die Ausgangslage darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
@@ -88,24 +89,27 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <asp:TextBox runat="server" ID="ObjectivContent" CssClass="col-sm-9 form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="ObjectivContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ObjectivContent" runat="server" ErrorMessage="Das Feld 'Ziel der Arbeit' darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
                 <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="col-sm-9 form-control" placeholder="Problemstellung" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="ProblemStatementContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ProblemStatementContent" runat="server" ErrorMessage="Die Problemstellung darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien / Fachliche Schwerpunkte / Referenzen:"></asp:Label>
                 <asp:TextBox runat="server" ID="ReferencesContent" CssClass="col-sm-9 form-control" placeholder="Technologien / Fachliche Schwerpunkte / Referenzen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="ReferencesContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ReferencesContent" runat="server" ErrorMessage="Das Feld 'Technologien / Fachliche Schwerpunkte / Referenzen' darf nicht leer sein!"></asp:RequiredFieldValidator>
             </div>
             <hr />
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen:"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
                 <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reservation (optional):"></asp:Label>
-                <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="Vollständiger Name des Schülers"></asp:TextBox>
-                <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="Vollständiger Name des Schülers" Visible="false"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="Vollständiger Name des Studierender"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="Vollständiger Name des Studierender" Visible="false"></asp:TextBox>
             </div>
             <!-- CANCELLED PART !!
             <div class="form-group">

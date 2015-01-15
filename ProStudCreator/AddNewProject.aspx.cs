@@ -252,6 +252,11 @@ namespace ProStudCreator
                 submitProject.Visible = false;
             }
 
+            if (proj.OverOnePage)
+            {
+                submitProject.Enabled = false;
+            }
+
             ProjectName.ReadOnly = true;
             Employer.ReadOnly = true;
             EmployerMail.ReadOnly = true;
@@ -398,7 +403,7 @@ namespace ProStudCreator
                 Response.Redirect("/AddNewProject?id=" + id);
             }
 
-            else if (projectType.Any() && NameBetreuer1.Text != "" || Request.QueryString["id"] != null)
+            else if (projectType.Any() || Request.QueryString["id"] != null)
             {
                 if (Request.QueryString["id"] != null)
                 {
@@ -504,8 +509,6 @@ namespace ProStudCreator
 
                 projects.Department = Department.Text;
 
-
-
                 if (AddPicture.FileName != "")
                 {
                     using (var input = AddPicture.PostedFile.InputStream)
@@ -527,13 +530,35 @@ namespace ProStudCreator
                     db.Projects.InsertOnSubmit(projects);
                 }
                 db.SubmitChanges();
+
+                int lastinsertedId;
+
+                if (Request.QueryString["id"] == null)
+                {
+                    lastinsertedId = projects.Id;
+                }
+                else
+                {
+                    lastinsertedId = id;
+                }
+
+                PdfCreator pdfCreator = new PdfCreator();
+                int amountPages = pdfCreator.getNumberOfPDFPages(lastinsertedId, Request);
+
+                // 2, da am Ende jeder Erstellung eines Dokuments eine NewPage macht().
+                if (amountPages > 1)
+                {
+                    projects.OverOnePage = true;
+                }
+                else
+                {
+                    projects.OverOnePage = false;
+                }
+
+                db.SubmitChanges();
+
                 Response.Redirect("/Projectlist");
             }
-        }
-
-        private bool EmailAvailable()
-        {
-            return db.AspNetUsers.Any(item => item.Email == EMail1.Text);
         }
 
         private void applyProjectType(Project _is)
@@ -622,6 +647,7 @@ namespace ProStudCreator
 
         protected void refuseProject_Click(object sender, EventArgs e)
         {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "Scripts", "<script>alert('This is altert.');</script>");
             var id = int.Parse(Request.QueryString["id"]);
             var proj = db.Projects.Single(i => i.Id == id);
             proj.Published = false;
