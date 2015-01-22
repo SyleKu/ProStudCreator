@@ -75,12 +75,11 @@ namespace ProStudCreator
 
             if (projectCounter < 10)
             {
-                title = new Paragraph(proj.Department + "0" + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+                title = new Paragraph(proj.Department.DepartmentName + "0" + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
             }
             else
             {
-
-                title = new Paragraph(proj.Department + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+                title = new Paragraph(proj.Department.DepartmentName + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
             }
 
             title.SpacingBefore = 8f;
@@ -191,9 +190,9 @@ namespace ProStudCreator
 
             text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectTable.AddCell(text);
-            text = new Paragraph(checkPriorityOne(proj), FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            text = new Paragraph(db.ProjectPriorities.Single(i => i.Id == proj.POneID).Priority, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectTable.AddCell(text);
-            text = new Paragraph(checkPriorityTwo(proj), FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            text = new Paragraph(db.ProjectPriorities.Single(i => i.Id == proj.PTwoID).Priority, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectTable.AddCell(text);
 
 
@@ -214,11 +213,13 @@ namespace ProStudCreator
                 }
             }
 
+            
+
             text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectTable.AddCell(text);
-            text = new Paragraph(proj.POneTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            text = new Paragraph(db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID).TeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectTable.AddCell(text);
-            text = new Paragraph(proj.PTwoTeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            text = new Paragraph(db.ProjectTeamSizes.Single(i => i.Id == proj.PTwoTeamSizeID).TeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
             projectTable.AddCell(text);
 
             document.Add(projectTable);
@@ -431,50 +432,7 @@ namespace ProStudCreator
                 foot.WriteSelectedRows(0, -1, -1, 40, writer.DirectContent);
             }
         }
-
-        private String checkPriorityOne(Project proj)
-        {
-            var priorityOne = "";
-            if (proj.POneP5 && proj.POneP6)
-            {
-                priorityOne = "P5 oder P6";
-
-            }
-            else if (proj.POneP5)
-            {
-                priorityOne = "P5";
-            }
-            else
-            {
-                priorityOne = "P6";
-            }
-
-            return priorityOne;
-        }
-
-        private String checkPriorityTwo(Project proj)
-        {
-            var priorityTwo = "";
-            if (proj.PTwoP5 && proj.PTwoP6)
-            {
-                priorityTwo = "P5 oder P6";
-            }
-            else if (proj.PTwoP5)
-            {
-                priorityTwo = "P5";
-            }
-            else if (proj.PTwoP6)
-            {
-                priorityTwo = "P6";
-            }
-            else
-            {
-                priorityTwo = "------";
-
-            }
-            return priorityTwo;
-        }
-
+        
         private String getCurrentProjectTypeOne(Project proj)
         {
             var projectType = "";

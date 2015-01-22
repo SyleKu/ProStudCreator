@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
         <div class="well adminSettings non-selectable">
-            <h3>Eingereichte Projekte:</h3>
+            <h3>Submitted projects:</h3>
             <div class="well" style="background-color: #ffffff">
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" Width="1200px" AutoGenerateColumns="False" OnRowCommand="CheckProjectsEvent">
                     <AlternatingRowStyle BackColor="White" />
@@ -40,24 +40,25 @@
         </div>
     </asp:PlaceHolder>
     <div class="well usernSettings non-selectable">
-        <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click" />
+        <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="New project" OnClick="newProject_Click" />
         <asp:PlaceHolder ID="AdminViewPDF" runat="server" Visible="false">
-            <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont" Text="Erstelle PDF" OnClick="AllProjectsAsPDF_Click" />
+            <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont" Text="Create PDF" OnClick="AllProjectsAsPDF_Click" />
 
         </asp:PlaceHolder>
         <div class="radioButtonSettings non-selectable">
             <asp:RadioButtonList ID="ProjectsFilterAllProjects" RepeatDirection="Horizontal" runat="server" AutoPostBack="true">
-                <asp:ListItem Value="AllProjects">Alle Projekte</asp:ListItem>
-                <asp:ListItem Value="MyProjects">Meine Projekte (in Bearbeitung)</asp:ListItem>
-                <asp:ListItem Value="NotAvailable">Eingereichte Projekte</asp:ListItem>
-                <asp:ListItem Value="Available">Veröffentlicht</asp:ListItem>
+                <asp:ListItem Value="AllFutureProjects">Projects next semester</asp:ListItem>
+                <asp:ListItem Value="AllPastProjects">Projects last semester</asp:ListItem>
+                <asp:ListItem Value="MyProjects">My projects (in progress)</asp:ListItem>
+                <asp:ListItem Value="NotAvailable">Submitted projects</asp:ListItem>
+                <asp:ListItem Value="Available">Published Projects</asp:ListItem>
             </asp:RadioButtonList>
         </div>
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">
             <asp:GridView ID="AllProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" Width="1200px" AutoGenerateColumns="False" OnRowCommand="AllProjectsEvent" OnRowDataBound="AllProjects_RowDataBound">
                 <AlternatingRowStyle BackColor="White" />
                 <Columns>
-                    <asp:BoundField DataField="id" HeaderText="ID"/>
+                    <asp:BoundField DataField="id" HeaderText="ID" />
                     <asp:BoundField DataField="advisorName" HeaderText="BetreuerIn" SortExpression="Advisor" ItemStyle-Width="200px" />
                     <asp:BoundField DataField="advisorEmail" HeaderText="E-Mail" SortExpression="Advisor" ItemStyle-Width="200px" />
                     <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="Advisor" ItemStyle-Width="250px" />

@@ -13,6 +13,51 @@ namespace ProStudCreator {
     public partial class AddNewProject {
         
         /// <summary>
+        /// refusedReason control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl refusedReason;
+        
+        /// <summary>
+        /// refusedReasonTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label refusedReasonTitle;
+        
+        /// <summary>
+        /// refusedReasonText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox refusedReasonText;
+        
+        /// <summary>
+        /// refuseDefinitiveNewProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button refuseDefinitiveNewProject;
+        
+        /// <summary>
+        /// cancelRefusion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button cancelRefusion;
+        
+        /// <summary>
         /// newProjectDiv control.
         /// </summary>
         /// <remarks>
@@ -434,5 +479,14 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button refuseNewProject;
+        
+        /// <summary>
+        /// rollbackProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button rollbackProject;
     }
 }

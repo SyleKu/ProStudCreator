@@ -28,7 +28,7 @@ namespace ProStudCreator.Account
                 // Weitere Informationen zum Aktivieren der Kontobestätigung und Kennwortzurücksetzung finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=320771".
                 string code = manager.GenerateEmailConfirmationToken(user.Id);
                 string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, user.Id, Request);
-                manager.SendEmail(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>.");
+                //manager.SendEmail(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>.");
 
                 IdentityHelper.SignIn(manager, user, isPersistent: false);
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);

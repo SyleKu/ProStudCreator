@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.html;
+using System.Net.Mail;
 
 namespace ProStudCreator
 {
@@ -28,7 +29,8 @@ namespace ProStudCreator
     public partial class projectlist : System.Web.UI.Page
     {
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        bool[] projectFilter = new bool[4];
+        bool[] projectFilter = new bool[5];
+        DateTime today = DateTime.Now;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -59,31 +61,44 @@ namespace ProStudCreator
 
                 var projects = db.Projects.Where(i => true);
 
-                CheckProjects.DataSource = projects.Where(item => !item.Published && !item.InProgress && !item.StateDeleted).Select(i => new ProjectSingleElement()
-                {
-                    id = i.Id,
-                    advisorName = i.Advisor + Environment.NewLine + i.Advisor2,
-                    advisorEmail = i.AdvisorMail + Environment.NewLine + i.AdvisorMail2,
-                    projectName = i.Name,
-                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                    projectType2 = "pictures/projectTyp" +
-                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                });
+                CheckProjects.DataSource = projects.Where(item => !item.Published && !item.InProgress && !item.StateDeleted).Select(i => getProjectSingleElement(i));
 
+
+                int year = today.Year;
+                int month = today.Month;
+
+                int JahrMonatNummer = 12 * year + month - 1;
+                int Semester = (int)((JahrMonatNummer - 1.5) / 6);
+
+                /*
+                
+                if(today > Semester)
+                    alle projekte seit mitte oktober letztes jahr
+                if(heute > mitte oktober)
+                    alle projekte seit mitte februar dieses jahr
+                */
                 if (projectFilter[0])
+                {
                     projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
+                    /*
+                    if(projects.Where(i => (int)(((i.CreateDate.Year *12 + i.CreateDate.Month -1)-1.5) /6)) < Semester)
+                        projects = projects.Where(item => item.POneID==27);
+                    else
+                    {
+                    }*/
+
+                }
 
                 else if (projectFilter[1])
                 {
+                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
+                }
+
+                else if (projectFilter[2])
+                {
                     projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
                 }
-                else if (projectFilter[2])
+                else if (projectFilter[3])
                 {
                     projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
 
@@ -92,34 +107,25 @@ namespace ProStudCreator
                 {
                     projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
                 }
-                AllProjects.DataSource = projects.Select(i => new ProjectSingleElement()
-                {
-                    id = i.Id,
-                    advisorName = i.Advisor + Environment.NewLine + i.Advisor2,
-                    advisorEmail = i.AdvisorMail + Environment.NewLine + i.AdvisorMail2,
-                    projectName = i.Name,
-                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                    projectType2 = "pictures/projectTyp" +
-                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                });
+
+                AllProjects.DataSource = projects.Select(i => getProjectSingleElement(i));
             }
 
             else
             {
-                if (ProjectsFilterAllProjects.Items[0].Text.Contains("Alle Projekte"))
+                if (ProjectsFilterAllProjects.Items[0].Text.Contains("Projects next semester"))
                 {
                     ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
                 }
 
+                if (ProjectsFilterAllProjects.Items[1].Text.Contains("Projects last semester"))
+                {
+                    ProjectsFilterAllProjects.Items[1].Attributes.CssStyle.Add("display", "none");
+                }
+
                 if (!IsPostBack)
                 {
-                    ProjectsFilterAllProjects.Items[1].Selected = true;
+                    ProjectsFilterAllProjects.Items[2].Selected = true;
                 }
 
                 int counter = 0;
@@ -131,11 +137,11 @@ namespace ProStudCreator
 
                 var projects = db.Projects.Where(i => true);
 
-                if (projectFilter[1])
+                if (projectFilter[2])
                 {
                     projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
                 }
-                else if (projectFilter[2])
+                else if (projectFilter[3])
                 {
                     projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
 
@@ -145,30 +151,35 @@ namespace ProStudCreator
                     projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
                 }
 
-                AllProjects.DataSource = projects.Select(i => new ProjectSingleElement()
-                {
-                    id = i.Id,
-                    advisorName = i.Advisor + " " + i.Advisor2,
-                    advisorEmail = i.AdvisorMail + " " + i.AdvisorMail2,
-                    projectName = i.Name,
-                    p5 = (i.POneP5 ? true : false || i.PTwoP5 ? true : false),
-                    p6 = (i.POneP6 ? true : false || i.PTwoP6 ? true : false),
-                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
-                    projectType2 = "pictures/projectTyp" +
-                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                    (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                    (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                    (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-                });
+                AllProjects.DataSource = projects.Select(i => getProjectSingleElement(i));
             }
             CheckProjects.DataBind();
             AllProjects.DataBind();
         }
 
+        private ProjectSingleElement getProjectSingleElement(Project i) {
+
+            return new ProjectSingleElement()
+               {
+                   id = i.Id,
+                   advisorName = i.Advisor + Server.HtmlEncode("<br / >") + i.Advisor2,
+                   advisorEmail = i.AdvisorMail + Server.HtmlEncode("<br / >") + i.AdvisorMail2,
+                   projectName = i.Name,
+                   p5 = (i.POneID == 1 ? true : false || i.PTwoID == 3 ? true : false),
+                   p6 = (i.POneID == 2 ? true : false || i.PTwoID == 3 ? true : false),
+                   projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                   projectType2 = "pictures/projectTyp" +
+                   ((i.TypeHW && i.TypeDesignUX) ? "HW" :
+                   (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
+                   (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
+                   (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
+                   (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
+               };
+        }
+
         protected void AllProjects_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (projectFilter[2] || projectFilter[3])
+            if (projectFilter[3] || projectFilter[4])
             {
                 e.Row.Cells[9].Visible = false;
                 e.Row.Cells[10].Visible = false;
@@ -329,6 +340,6 @@ namespace ProStudCreator
             }
         }
 
-        
+
     }
 }

@@ -21,7 +21,8 @@ namespace ProStudCreator.Account
                 // E-Mail-Adresse des Benutzers überprüfen
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 ApplicationUser user = manager.FindByName(Email.Text);
-                if (user == null || !manager.IsEmailConfirmed(user.Id))
+                // if (user == null || !manager.IsEmailConfirmed(user.Id))
+                if (user == null)
                 {
                     FailureText.Text = "Der Benutzer ist nicht vorhanden oder wurde nicht bestätigt.";
                     ErrorMessage.Visible = true;

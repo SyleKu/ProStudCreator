@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using System.Net.Mail;
 
 namespace ProStudCreator
 {
@@ -16,6 +18,7 @@ namespace ProStudCreator
         bool[] projectType = new bool[6];
         private static int id;
         private Project projects;
+        ProjectPriority projectPriority = new ProjectPriority();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,10 +32,25 @@ namespace ProStudCreator
             }
             else
             {
+                InitialPositionContent.Attributes.Add("placeholder", "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
+                ObjectivContent.Attributes.Add("placeholder", "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");
+                ProblemStatementContent.Attributes.Add("placeholder", "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
+                ReferencesContent.Attributes.Add("placeholder", "Beispiel: JavaScript, Komplexe Datenstrukturen, Three.js/WebGL");
+                RemarksContent.Attributes.Add("placeholder", "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
+
+                POneContent.DataSource = db.ProjectPriorities.Where(i => i.Id != 0).Select(i => i.Priority);
+                PTwoContent.DataSource = db.ProjectPriorities.Select(i => i.Priority);
+
+                POneTeamSize.DataSource = db.ProjectTeamSizes.Where(i => i.Id != 0).Select(i => i.TeamSize);
+                PTwoTeamSize.DataSource = db.ProjectTeamSizes.Select(i => i.TeamSize);
+
+                Department.DataSource = db.Departments.Select(i => i.DepartmentName);
+                DataBind();
+
                 ViewState["Types"] = projectType;
-                AddPictureLabel.Text = "Bild hinzufügen";
-                SiteTitle.Text = "Neues Projekt erstellen:";
-                saveNewProject.Text = "Speichern";
+                AddPictureLabel.Text = "Add image";
+                SiteTitle.Text = "Create new project:";
+                saveNewProject.Text = "Save";
 
                 if (Request.QueryString["id"] != null)
                 {
@@ -57,10 +75,10 @@ namespace ProStudCreator
                 Response.Redirect("/projectlist");
             }
             */
-            SiteTitle.Text = "Projekt bearbeiten:";
-            CreatorID.Text = "Ersteller: " + proj.Creator;
-            saveNewProject.Text = "Änderungen speichern";
-            AddPictureLabel.Text = "Bild ändern";
+            SiteTitle.Text = "Edit project:";
+            CreatorID.Text = "Creator: " + proj.Creator + ", " + proj.CreateDate.ToString("dd.MM.yyyy");
+            saveNewProject.Text = "Save changes";
+            AddPictureLabel.Text = "Change image";
             saveNewProject.Width = 175;
 
             if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && Request.QueryString["show"] != null)
@@ -114,73 +132,16 @@ namespace ProStudCreator
             }
 
             // Priority 1
-
-            if (proj.POneP5 && proj.POneP6)
-            {
-                POneContent.Text = "P5 oder P6";
-
-            }
-            else if (proj.POneP5)
-            {
-                POneContent.Text = "P5 (180h pro Student)";
-            }
-            else
-            {
-                POneContent.Text = "P6 (360h pro Student)";
-            }
+            POneContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.POneID - 1).Priority;
 
             //  Priority 2
-
-            if (proj.PTwoP5 && proj.PTwoP6)
-            {
-                PTwoContent.Text = "P5 oder P6";
-            }
-            else if (proj.PTwoP5)
-            {
-                PTwoContent.Text = "P5 (180h pro Student)";
-            }
-            else if (proj.PTwoP6)
-            {
-                PTwoContent.Text = "P6 (360h pro Student)";
-            }
-            else
-            {
-                PTwoContent.Text = "------";
-            }
+            PTwoContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.PTwoID).Priority;
 
             // Teamsize Priority 1
-
-            if (proj.POneTeamSize == "Einzelarbeit")
-            {
-                POneTeamSize.Text = "Einzelarbeit";
-            }
-            else if (proj.POneTeamSize == "2er Team")
-            {
-                POneTeamSize.Text = "2er Team";
-            }
-            else
-            {
-                POneTeamSize.Text = "1er oder 2er Team";
-            }
+            POneTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID - 1).TeamSize;
 
             // Teamsize Priority 2
-
-            if (proj.PTwoTeamSize == "------")
-            {
-                PTwoTeamSize.Text = "------";
-            }
-            else if (proj.PTwoTeamSize == "Einzelarbeit")
-            {
-                PTwoTeamSize.Text = "Einzelarbeit";
-            }
-            else if (proj.PTwoTeamSize == "2er Team")
-            {
-                PTwoTeamSize.Text = "2er Team";
-            }
-            else
-            {
-                PTwoTeamSize.Text = "1er oder 2er Team";
-            }
+            PTwoTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.PTwoTeamSizeID).TeamSize;
 
             InitialPositionContent.Text = proj.InitialPosition;
 
@@ -219,15 +180,16 @@ namespace ProStudCreator
                 ReservationNameTwo.Text = proj.ReservationNameTwo;
                 ReservationNameTwo.Visible = true;
             }
-            Department.Text = proj.Department;
+
+            Department.Text = db.Departments.Single(i => i.Id == proj.DepartmentID).DepartmentName;
         }
 
         private void showOnlyContent()
         {
             var proj = db.Projects.Single(i => i.Id == id);
 
-            SiteTitle.Text = "Projekt Ansicht:";
-            saveNewProject.Text = "Bearbeiten";
+            SiteTitle.Text = "View project:";
+            saveNewProject.Text = "Edit";
             saveNewProject.Width = 100;
             if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && !proj.InProgress)
             {
@@ -296,7 +258,16 @@ namespace ProStudCreator
             if (proj.Published)
             {
                 newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
-                saveNewProject.Visible = false;
+
+                if (User.Identity.Name == "test@fhnw.ch")
+                {
+                    rollbackProject.Visible = true;
+                    saveNewProject.Visible = true;
+                }
+                else
+                {
+                    saveNewProject.Visible = false;
+                }
             }
 
             if (proj.Refused)
@@ -443,49 +414,13 @@ namespace ProStudCreator
 
                 applyProjectType(projects);
 
-                if (POneContent.Text == "P5 (180h pro Student)")
-                {
-                    projects.POneP5 = true;
-                    projects.POneP6 = false;
-                }
-                else if (POneContent.Text == "P6 (360h pro Student)")
-                {
-
-                    projects.POneP5 = false;
-                    projects.POneP6 = true;
-                }
-                else
-                {
-                    projects.POneP5 = true;
-                    projects.POneP6 = true;
-                }
 
 
-                if (PTwoContent.Text == "P5 (180h pro Student)")
-                {
-                    projects.PTwoP5 = true;
-                    projects.PTwoP6 = false;
-                }
-                else if (PTwoContent.Text == "P6 (360h pro Student)")
-                {
+                projects.POneID = POneContent.SelectedIndex + 1;
+                projects.PTwoID = PTwoContent.SelectedIndex;
 
-                    projects.PTwoP5 = false;
-                    projects.PTwoP6 = true;
-                }
-                else if (PTwoContent.Text == "P5 oder P6")
-                {
-
-                    projects.PTwoP5 = true;
-                    projects.PTwoP6 = true;
-                }
-                else
-                {
-                    projects.PTwoP5 = false;
-                    projects.PTwoP6 = false;
-                }
-
-                projects.POneTeamSize = POneTeamSize.Text;
-                projects.PTwoTeamSize = PTwoTeamSize.Text;
+                projects.POneTeamSizeID = POneTeamSize.SelectedIndex + 1;
+                projects.PTwoTeamSizeID = PTwoTeamSize.SelectedIndex;
 
                 projects.InitialPosition = InitialPositionContent.Text;
                 projects.Objective = ObjectivContent.Text;
@@ -507,7 +442,7 @@ namespace ProStudCreator
                 applyImportance(projects);
                 */
 
-                projects.Department = Department.Text;
+                projects.DepartmentID = Department.SelectedIndex;
 
                 if (AddPicture.FileName != "")
                 {
@@ -557,7 +492,7 @@ namespace ProStudCreator
 
                 db.SubmitChanges();
 
-                Response.Redirect("/Projectlist");
+                Response.Redirect("/projectlist");
             }
         }
 
@@ -642,19 +577,37 @@ namespace ProStudCreator
             var proj = db.Projects.Single(i => i.Id == id);
             proj.Published = true;
             db.SubmitChanges();
-            Response.Redirect("/Projectlist");
+
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.To.Add("kushtrim.sylejmani@fhnw.ch");
+                mailMessage.From = new MailAddress(User.Identity.Name);
+                mailMessage.Subject = "Projekt '" + proj.Name + "' veröffentlicht";
+                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht. \r\n----------------------\n Automatische Antwort von ProStudCreator";
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                Response.Write("E-mail sent!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Could not send the e-mail - error: " + ex.Message);
+            }
+
+
+            Response.Redirect("/projectlist");
         }
 
         protected void refuseProject_Click(object sender, EventArgs e)
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "Scripts", "<script>alert('This is altert.');</script>");
             var id = int.Parse(Request.QueryString["id"]);
             var proj = db.Projects.Single(i => i.Id == id);
-            proj.Published = false;
-            proj.InProgress = true;
-            proj.Refused = true;
-            db.SubmitChanges();
-            Response.Redirect("/Projectlist");
+
+            refusedReason.Visible = true;
+            refuseNewProject.Visible = false;
+            publishProject.Visible = false;
+            saveNewProject.Visible = false;
+            refusedReasonText.Text = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " abgelehnt.\r\n\nDies sind die Gründe dafür:\n\n\n\nFreundliche Grüsse\n" + User.Identity.Name;
         }
 
         protected void submitProject_Click(object sender, EventArgs e)
@@ -665,7 +618,7 @@ namespace ProStudCreator
             proj.InProgress = false;
             proj.Refused = false;
             db.SubmitChanges();
-            Response.Redirect("/Projectlist");
+            Response.Redirect("/projectlist");
         }
 
         protected void deleteImage_Click(object sender, EventArgs e)
@@ -701,5 +654,50 @@ namespace ProStudCreator
             }
         }
 
+        protected void rollbackProject_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+            proj.Published = false;
+            proj.InProgress = false;
+            proj.Refused = false;
+            db.SubmitChanges();
+            Response.Redirect("/projectlist");
+        }
+
+        protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+
+            proj.Published = false;
+            proj.InProgress = true;
+            proj.Refused = true;
+            db.SubmitChanges();
+
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.To.Add("kushtrim.sylejmani@fhnw.ch");
+                mailMessage.From = new MailAddress(User.Identity.Name);
+                mailMessage.Subject = "Projekt " + proj.Name + " abgelehnt";
+                mailMessage.Body = refusedReasonText.Text;
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                Response.Write("E-mail sent!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Could not send the e-mail - error: " + ex.Message);
+            }
+
+            Response.Redirect("/projectlist");
+        }
+
+        protected void cancelRefusion_Click(object sender, EventArgs e)
+        {
+            refusedReason.Visible = false;
+            refuseNewProject.Visible = true;
+        }
     }
 }

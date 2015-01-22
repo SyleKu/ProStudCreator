@@ -48,6 +48,15 @@ namespace ProStudCreator
     partial void InsertAspNetUser(AspNetUser instance);
     partial void UpdateAspNetUser(AspNetUser instance);
     partial void DeleteAspNetUser(AspNetUser instance);
+    partial void InsertDepartment(Department instance);
+    partial void UpdateDepartment(Department instance);
+    partial void DeleteDepartment(Department instance);
+    partial void InsertProjectPriority(ProjectPriority instance);
+    partial void UpdateProjectPriority(ProjectPriority instance);
+    partial void DeleteProjectPriority(ProjectPriority instance);
+    partial void InsertProjectTeamSize(ProjectTeamSize instance);
+    partial void UpdateProjectTeamSize(ProjectTeamSize instance);
+    partial void DeleteProjectTeamSize(ProjectTeamSize instance);
     partial void InsertProject(Project instance);
     partial void UpdateProject(Project instance);
     partial void DeleteProject(Project instance);
@@ -128,6 +137,30 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<AspNetUser>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Department> Departments
+		{
+			get
+			{
+				return this.GetTable<Department>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ProjectPriority> ProjectPriorities
+		{
+			get
+			{
+				return this.GetTable<ProjectPriority>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ProjectTeamSize> ProjectTeamSizes
+		{
+			get
+			{
+				return this.GetTable<ProjectTeamSize>();
 			}
 		}
 		
@@ -1292,6 +1325,404 @@ namespace ProStudCreator
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Departments")]
+	public partial class Department : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _DepartmentName;
+		
+		private EntitySet<Project> _Projects;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDepartmentNameChanging(string value);
+    partial void OnDepartmentNameChanged();
+    #endregion
+		
+		public Department()
+		{
+			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentName", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string DepartmentName
+		{
+			get
+			{
+				return this._DepartmentName;
+			}
+			set
+			{
+				if ((this._DepartmentName != value))
+				{
+					this.OnDepartmentNameChanging(value);
+					this.SendPropertyChanging();
+					this._DepartmentName = value;
+					this.SendPropertyChanged("DepartmentName");
+					this.OnDepartmentNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_Project", Storage="_Projects", ThisKey="Id", OtherKey="DepartmentID")]
+		public EntitySet<Project> Projects
+		{
+			get
+			{
+				return this._Projects;
+			}
+			set
+			{
+				this._Projects.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = this;
+		}
+		
+		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ProjectPriorities")]
+	public partial class ProjectPriority : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Priority;
+		
+		private EntitySet<Project> _Projects;
+		
+		private EntitySet<Project> _Projects1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnPriorityChanging(string value);
+    partial void OnPriorityChanged();
+    #endregion
+		
+		public ProjectPriority()
+		{
+			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Priority", DbType="NVarChar(MAX)")]
+		public string Priority
+		{
+			get
+			{
+				return this._Priority;
+			}
+			set
+			{
+				if ((this._Priority != value))
+				{
+					this.OnPriorityChanging(value);
+					this.SendPropertyChanging();
+					this._Priority = value;
+					this.SendPropertyChanged("Priority");
+					this.OnPriorityChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectPriority_Project", Storage="_Projects", ThisKey="Id", OtherKey="POneID")]
+		public EntitySet<Project> Projects
+		{
+			get
+			{
+				return this._Projects;
+			}
+			set
+			{
+				this._Projects.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectPriority_Project1", Storage="_Projects1", ThisKey="Id", OtherKey="PTwoID")]
+		public EntitySet<Project> Projects1
+		{
+			get
+			{
+				return this._Projects1;
+			}
+			set
+			{
+				this._Projects1.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectPriority = this;
+		}
+		
+		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectPriority = null;
+		}
+		
+		private void attach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectPriority1 = this;
+		}
+		
+		private void detach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectPriority1 = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ProjectTeamSize")]
+	public partial class ProjectTeamSize : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _TeamSize;
+		
+		private EntitySet<Project> _Projects;
+		
+		private EntitySet<Project> _Projects1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnTeamSizeChanging(string value);
+    partial void OnTeamSizeChanged();
+    #endregion
+		
+		public ProjectTeamSize()
+		{
+			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TeamSize", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string TeamSize
+		{
+			get
+			{
+				return this._TeamSize;
+			}
+			set
+			{
+				if ((this._TeamSize != value))
+				{
+					this.OnTeamSizeChanging(value);
+					this.SendPropertyChanging();
+					this._TeamSize = value;
+					this.SendPropertyChanged("TeamSize");
+					this.OnTeamSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectTeamSize_Project", Storage="_Projects", ThisKey="Id", OtherKey="POneTeamSizeID")]
+		public EntitySet<Project> Projects
+		{
+			get
+			{
+				return this._Projects;
+			}
+			set
+			{
+				this._Projects.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectTeamSize_Project1", Storage="_Projects1", ThisKey="Id", OtherKey="PTwoTeamSizeID")]
+		public EntitySet<Project> Projects1
+		{
+			get
+			{
+				return this._Projects1;
+			}
+			set
+			{
+				this._Projects1.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectTeamSize = this;
+		}
+		
+		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectTeamSize = null;
+		}
+		
+		private void attach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectTeamSize1 = this;
+		}
+		
+		private void detach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.ProjectTeamSize1 = null;
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Projects")]
 	public partial class Project : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1328,17 +1759,13 @@ namespace ProStudCreator
 		
 		private bool _TypeDBBigData;
 		
-		private bool _POneP5;
+		private int _POneID;
 		
-		private bool _POneP6;
+		private int _POneTeamSizeID;
 		
-		private string _POneTeamSize;
+		private int _PTwoID;
 		
-		private bool _PTwoP5;
-		
-		private bool _PTwoP6;
-		
-		private string _PTwoTeamSize;
+		private int _PTwoTeamSizeID;
 		
 		private string _InitialPosition;
 		
@@ -1362,7 +1789,7 @@ namespace ProStudCreator
 		
 		private bool _InProgress;
 		
-		private string _Department;
+		private int _DepartmentID;
 		
 		private bool _OverOnePage;
 		
@@ -1375,6 +1802,16 @@ namespace ProStudCreator
 		private bool _Refused;
 		
 		private bool _StateDeleted;
+		
+		private EntityRef<Department> _Department;
+		
+		private EntityRef<ProjectPriority> _ProjectPriority;
+		
+		private EntityRef<ProjectPriority> _ProjectPriority1;
+		
+		private EntityRef<ProjectTeamSize> _ProjectTeamSize;
+		
+		private EntityRef<ProjectTeamSize> _ProjectTeamSize1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1410,18 +1847,14 @@ namespace ProStudCreator
     partial void OnTypeAppWebChanged();
     partial void OnTypeDBBigDataChanging(bool value);
     partial void OnTypeDBBigDataChanged();
-    partial void OnPOneP5Changing(bool value);
-    partial void OnPOneP5Changed();
-    partial void OnPOneP6Changing(bool value);
-    partial void OnPOneP6Changed();
-    partial void OnPOneTeamSizeChanging(string value);
-    partial void OnPOneTeamSizeChanged();
-    partial void OnPTwoP5Changing(bool value);
-    partial void OnPTwoP5Changed();
-    partial void OnPTwoP6Changing(bool value);
-    partial void OnPTwoP6Changed();
-    partial void OnPTwoTeamSizeChanging(string value);
-    partial void OnPTwoTeamSizeChanged();
+    partial void OnPOneIDChanging(int value);
+    partial void OnPOneIDChanged();
+    partial void OnPOneTeamSizeIDChanging(int value);
+    partial void OnPOneTeamSizeIDChanged();
+    partial void OnPTwoIDChanging(int value);
+    partial void OnPTwoIDChanged();
+    partial void OnPTwoTeamSizeIDChanging(int value);
+    partial void OnPTwoTeamSizeIDChanged();
     partial void OnInitialPositionChanging(string value);
     partial void OnInitialPositionChanged();
     partial void OnPictureChanging(System.Data.Linq.Binary value);
@@ -1444,8 +1877,8 @@ namespace ProStudCreator
     partial void OnPublishedChanged();
     partial void OnInProgressChanging(bool value);
     partial void OnInProgressChanged();
-    partial void OnDepartmentChanging(string value);
-    partial void OnDepartmentChanged();
+    partial void OnDepartmentIDChanging(int value);
+    partial void OnDepartmentIDChanged();
     partial void OnOverOnePageChanging(bool value);
     partial void OnOverOnePageChanged();
     partial void OnCreateDateChanging(System.DateTime value);
@@ -1462,6 +1895,11 @@ namespace ProStudCreator
 		
 		public Project()
 		{
+			this._Department = default(EntityRef<Department>);
+			this._ProjectPriority = default(EntityRef<ProjectPriority>);
+			this._ProjectPriority1 = default(EntityRef<ProjectPriority>);
+			this._ProjectTeamSize = default(EntityRef<ProjectTeamSize>);
+			this._ProjectTeamSize1 = default(EntityRef<ProjectTeamSize>);
 			OnCreated();
 		}
 		
@@ -1765,122 +2203,98 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneP5", DbType="Bit NOT NULL")]
-		public bool POneP5
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneID", DbType="Int NOT NULL")]
+		public int POneID
 		{
 			get
 			{
-				return this._POneP5;
+				return this._POneID;
 			}
 			set
 			{
-				if ((this._POneP5 != value))
+				if ((this._POneID != value))
 				{
-					this.OnPOneP5Changing(value);
+					if (this._ProjectPriority.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPOneIDChanging(value);
 					this.SendPropertyChanging();
-					this._POneP5 = value;
-					this.SendPropertyChanged("POneP5");
-					this.OnPOneP5Changed();
+					this._POneID = value;
+					this.SendPropertyChanged("POneID");
+					this.OnPOneIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneP6", DbType="Bit NOT NULL")]
-		public bool POneP6
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneTeamSizeID", DbType="Int NOT NULL")]
+		public int POneTeamSizeID
 		{
 			get
 			{
-				return this._POneP6;
+				return this._POneTeamSizeID;
 			}
 			set
 			{
-				if ((this._POneP6 != value))
+				if ((this._POneTeamSizeID != value))
 				{
-					this.OnPOneP6Changing(value);
+					if (this._ProjectTeamSize.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPOneTeamSizeIDChanging(value);
 					this.SendPropertyChanging();
-					this._POneP6 = value;
-					this.SendPropertyChanged("POneP6");
-					this.OnPOneP6Changed();
+					this._POneTeamSizeID = value;
+					this.SendPropertyChanged("POneTeamSizeID");
+					this.OnPOneTeamSizeIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POneTeamSize", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string POneTeamSize
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoID", DbType="Int NOT NULL")]
+		public int PTwoID
 		{
 			get
 			{
-				return this._POneTeamSize;
+				return this._PTwoID;
 			}
 			set
 			{
-				if ((this._POneTeamSize != value))
+				if ((this._PTwoID != value))
 				{
-					this.OnPOneTeamSizeChanging(value);
+					if (this._ProjectPriority1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPTwoIDChanging(value);
 					this.SendPropertyChanging();
-					this._POneTeamSize = value;
-					this.SendPropertyChanged("POneTeamSize");
-					this.OnPOneTeamSizeChanged();
+					this._PTwoID = value;
+					this.SendPropertyChanged("PTwoID");
+					this.OnPTwoIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoP5", DbType="Bit NOT NULL")]
-		public bool PTwoP5
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoTeamSizeID", DbType="Int NOT NULL")]
+		public int PTwoTeamSizeID
 		{
 			get
 			{
-				return this._PTwoP5;
+				return this._PTwoTeamSizeID;
 			}
 			set
 			{
-				if ((this._PTwoP5 != value))
+				if ((this._PTwoTeamSizeID != value))
 				{
-					this.OnPTwoP5Changing(value);
+					if (this._ProjectTeamSize1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPTwoTeamSizeIDChanging(value);
 					this.SendPropertyChanging();
-					this._PTwoP5 = value;
-					this.SendPropertyChanged("PTwoP5");
-					this.OnPTwoP5Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoP6", DbType="Bit NOT NULL")]
-		public bool PTwoP6
-		{
-			get
-			{
-				return this._PTwoP6;
-			}
-			set
-			{
-				if ((this._PTwoP6 != value))
-				{
-					this.OnPTwoP6Changing(value);
-					this.SendPropertyChanging();
-					this._PTwoP6 = value;
-					this.SendPropertyChanged("PTwoP6");
-					this.OnPTwoP6Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PTwoTeamSize", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string PTwoTeamSize
-		{
-			get
-			{
-				return this._PTwoTeamSize;
-			}
-			set
-			{
-				if ((this._PTwoTeamSize != value))
-				{
-					this.OnPTwoTeamSizeChanging(value);
-					this.SendPropertyChanging();
-					this._PTwoTeamSize = value;
-					this.SendPropertyChanged("PTwoTeamSize");
-					this.OnPTwoTeamSizeChanged();
+					this._PTwoTeamSizeID = value;
+					this.SendPropertyChanged("PTwoTeamSizeID");
+					this.OnPTwoTeamSizeIDChanged();
 				}
 			}
 		}
@@ -2105,22 +2519,26 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Department", DbType="NVarChar(10) NOT NULL", CanBeNull=false)]
-		public string Department
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentID", DbType="Int NOT NULL")]
+		public int DepartmentID
 		{
 			get
 			{
-				return this._Department;
+				return this._DepartmentID;
 			}
 			set
 			{
-				if ((this._Department != value))
+				if ((this._DepartmentID != value))
 				{
-					this.OnDepartmentChanging(value);
+					if (this._Department.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDepartmentIDChanging(value);
 					this.SendPropertyChanging();
-					this._Department = value;
-					this.SendPropertyChanged("Department");
-					this.OnDepartmentChanged();
+					this._DepartmentID = value;
+					this.SendPropertyChanged("DepartmentID");
+					this.OnDepartmentIDChanged();
 				}
 			}
 		}
@@ -2241,6 +2659,176 @@ namespace ProStudCreator
 					this._StateDeleted = value;
 					this.SendPropertyChanged("StateDeleted");
 					this.OnStateDeletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_Project", Storage="_Department", ThisKey="DepartmentID", OtherKey="Id", IsForeignKey=true)]
+		public Department Department
+		{
+			get
+			{
+				return this._Department.Entity;
+			}
+			set
+			{
+				Department previousValue = this._Department.Entity;
+				if (((previousValue != value) 
+							|| (this._Department.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Department.Entity = null;
+						previousValue.Projects.Remove(this);
+					}
+					this._Department.Entity = value;
+					if ((value != null))
+					{
+						value.Projects.Add(this);
+						this._DepartmentID = value.Id;
+					}
+					else
+					{
+						this._DepartmentID = default(int);
+					}
+					this.SendPropertyChanged("Department");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectPriority_Project", Storage="_ProjectPriority", ThisKey="POneID", OtherKey="Id", IsForeignKey=true)]
+		public ProjectPriority ProjectPriority
+		{
+			get
+			{
+				return this._ProjectPriority.Entity;
+			}
+			set
+			{
+				ProjectPriority previousValue = this._ProjectPriority.Entity;
+				if (((previousValue != value) 
+							|| (this._ProjectPriority.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ProjectPriority.Entity = null;
+						previousValue.Projects.Remove(this);
+					}
+					this._ProjectPriority.Entity = value;
+					if ((value != null))
+					{
+						value.Projects.Add(this);
+						this._POneID = value.Id;
+					}
+					else
+					{
+						this._POneID = default(int);
+					}
+					this.SendPropertyChanged("ProjectPriority");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectPriority_Project1", Storage="_ProjectPriority1", ThisKey="PTwoID", OtherKey="Id", IsForeignKey=true)]
+		public ProjectPriority ProjectPriority1
+		{
+			get
+			{
+				return this._ProjectPriority1.Entity;
+			}
+			set
+			{
+				ProjectPriority previousValue = this._ProjectPriority1.Entity;
+				if (((previousValue != value) 
+							|| (this._ProjectPriority1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ProjectPriority1.Entity = null;
+						previousValue.Projects1.Remove(this);
+					}
+					this._ProjectPriority1.Entity = value;
+					if ((value != null))
+					{
+						value.Projects1.Add(this);
+						this._PTwoID = value.Id;
+					}
+					else
+					{
+						this._PTwoID = default(int);
+					}
+					this.SendPropertyChanged("ProjectPriority1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectTeamSize_Project", Storage="_ProjectTeamSize", ThisKey="POneTeamSizeID", OtherKey="Id", IsForeignKey=true)]
+		public ProjectTeamSize ProjectTeamSize
+		{
+			get
+			{
+				return this._ProjectTeamSize.Entity;
+			}
+			set
+			{
+				ProjectTeamSize previousValue = this._ProjectTeamSize.Entity;
+				if (((previousValue != value) 
+							|| (this._ProjectTeamSize.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ProjectTeamSize.Entity = null;
+						previousValue.Projects.Remove(this);
+					}
+					this._ProjectTeamSize.Entity = value;
+					if ((value != null))
+					{
+						value.Projects.Add(this);
+						this._POneTeamSizeID = value.Id;
+					}
+					else
+					{
+						this._POneTeamSizeID = default(int);
+					}
+					this.SendPropertyChanged("ProjectTeamSize");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectTeamSize_Project1", Storage="_ProjectTeamSize1", ThisKey="PTwoTeamSizeID", OtherKey="Id", IsForeignKey=true)]
+		public ProjectTeamSize ProjectTeamSize1
+		{
+			get
+			{
+				return this._ProjectTeamSize1.Entity;
+			}
+			set
+			{
+				ProjectTeamSize previousValue = this._ProjectTeamSize1.Entity;
+				if (((previousValue != value) 
+							|| (this._ProjectTeamSize1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ProjectTeamSize1.Entity = null;
+						previousValue.Projects1.Remove(this);
+					}
+					this._ProjectTeamSize1.Entity = value;
+					if ((value != null))
+					{
+						value.Projects1.Add(this);
+						this._PTwoTeamSizeID = value.Id;
+					}
+					else
+					{
+						this._PTwoTeamSizeID = default(int);
+					}
+					this.SendPropertyChanged("ProjectTeamSize1");
 				}
 			}
 		}

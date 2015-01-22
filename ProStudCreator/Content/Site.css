@@ -34,6 +34,7 @@ input[type="select"] {
     .jumbotron {
         margin-top: 20px;
     }
+
     .body-content {
         padding: 0;
     }
@@ -42,15 +43,15 @@ input[type="select"] {
 
 /* General Styles*/
 hr {
-  -moz-border-bottom-colors: none;
-  -moz-border-image: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-color: #EEEEEE -moz-use-text-color #FFFFFF;
-  border-style: solid none;
-  border-width: 1px 0;
-  margin: 18px 0;
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #EEEEEE -moz-use-text-color #FFFFFF;
+    border-style: solid none;
+    border-width: 1px 0;
+    margin: 18px 0;
 }
 
 .non-selectable {
@@ -85,7 +86,7 @@ body  {
     padding: 19px 29px 29px;
 }
 
-.title-box{
+.title-box {
     margin-bottom: 12px;
 }
 
@@ -122,7 +123,7 @@ h2 {
     /*
         like img-rounded 
     */
-    border-radius: 6px; 
+    border-radius: 6px;
 }
 
 .btnHeight {
@@ -144,7 +145,7 @@ h2 {
     background-color: #f5f5f5;
 }
 
-.titleSize span{
+.titleSize span {
     font: 24px !important;
     margin-bottom: 10px !important;
     margin-top: 20px !important;
@@ -174,6 +175,13 @@ h2 {
     resize: vertical;
 }
 
+.contentRefuseDesign {
+    height: 450px !important;
+    min-height: 140px;
+    max-height: 750px;
+    resize: vertical;
+}
+
 marginLeftZero input[type="email"], input[type="submit"] {
     margin-left: 0px !important;
 }
@@ -186,21 +194,21 @@ marginLeftZero input[type="email"], input[type="submit"] {
     background-color: #A9F5A9;
 }
 
-.publishProject:hover {
-    background-color: #58FA82;
-    border-color: #58FA58;
-}
+    .publishProject:hover {
+        background-color: #58FA82;
+        border-color: #58FA58;
+    }
 
 .refuseProject {
     background-color: #F5A9A9;
     margin-right: 5px;
 }
 
-.refuseProject:hover {
-    background-color: #F78181;
-    border-color: #FE2E2E;
-    margin-right: 5px;
-}
+    .refuseProject:hover {
+        background-color: #F78181;
+        border-color: #FE2E2E;
+        margin-right: 5px;
+    }
 
 .publishedProjectBackground {
     background-color: #A9F5A9 !important;
