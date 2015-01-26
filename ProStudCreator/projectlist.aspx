@@ -48,7 +48,7 @@
         <div class="radioButtonSettings non-selectable">
             <asp:RadioButtonList ID="ProjectsFilterAllProjects" RepeatDirection="Horizontal" runat="server" AutoPostBack="true">
                 <asp:ListItem Value="AllFutureProjects">Projects next semester</asp:ListItem>
-                <asp:ListItem Value="AllPastProjects">Projects last semester</asp:ListItem>
+                <asp:ListItem Value="AllPastProjects">Projects this semester</asp:ListItem>
                 <asp:ListItem Value="MyProjects">My projects (in progress)</asp:ListItem>
                 <asp:ListItem Value="NotAvailable">Submitted projects</asp:ListItem>
                 <asp:ListItem Value="Available">Published Projects</asp:ListItem>
@@ -101,6 +101,18 @@
                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
             </asp:GridView>
+        </div>
+        <div>
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" />
+            = Project refused,
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
+            = Project PDF is over 1 page,
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#A9F5A9" />
+            = Project is published,
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#CEECF5" />
+            /
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight"/>
+            = Project in progress 
         </div>
     </div>
 </asp:Content>

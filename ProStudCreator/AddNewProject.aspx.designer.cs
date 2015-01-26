@@ -481,6 +481,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button refuseNewProject;
         
         /// <summary>
+        /// moveProjectToTheNextSemester control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button moveProjectToTheNextSemester;
+        
+        /// <summary>
         /// rollbackProject control.
         /// </summary>
         /// <remarks>

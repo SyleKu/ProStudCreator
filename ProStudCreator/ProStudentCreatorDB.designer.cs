@@ -1797,6 +1797,8 @@ namespace ProStudCreator
 		
 		private System.DateTime _ModificationDate;
 		
+		private System.Nullable<System.DateTime> _PublishedDate;
+		
 		private string _LastEditedBy;
 		
 		private bool _Refused;
@@ -1885,6 +1887,8 @@ namespace ProStudCreator
     partial void OnCreateDateChanged();
     partial void OnModificationDateChanging(System.DateTime value);
     partial void OnModificationDateChanged();
+    partial void OnPublishedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnPublishedDateChanged();
     partial void OnLastEditedByChanging(string value);
     partial void OnLastEditedByChanged();
     partial void OnRefusedChanging(bool value);
@@ -2599,6 +2603,26 @@ namespace ProStudCreator
 					this._ModificationDate = value;
 					this.SendPropertyChanged("ModificationDate");
 					this.OnModificationDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublishedDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> PublishedDate
+		{
+			get
+			{
+				return this._PublishedDate;
+			}
+			set
+			{
+				if ((this._PublishedDate != value))
+				{
+					this.OnPublishedDateChanging(value);
+					this.SendPropertyChanging();
+					this._PublishedDate = value;
+					this.SendPropertyChanged("PublishedDate");
+					this.OnPublishedDateChanged();
 				}
 			}
 		}

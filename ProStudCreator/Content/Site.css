@@ -224,3 +224,7 @@ marginLeftZero input[type="email"], input[type="submit"] {
 .passwordMarginTop, .passwordForgotTop {
     margin-top: 90px;
 }
+
+.rollbackMarginRight {
+    margin-right: 5px;
+}

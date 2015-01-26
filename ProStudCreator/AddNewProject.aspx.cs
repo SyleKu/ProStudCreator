@@ -19,10 +19,11 @@ namespace ProStudCreator
         private static int id;
         private Project projects;
         ProjectPriority projectPriority = new ProjectPriority();
+        DateTime today = DateTime.Now;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.Identity.Name == "test@fhnw.ch")
+            if (User.IsInRole("Admin"))
             {
                 AdminView.Visible = true;
             }
@@ -68,20 +69,14 @@ namespace ProStudCreator
         private void getDataToEdit()
         {
             var proj = db.Projects.Single(i => i.Id == id);
-
-            /*
-            if (proj.Creator != User.Identity.Name)
-            {
-                Response.Redirect("/projectlist");
-            }
-            */
+            
             SiteTitle.Text = "Edit project:";
-            CreatorID.Text = "Creator: " + proj.Creator + ", " + proj.CreateDate.ToString("dd.MM.yyyy");
+            CreatorID.Text = "Creator: " + proj.Creator + ", CreateDate: " + proj.CreateDate.ToString("dd.MM.yyyy");
             saveNewProject.Text = "Save changes";
             AddPictureLabel.Text = "Change image";
             saveNewProject.Width = 175;
 
-            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && Request.QueryString["show"] != null)
+            if (User.IsInRole("Admin") && !proj.Published && Request.QueryString["show"] != null)
             {
                 publishProject.Visible = true;
                 refuseNewProject.Visible = true;
@@ -132,13 +127,13 @@ namespace ProStudCreator
             }
 
             // Priority 1
-            POneContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.POneID - 1).Priority;
+            POneContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.POneID).Priority;
 
             //  Priority 2
             PTwoContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.PTwoID).Priority;
 
             // Teamsize Priority 1
-            POneTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID - 1).TeamSize;
+            POneTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID).TeamSize;
 
             // Teamsize Priority 2
             PTwoTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.PTwoTeamSizeID).TeamSize;
@@ -191,13 +186,13 @@ namespace ProStudCreator
             SiteTitle.Text = "View project:";
             saveNewProject.Text = "Edit";
             saveNewProject.Width = 100;
-            if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && !proj.InProgress)
+            if (User.IsInRole("Admin") && !proj.Published && !proj.InProgress)
             {
                 publishProject.Visible = true;
                 refuseNewProject.Visible = true;
                 submitProject.Visible = false;
             }
-            else if (User.Identity.Name == "test@fhnw.ch" && !proj.Published && proj.InProgress)
+            else if (User.IsInRole("Admin") && !proj.Published && proj.InProgress)
             {
                 publishProject.Visible = false;
                 refuseNewProject.Visible = false;
@@ -254,12 +249,12 @@ namespace ProStudCreator
             ReservationNameOne.Enabled = false;
             ReservationNameTwo.Enabled = false;
             Department.Enabled = false;
-
+            
             if (proj.Published)
             {
                 newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
 
-                if (User.Identity.Name == "test@fhnw.ch")
+                if (User.IsInRole("Admin"))
                 {
                     rollbackProject.Visible = true;
                     saveNewProject.Visible = true;
@@ -268,6 +263,8 @@ namespace ProStudCreator
                 {
                     saveNewProject.Visible = false;
                 }
+
+                moveProjectToTheNextSemester.Visible = true;
             }
 
             if (proj.Refused)
@@ -390,6 +387,7 @@ namespace ProStudCreator
                     projects.Published = false;
                     projects.CreateDate = DateTime.Now;
                     projects.ModificationDate = DateTime.Now;
+                    projects.PublishedDate = null;
                     projects.LastEditedBy = User.Identity.Name;
                     projects.StateDeleted = false;
                     projects.Refused = false;
@@ -576,15 +574,16 @@ namespace ProStudCreator
             var id = int.Parse(Request.QueryString["id"]);
             var proj = db.Projects.Single(i => i.Id == id);
             proj.Published = true;
+            proj.PublishedDate = DateTime.Now;
             db.SubmitChanges();
 
             try
             {
                 MailMessage mailMessage = new MailMessage();
-                mailMessage.To.Add("kushtrim.sylejmani@fhnw.ch");
+                mailMessage.To.Add(proj.Creator);
                 mailMessage.From = new MailAddress(User.Identity.Name);
                 mailMessage.Subject = "Projekt '" + proj.Name + "' veröffentlicht";
-                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht. \r\n----------------------\n Automatische Antwort von ProStudCreator";
+                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht.\r\n\n----------------------\n Automatische Antwort von ProStudCreator";
                 SmtpClient smtpClient = new SmtpClient();
                 smtpClient.Send(mailMessage);
                 Response.Write("E-mail sent!");
@@ -610,6 +609,35 @@ namespace ProStudCreator
             refusedReasonText.Text = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " abgelehnt.\r\n\nDies sind die Gründe dafür:\n\n\n\nFreundliche Grüsse\n" + User.Identity.Name;
         }
 
+        protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+
+            proj.Published = false;
+            proj.InProgress = true;
+            proj.Refused = true;
+            db.SubmitChanges();
+
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.To.Add(proj.Creator);
+                mailMessage.From = new MailAddress(User.Identity.Name);
+                mailMessage.Subject = "Projekt '" + proj.Name + "' abgelehnt";
+                mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\n Automatische Antwort von ProStudCreator";
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                Response.Write("E-mail sent!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Could not send the e-mail - error: " + ex.Message);
+            }
+
+            Response.Redirect("/projectlist");
+        }
+
         protected void submitProject_Click(object sender, EventArgs e)
         {
             var id = int.Parse(Request.QueryString["id"]);
@@ -632,7 +660,7 @@ namespace ProStudCreator
 
         protected void POneTeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "Einzelarbeit" || POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "------")
+            if (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1 || POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0)
             {
                 ReservationNameTwo.Visible = false;
             }
@@ -644,7 +672,7 @@ namespace ProStudCreator
 
         protected void PTwoTeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "Einzelarbeit" || POneTeamSize.SelectedValue == "Einzelarbeit" && PTwoTeamSize.SelectedValue == "------")
+            if (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1 || POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0)
             {
                 ReservationNameTwo.Visible = false;
             }
@@ -665,39 +693,26 @@ namespace ProStudCreator
             Response.Redirect("/projectlist");
         }
 
-        protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
-        {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-
-            proj.Published = false;
-            proj.InProgress = true;
-            proj.Refused = true;
-            db.SubmitChanges();
-
-            try
-            {
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.To.Add("kushtrim.sylejmani@fhnw.ch");
-                mailMessage.From = new MailAddress(User.Identity.Name);
-                mailMessage.Subject = "Projekt " + proj.Name + " abgelehnt";
-                mailMessage.Body = refusedReasonText.Text;
-                SmtpClient smtpClient = new SmtpClient();
-                smtpClient.Send(mailMessage);
-                Response.Write("E-mail sent!");
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Could not send the e-mail - error: " + ex.Message);
-            }
-
-            Response.Redirect("/projectlist");
-        }
+        
 
         protected void cancelRefusion_Click(object sender, EventArgs e)
         {
+            saveNewProject.Visible = true;
             refusedReason.Visible = false;
             refuseNewProject.Visible = true;
+            publishProject.Visible = true;
+        }
+
+        protected void moveProjectToTheNextSemester_Click(object sender, EventArgs e)
+        {
+            var id = int.Parse(Request.QueryString["id"]);
+            var proj = db.Projects.Single(i => i.Id == id);
+            proj.Published = false;
+            proj.PublishedDate = null;
+            proj.InProgress = false;
+            proj.Refused = false;
+            db.SubmitChanges();
+            Response.Redirect("/projectlist");
         }
     }
 }

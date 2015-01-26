@@ -126,6 +126,7 @@
         <asp:Button runat="server" ID="submitProject" Visible="false" CssClass="btn btn-default marginLeftZero" Text="Submit project" OnClientClick="return confirm('Do your really want to submit this project?');" OnClick="submitProject_Click"></asp:Button>
         <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject pull-right" Width="113px" Text="Publish" OnClientClick="return confirm('Do your really want to publish this project?');" OnClick="publishProject_Click"></asp:Button>
         <asp:Button runat="server" ID="refuseNewProject" Visible="false" CssClass="btn btn-default refuseProject pull-right" Width="113px" Text="Refuse" OnClick="refuseProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="rollbackProject" Visible="false" CssClass="btn btn-default pull-right" Width="113px" Text="Rollback" OnClientClick="return confirm('Do your really want to rollback this project?');" OnClick="rollbackProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="moveProjectToTheNextSemester" Visible="false" CssClass="btn btn-default pull-right" Text="Move project to the next semester" OnClientClick="return confirm('Do your really want to move this project to the next Semester?\nThe project will immediately be sent to the admin.');" OnClick="moveProjectToTheNextSemester_Click"></asp:Button>
+        <asp:Button runat="server" ID="rollbackProject" Visible="false" CssClass="btn btn-default rollbackMarginRight pull-right" Text="Rollback" OnClientClick="return confirm('Do your really want to rollback this project?');" OnClick="rollbackProject_Click"></asp:Button>
     </div>
 </asp:Content>

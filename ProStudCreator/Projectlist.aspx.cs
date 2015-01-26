@@ -9,6 +9,10 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.html;
 using System.Net.Mail;
+using System.Web.Security;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Owin;
 
 namespace ProStudCreator
 {
@@ -34,6 +38,10 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            /*
+            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            manager.AddToRole(User.Identity.GetUserId(), "Admin");
+            */
             if (IsPostBack)
             {
                 projectFilter = (bool[])ViewState["Filter"];
@@ -43,7 +51,7 @@ namespace ProStudCreator
                 ViewState["Filter"] = projectFilter;
             }
 
-            if (User.Identity.Name == "test@fhnw.ch")
+            if (User.IsInRole("Admin"))
             {
                 AdminView.Visible = true;
                 AdminViewPDF.Visible = true;
@@ -64,33 +72,74 @@ namespace ProStudCreator
                 CheckProjects.DataSource = projects.Where(item => !item.Published && !item.InProgress && !item.StateDeleted).Select(i => getProjectSingleElement(i));
 
 
-                int year = today.Year;
-                int month = today.Month;
+                bool isFruehlingSemester = false;
 
-                int JahrMonatNummer = 12 * year + month - 1;
-                int Semester = (int)((JahrMonatNummer - 1.5) / 6);
+                if (today.Month > 1 && today.Month < 9)
+                {
+                    isFruehlingSemester = true;
+                }
 
-                /*
-                
-                if(today > Semester)
-                    alle projekte seit mitte oktober letztes jahr
-                if(heute > mitte oktober)
-                    alle projekte seit mitte februar dieses jahr
-                */
+
+                DateTime vonFilter;
+                DateTime bisFilter;
+
                 if (projectFilter[0])
                 {
-                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
-                    /*
-                    if(projects.Where(i => (int)(((i.CreateDate.Year *12 + i.CreateDate.Month -1)-1.5) /6)) < Semester)
-                        projects = projects.Where(item => item.POneID==27);
+                    if (isFruehlingSemester)
+                    {
+                        vonFilter = new DateTime(today.Year, 2, 1);
+                        bisFilter = new DateTime(today.Year, 8, 1);
+
+                        projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                    }
                     else
                     {
-                    }*/
+                        if (today.Month > 6)
+                        {
+                            vonFilter = new DateTime(today.Year, 8, 1);
+                            bisFilter = new DateTime(today.Year + 1, 2, 1);
+
+                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                        }
+                        else
+                        {
+                            vonFilter = new DateTime(today.Year - 1, 8, 1);
+                            bisFilter = new DateTime(today.Year, 2, 1);
+
+                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                        }
+                    }
+                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
+
 
                 }
 
                 else if (projectFilter[1])
                 {
+                    if (isFruehlingSemester)
+                    {
+                        vonFilter = new DateTime(today.Year - 1, 8, 1);
+                        bisFilter = new DateTime(today.Year, 2, 1);
+
+                        projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                    }
+                    else
+                    {
+                        if (today.Month > 6)
+                        {
+                            vonFilter = new DateTime(today.Year, 2, 1);
+                            bisFilter = new DateTime(today.Year, 8, 1);
+
+                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                        }
+                        else
+                        {
+                            vonFilter = new DateTime(today.Year - 1, 2, 1);
+                            bisFilter = new DateTime(today.Year - 1, 8, 1);
+
+                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
+                        }
+                    }
                     projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
                 }
 
@@ -113,15 +162,8 @@ namespace ProStudCreator
 
             else
             {
-                if (ProjectsFilterAllProjects.Items[0].Text.Contains("Projects next semester"))
-                {
-                    ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
-                }
-
-                if (ProjectsFilterAllProjects.Items[1].Text.Contains("Projects last semester"))
-                {
-                    ProjectsFilterAllProjects.Items[1].Attributes.CssStyle.Add("display", "none");
-                }
+                ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
+                ProjectsFilterAllProjects.Items[1].Attributes.CssStyle.Add("display", "none");
 
                 if (!IsPostBack)
                 {
@@ -157,8 +199,8 @@ namespace ProStudCreator
             AllProjects.DataBind();
         }
 
-        private ProjectSingleElement getProjectSingleElement(Project i) {
-
+        private ProjectSingleElement getProjectSingleElement(Project i)
+        {
             return new ProjectSingleElement()
                {
                    id = i.Id,
@@ -166,7 +208,7 @@ namespace ProStudCreator
                    advisorEmail = i.AdvisorMail + Server.HtmlEncode("<br / >") + i.AdvisorMail2,
                    projectName = i.Name,
                    p5 = (i.POneID == 1 ? true : false || i.PTwoID == 3 ? true : false),
-                   p6 = (i.POneID == 2 ? true : false || i.PTwoID == 3 ? true : false),
+                   p6 = (i.POneID == 2 ? true : false || i.PTwoID == 2 ? true : false || i.PTwoID == 3 ? true : false),
                    projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
                    projectType2 = "pictures/projectTyp" +
                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
@@ -339,7 +381,5 @@ namespace ProStudCreator
                 ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
             }
         }
-
-
     }
 }

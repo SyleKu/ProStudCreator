@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 13.25" name="ProStudentCreatorDB">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 13.5" name="ProStudentCreatorDB">
   <DataContextMoniker Name="/ProStudentCreatorDBDataContext" />
   <nestedChildShapes>
     <classShape Id="820eb6bb-b4af-469a-a83c-54e0291d3eab" absoluteBounds="7.25, 0.625, 2, 1.1939925130208335">
@@ -84,45 +84,45 @@
         <elementListCompartment Id="3b03533f-0fc0-4951-86ce-7d70b5d6458a" absoluteBounds="4.015, 8.46, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" absoluteBounds="1.375, 5.125, 2, 7.9245426432291648">
+    <classShape Id="93a84d83-164b-4281-bef9-b95595564a78" absoluteBounds="1.25, 5.125, 2, 8.1168440755208326">
       <DataClassMoniker Name="/ProStudentCreatorDBDataContext/Project" />
       <nestedChildShapes>
-        <elementListCompartment Id="18d06d4f-f790-44f7-9d21-8e08d29b27ef" absoluteBounds="1.3900000000000001, 5.585, 1.9700000000000002, 7.3645426432291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="d9290db2-9398-4541-97f3-bdbb6a3d6887" absoluteBounds="1.2650000000000001, 5.585, 1.9700000000000002, 7.556844075520833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(4 : 5.72199625651042); (3.375 : 5.72199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 5.72199625651042); (3.25 : 5.72199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Department/Department_Project" />
       <nodes>
         <classShapeMoniker Id="7be6452a-58ec-4426-827e-712814704429" />
-        <classShapeMoniker Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" />
+        <classShapeMoniker Id="93a84d83-164b-4281-bef9-b95595564a78" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4 : 7.22199625651042); (3.375 : 7.22199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 7.22199625651042); (3.25 : 7.22199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/ProjectPriority/ProjectPriority_Project" />
       <nodes>
         <classShapeMoniker Id="ba547999-82a0-4d75-83c2-d61ffc4fafcd" />
-        <classShapeMoniker Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" />
+        <classShapeMoniker Id="93a84d83-164b-4281-bef9-b95595564a78" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4 : 6.86099812825521); (3.375 : 6.86099812825521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 6.86099812825521); (3.25 : 6.86099812825521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/ProjectPriority/ProjectPriority_Project1" />
       <nodes>
         <classShapeMoniker Id="ba547999-82a0-4d75-83c2-d61ffc4fafcd" />
-        <classShapeMoniker Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" />
+        <classShapeMoniker Id="93a84d83-164b-4281-bef9-b95595564a78" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4 : 8.59699625651042); (3.375 : 8.59699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 8.59699625651042); (3.25 : 8.59699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/ProjectTeamSize/ProjectTeamSize_Project" />
       <nodes>
         <classShapeMoniker Id="c3efa011-62a4-4990-b452-e969c7519799" />
-        <classShapeMoniker Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" />
+        <classShapeMoniker Id="93a84d83-164b-4281-bef9-b95595564a78" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4 : 8.23599812825521); (3.375 : 8.23599812825521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4 : 8.23599812825521); (3.25 : 8.23599812825521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/ProjectTeamSize/ProjectTeamSize_Project1" />
       <nodes>
         <classShapeMoniker Id="c3efa011-62a4-4990-b452-e969c7519799" />
-        <classShapeMoniker Id="3038fcbc-5a04-40bd-8a97-a8a7f44d2910" />
+        <classShapeMoniker Id="93a84d83-164b-4281-bef9-b95595564a78" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>
