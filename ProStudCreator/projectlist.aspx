@@ -59,8 +59,8 @@
                 <AlternatingRowStyle BackColor="White" />
                 <Columns>
                     <asp:BoundField DataField="id" HeaderText="ID" />
-                    <asp:BoundField DataField="advisorName" HeaderText="BetreuerIn" SortExpression="Advisor" ItemStyle-Width="200px" />
-                    <asp:BoundField DataField="advisorEmail" HeaderText="E-Mail" SortExpression="Advisor" ItemStyle-Width="200px" />
+                    <asp:BoundField DataField="advisorName" HeaderText="BetreuerIn" SortExpression="Advisor" ItemStyle-Width="200px" HtmlEncode="false" />
+                    <asp:BoundField DataField="advisorEmail" HeaderText="E-Mail" SortExpression="Advisor" ItemStyle-Width="200px" HtmlEncode="false" />
                     <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="Advisor" ItemStyle-Width="250px" />
                     <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="Advisor" />
                     <asp:CheckBoxField HeaderText="P6" DataField="p6" SortExpression="Advisor" />
