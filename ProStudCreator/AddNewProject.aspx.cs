@@ -51,7 +51,7 @@ namespace ProStudCreator
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Add image";
                 SiteTitle.Text = "Create new project:";
-                saveNewProject.Text = "Save";
+                saveProject.Text = "Save";
 
                 if (Request.QueryString["id"] != null)
                 {
@@ -69,17 +69,18 @@ namespace ProStudCreator
         private void getDataToEdit()
         {
             var proj = db.Projects.Single(i => i.Id == id);
-            
+
             SiteTitle.Text = "Edit project:";
             CreatorID.Text = "Creator: " + proj.Creator + ", CreateDate: " + proj.CreateDate.ToString("dd.MM.yyyy");
-            saveNewProject.Text = "Save changes";
-            AddPictureLabel.Text = "Change image";
-            saveNewProject.Width = 175;
+            saveProject.Visible = true;
+            saveProject.Text = "Save changes";
+            AddPictureLabel.Text = "Change image:";
+            saveProject.Width = 120;
 
             if (User.IsInRole("Admin") && !proj.Published && Request.QueryString["show"] != null)
             {
                 publishProject.Visible = true;
-                refuseNewProject.Visible = true;
+                refuseProject.Visible = true;
             }
 
             ProjectName.Text = proj.Name;
@@ -157,7 +158,15 @@ namespace ProStudCreator
             ProblemStatementContent.Text = proj.ProblemStatement;
             ReferencesContent.Text = proj.References;
             RemarksContent.Text = proj.Remarks;
-            submitProject.Visible = false;
+
+            if (Request.QueryString["id"] != null && proj.InProgress)
+            {
+                submitProject.Visible = true;
+            }
+            else
+            {
+                submitProject.Visible = false;
+            }
 
             /* CANCELLED PART!
             if (proj.Importance)
@@ -184,18 +193,19 @@ namespace ProStudCreator
             var proj = db.Projects.Single(i => i.Id == id);
 
             SiteTitle.Text = "View project:";
-            saveNewProject.Text = "Edit";
-            saveNewProject.Width = 100;
+            saveProject.Visible = false;
+            editProject.Visible = true;
+
             if (User.IsInRole("Admin") && !proj.Published && !proj.InProgress)
             {
                 publishProject.Visible = true;
-                refuseNewProject.Visible = true;
+                refuseProject.Visible = true;
                 submitProject.Visible = false;
             }
             else if (User.IsInRole("Admin") && !proj.Published && proj.InProgress)
             {
                 publishProject.Visible = false;
-                refuseNewProject.Visible = false;
+                refuseProject.Visible = false;
                 submitProject.Visible = true;
             }
             else if (!proj.Published && proj.InProgress)
@@ -204,8 +214,9 @@ namespace ProStudCreator
             }
             else
             {
+                saveProject.Visible = false;
                 publishProject.Visible = false;
-                refuseNewProject.Visible = false;
+                refuseProject.Visible = false;
                 submitProject.Visible = false;
             }
 
@@ -237,7 +248,7 @@ namespace ProStudCreator
 
             ObjectivContent.ReadOnly = true;
             AddPictureLabel.Visible = false;
-            ImageLabel.Text = "Bild:";
+            ImageLabel.Text = "Image:";
             AddPicture.Visible = false;
             DeleteImageButton.Visible = false;
 
@@ -249,7 +260,7 @@ namespace ProStudCreator
             ReservationNameOne.Enabled = false;
             ReservationNameTwo.Enabled = false;
             Department.Enabled = false;
-            
+
             if (proj.Published)
             {
                 newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
@@ -257,11 +268,11 @@ namespace ProStudCreator
                 if (User.IsInRole("Admin"))
                 {
                     rollbackProject.Visible = true;
-                    saveNewProject.Visible = true;
+                    saveProject.Visible = true;
                 }
                 else
                 {
-                    saveNewProject.Visible = false;
+                    saveProject.Visible = false;
                 }
 
                 moveProjectToTheNextSemester.Visible = true;
@@ -363,135 +374,158 @@ namespace ProStudCreator
             ViewState["Types"] = projectType;
         }
 
-        protected void saveProject(object sender, EventArgs e)
+        protected void editProject_Click(object sender, EventArgs e)
         {
-            if (Request.QueryString["show"] != null)
+            var id = Request.QueryString["id"];
+            Response.Redirect("/AddNewProject?id=" + id);
+        }
+
+        protected void saveProjectButton(object sender, EventArgs e)
+        {
+            string fileExt = System.IO.Path.GetExtension(AddPicture.FileName.ToUpper());
+            if (fileExt == ".JPEG" || fileExt == ".JPG" || fileExt == ".PNG" || fileExt == "")
             {
-                var id = Request.QueryString["id"];
-                Response.Redirect("/AddNewProject?id=" + id);
-            }
-
-            else if (projectType.Any() || Request.QueryString["id"] != null)
-            {
-                if (Request.QueryString["id"] != null)
-                {
-                    projects = db.Projects.Single(i => i.Id == id);
-                    projects.ModificationDate = DateTime.Now;
-                    projects.LastEditedBy = User.Identity.Name;
-                }
-                else
-                {
-                    projects = new Project();
-                    projects.Creator = User.Identity.Name;
-                    projects.InProgress = true;
-                    projects.Published = false;
-                    projects.CreateDate = DateTime.Now;
-                    projects.ModificationDate = DateTime.Now;
-                    projects.PublishedDate = null;
-                    projects.LastEditedBy = User.Identity.Name;
-                    projects.StateDeleted = false;
-                    projects.Refused = false;
-                }
-
-                projects.Name = ProjectName.Text;
-                projects.Employer = Employer.Text;
-                projects.EmployerEmail = EmployerMail.Text;
-                projects.Advisor = NameBetreuer1.Text;
-                projects.AdvisorMail = EMail1.Text;
-
-                if (NameBetreuer2.Text != "" && EMail2.Text != "")
-                {
-                    projects.Advisor2 = NameBetreuer2.Text;
-                    projects.AdvisorMail2 = EMail2.Text;
-                }
-                else
-                {
-                    projects.Advisor2 = "";
-                    projects.AdvisorMail2 = "";
-                }
-
-                applyProjectType(projects);
-
-
-
-                projects.POneID = POneContent.SelectedIndex + 1;
-                projects.PTwoID = PTwoContent.SelectedIndex;
-
-                projects.POneTeamSizeID = POneTeamSize.SelectedIndex + 1;
-                projects.PTwoTeamSizeID = PTwoTeamSize.SelectedIndex;
-
-                projects.InitialPosition = InitialPositionContent.Text;
-                projects.Objective = ObjectivContent.Text;
-                projects.ProblemStatement = ProblemStatementContent.Text;
-                projects.References = ReferencesContent.Text;
-                projects.Remarks = RemarksContent.Text;
-                projects.ReservationNameOne = ReservationNameOne.Text;
-                if (ReservationNameTwo.Visible)
-                {
-                    projects.ReservationNameTwo = ReservationNameTwo.Text;
-
-                }
-                else
-                {
-                    projects.ReservationNameTwo = "";
-                }
-
-                /* CANCELLED PART!
-                applyImportance(projects);
-                */
-
-                projects.DepartmentID = Department.SelectedIndex;
-
-                if (AddPicture.FileName != "")
-                {
-                    using (var input = AddPicture.PostedFile.InputStream)
-                    {
-                        var data = new byte[AddPicture.PostedFile.ContentLength];
-                        for (var offset = 0; ; )
-                        {
-                            var read = input.Read(data, offset, data.Length - offset);
-                            if (read == 0)
-                                break;
-
-                            offset += read;
-                        }
-                        projects.Picture = new System.Data.Linq.Binary(data);
-                    }
-                }
-                if (Request.QueryString["id"] == null)
-                {
-                    db.Projects.InsertOnSubmit(projects);
-                }
-                db.SubmitChanges();
-
-                int lastinsertedId;
-
-                if (Request.QueryString["id"] == null)
-                {
-                    lastinsertedId = projects.Id;
-                }
-                else
-                {
-                    lastinsertedId = id;
-                }
-
-                PdfCreator pdfCreator = new PdfCreator();
-                int amountPages = pdfCreator.getNumberOfPDFPages(lastinsertedId, Request);
-
-                // 2, da am Ende jeder Erstellung eines Dokuments eine NewPage macht().
-                if (amountPages > 1)
-                {
-                    projects.OverOnePage = true;
-                }
-                else
-                {
-                    projects.OverOnePage = false;
-                }
-
-                db.SubmitChanges();
-
+                saveCurrentProject();
                 Response.Redirect("/projectlist");
             }
+            else
+            {
+                string message = "Wrong File-Extensions! Only .JPEG, .JPG and .PNG allowed.";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(message);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+            }
+        }
+
+        private void saveCurrentProject()
+        {
+            if (Request.QueryString["id"] != null)
+            {
+                projects = db.Projects.Single(i => i.Id == id);
+                projects.ModificationDate = DateTime.Now;
+                projects.LastEditedBy = User.Identity.Name;
+            }
+            else
+            {
+                projects = new Project();
+                projects.Creator = User.Identity.Name;
+                projects.InProgress = true;
+                projects.Published = false;
+                projects.CreateDate = DateTime.Now;
+                projects.ModificationDate = DateTime.Now;
+                projects.PublishedDate = null;
+                projects.LastEditedBy = User.Identity.Name;
+                projects.StateDeleted = false;
+                projects.Refused = false;
+            }
+
+            projects.Name = ProjectName.Text;
+            projects.Employer = Employer.Text;
+            projects.EmployerEmail = EmployerMail.Text;
+            projects.Advisor = NameBetreuer1.Text;
+            projects.AdvisorMail = EMail1.Text;
+
+            if (NameBetreuer2.Text != "" && EMail2.Text != "")
+            {
+                projects.Advisor2 = NameBetreuer2.Text;
+                projects.AdvisorMail2 = EMail2.Text;
+            }
+            else
+            {
+                projects.Advisor2 = "";
+                projects.AdvisorMail2 = "";
+            }
+
+            applyProjectType(projects);
+
+            projects.POneID = POneContent.SelectedIndex + 1;
+            projects.POneTeamSizeID = POneTeamSize.SelectedIndex + 1;
+
+            if (PTwoContent.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
+            {
+                projects.PTwoID = 0;
+                projects.PTwoTeamSizeID = 0;
+            }
+            else
+            {
+                projects.PTwoID = PTwoContent.SelectedIndex;
+                projects.PTwoTeamSizeID = PTwoTeamSize.SelectedIndex;
+            }
+
+            projects.InitialPosition = InitialPositionContent.Text;
+            projects.Objective = ObjectivContent.Text;
+            projects.ProblemStatement = ProblemStatementContent.Text;
+            projects.References = ReferencesContent.Text;
+            projects.Remarks = RemarksContent.Text;
+            projects.ReservationNameOne = ReservationNameOne.Text;
+
+            if (ReservationNameTwo.Visible)
+            {
+                projects.ReservationNameTwo = ReservationNameTwo.Text;
+            }
+            else
+            {
+                projects.ReservationNameTwo = "";
+            }
+
+            /* CANCELLED PART!
+            applyImportance(projects);
+            */
+
+            projects.DepartmentID = Department.SelectedIndex;
+
+            if (AddPicture.HasFile)
+            {
+                using (var input = AddPicture.PostedFile.InputStream)
+                {
+                    var data = new byte[AddPicture.PostedFile.ContentLength];
+                    for (var offset = 0; ; )
+                    {
+                        var read = input.Read(data, offset, data.Length - offset);
+                        if (read == 0)
+                            break;
+
+                        offset += read;
+                    }
+                    projects.Picture = new System.Data.Linq.Binary(data);
+                }
+            }
+
+            if (Request.QueryString["id"] == null)
+            {
+                db.Projects.InsertOnSubmit(projects);
+            }
+            db.SubmitChanges();
+
+            int lastinsertedId;
+
+            if (Request.QueryString["id"] == null)
+            {
+                lastinsertedId = projects.Id;
+            }
+            else
+            {
+                lastinsertedId = id;
+            }
+
+            PdfCreator pdfCreator = new PdfCreator();
+            int amountPages = pdfCreator.getNumberOfPDFPages(lastinsertedId, Request);
+
+            if (amountPages > 1)
+            {
+                projects.OverOnePage = true;
+            }
+            else
+            {
+                projects.OverOnePage = false;
+            }
+
+            db.SubmitChanges();
         }
 
         private void applyProjectType(Project _is)
@@ -583,7 +617,7 @@ namespace ProStudCreator
                 mailMessage.To.Add(proj.Creator);
                 mailMessage.From = new MailAddress(User.Identity.Name);
                 mailMessage.Subject = "Projekt '" + proj.Name + "' veröffentlicht";
-                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht.\r\n\n----------------------\n Automatische Antwort von ProStudCreator";
+                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht.\r\n\n----------------------\n Automatische Antwort von ProStudCreator\n\n http://prostudcreator.cs.technik.fhnw.ch/";
                 SmtpClient smtpClient = new SmtpClient();
                 smtpClient.Send(mailMessage);
                 Response.Write("E-mail sent!");
@@ -603,9 +637,9 @@ namespace ProStudCreator
             var proj = db.Projects.Single(i => i.Id == id);
 
             refusedReason.Visible = true;
-            refuseNewProject.Visible = false;
+            refuseProject.Visible = false;
             publishProject.Visible = false;
-            saveNewProject.Visible = false;
+            saveProject.Visible = false;
             refusedReasonText.Text = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " abgelehnt.\r\n\nDies sind die Gründe dafür:\n\n\n\nFreundliche Grüsse\n" + User.Identity.Name;
         }
 
@@ -625,7 +659,7 @@ namespace ProStudCreator
                 mailMessage.To.Add(proj.Creator);
                 mailMessage.From = new MailAddress(User.Identity.Name);
                 mailMessage.Subject = "Projekt '" + proj.Name + "' abgelehnt";
-                mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\n Automatische Antwort von ProStudCreator";
+                mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\n Automatische Antwort von ProStudCreator\n\n http://prostudcreator.cs.technik.fhnw.ch/";
                 SmtpClient smtpClient = new SmtpClient();
                 smtpClient.Send(mailMessage);
                 Response.Write("E-mail sent!");
@@ -640,13 +674,29 @@ namespace ProStudCreator
 
         protected void submitProject_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-            proj.Published = false;
-            proj.InProgress = false;
-            proj.Refused = false;
-            db.SubmitChanges();
-            Response.Redirect("/projectlist");
+            if (!(projectType.Count(a => a) < 1) && !(projectType.Count(a => a) > 2))
+            {
+                saveCurrentProject();
+                var id = int.Parse(Request.QueryString["id"]);
+                var proj = db.Projects.Single(i => i.Id == id);
+                proj.Published = false;
+                proj.InProgress = false;
+                proj.Refused = false;
+                db.SubmitChanges();
+                Response.Redirect("/projectlist");
+            }
+            else
+            {
+                string message = "You have to choose 1 or 2 projecttypes, before you can submit this project.";
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(message);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+            }
         }
 
         protected void deleteImage_Click(object sender, EventArgs e)
@@ -693,13 +743,13 @@ namespace ProStudCreator
             Response.Redirect("/projectlist");
         }
 
-        
+
 
         protected void cancelRefusion_Click(object sender, EventArgs e)
         {
-            saveNewProject.Visible = true;
+            saveProject.Visible = true;
             refusedReason.Visible = false;
-            refuseNewProject.Visible = true;
+            refuseProject.Visible = true;
             publishProject.Visible = true;
         }
 
@@ -714,5 +764,6 @@ namespace ProStudCreator
             db.SubmitChanges();
             Response.Redirect("/projectlist");
         }
+
     }
 }

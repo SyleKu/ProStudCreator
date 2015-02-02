@@ -187,6 +187,7 @@
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Properties\PublishProfiles\ProStudCreator.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="pictures\Logo.png" />
     <Content Include="pictures\projectTypAppWeb.png" />

@@ -64,40 +64,39 @@
                 <img alt="Fachhochschule Nordwestschweiz" src="/pictures/Logo.png" />
             </div>
             <div class="well" style="background-color: #f5f5f5">
-                <h2>Registrieren ProStudCreator</h2>
+                <h2>Register ProStudCreator</h2>
                 <p class="control-group">
-                    Bitte geben Sie Ihre FHNW E-Mail Adresse und das dazugehörige Passwort ein, um sich zu registrieren.
-                    Sie erhalten eine E-Mail, damit Sie sich authentifizieren können.
+                    Please enter your FHNW e-mail address and the corresponding password and click 'Sign Up' to continue
                 </p>
                 <div class="form-group no-bottom">
-                    <label for="EnterEMail">E-Mail Adresse</label>
+                    <label for="EnterEMail">E-mail address</label>
                 </div>
                 <div class="form-group">
-                    <asp:TextBox ID="NewUserEmail" CssClass="form-control col-sm-3" runat="server" Width="345px" placeholder="vorname.nachname"></asp:TextBox>
+                    <asp:TextBox ID="NewUserEmail" CssClass="form-control col-sm-3" runat="server" Width="345px" placeholder="firstname.lastname"></asp:TextBox>
                     <asp:TextBox ID="FixEmailEnding" CssClass="form-control col-sm-3" runat="server" Enabled="false" Width="90px" Text="@fhnw.ch"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserEmail" Display="Dynamic" CssClass="text-danger" ErrorMessage="Das E-Mail-Feld ist erforderlich." />
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserEmail" Display="Dynamic" CssClass="text-danger" ErrorMessage="The e-mail field is required." />
                 </div>
                 <div class="form-group no-bottom set-marginTop">
-                    <label for="EnterPassword">Passwort</label>
+                    <label for="EnterPassword">Password</label>
                 </div>
                 <div class="form-group">
-                    <asp:TextBox ID="NewUserPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Passwort"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPassword" Display="Dynamic" CssClass="text-danger" ErrorMessage="Das Kennwortfeld ist erforderlich." />
+                    <asp:TextBox ID="NewUserPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Password"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPassword" Display="Dynamic" CssClass="text-danger" ErrorMessage="The password field is required." />
                 </div>
                 <div class="form-group no-bottom">
-                    <label for="EnterPassword">Passwort erneut eingeben</label>
+                    <label for="EnterPassword">Re-enter password</label>
                 </div>
                 <div class="form-group">
-                    <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" placeholder="Passwort erneut eingeben"></asp:TextBox>
+                    <asp:TextBox ID="NewUserPasswordValidate" CssClass="form-control" TextMode="Password" runat="server" placeholder="Re-enter password"></asp:TextBox>
                     <asp:RequiredFieldValidator runat="server" ControlToValidate="NewUserPasswordValidate"
-                        CssClass="text-danger" Display="Dynamic" ErrorMessage="Das Feld zum Bestätigen des Kennworts ist erforderlich." />
-                    <asp:CompareValidator ID="ComparePasswortsValidator" CssClass="text-danger" Display="Dynamic" ControlToCompare="NewUserPassword" ControlToValidate="NewUserPasswordValidate" runat="server" ErrorMessage="Diese Passwörter stimmen nicht überein."></asp:CompareValidator>
+                        CssClass="text-danger" Display="Dynamic" ErrorMessage="The field to confirm the password is required." />
+                    <asp:CompareValidator ID="ComparePasswortsValidator" CssClass="text-danger" Display="Dynamic" ControlToCompare="NewUserPassword" ControlToValidate="NewUserPasswordValidate" runat="server" ErrorMessage="The passwords do not match."></asp:CompareValidator>
                 </div>
                 <p class="text-danger">
                     <asp:Literal runat="server" ID="ErrorMessage" />
                 </p>
-                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Registrieren" Width="113px" OnClick="CreateUser_Click"></asp:Button>
-                <a class="btn btn-default" href="login.aspx">Abbrechen</a>
+                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Sign Up" Width="113px" OnClick="CreateUser_Click"></asp:Button>
+                <a class="btn btn-default" href="login.aspx">Cancel</a>
             </div>
         </div>
     </form>

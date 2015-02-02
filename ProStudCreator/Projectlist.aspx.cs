@@ -38,10 +38,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*
-            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            manager.AddToRole(User.Identity.GetUserId(), "Admin");
-            */
+            
             if (IsPostBack)
             {
                 projectFilter = (bool[])ViewState["Filter"];
@@ -49,6 +46,7 @@ namespace ProStudCreator
             else
             {
                 ViewState["Filter"] = projectFilter;
+                ProjectsFilterAllProjects.Items[2].Selected = true;
             }
 
             if (User.IsInRole("Admin"))
@@ -56,10 +54,6 @@ namespace ProStudCreator
                 AdminView.Visible = true;
                 AdminViewPDF.Visible = true;
 
-                if (!IsPostBack)
-                {
-                    ProjectsFilterAllProjects.Items[0].Selected = true;
-                }
                 int counter = 0;
                 foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
                 {
@@ -164,12 +158,7 @@ namespace ProStudCreator
             {
                 ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
                 ProjectsFilterAllProjects.Items[1].Attributes.CssStyle.Add("display", "none");
-
-                if (!IsPostBack)
-                {
-                    ProjectsFilterAllProjects.Items[2].Selected = true;
-                }
-
+                
                 int counter = 0;
                 foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
                 {
@@ -205,11 +194,18 @@ namespace ProStudCreator
                {
                    id = i.Id,
                    advisorName = Server.HtmlEncode(i.Advisor) + "<br />" + Server.HtmlEncode(i.Advisor2),
-                   advisorEmail = Server.HtmlEncode(i.AdvisorMail) + "<br / >" + Server.HtmlEncode(i.AdvisorMail2),
+                   advisorEmail = Server.HtmlEncode(i.AdvisorMail) + "<br />" + Server.HtmlEncode(i.AdvisorMail2),
                    projectName = i.Name,
                    p5 = (i.POneID == 1 ? true : false || i.PTwoID == 3 ? true : false),
                    p6 = (i.POneID == 2 ? true : false || i.PTwoID == 2 ? true : false || i.PTwoID == 3 ? true : false),
-                   projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : i.TypeMathAlg ? "MathAlg" : i.TypeAppWeb ? "AppWeb" : "DBBigData"))) + ".png",
+                   projectType1 = "pictures/projectTyp" + 
+                   (i.TypeDesignUX ? "DesignUX" : 
+                   (i.TypeHW ? "HW" : 
+                   (i.TypeCGIP ? "CGIP" : 
+                   i.TypeMathAlg ? "MathAlg" : 
+                   i.TypeAppWeb ? "AppWeb" :
+                   i.TypeDBBigData ? "DBBigData" : "Transparent"))) + ".png",
+
                    projectType2 = "pictures/projectTyp" +
                    ((i.TypeHW && i.TypeDesignUX) ? "HW" :
                    (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
@@ -333,9 +329,12 @@ namespace ProStudCreator
                 }
                 bytesInStream = output.ToArray();
             }
+
+            Project projects = db.Projects.Single(i => i.Id == idPDF);
+
             Response.Clear();
             Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", "attachment; filename=SingleProject.pdf");
+            Response.AddHeader("content-disposition", "attachment; filename="+ projects.Department.DepartmentName + "01.pdf");
             Response.BinaryWrite(bytesInStream);
             Response.End();
         }
@@ -370,7 +369,7 @@ namespace ProStudCreator
             }
             else
             {
-                string message = "Es sind keine Projekte aufgelistet!";
+                string message = "No projects are listed!";
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");

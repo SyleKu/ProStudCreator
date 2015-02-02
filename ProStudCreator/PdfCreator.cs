@@ -213,7 +213,7 @@ namespace ProStudCreator
                 }
             }
 
-            
+
 
             text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
             projectTable.AddCell(text);
@@ -229,6 +229,8 @@ namespace ProStudCreator
                 document.Add(image);
             }
 
+            int paragraphSpacing = 12;
+
             for (int i = 0; i < 5; i++)
             {
                 switch (i)
@@ -237,11 +239,11 @@ namespace ProStudCreator
                         if (proj.InitialPosition != "")
                         {
                             text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                            text.SetLeading(0.0f, 1.0f);
                             document.Add(text);
 
                             text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                            text.SetLeading(0, 1.0f);
+                            text.SpacingAfter = 1f;
+                            text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
                             document.Add(text);
@@ -251,12 +253,10 @@ namespace ProStudCreator
                         if (proj.Objective != "")
                         {
                             text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                            text.SetLeading(0.0f, 2.0f);
-                            text.Add("");
                             document.Add(text);
 
                             text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                            text.SetLeading(0, 1.0f);
+                            text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
                             document.Add(text);
@@ -266,12 +266,11 @@ namespace ProStudCreator
                         if (proj.ProblemStatement != "")
                         {
                             text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                            text.SetLeading(0.0f, 2.0f);
-                            text.Add("");
                             document.Add(text);
 
                             text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                            text.SetLeading(0, 1.0f);
+                            text.SpacingAfter = 1f;
+                            text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
                             document.Add(text);
@@ -280,13 +279,12 @@ namespace ProStudCreator
                     case 3:
                         if (proj.References != "")
                         {
-                            text = new Paragraph("Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                            text.SetLeading(0.0f, 2.0f);
-                            text.Add("");
+                            text = new Paragraph(paragraphSpacing, "Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
                             document.Add(text);
 
                             text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                            text.SetLeading(0, 1.0f);
+                            text.SpacingAfter = 1f;
+                            text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
                             document.Add(text);
@@ -296,12 +294,11 @@ namespace ProStudCreator
                         if (proj.Remarks != "")
                         {
                             text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                            text.SetLeading(0.0f, 2.0f);
-                            text.Add("");
                             document.Add(text);
 
                             text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                            text.SetLeading(0, 1.0f);
+                            text.SpacingAfter = 1f;
+                            text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
                             document.Add(text);
@@ -330,19 +327,19 @@ namespace ProStudCreator
             if (proj.ReservationNameOne != "")
             {
                 text = new Paragraph("Reservation:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                text.SetLeading(0.0f, 2.0f);
-                text.Add("");
                 document.Add(text);
 
                 if (proj.ReservationNameTwo != "")
                 {
                     text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " und " + proj.ReservationNameTwo + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SetLeading(0, 1.0f);
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, 1.0f);
                 }
                 else
                 {
                     text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SetLeading(0, 1.0f);
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, 1.0f);
                 }
                 document.Add(text);
             }
@@ -432,7 +429,7 @@ namespace ProStudCreator
                 foot.WriteSelectedRows(0, -1, -1, 40, writer.DirectContent);
             }
         }
-        
+
         private String getCurrentProjectTypeOne(Project proj)
         {
             var projectType = "";

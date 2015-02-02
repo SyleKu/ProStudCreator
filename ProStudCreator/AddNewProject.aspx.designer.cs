@@ -436,22 +436,31 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList Department;
         
         /// <summary>
-        /// saveNewProject control.
+        /// saveProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button saveNewProject;
+        protected global::System.Web.UI.WebControls.Button saveProject;
         
         /// <summary>
-        /// cancelNewProject control.
+        /// editProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button cancelNewProject;
+        protected global::System.Web.UI.WebControls.Button editProject;
+        
+        /// <summary>
+        /// cancelProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button cancelProject;
         
         /// <summary>
         /// submitProject control.
@@ -472,13 +481,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button publishProject;
         
         /// <summary>
-        /// refuseNewProject control.
+        /// refuseProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button refuseNewProject;
+        protected global::System.Web.UI.WebControls.Button refuseProject;
         
         /// <summary>
         /// moveProjectToTheNextSemester control.

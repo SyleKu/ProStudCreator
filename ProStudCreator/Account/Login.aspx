@@ -55,21 +55,21 @@
             <div class="well" style="background-color: #f5f5f5">
                 <h2>Login ProStudCreator</h2>
                 <p class="control-group">
-                    Bitte geben Sie Ihre FHNW E-Mail Adresse und das dazugehörige Passwort ein und klicken Sie auf Login um weiterzufahren.
+                    Please enter your FHNW e-mail address and the corresponding password and click 'Login' to continue.
                 </p>
                 <div class="form-group">
-                    <asp:Label runat="server" AssociatedControlID="Email" >E-Mail Adresse</asp:Label>
-                    <asp:TextBox runat="server" ID="Email" TextMode="Email" CssClass="form-control" TabIndex="1" placeholder="vorname.nachname@fhnw.ch"></asp:TextBox>
+                    <asp:Label runat="server" AssociatedControlID="Email" >E-mail address</asp:Label>
+                    <asp:TextBox runat="server" ID="Email" TextMode="Email" CssClass="form-control" TabIndex="1" placeholder="firstname.lastname@fhnw.ch"></asp:TextBox>
                 </div>
                 <div class="form-group">
-                    <asp:Label runat="server" AssociatedControlID="Password">Passwort</asp:Label>
-                    <asp:TextBox runat="server" ID="Password" CssClass="form-control" TextMode="Password" TabIndex="2" placeholder="Passwort"></asp:TextBox>
+                    <asp:Label runat="server" AssociatedControlID="Password">Password</asp:Label>
+                    <asp:TextBox runat="server" ID="Password" CssClass="form-control" TextMode="Password" TabIndex="2" placeholder="Password"></asp:TextBox>
                 </div>
                 <asp:button runat="server" OnClick="LogIn" Text="Login" CssClass="btn btn-default" Width="61px" value="Login" tabindex="3" type="submit"></asp:button>
-                <a class="pull-right" href="/Account/Forgot.aspx">Passwort vergessen?</a>
+                <a class="pull-right" href="/Account/Forgot.aspx">Forgot password?</a>
             </div>
             <div>
-                <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled">Kein Konto? Jetzt registrieren</asp:HyperLink>
+                <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled">No account? Sign up now</asp:HyperLink>
             </div>
         </div>
         <div class="checkbox">
