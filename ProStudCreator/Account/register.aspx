@@ -1,11 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="ProStudCreator.Account.Register" %>
-
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Registrieren</title>
+    <title>Register new account</title>
     <style type="text/css">
         @import url(/Content/bootstrap.css);
         @import url(/Content/bootstrap.min.css);
@@ -57,16 +55,15 @@
     </style>
 </head>
 <body>
-
     <form id="form1" runat="server">
         <div class="form-signin">
             <div class="title-box">
                 <img alt="Fachhochschule Nordwestschweiz" src="/pictures/Logo.png" />
             </div>
             <div class="well" style="background-color: #f5f5f5">
-                <h2>Register ProStudCreator</h2>
+                <h2>Register new account</h2>
                 <p class="control-group">
-                    Please enter your FHNW e-mail address and the corresponding password and click 'Sign Up' to continue
+                    Please enter your FHNW e-mail address and a password and click 'Sign Up' to continue
                 </p>
                 <div class="form-group no-bottom">
                     <label for="EnterEMail">E-mail address</label>
@@ -95,7 +92,7 @@
                 <p class="text-danger">
                     <asp:Literal runat="server" ID="ErrorMessage" />
                 </p>
-                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Sign Up" Width="113px" OnClick="CreateUser_Click"></asp:Button>
+                <asp:Button runat="server" ID="CreateUser" CssClass="btn btn-default" Text="Create account" Width="113px" OnClick="CreateUser_Click"></asp:Button>
                 <a class="btn btn-default" href="login.aspx">Cancel</a>
             </div>
         </div>

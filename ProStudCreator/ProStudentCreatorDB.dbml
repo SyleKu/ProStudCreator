@@ -62,71 +62,75 @@
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="DepartmentName" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentID" Type="Project" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ProjectPriorities" Member="ProjectPriorities">
-    <Type Name="ProjectPriority">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Priority" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Association Name="ProjectPriority_Project" Member="Projects" ThisKey="Id" OtherKey="POneID" Type="Project" />
-      <Association Name="ProjectPriority_Project1" Member="Projects1" ThisKey="Id" OtherKey="PTwoID" Type="Project" />
+      <Column Name="DepartmentName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
     </Type>
   </Table>
   <Table Name="dbo.ProjectTeamSize" Member="ProjectTeamSizes">
     <Type Name="ProjectTeamSize">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="TeamSize" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Association Name="ProjectTeamSize_Project" Member="Projects" ThisKey="Id" OtherKey="POneTeamSizeID" Type="Project" />
-      <Association Name="ProjectTeamSize_Project1" Member="Projects1" ThisKey="Id" OtherKey="PTwoTeamSizeID" Type="Project" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Size1" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Size2" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="ProjectTeamSize_Project" Member="Projects" ThisKey="Id" OtherKey="POneTeamSizeId" Type="Project" />
+      <Association Name="ProjectTeamSize_Project1" Member="Projects1" ThisKey="Id" OtherKey="PTwoTeamSizeId" Type="Project" />
     </Type>
   </Table>
   <Table Name="dbo.Projects" Member="Projects">
     <Type Name="Project">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Creator" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Employer" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="EmployerEmail" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Advisor" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Advisor2" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="AdvisorMail" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="AdvisorMail2" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Creator" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Employer" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="EmployerEmail" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Advisor" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Advisor2" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="AdvisorMail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="AdvisorMail2" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="TypeDesignUX" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeHW" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeCGIP" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeMathAlg" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeAppWeb" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeDBBigData" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="POneID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="POneTeamSizeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PTwoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PTwoTeamSizeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="POneTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="POneTeamSizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PTwoTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PTwoTeamSizeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="InitialPosition" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="Objective" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="ReservationNameOne" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="ReservationNameTwo" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Importance" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ReservationNameOne" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ReservationNameTwo" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Important" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Published" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="InProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="DepartmentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="OverOnePage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="ModificationDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="PublishedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="Refused" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="StateDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Department_Project" Member="Department" ThisKey="DepartmentID" OtherKey="Id" Type="Department" IsForeignKey="true" />
-      <Association Name="ProjectPriority_Project" Member="ProjectPriority" ThisKey="POneID" OtherKey="Id" Type="ProjectPriority" IsForeignKey="true" />
-      <Association Name="ProjectPriority_Project1" Member="ProjectPriority1" ThisKey="PTwoID" OtherKey="Id" Type="ProjectPriority" IsForeignKey="true" />
-      <Association Name="ProjectTeamSize_Project" Member="ProjectTeamSize" ThisKey="POneTeamSizeID" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
-      <Association Name="ProjectTeamSize_Project1" Member="ProjectTeamSize1" ThisKey="PTwoTeamSizeID" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
+      <Association Name="Department_Project" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
+      <Association Name="ProjectTeamSize_Project" Member="POneTeamSize" ThisKey="POneTeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
+      <Association Name="ProjectTeamSize_Project1" Member="PTwoTeamSize" ThisKey="PTwoTeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
+      <Association Name="ProjectType_Project" Member="POneType" ThisKey="POneTypeId" OtherKey="Id" Type="ProjectType" IsForeignKey="true" />
+      <Association Name="ProjectType_Project1" Member="PTwoType" ThisKey="PTwoTypeId" OtherKey="Id" Type="ProjectType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ProjectTypes" Member="ProjectTypes">
+    <Type Name="ProjectType">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="P5" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="P6" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="ProjectType_Project" Member="Projects" ThisKey="Id" OtherKey="POneTypeId" Type="Project" />
+      <Association Name="ProjectType_Project1" Member="Projects1" ThisKey="Id" OtherKey="PTwoTypeId" Type="Project" />
     </Type>
   </Table>
 </Database>

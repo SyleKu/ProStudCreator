@@ -54,16 +54,16 @@
                 </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priority 1"></asp:Label>
-                <asp:DropDownList runat="server" ID="POneContent" CssClass="form-control col-sm-1" Width="200px">
+                <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1" Width="200px">
                 </asp:DropDownList>
-                <asp:DropDownList runat="server" ID="POneTeamSize" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="POneTeamSize_SelectedIndexChanged" AutoPostBack="true">
+                <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="POneTeamSize_SelectedIndexChanged" AutoPostBack="true">
                 </asp:DropDownList>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priority 2"></asp:Label>
-                <asp:DropDownList runat="server" ID="PTwoContent" CssClass="form-control col-sm-1" Width="200px">
+                <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1" Width="200px">
                 </asp:DropDownList>
-                <asp:DropDownList runat="server" ID="PTwoTeamSize" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="PTwoTeamSize_SelectedIndexChanged" AutoPostBack="true">
+                <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="PTwoTeamSize_SelectedIndexChanged" AutoPostBack="true">
                 </asp:DropDownList>
             </div>
             <div class="form-group">
@@ -127,6 +127,6 @@
         <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject pull-right" Width="113px" Text="Publish" OnClientClick="return confirm('Do your really want to publish this project?');" OnClick="publishProject_Click"></asp:Button>
         <asp:Button runat="server" ID="refuseProject" Visible="false" CssClass="btn btn-default refuseProject pull-right" Width="113px" Text="Refuse" OnClick="refuseProject_Click"></asp:Button>
         <asp:Button runat="server" ID="moveProjectToTheNextSemester" Visible="false" CssClass="btn btn-default pull-right" Text="Move project to the next semester" OnClientClick="return confirm('Do your really want to move this project to the next Semester?\nThe project will immediately be sent to the admin.');" OnClick="moveProjectToTheNextSemester_Click"></asp:Button>
-        <asp:Button runat="server" ID="rollbackProject" Visible="false" CssClass="btn btn-default rollbackMarginRight pull-right" Text="Rollback" OnClientClick="return confirm('Do your really want to rollback this project?');" OnClick="rollbackProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="rollbackProject" Visible="false" CssClass="btn btn-default rollbackMarginRight pull-right" Text="Unpublish" OnClientClick="return confirm('Do your really want to unpublish this project?');" OnClick="rollbackProject_Click"></asp:Button>
     </div>
 </asp:Content>

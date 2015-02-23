@@ -196,8 +196,8 @@ namespace ProStudCreator
                    advisorName = Server.HtmlEncode(i.Advisor) + "<br />" + Server.HtmlEncode(i.Advisor2),
                    advisorEmail = Server.HtmlEncode(i.AdvisorMail) + "<br />" + Server.HtmlEncode(i.AdvisorMail2),
                    projectName = i.Name,
-                   p5 = (i.POneID == 1 ? true : false || i.PTwoID == 3 ? true : false),
-                   p6 = (i.POneID == 2 ? true : false || i.PTwoID == 2 ? true : false || i.PTwoID == 3 ? true : false),
+                   p5 = i.POneType.P5 || i.PTwoType.P5,
+                   p6 = i.POneType.P6 || i.PTwoType.P6,
                    projectType1 = "pictures/projectTyp" + 
                    (i.TypeDesignUX ? "DesignUX" : 
                    (i.TypeHW ? "HW" : 

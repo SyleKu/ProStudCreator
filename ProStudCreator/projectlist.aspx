@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
         <div class="well adminSettings non-selectable">
-            <h3>Submitted projects:</h3>
+            <h3>Pending projects</h3>
             <div class="well" style="background-color: #ffffff">
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" Width="1200px" AutoGenerateColumns="False" OnRowCommand="CheckProjectsEvent">
                     <AlternatingRowStyle BackColor="White" />
@@ -14,9 +14,9 @@
                         <asp:BoundField DataField="projectName" HeaderText="Projectname" SortExpression="Advisor" ItemStyle-Width="250px" />
                         <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="Advisor" />
                         <asp:CheckBoxField HeaderText="P6" DataField="p6" SortExpression="Advisor" />
-                        <asp:ImageField ItemStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Projecttype" ItemStyle-Width="20px" />
-                        <asp:ImageField ItemStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px" />
-                        <asp:TemplateField>
+                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Projecttype" ItemStyle-Width="20px" />
+                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px" />
+                        <asp:TemplateField ItemStyle-CssClass="nowrap">
                             <ItemTemplate>
                                 <asp:LinkButton runat="server" CommandName="showProject" ToolTip="Show project" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open"></asp:LinkButton>
                                 <asp:LinkButton runat="server" CommandName="editProject" ToolTip="Edit project" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton>
@@ -40,7 +40,7 @@
         </div>
     </asp:PlaceHolder>
     <div class="well usernSettings non-selectable">
-        <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="New project" OnClick="newProject_Click" />
+        <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="Create new project" OnClick="newProject_Click" />
         <asp:PlaceHolder ID="AdminViewPDF" runat="server" Visible="false">
             <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont" Text="Create PDF" OnClick="AllProjectsAsPDF_Click" />
 
@@ -49,9 +49,9 @@
             <asp:RadioButtonList ID="ProjectsFilterAllProjects" RepeatDirection="Horizontal" runat="server" AutoPostBack="true">
                 <asp:ListItem Value="AllFutureProjects">Projects next semester</asp:ListItem>
                 <asp:ListItem Value="AllPastProjects">Projects this semester</asp:ListItem>
-                <asp:ListItem Value="MyProjects">My projects (in progress)</asp:ListItem>
-                <asp:ListItem Value="NotAvailable">My submitted projects</asp:ListItem>
-                <asp:ListItem Value="Available">My published projects</asp:ListItem>
+                <asp:ListItem Value="MyProjects">Unsubmitted</asp:ListItem>
+                <asp:ListItem Value="NotAvailable">Submitted</asp:ListItem>
+                <asp:ListItem Value="Available">Published</asp:ListItem>
             </asp:RadioButtonList>
         </div>
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">
@@ -64,8 +64,8 @@
                     <asp:BoundField DataField="projectName" HeaderText="Projectname" SortExpression="Advisor" ItemStyle-Width="250px" />
                     <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="Advisor" />
                     <asp:CheckBoxField HeaderText="P6" DataField="p6" SortExpression="Advisor" />
-                    <asp:ImageField ItemStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Projecttype" ItemStyle-Width="20px" />
-                    <asp:ImageField ItemStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px" />
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Projecttype" ItemStyle-Width="20px" />
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px" />
                     <asp:TemplateField>
                         <ItemTemplate>
                             <asp:LinkButton runat="server" ID="showProjectButton" ToolTip="Show project" CommandName="showProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open pull-right"></asp:LinkButton>
@@ -102,17 +102,12 @@
                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
             </asp:GridView>
         </div>
-        <div>
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" />
-            = Project refused,
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
-            = Project PDF is over 1 page,
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#A9F5A9" />
-            = Project is published,
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#CEECF5" />
-            /
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight"/>
-            = Project in progress 
+        <div style="font-size:70%">
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" /> = Project refused&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" /> = PDF is >1 page&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#A9F5A9" /> = Project is published&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#CEECF5" /> /
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight"/> = Project in progress 
         </div>
     </div>
 </asp:Content>

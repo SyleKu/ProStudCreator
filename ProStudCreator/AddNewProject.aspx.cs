@@ -18,7 +18,7 @@ namespace ProStudCreator
         bool[] projectType = new bool[6];
         private static int id;
         private Project projects;
-        ProjectPriority projectPriority = new ProjectPriority();
+        ProjectType projectPriority = new ProjectType();
         DateTime today = DateTime.Now;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -39,18 +39,18 @@ namespace ProStudCreator
                 ReferencesContent.Attributes.Add("placeholder", "Beispiel: JavaScript, Komplexe Datenstrukturen, Three.js/WebGL");
                 RemarksContent.Attributes.Add("placeholder", "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
 
-                POneContent.DataSource = db.ProjectPriorities.Where(i => i.Id != 0).Select(i => i.Priority);
-                PTwoContent.DataSource = db.ProjectPriorities.Select(i => i.Priority);
+                POneType.DataSource = db.ProjectTypes;
+                POneTeamSize.DataSource = db.ProjectTeamSizes;
 
-                POneTeamSize.DataSource = db.ProjectTeamSizes.Where(i => i.Id != 0).Select(i => i.TeamSize);
-                PTwoTeamSize.DataSource = db.ProjectTeamSizes.Select(i => i.TeamSize);
+                PTwoType.DataSource = Enumerable.Repeat(new ProjectType() { Description="-",Id=-1 }, 1).Concat(db.ProjectTypes);
+                PTwoTeamSize.DataSource = Enumerable.Repeat(new ProjectTeamSize() { Description="-",Id=-1 }, 1).Concat(db.ProjectTeamSizes);
 
                 Department.DataSource = db.Departments.Select(i => i.DepartmentName);
                 DataBind();
 
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Add image";
-                SiteTitle.Text = "Create new project:";
+                SiteTitle.Text = "Create new project";
                 saveProject.Text = "Save";
 
                 if (Request.QueryString["id"] != null)
@@ -70,8 +70,9 @@ namespace ProStudCreator
         {
             var proj = db.Projects.Single(i => i.Id == id);
 
-            SiteTitle.Text = "Edit project:";
-            CreatorID.Text = "Creator: " + proj.Creator + ", CreateDate: " + proj.CreateDate.ToString("dd.MM.yyyy");
+            Page.Title = "Edit project";
+            SiteTitle.Text = "Edit project";
+            CreatorID.Text = proj.Creator + "/" + proj.CreateDate.ToString("dd.MM.yyyy");
             saveProject.Visible = true;
             saveProject.Text = "Save changes";
             AddPictureLabel.Text = "Change image:";
@@ -128,16 +129,16 @@ namespace ProStudCreator
             }
 
             // Priority 1
-            POneContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.POneID).Priority;
+            POneType.Text = proj.POneType.Description;
 
             //  Priority 2
-            PTwoContent.Text = db.ProjectPriorities.Single(i => i.Id == proj.PTwoID).Priority;
+            PTwoType.Text = proj.PTwoType.Description;
 
             // Teamsize Priority 1
-            POneTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID).TeamSize;
+            POneTeamSize.Text = proj.POneTeamSize.Description;
 
             // Teamsize Priority 2
-            PTwoTeamSize.Text = db.ProjectTeamSizes.Single(i => i.Id == proj.PTwoTeamSizeID).TeamSize;
+            PTwoTeamSize.Text = proj.PTwoTeamSize.Description;
 
             InitialPositionContent.Text = proj.InitialPosition;
 
@@ -185,14 +186,15 @@ namespace ProStudCreator
                 ReservationNameTwo.Visible = true;
             }
 
-            Department.Text = db.Departments.Single(i => i.Id == proj.DepartmentID).DepartmentName;
+            Department.Text = proj.Department.DepartmentName;
         }
 
         private void showOnlyContent()
         {
             var proj = db.Projects.Single(i => i.Id == id);
 
-            SiteTitle.Text = "View project:";
+            Page.Title = "View project";
+            SiteTitle.Text = "View project";
             saveProject.Visible = false;
             editProject.Visible = true;
 
@@ -240,9 +242,9 @@ namespace ProStudCreator
             AppWeb.Enabled = false;
             DBBigData.Enabled = false;
 
-            POneContent.Enabled = false;
+            POneType.Enabled = false;
             POneTeamSize.Enabled = false;
-            PTwoContent.Enabled = false;
+            PTwoType.Enabled = false;
             PTwoTeamSize.Enabled = false;
             InitialPositionContent.ReadOnly = true;
 
@@ -443,18 +445,18 @@ namespace ProStudCreator
 
             applyProjectType(projects);
 
-            projects.POneID = POneContent.SelectedIndex + 1;
-            projects.POneTeamSizeID = POneTeamSize.SelectedIndex + 1;
+            projects.POneTypeId = int.Parse(POneType.SelectedValue);
+            projects.POneTeamSizeId = POneTeamSize.SelectedIndex + 1;
 
-            if (PTwoContent.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
+            if (PTwoType.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
             {
-                projects.PTwoID = 0;
-                projects.PTwoTeamSizeID = 0;
+                projects.PTwoTypeId = null;
+                projects.PTwoTeamSizeId = null;
             }
             else
             {
-                projects.PTwoID = PTwoContent.SelectedIndex;
-                projects.PTwoTeamSizeID = PTwoTeamSize.SelectedIndex;
+                projects.PTwoTypeId = PTwoType.SelectedIndex;
+                projects.PTwoTeamSizeId = PTwoTeamSize.SelectedIndex;
             }
 
             projects.InitialPosition = InitialPositionContent.Text;
@@ -477,7 +479,7 @@ namespace ProStudCreator
             applyImportance(projects);
             */
 
-            projects.DepartmentID = Department.SelectedIndex;
+            projects.DepartmentId = Department.SelectedIndex;
 
             if (AddPicture.HasFile)
             {

@@ -53,6 +53,10 @@ namespace ProStudCreator
 
         private void WritePDF(Project currentProject, String currentProjectType, Document document, Rectangle defaultPageSize, int projectCounter, HttpRequest currentRequest)
         {
+            var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+            var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+
+
             var proj = currentProject;
             currentProjectType = getCurrentProjectTypeOne(proj);
 
@@ -159,50 +163,37 @@ namespace ProStudCreator
 
 
             PdfPCell advisorCell;
-            text = new Paragraph("BetreuerIn:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+            text = new Paragraph("BetreuerIn:", fontHeading);
             advisorCell = new PdfPCell(text);
             advisorCell.Border = Rectangle.NO_BORDER;
             projectTable.AddCell(advisorCell);
 
-            text = new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-            projectTable.AddCell(text);
+            projectTable.AddCell(new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, fontRegular));
 
             projectTable.AddCell(" ");
-            text = new Paragraph("Priorität 1", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-            projectTable.AddCell(text);
-            text = new Paragraph("Priorität 2", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-            projectTable.AddCell(text);
+            projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
+            projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
 
             if (proj.Advisor2 != "")
             {
                 projectTable.AddCell(" ");
-                text = new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                projectTable.AddCell(text);
+                projectTable.AddCell(new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, fontRegular));
             }
             else
             {
-                text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                projectTable.AddCell(text);
-
-                text = new Paragraph(proj.Employer, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                projectTable.AddCell(text);
+                projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
+                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
             }
 
-            text = new Paragraph("Arbeitsumfang:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-            projectTable.AddCell(text);
-            text = new Paragraph(db.ProjectPriorities.Single(i => i.Id == proj.POneID).Priority, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-            projectTable.AddCell(text);
-            text = new Paragraph(db.ProjectPriorities.Single(i => i.Id == proj.PTwoID).Priority, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-            projectTable.AddCell(text);
+            projectTable.AddCell(new Paragraph("Arbeitsumfang:", fontHeading));
+            projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoType.Description, fontRegular));
 
 
             if (proj.Employer != "" && proj.Advisor2 != "")
             {
-                text = new Paragraph("Auftraggeber:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-                projectTable.AddCell(text);
-
-                text = new Paragraph(proj.Employer, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                projectTable.AddCell(text);
+                projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
+                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
 
             }
             else
@@ -215,12 +206,9 @@ namespace ProStudCreator
 
 
 
-            text = new Paragraph("Teamgrösse:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
-            projectTable.AddCell(text);
-            text = new Paragraph(db.ProjectTeamSizes.Single(i => i.Id == proj.POneTeamSizeID).TeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-            projectTable.AddCell(text);
-            text = new Paragraph(db.ProjectTeamSizes.Single(i => i.Id == proj.PTwoTeamSizeID).TeamSize, FontFactory.GetFont(FontFactory.HELVETICA, 10));
-            projectTable.AddCell(text);
+            projectTable.AddCell(new Paragraph("Teamgrösse:", fontHeading));
+            projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoTeamSize.Description, fontRegular));
 
             document.Add(projectTable);
 
@@ -229,7 +217,7 @@ namespace ProStudCreator
                 document.Add(image);
             }
 
-            int paragraphSpacing = 12;
+            int paragraphSpacing = 20;
 
             for (int i = 0; i < 5; i++)
             {
@@ -238,10 +226,10 @@ namespace ProStudCreator
                     case 0:
                         if (proj.InitialPosition != "")
                         {
-                            text = new Paragraph("Ausgangslage:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                            text = new Paragraph("Ausgangslage:", fontHeading);
                             document.Add(text);
 
-                            text = new Paragraph(proj.InitialPosition, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                            text = new Paragraph(proj.InitialPosition, fontRegular);
                             text.SpacingAfter = 1f;
                             text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -252,10 +240,10 @@ namespace ProStudCreator
                     case 1:
                         if (proj.Objective != "")
                         {
-                            text = new Paragraph("Ziel der Arbeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                            text = new Paragraph(paragraphSpacing, "Ziel der Arbeit:", fontHeading);
                             document.Add(text);
 
-                            text = new Paragraph(proj.Objective, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                            text = new Paragraph(proj.Objective, fontRegular);
                             text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
                             text.IndentationRight = 10f;
@@ -265,10 +253,10 @@ namespace ProStudCreator
                     case 2:
                         if (proj.ProblemStatement != "")
                         {
-                            text = new Paragraph("Problemstellung:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                            text = new Paragraph(paragraphSpacing, "Problemstellung:", fontHeading);
                             document.Add(text);
 
-                            text = new Paragraph(proj.ProblemStatement, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                            text = new Paragraph(proj.ProblemStatement, fontRegular);
                             text.SpacingAfter = 1f;
                             text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -279,10 +267,10 @@ namespace ProStudCreator
                     case 3:
                         if (proj.References != "")
                         {
-                            text = new Paragraph(paragraphSpacing, "Technologien / Fachliche Schwerpunkte / Referenzen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                            text = new Paragraph(paragraphSpacing, "Technologien/Fachliche Schwerpunkte/Referenzen:", fontHeading);
                             document.Add(text);
 
-                            text = new Paragraph(proj.References, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                            text = new Paragraph(proj.References, fontRegular);
                             text.SpacingAfter = 1f;
                             text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -293,10 +281,10 @@ namespace ProStudCreator
                     case 4:
                         if (proj.Remarks != "")
                         {
-                            text = new Paragraph("Bemerkungen:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                            text = new Paragraph(paragraphSpacing, "Bemerkungen:", fontHeading);
                             document.Add(text);
 
-                            text = new Paragraph(proj.Remarks, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                            text = new Paragraph(proj.Remarks, fontRegular);
                             text.SpacingAfter = 1f;
                             text.SetLeading(0.0f, 1.0f);
                             text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -307,7 +295,7 @@ namespace ProStudCreator
 
                     /* CANCELLED PART!
                     case 5:
-                    text = new Paragraph("Wichtigkeit:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                    text = new Paragraph("Wichtigkeit:", fontHeading);
                     document.Add(text);
                     if (proj.Importance)
                     {
@@ -326,7 +314,7 @@ namespace ProStudCreator
             }
             if (proj.ReservationNameOne != "")
             {
-                text = new Paragraph("Reservation:", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+                text = new Paragraph(paragraphSpacing, "Reservation:", fontHeading);
                 document.Add(text);
 
                 if (proj.ReservationNameTwo != "")

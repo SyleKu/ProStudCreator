@@ -238,13 +238,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.ImageButton DBBigData;
         
         /// <summary>
-        /// POneContent control.
+        /// POneType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList POneContent;
+        protected global::System.Web.UI.WebControls.DropDownList POneType;
         
         /// <summary>
         /// POneTeamSize control.
@@ -256,13 +256,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList POneTeamSize;
         
         /// <summary>
-        /// PTwoContent control.
+        /// PTwoType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList PTwoContent;
+        protected global::System.Web.UI.WebControls.DropDownList PTwoType;
         
         /// <summary>
         /// PTwoTeamSize control.
