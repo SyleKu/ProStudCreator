@@ -64,6 +64,11 @@ namespace ProStudCreator
                     throw new InvalidOperationException("Fehler bei der Überprüfung des Anti-XSRF-Tokens.");
                 }
             }
+
+            if (!ShibUser.IsAuthenticated())
+            {
+                throw new System.UnauthorizedAccessException();
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)

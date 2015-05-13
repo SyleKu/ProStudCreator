@@ -1,27 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using iTextSharp.text;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.html;
-using System.Net.Mail;
-using System.Web.Security;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Owin;
-
 namespace ProStudCreator
 {
-
     public class ProjectSingleElement
     {
         public int id { get; set; }
+        public string Institute { get; set; }
         public string advisorName { get; set; }
-        public string advisorEmail { get; set; }
         public string projectName { get; set; }
         public string projectType1 { get; set; }
         public string projectType2 { get; set; }
@@ -29,347 +21,252 @@ namespace ProStudCreator
         public bool p6 { get; set; }
     }
 
-
-    public partial class projectlist : System.Web.UI.Page
+    public partial class Projectlist : Page
     {
-        ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        bool[] projectFilter = new bool[5];
-        DateTime today = DateTime.Now;
-
-        protected void Page_Load(object sender, EventArgs e)
+        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        protected PlaceHolder AdminView;
+        protected GridView CheckProjects;
+        protected RadioButtonList ListFilter;
+        protected GridView AllProjects;
+        protected Button newProject;
+        protected PlaceHolder AdminViewPDF;
+        protected Button AllProjectsAsPDF;
+        protected void Page_Load(object sender, System.EventArgs e)
         {
-            
-            if (IsPostBack)
+            IQueryable<Project> projects =
+                from i in this.db.Projects
+                where true
+                select i;
+            if (ShibUser.IsAdmin())
             {
-                projectFilter = (bool[])ViewState["Filter"];
-            }
-            else
-            {
-                ViewState["Filter"] = projectFilter;
-                ProjectsFilterAllProjects.Items[2].Selected = true;
-            }
-
-            if (User.IsInRole("Admin"))
-            {
-                AdminView.Visible = true;
-                AdminViewPDF.Visible = true;
-
-                int counter = 0;
-                foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
+                this.AllProjectsAsPDF.Visible = true;
+                this.AdminView.Visible = true;
+                this.AdminViewPDF.Visible = true;
+                this.CheckProjects.DataSource =
+                    from item in projects
+                    where (int)item.State == 1 && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
+                    select item into i
+                    select this.getProjectSingleElement(i);
+                if (this.ListFilter.SelectedValue == "AllFutureProjects")
                 {
-                    projectFilter[counter] = item.Selected;
-                    counter++;
+                    projects =
+                        from p in projects
+                        where p.PublishedDate >= Semester.CurrentSemester.StartDate && (int)p.State == 3
+                        select p;
                 }
-
-                var projects = db.Projects.Where(i => true);
-
-                CheckProjects.DataSource = projects.Where(item => !item.Published && !item.InProgress && !item.StateDeleted).Select(i => getProjectSingleElement(i));
-
-
-                bool isFruehlingSemester = false;
-
-                if (today.Month > 1 && today.Month < 9)
+                else if (this.ListFilter.SelectedValue == "AllPastProjects")
                 {
-                    isFruehlingSemester = true;
+                    projects =
+                        from p in projects
+                        where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && (int)p.State == 3
+                        select p;
                 }
-
-
-                DateTime vonFilter;
-                DateTime bisFilter;
-
-                if (projectFilter[0])
+                else if (this.ListFilter.SelectedValue == "InProgress")
                 {
-                    if (isFruehlingSemester)
-                    {
-                        vonFilter = new DateTime(today.Year, 2, 1);
-                        bisFilter = new DateTime(today.Year, 8, 1);
-
-                        projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                    }
-                    else
-                    {
-                        if (today.Month > 6)
-                        {
-                            vonFilter = new DateTime(today.Year, 8, 1);
-                            bisFilter = new DateTime(today.Year + 1, 2, 1);
-
-                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                        }
-                        else
-                        {
-                            vonFilter = new DateTime(today.Year - 1, 8, 1);
-                            bisFilter = new DateTime(today.Year, 2, 1);
-
-                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                        }
-                    }
-                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
-
-
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
+                        select item;
                 }
-
-                else if (projectFilter[1])
+                else if (this.ListFilter.SelectedValue == "Submitted")
                 {
-                    if (isFruehlingSemester)
-                    {
-                        vonFilter = new DateTime(today.Year - 1, 8, 1);
-                        bisFilter = new DateTime(today.Year, 2, 1);
-
-                        projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                    }
-                    else
-                    {
-                        if (today.Month > 6)
-                        {
-                            vonFilter = new DateTime(today.Year, 2, 1);
-                            bisFilter = new DateTime(today.Year, 8, 1);
-
-                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                        }
-                        else
-                        {
-                            vonFilter = new DateTime(today.Year - 1, 2, 1);
-                            bisFilter = new DateTime(today.Year - 1, 8, 1);
-
-                            projects = projects.Where(p => p.PublishedDate >= vonFilter && p.PublishedDate <= bisFilter);
-                        }
-                    }
-                    projects = projects.Where(item => !item.InProgress && !item.StateDeleted && item.Published);
-                }
-
-                else if (projectFilter[2])
-                {
-                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
-                }
-                else if (projectFilter[3])
-                {
-                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
-
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 1
+                        select item;
                 }
                 else
                 {
-                    projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 3
+                        select item;
                 }
-
-                AllProjects.DataSource = projects.Select(i => getProjectSingleElement(i));
             }
-
             else
             {
-                ProjectsFilterAllProjects.Items[0].Attributes.CssStyle.Add("display", "none");
-                ProjectsFilterAllProjects.Items[1].Attributes.CssStyle.Add("display", "none");
-                
-                int counter = 0;
-                foreach (System.Web.UI.WebControls.ListItem item in ProjectsFilterAllProjects.Items)
+                this.ListFilter.Items[0].Attributes.CssStyle.Add("display", "none");
+                this.ListFilter.Items[1].Attributes.CssStyle.Add("display", "none");
+                if (this.ListFilter.SelectedValue == "InProgress")
                 {
-                    projectFilter[counter] = item.Selected;
-                    counter++;
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
+                        select item;
                 }
-
-                var projects = db.Projects.Where(i => true);
-
-                if (projectFilter[2])
+                else if (this.ListFilter.SelectedValue == "Submitted")
                 {
-                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.StateDeleted && item.InProgress);
-                }
-                else if (projectFilter[3])
-                {
-                    projects = projects.Where(item => item.Creator == User.Identity.Name && !item.Published && !item.InProgress && !item.StateDeleted);
-
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 1
+                        select item;
                 }
                 else
                 {
-                    projects = projects.Where(item => item.Published && item.Creator == User.Identity.Name && !item.StateDeleted);
+                    projects =
+                        from item in projects
+                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 3
+                        select item;
                 }
-
-                AllProjects.DataSource = projects.Select(i => getProjectSingleElement(i));
             }
-            CheckProjects.DataBind();
-            AllProjects.DataBind();
+            this.AllProjects.DataSource =
+                from i in projects
+                select this.getProjectSingleElement(i);
+            this.CheckProjects.DataBind();
+            this.AllProjects.DataBind();
         }
-
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
-            return new ProjectSingleElement()
-               {
-                   id = i.Id,
-                   advisorName = Server.HtmlEncode(i.Advisor) + "<br />" + Server.HtmlEncode(i.Advisor2),
-                   advisorEmail = Server.HtmlEncode(i.AdvisorMail) + "<br />" + Server.HtmlEncode(i.AdvisorMail2),
-                   projectName = i.Name,
-                   p5 = i.POneType.P5 || i.PTwoType.P5,
-                   p6 = i.POneType.P6 || i.PTwoType.P6,
-                   projectType1 = "pictures/projectTyp" + 
-                   (i.TypeDesignUX ? "DesignUX" : 
-                   (i.TypeHW ? "HW" : 
-                   (i.TypeCGIP ? "CGIP" : 
-                   i.TypeMathAlg ? "MathAlg" : 
-                   i.TypeAppWeb ? "AppWeb" :
-                   i.TypeDBBigData ? "DBBigData" : "Transparent"))) + ".png",
-
-                   projectType2 = "pictures/projectTyp" +
-                   ((i.TypeHW && i.TypeDesignUX) ? "HW" :
-                   (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" :
-                   (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" :
-                   (i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" :
-                   (i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb) ? "DBBigData" : "Transparent")) + ".png"
-               };
+            return new ProjectSingleElement
+            {
+                id = i.Id,
+                advisorName = string.Concat(new string[]
+                {
+                    "<a href=\"mailto:",
+                    i.Advisor1Mail,
+                    "\">",
+                    base.Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;"),
+                    "</a><br /><a href=\"mailto:",
+                    i.Advisor2Mail,
+                    "\">",
+                    base.Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;"),
+                    "</a>"
+                }),
+                projectName = ((i.ProjectNr == 0) ? "??" : i.ProjectNr.ToString()) + ": " + i.Name,
+                Institute = i.Department.DepartmentName,
+                p5 = i.POneType.P5 || (i.PTwoType != null && i.PTwoType.P5),
+                p6 = i.POneType.P6 || (i.PTwoType != null && i.PTwoType.P6),
+                projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : (i.TypeMathAlg ? "MathAlg" : (i.TypeAppWeb ? "AppWeb" : (i.TypeDBBigData ? "DBBigData" : "Transparent")))))) + ".png",
+                projectType2 = "pictures/projectTyp" + ((i.TypeHW && i.TypeDesignUX) ? "HW" : ((i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" : ((i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" : ((i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" : ((i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb)) ? "DBBigData" : "Transparent"))))) + ".png"
+            };
         }
-
         protected void AllProjects_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (projectFilter[3] || projectFilter[4])
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                e.Row.Cells[9].Visible = false;
-                e.Row.Cells[10].Visible = false;
+                Project project = this.db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
+                Color? col = null;
+                if (project.State == ProjectState.Published)
+                {
+                    col = new Color?(ColorTranslator.FromHtml("#A9F5A9"));
+                    if (!ShibUser.IsAdmin())
+                    {
+                        e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
+                    }
+                }
+                else if (project.State == ProjectState.Rejected)
+                {
+                    col = new Color?(ColorTranslator.FromHtml("#F5A9A9"));
+                }
+                else if (project.OverOnePage)
+                {
+                    col = new Color?(ColorTranslator.FromHtml("#F3F781"));
+                }
+                if (col.HasValue)
+                {
+                    foreach (TableCell cell in e.Row.Cells)
+                    {
+                        cell.BackColor = col.Value;
+                    }
+                }
             }
-
-            Project projects;
-            foreach (GridViewRow row in AllProjects.Rows)
+        }
+        protected void newProject_Click(object sender, System.EventArgs e)
+        {
+            base.Response.Redirect("AddNewProject");
+        }
+        protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
+        {
+            string commandName = e.CommandName;
+            if (commandName != null)
             {
-                int rowProjectID = Int32.Parse(row.Cells[0].Text);
-                projects = db.Projects.Single(item => item.Id == rowProjectID);
-                if (projects.Published)
+                if (!(commandName == "showProject"))
                 {
-                    for (int j = 0; j < AllProjects.Columns.Count; j++)
+                    if (!(commandName == "editProject"))
                     {
-                        row.Cells[j].BackColor = System.Drawing.ColorTranslator.FromHtml("#A9F5A9");
+                        if (!(commandName == "deleteProject"))
+                        {
+                            if (!(commandName == "revokeSubmission"))
+                            {
+                                if (commandName == "SinglePDF")
+                                {
+                                    int idPDF = System.Convert.ToInt32(e.CommandArgument);
+                                    this.CreateSinglePDF(idPDF);
+                                }
+                            }
+                            else
+                            {
+                                Project projectr = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
+                                projectr.State = ProjectState.InProgress;
+                                this.db.SubmitChanges();
+                                base.Response.Redirect(base.Request.RawUrl);
+                            }
+                        }
+                        else
+                        {
+                            Project project = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
+                            project.Delete();
+                            this.db.SubmitChanges();
+                            base.Response.Redirect(base.Request.RawUrl);
+                        }
                     }
-                }
-                else if (projects.Refused)
-                {
-                    for (int j = 0; j < AllProjects.Columns.Count; j++)
+                    else
                     {
-                        row.Cells[j].BackColor = System.Drawing.ColorTranslator.FromHtml("#F5A9A9");
-                    }
-                }
-                else if (projects.OverOnePage)
-                {
-                    for (int j = 0; j < AllProjects.Columns.Count; j++)
-                    {
-                        row.Cells[j].BackColor = System.Drawing.ColorTranslator.FromHtml("#F3F781");
+                        base.Response.Redirect("AddNewProject?id=" + e.CommandArgument);
                     }
                 }
                 else
                 {
-                    // DO NOTHING !!
+                    base.Response.Redirect("AddNewProject?id=" + e.CommandArgument + "&show=true");
                 }
             }
-            e.Row.Cells[0].Visible = false;
         }
-
-        protected void newProject_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("/AddNewProject");
-        }
-
-
-        protected void CheckProjectsEvent(object sender, GridViewCommandEventArgs e)
-        {
-            switch (e.CommandName)
-            {
-                case "showProject":
-                    Response.Redirect("/AddNewProject?id=" + e.CommandArgument + "&show=true");
-                    break;
-                case "editProject":
-                    Response.Redirect("/AddNewProject?id=" + e.CommandArgument);
-                    break;
-                case "deleteProject":
-                    var id = Convert.ToInt32(e.CommandArgument);
-                    Project projects = db.Projects.Single(i => i.Id == id);
-                    projects.StateDeleted = true;
-                    db.SubmitChanges();
-                    Response.Redirect(Request.RawUrl);
-                    break;
-                case "SinglePDF":
-                    var idPDF = Convert.ToInt32(e.CommandArgument);
-                    CreateSinglePDF(idPDF);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        protected void AllProjectsEvent(object sender, GridViewCommandEventArgs e)
-        {
-            switch (e.CommandName)
-            {
-                case "showProject":
-                    Response.Redirect("/AddNewProject?id=" + e.CommandArgument + "&show=true");
-                    break;
-                case "editProject":
-                    Response.Redirect("/AddNewProject?id=" + e.CommandArgument);
-                    break;
-                case "deleteProject":
-                    var id = Convert.ToInt32(e.CommandArgument);
-                    Project projects = db.Projects.Single(i => i.Id == id);
-                    projects.StateDeleted = true;
-                    db.SubmitChanges();
-                    Response.Redirect(Request.RawUrl);
-                    break;
-                case "SinglePDF":
-                    var idPDF = Convert.ToInt32(e.CommandArgument);
-                    CreateSinglePDF(idPDF);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         private void CreateSinglePDF(int idPDF)
         {
-            float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
+            float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
             byte[] bytesInStream;
-
-            using (var output = new MemoryStream())
+            using (System.IO.MemoryStream output = new System.IO.MemoryStream())
             {
-                using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
+                using (Document document = new Document(PageSize.A4, margin, margin, margin, margin))
                 {
                     PdfCreator pdfCreator = new PdfCreator();
-                    pdfCreator.CreatePDF(document, output, false, idPDF, Request, null);
+                    pdfCreator.CreatePDF(document, output, Enumerable.Repeat<int>(idPDF, 1));
                 }
                 bytesInStream = output.ToArray();
             }
-
-            Project projects = db.Projects.Single(i => i.Id == idPDF);
-
-            Response.Clear();
-            Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", "attachment; filename="+ projects.Department.DepartmentName + "01.pdf");
-            Response.BinaryWrite(bytesInStream);
-            Response.End();
+            Project project = this.db.Projects.Single((Project i) => i.Id == idPDF);
+            base.Response.Clear();
+            base.Response.ContentType = "application/force-download";
+            base.Response.AddHeader("content-disposition", "attachment; filename=" + project.Department.DepartmentName + project.ProjectNr.ToString("00") + ".pdf");
+            base.Response.BinaryWrite(bytesInStream);
+            base.Response.End();
         }
-
-        protected void AllProjectsAsPDF_Click(object sender, EventArgs e)
+        protected void AllProjectsAsPDF_Click(object sender, System.EventArgs e)
         {
-            if (AllProjects.Rows.Count != 0)
+            if (this.AllProjects.Rows.Count != 0)
             {
-                float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
+                float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
                 byte[] bytesInStream;
-                List<int> gridViewProjectsId = new List<int>();
-
-                foreach (GridViewRow row in AllProjects.Rows)
+                using (System.IO.MemoryStream output = new System.IO.MemoryStream())
                 {
-                    gridViewProjectsId.Add(Int32.Parse(row.Cells[0].Text));
-                }
-
-                using (var output = new MemoryStream())
-                {
-                    using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
+                    using (Document document = new Document(PageSize.A4, margin, margin, margin, margin))
                     {
                         PdfCreator pdfCreator = new PdfCreator();
-                        pdfCreator.CreatePDF(document, output, true, 0, Request, gridViewProjectsId);
+                        pdfCreator.CreatePDF(document, output,
+                            from pse in (System.Collections.Generic.IEnumerable<ProjectSingleElement>)this.AllProjects.DataSource
+                            select pse.id);
                     }
                     bytesInStream = output.ToArray();
                 }
-                Response.Clear();
-                Response.ContentType = "application/force-download";
-                Response.AddHeader("content-disposition", "attachment; filename=AllProjects.pdf");
-                Response.BinaryWrite(bytesInStream);
-                Response.End();
+                base.Response.Clear();
+                base.Response.ContentType = "application/force-download";
+                base.Response.AddHeader("content-disposition", "attachment; filename=AllProjects.pdf");
+                base.Response.BinaryWrite(bytesInStream);
+                base.Response.End();
             }
             else
             {
-                string message = "No projects are listed!";
+                string message = "In dieser Kategorie sind keine Projekte vorhanden!";
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
@@ -377,7 +274,7 @@ namespace ProStudCreator
                 sb.Append(message);
                 sb.Append("')};");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                base.ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
             }
         }
     }

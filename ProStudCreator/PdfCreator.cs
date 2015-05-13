@@ -14,15 +14,15 @@ namespace ProStudCreator
     {
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
-        public void CreatePDF(Document document, MemoryStream output, bool multiPDF, int idPDF, HttpRequest currentRequest, List<int> gridViewProjectsId)
+        public void CreatePDF(Document document, MemoryStream output, IEnumerable<int> projectIds)
         {
             PdfWriter writer = PdfWriter.GetInstance(document, output);
 
             // the image we're using for the page header      
-            iTextSharp.text.Image imageHeader = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/Logo.png"));
+            iTextSharp.text.Image imageHeader = iTextSharp.text.Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            MyPageEventHandler ef = new MyPageEventHandler()
+            var ef = new MyPageEventHandler()
             {
                 ImageHeader = imageHeader
             };
@@ -30,62 +30,35 @@ namespace ProStudCreator
             // and add it to the PdfWriter
             writer.PageEvent = ef;
             document.Open();
-            int projectCounter = 0;
-            var currentProjectType = "";
-            Rectangle defaultPageSize = PageSize.A4;
-            if (multiPDF)
-            {
-                Project currentProject;
-                foreach (int projectId in gridViewProjectsId)
-                {
-                    currentProject = db.Projects.Single(item => item.Id == projectId);
-                    projectCounter += 1;
-                    WritePDF(currentProject, currentProjectType, document, defaultPageSize, projectCounter, currentRequest);
-                }
-            }
-            else
-            {
-                projectCounter += 1;
-                var singleProject = db.Projects.Single(item => item.Id == idPDF);
-                WritePDF(singleProject, currentProjectType, document, defaultPageSize, projectCounter, currentRequest);
-            }
+            foreach (int projectId in projectIds)
+                WritePDF(db.Projects.Single(item => item.Id == projectId), document);
         }
 
-        private void WritePDF(Project currentProject, String currentProjectType, Document document, Rectangle defaultPageSize, int projectCounter, HttpRequest currentRequest)
+        private void WritePDF(Project currentProject, Document document)
         {
             var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
             var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
 
 
             var proj = currentProject;
-            currentProjectType = getCurrentProjectTypeOne(proj);
+            var currentProjectType = getCurrentProjectTypeOne(proj);
 
-            iTextSharp.text.Image projectTypeImage = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin + 10);
+            iTextSharp.text.Image projectTypeImage = iTextSharp.text.Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/" + currentProjectType));
+            projectTypeImage.SetAbsolutePosition(388, PageSize.A4.Height - document.TopMargin + 10);
 
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
             currentProjectType = getCurrentProjectTypeTwo(proj);
-            projectTypeImage = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(443, defaultPageSize.Height - document.TopMargin + 10);
+            projectTypeImage = iTextSharp.text.Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/" + currentProjectType));
+            projectTypeImage.SetAbsolutePosition(443, PageSize.A4.Height - document.TopMargin + 10);
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
             PdfPTable tableTitle = new PdfPTable(1);
             tableTitle.SpacingAfter = 8f;
 
-            Paragraph title;
-
-            if (projectCounter < 10)
-            {
-                title = new Paragraph(proj.Department.DepartmentName + "0" + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
-            }
-            else
-            {
-                title = new Paragraph(proj.Department.DepartmentName + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
-            }
-
+            var title = new Paragraph(proj.Department.DepartmentName + currentProject.ProjectNr.ToString("00") + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
             title.SpacingBefore = 8f;
             tableTitle.DefaultCell.Border = Rectangle.NO_BORDER;
             title.Alignment = Element.ALIGN_JUSTIFIED;
@@ -94,7 +67,7 @@ namespace ProStudCreator
             tableTitle.AddCell(title);
             document.Add(tableTitle);
 
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/projectTypTransparent.png"));
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/projectTypTransparent.png"));
             if (proj.Picture != null)
             {
                 byte[] imageBytes = proj.Picture.ToArray();
@@ -106,8 +79,8 @@ namespace ProStudCreator
                 image.Alignment = iTextSharp.text.Image.TEXTWRAP | iTextSharp.text.Image.ALIGN_RIGHT;
                 //float scalePercent;
 
-                float width = defaultPageSize.Width - document.RightMargin - document.LeftMargin;
-                float height = defaultPageSize.Height - document.TopMargin - document.BottomMargin;
+                float width = PageSize.A4.Width - document.RightMargin - document.LeftMargin;
+                float height = PageSize.A4.Height - document.TopMargin - document.BottomMargin;
 
                 if (w > h)
                 {
@@ -146,76 +119,68 @@ namespace ProStudCreator
                 // image.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin - image.ScaledHeight);
             }
 
-            PdfPTable projectTable = new PdfPTable(5);
+            var projectTable = new PdfPTable(5);
             projectTable.SpacingAfter = 8f;
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
-
             projectTable.WidthPercentage = 100f;
-            float[] widthProject = new float[] { 22, 50, 25, 25, 25 };
-            projectTable.SetWidths(widthProject);
+            projectTable.SetWidths(new float[] { 22, 50, 25, 25, 25 });
 
 
 
-            Paragraph text = new Paragraph();
+            var text = new Paragraph();
             text.Alignment = Element.ALIGN_JUSTIFIED | Element.ALIGN_LEFT;
             text.SetLeading(1.0f, 2.0f);
 
 
-            PdfPCell advisorCell;
-            text = new Paragraph("BetreuerIn:", fontHeading);
-            advisorCell = new PdfPCell(text);
+            text = new Paragraph("Betreuer:", fontHeading);
+            var advisorCell = new PdfPCell(text);
             advisorCell.Border = Rectangle.NO_BORDER;
             projectTable.AddCell(advisorCell);
 
-            projectTable.AddCell(new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, fontRegular));
-
-            projectTable.AddCell(" ");
+            projectTable.AddCell(new Paragraph(proj.Advisor1Name + ", " + proj.Advisor1Mail, fontRegular));
+            projectTable.AddCell("");
             projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
             projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
 
-            if (proj.Advisor2 != "")
+            if (proj.Advisor2Name != "")
             {
-                projectTable.AddCell(" ");
-                projectTable.AddCell(new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, fontRegular));
+                projectTable.AddCell("");
+                projectTable.AddCell(new Paragraph(proj.Advisor2Name + ", " + proj.Advisor2Mail, fontRegular));
             }
             else
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
+                projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
             }
 
             projectTable.AddCell(new Paragraph("Arbeitsumfang:", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
-            projectTable.AddCell(new Paragraph(proj.PTwoType.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
 
-            if (proj.Employer != "" && proj.Advisor2 != "")
+            if (proj.ClientName != "" || proj.Advisor2Name != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
+                projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
 
             }
             else
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    projectTable.AddCell(" ");
-                }
+                projectTable.AddCell("");
+                projectTable.AddCell("");
             }
 
 
 
             projectTable.AddCell(new Paragraph("Teamgrösse:", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
-            projectTable.AddCell(new Paragraph(proj.PTwoTeamSize.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description, fontRegular));
 
             document.Add(projectTable);
 
             if (proj.Picture != null)
-            {
                 document.Add(image);
-            }
 
             int paragraphSpacing = 20;
 
@@ -312,20 +277,20 @@ namespace ProStudCreator
                         break;
                 }
             }
-            if (proj.ReservationNameOne != "")
+            if (proj.Reservation1Name != "")
             {
                 text = new Paragraph(paragraphSpacing, "Reservation:", fontHeading);
                 document.Add(text);
 
-                if (proj.ReservationNameTwo != "")
+                if (proj.Reservation2Name != "")
                 {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " und " + proj.ReservationNameTwo + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                    text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + " und " + proj.Reservation2Name + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
                     text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, 1.0f);
                 }
                 else
                 {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                    text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
                     text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, 1.0f);
                 }
@@ -375,7 +340,7 @@ namespace ProStudCreator
                 head.WriteSelectedRows(
                   0, -1,  // first/last row; -1 flags all write all rows
                   -1,      // left offset
-                    // ** bottom** yPos of the table
+                           // ** bottom** yPos of the table
                   page.Height - cellHeight + head.TotalHeight,
                   writer.DirectContent
                 );
@@ -456,33 +421,21 @@ namespace ProStudCreator
 
 
             if (proj.TypeHW && proj.TypeDesignUX)
-            {
                 projectType = "projectTypHW.png";
-            }
             else if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
-            {
                 projectType = "projectTypCGIP.png";
-            }
             else if (proj.TypeMathAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
-            {
                 projectType = "projectTypMathAlg.png";
-            }
             else if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg))
-            {
                 projectType = "projectTypAppWeb.png";
-            }
             else if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb))
-            {
                 projectType = "projectTypDBBigData.png";
-            }
             else
-            {
                 projectType = "projectTypTransparent.png";
-            }
 
             return projectType;
         }
-        public int getNumberOfPDFPages(int idPDF, HttpRequest currentRequest)
+        public int CalcNumberOfPages(int idPDF, HttpRequest currentRequest)
         {
             float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
             int numberOfPages;
@@ -490,7 +443,7 @@ namespace ProStudCreator
             {
                 using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
                 {
-                    CreatePDF(document, output, false, idPDF, currentRequest, null);
+                    CreatePDF(document, output, Enumerable.Repeat(idPDF, 1));
                 }
                 PdfReader pdfReader = new PdfReader(output.ToArray());
                 numberOfPages = pdfReader.NumberOfPages;

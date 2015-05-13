@@ -1,17 +1,17 @@
-﻿<%@ Page Title="New Project" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+﻿<%@ Page Title="Neues Projekt" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Stylesheets" runat="server">
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="refusedReason" class="well newProjectSettings non-selectable" runat="server" visible="false">
-        <asp:Label runat="server" ID="refusedReasonTitle" Text="Refuse Reason:" Font-Size="24px" Height="50px"></asp:Label>
+        <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
         <div class="form-group">
-            <asp:Label runat="server" CssClass="control-label" Text="Please tell the reason why you want to reject this project. This text will be sent via e-mail to the user."></asp:Label>
+            <asp:Label runat="server" CssClass="control-label" Text="Weshalb wird dieses Projekt abgelehnt? Der Text wird dem Projektersteller via E-Mail zugestellt."></asp:Label>
             <asp:TextBox runat="server" ID="refusedReasonText" CssClass="form-control contentRefuseDesign" TextMode="MultiLine"></asp:TextBox>
         </div>
-        <asp:Button runat="server" ID="refuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Refuse Definitive" OnClientClick="return confirm('Do you really want to refuse this project?');" OnClick="refuseDefinitiveNewProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Cancel" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
+        <asp:Button runat="server" ID="refuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirm('Dieses Projekt wirklich ablehnen?');" OnClick="refuseDefinitiveNewProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
 
     <div id="newProjectDiv" class="well newProjectSettings non-selectable" runat="server">
@@ -21,60 +21,59 @@
         </asp:PlaceHolder>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group" style="margin-top: 15px">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projectname:"></asp:Label>
-                <asp:TextBox runat="server" ID="ProjectName" CssClass="col-sm-9 form-control" MaxLength="100" placeholder="Projectname"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="ProjectNameValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="The project name cannot be blank!"></asp:RequiredFieldValidator>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
+                <asp:TextBox runat="server" ID="ProjectName" CssClass="col-sm-9 form-control" MaxLength="100" placeholder="Projektname"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="ProjectNameValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Client:"></asp:Label>
-                <asp:TextBox runat="server" ID="Employer" CssClass="col-sm-9 form-control" placeholder="Name of the Client"></asp:TextBox>
-                <asp:TextBox runat="server" ID="EmployerMail" CssClass="col-sm-9 form-control" placeholder="E-Mail of the Client" TextMode="Email"></asp:TextBox>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Kunde (optional):"></asp:Label>
+                <asp:TextBox runat="server" ID="Employer" CssClass="col-sm-9 form-control" placeholder="Name des Kunden"></asp:TextBox>
+                <asp:TextBox runat="server" ID="EmployerMail" CssClass="col-sm-9 form-control" placeholder="E-Mail des Kunden" TextMode="Email"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Advisor:"></asp:Label>
-                <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="col-sm-9 form-control" placeholder="Firstname Lastname of the first advisor"></asp:TextBox>
-                <asp:TextBox runat="server" ID="EMail1" CssClass="col-sm-9 form-control" placeholder="E-Mail of the first advisor" TextMode="Email"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="NameBetreuerValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="NameBetreuer1" runat="server" ErrorMessage="The Name of the first advisor cannot be blank!"></asp:RequiredFieldValidator>
-                <asp:RequiredFieldValidator ID="EMail1BetreuerValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="EMail1" runat="server" ErrorMessage="The E-Mail of the first advisor cannot be blank!"></asp:RequiredFieldValidator>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Betreuung:"></asp:Label>
+                <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="col-sm-9 form-control" placeholder="Vorname Nachname des offiziellen Betreuers"></asp:TextBox>
+                <asp:TextBox runat="server" ID="EMail1" CssClass="col-sm-9 form-control" placeholder="E-Mail des offiziellen Betreuers" TextMode="Email"></asp:TextBox>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:TextBox runat="server" ID="NameBetreuer2" CssClass="col-sm-9 form-control" placeholder="Firstname Lastname of the second advisor"></asp:TextBox>
-                <asp:TextBox runat="server" ID="EMail2" CssClass="col-sm-9 form-control" placeholder="E-Mail of the second advisor" TextMode="Email"></asp:TextBox>
+                <asp:TextBox runat="server" ID="NameBetreuer2" CssClass="col-sm-9 form-control" placeholder="Vorname Nachname des Zweitbetreuers"></asp:TextBox>
+                <asp:TextBox runat="server" ID="EMail2" CssClass="col-sm-9 form-control" placeholder="E-Mail des Zweitbetreuers" TextMode="Email"></asp:TextBox>
             </div>
             <hr />
+            <asp:UpdatePanel runat="server" class="form-group">
+                <ContentTemplate>
+                    <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Themengebiet:"></asp:Label>
+                    <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ToolTip="Design, Usability, User Interfaces, ..." ImageUrl="pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" CausesValidation="false" />
+                    <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ToolTip="Hardwarenah, Embedded, Low-level, ..." ImageUrl="pictures/projectTypHWUnchecked.png" OnClick="HW_Click" CausesValidation="false" />
+                    <asp:ImageButton CssClass="img-rounded" ID="CGIP" Height="60px" runat="server" ToolTip="Computergrafik, 3D, Bildverarbeitung, ..." ImageUrl="pictures/projectTypCGIPUnchecked.png" OnClick="CGIP_Click" CausesValidation="false" />
+                    <asp:ImageButton CssClass="img-rounded" ID="MathAlg" Height="60px" runat="server" ToolTip="Mathematik, Algorithmen, Machine Learning, Data Mining, ..." ImageUrl="pictures/projectTypMathAlgUnchecked.png" OnClick="MathAlg_Click" CausesValidation="false" />
+                    <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ToolTip="Mobile Apps, Webentwicklung, ..." ImageUrl="pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" CausesValidation="false" />
+                    <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ToolTip="Datenbanken, Big Data, Data Spaces, ..." ImageUrl="pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" CausesValidation="false" />
+                </ContentTemplate>
+            </asp:UpdatePanel>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projecttype:"></asp:Label>
-                <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ImageUrl="/pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" CausesValidation="false" />
-                <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ImageUrl="/pictures/projectTypHWUnchecked.png" OnClick="HW_Click" CausesValidation="false" />
-                <asp:ImageButton CssClass="img-rounded" ID="CGIP" Height="60px" runat="server" ImageUrl="/pictures/projectTypCGIPUnchecked.png" OnClick="CGIP_Click" CausesValidation="false" />
-                <asp:ImageButton CssClass="img-rounded" ID="MathAlg" Height="60px" runat="server" ImageUrl="/pictures/projectTypMathAlgUnchecked.png" OnClick="MathAlg_Click" CausesValidation="false" />
-                <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ImageUrl="/pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" CausesValidation="false" />
-                <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ImageUrl="/pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" CausesValidation="false" />
-                </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priority 1"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1"></asp:Label>
                 <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1" Width="200px">
                 </asp:DropDownList>
                 <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="POneTeamSize_SelectedIndexChanged" AutoPostBack="true">
                 </asp:DropDownList>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priority 2"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2"></asp:Label>
                 <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1" Width="200px">
                 </asp:DropDownList>
                 <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control col-sm-1 teamSizeMarginLeft" Width="200px" OnSelectedIndexChanged="PTwoTeamSize_SelectedIndexChanged" AutoPostBack="true">
                 </asp:DropDownList>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Current situation:"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="col-sm-9 form-control" TextMode="MultiLine"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="InitialPositionContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="InitialPositionContent" runat="server" ErrorMessage="The current situation cannot be blank!"></asp:RequiredFieldValidator>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Add image:"></asp:Label>
+                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <asp:FileUpload runat="server" ID="AddPicture" CssClass="control-label col-sm-4" />
-                <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Do you really want to delete this image?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
+                <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
@@ -82,51 +81,41 @@
             </div>
             <hr />
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Objective:"></asp:Label>
-                <asp:TextBox runat="server" ID="ObjectivContent" CssClass="col-sm-9 form-control" placeholder="Objective" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="ObjectivContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ObjectivContent" runat="server" ErrorMessage="The field 'Objective' cannot be blank!"></asp:RequiredFieldValidator>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
+                <asp:TextBox runat="server" ID="ObjectivContent" CssClass="col-sm-9 form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problem statement:"></asp:Label>
-                <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="col-sm-9 form-control" placeholder="ProblemStatement" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="ProblemStatementContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ProblemStatementContent" runat="server" ErrorMessage="The Problemstatement cannot be blank!"></asp:RequiredFieldValidator>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
+                <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="col-sm-9 form-control" placeholder="Problemstellung" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologies / main focus / references:"></asp:Label>
-                <asp:TextBox runat="server" ID="ReferencesContent" CssClass="col-sm-9 form-control" placeholder="Technologies / main focus / references" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="ReferencesContentValidator" CssClass="col-sm-9" ForeColor="Red" Display="Dynamic" ControlToValidate="ReferencesContent" runat="server" ErrorMessage="The field 'Technologies / main focus / references' cannot be blank!"></asp:RequiredFieldValidator>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
+                <asp:TextBox runat="server" ID="ReferencesContent" CssClass="col-sm-9 form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <hr />
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Remarks (optional):"></asp:Label>
-                <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Remarks" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
+                <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control col-sm-9" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reservation (optional):"></asp:Label>
-                <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="Full name of the student"></asp:TextBox>
-                <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="Full name of the student" Visible="false"></asp:TextBox>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
+                <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
+                <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)" Visible="false"></asp:TextBox>
             </div>
-            <!-- CANCELLED PART !!
             <div class="form-group">
-                <asp:Label Visible="false" runat="server" CssClass="control-label col-sm-3" Text="Wichtigkeit:"></asp:Label>
-                <asp:DropDownList Visible="false" runat="server" ID="ImportanceContent" CssClass="form-control" Width="280px">
-                    <asp:ListItem>Normal</asp:ListItem>
-                    <asp:ListItem>wichtig aus Sicht Institut oder FHNW</asp:ListItem>
-                </asp:DropDownList>
-            </div> -->
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Department:"></asp:Label>
-                <asp:DropDownList runat="server" ID="Department" CssClass="form-control" Width="80px">
-                </asp:DropDownList>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Institut:"></asp:Label>
+                <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control" Width="80px"></asp:DropDownList>
             </div>
         </div>
-        <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default marginLeftZero" Text="Save"></asp:Button>
-        <asp:Button runat="server" ID="editProject" Visible="false" OnClick="editProject_Click" CssClass="btn btn-default marginLeftZero" Text="Edit"></asp:Button>
-        <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default marginLeftZero" TabIndex="5" Text="Cancel" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
-        <asp:Button runat="server" ID="submitProject" Visible="false" CssClass="btn btn-default marginLeftZero" Text="Submit project" OnClientClick="return confirm('Do your really want to submit this project?');" OnClick="submitProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject pull-right" Width="113px" Text="Publish" OnClientClick="return confirm('Do your really want to publish this project?');" OnClick="publishProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="refuseProject" Visible="false" CssClass="btn btn-default refuseProject pull-right" Width="113px" Text="Refuse" OnClick="refuseProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="moveProjectToTheNextSemester" Visible="false" CssClass="btn btn-default pull-right" Text="Move project to the next semester" OnClientClick="return confirm('Do your really want to move this project to the next Semester?\nThe project will immediately be sent to the admin.');" OnClick="moveProjectToTheNextSemester_Click"></asp:Button>
-        <asp:Button runat="server" ID="rollbackProject" Visible="false" CssClass="btn btn-default rollbackMarginRight pull-right" Text="Unpublish" OnClientClick="return confirm('Do your really want to unpublish this project?');" OnClick="rollbackProject_Click"></asp:Button>
+        <div style="text-align:right;">
+            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClientClick="return confirm('Wirklich veröffentlichen?');" OnClick="publishProject_Click"></asp:Button>
+            <asp:Button runat="server" ID="refuseProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click"></asp:Button>
+            <asp:Button runat="server" ID="moveProjectToTheNextSemester" Visible="false" CssClass="btn btn-default redButton" Text="Ins kommende Semester" OnClientClick="return confirm('Wirklich in das kommende Semester verschieben?');" OnClick="moveProjectToTheNextSemester_Click"></asp:Button>
+            <asp:Button runat="server" ID="rollbackProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClientClick="return confirm('Projekt wirklich zurückziehen?');" OnClick="rollbackProject_Click"></asp:Button>
+            <asp:Button runat="server" ID="submitProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClientClick="return confirm('Dieses Projekt offiziell einreichen?');" OnClick="submitProject_Click"></asp:Button>
+            <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Speichern"></asp:Button>
+            <asp:Button runat="server" ID="editProject" Visible="false" OnClick="editProject_Click" CssClass="btn btn-default" Text="Bearbeiten"></asp:Button>
+            <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
+        </div>
     </div>
 </asp:Content>
