@@ -31,7 +31,7 @@ namespace ProStudCreator
         protected Button newProject;
         protected PlaceHolder AdminViewPDF;
         protected Button AllProjectsAsPDF;
-        protected void Page_Load(object sender, System.EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             IQueryable<Project> projects =
                 from i in this.db.Projects
@@ -171,9 +171,9 @@ namespace ProStudCreator
                 }
             }
         }
-        protected void newProject_Click(object sender, System.EventArgs e)
+        protected void newProject_Click(object sender, EventArgs e)
         {
-            base.Response.Redirect("AddNewProject");
+            Response.Redirect("AddNewProject");
         }
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
@@ -199,7 +199,7 @@ namespace ProStudCreator
                                 Project projectr = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
                                 projectr.State = ProjectState.InProgress;
                                 this.db.SubmitChanges();
-                                base.Response.Redirect(base.Request.RawUrl);
+                                Response.Redirect(base.Request.RawUrl);
                             }
                         }
                         else
@@ -207,17 +207,17 @@ namespace ProStudCreator
                             Project project = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
                             project.Delete();
                             this.db.SubmitChanges();
-                            base.Response.Redirect(base.Request.RawUrl);
+                            Response.Redirect(base.Request.RawUrl);
                         }
                     }
                     else
                     {
-                        base.Response.Redirect("AddNewProject?id=" + e.CommandArgument);
+                        Response.Redirect("AddNewProject?id=" + e.CommandArgument);
                     }
                 }
                 else
                 {
-                    base.Response.Redirect("AddNewProject?id=" + e.CommandArgument + "&show=true");
+                    Response.Redirect("AddNewProject?id=" + e.CommandArgument + "&show=true");
                 }
             }
         }
@@ -235,13 +235,13 @@ namespace ProStudCreator
                 bytesInStream = output.ToArray();
             }
             Project project = this.db.Projects.Single((Project i) => i.Id == idPDF);
-            base.Response.Clear();
-            base.Response.ContentType = "application/force-download";
-            base.Response.AddHeader("content-disposition", "attachment; filename=" + project.Department.DepartmentName + project.ProjectNr.ToString("00") + ".pdf");
-            base.Response.BinaryWrite(bytesInStream);
-            base.Response.End();
+            Response.Clear();
+            Response.ContentType = "application/force-download";
+            Response.AddHeader("content-disposition", "attachment; filename=" + project.Department.DepartmentName + project.ProjectNr.ToString("00") + ".pdf");
+            Response.BinaryWrite(bytesInStream);
+            Response.End();
         }
-        protected void AllProjectsAsPDF_Click(object sender, System.EventArgs e)
+        protected void AllProjectsAsPDF_Click(object sender, EventArgs e)
         {
             if (this.AllProjects.Rows.Count != 0)
             {
@@ -258,23 +258,23 @@ namespace ProStudCreator
                     }
                     bytesInStream = output.ToArray();
                 }
-                base.Response.Clear();
-                base.Response.ContentType = "application/force-download";
-                base.Response.AddHeader("content-disposition", "attachment; filename=AllProjects.pdf");
-                base.Response.BinaryWrite(bytesInStream);
-                base.Response.End();
+                Response.Clear();
+                Response.ContentType = "application/force-download";
+                Response.AddHeader("content-disposition", "attachment; filename=AllProjects.pdf");
+                Response.BinaryWrite(bytesInStream);
+                Response.End();
             }
             else
             {
                 string message = "In dieser Kategorie sind keine Projekte vorhanden!";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
                 sb.Append("alert('");
                 sb.Append(message);
                 sb.Append("')};");
                 sb.Append("</script>");
-                base.ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
+                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
             }
         }
     }

@@ -18,7 +18,7 @@
                         <asp:TemplateField ItemStyle-CssClass="nowrap">
                             <ItemTemplate>
                                 <%--<asp:LinkButton runat="server" CommandName="showProject" ToolTip="Show project" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open"></asp:LinkButton>--%>
-                                <asp:LinkButton runat="server" CommandName="editProject" ToolTip="Projekt bearbeiten" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton><asp:LinkButton runat="server" CommandName="SinglePDF" ToolTip="PDF erzeugen" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-save"></asp:LinkButton><asp:LinkButton runat="server" CommandName="deleteProject" ToolTip="Projekt löschen" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                                <asp:LinkButton runat="server" CommandName="editProject" ToolTip="Projekt bearbeiten" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton><asp:LinkButton runat="server" CommandName="SinglePDF" ToolTip="PDF erzeugen" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyph-pdf"></asp:LinkButton><asp:LinkButton runat="server" CommandName="deleteProject" ToolTip="Projekt löschen" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -62,7 +62,7 @@
                             <asp:LinkButton runat="server" ID="showProjectButton" ToolTip="Show project" CommandName="showProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-eye-open pull-right"></asp:LinkButton>
                         </ItemTemplate>--%>
                         <ItemTemplate>
-                            <asp:LinkButton runat="server" ID="editProjectButton" ToolTip="Projekt bearbeiten" CommandName="editProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton><asp:LinkButton runat="server" ID="SinglePDFButton" ToolTip="PDF erzeugen" CommandName="SinglePDF" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-save"></asp:LinkButton><asp:LinkButton runat="server" ID="deleteProjectButton" ToolTip="Projekt löschen" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="editProjectButton" ToolTip="Projekt bearbeiten" CommandName="editProject" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-pencil"></asp:LinkButton><asp:LinkButton runat="server" ID="SinglePDFButton" ToolTip="PDF erzeugen" CommandName="SinglePDF" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight grlyph-pdf"></asp:LinkButton><asp:LinkButton runat="server" ID="deleteProjectButton" ToolTip="Projekt löschen" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
@@ -88,7 +88,7 @@
         <div style="margin-top:16px;">
             <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click" />
             <asp:PlaceHolder ID="AdminViewPDF" runat="server" Visible="false">
-                <asp:Button runat="server" ID="AllProjectsAsPDF" Visible="false" CssClass="btn btn-default buttonFont" Text="Projekte als PDF" OnClick="AllProjectsAsPDF_Click" />
+                <asp:Button runat="server" ID="AllProjectsAsPDF" Visible="false" CssClass="btn btn-default buttonFont pdf" Text="Projekte als PDF" OnClick="AllProjectsAsPDF_Click" />
             </asp:PlaceHolder>
         </div>
     </div>
@@ -97,15 +97,14 @@
         <p>Für das HS15 rechnen wir mit rund 90 Studierenden, die ein Projekt brauchen.</p>
         <ul>
             <li>
-                ca. 60 Studierende benötigen ein IP5 
+                ca. 70 Studierende benötigen ein IP5 
             </li>
             <li>
-                ca. 30 Studierende benötigen ein IP6
+                ca. 20 Studierende benötigen ein IP6
             </li>
         </ul>
         <p>
-            Wir brauchen ca. 50 Projekte effektiv und für eine gute Auswahl ca. total 60 Projekte.<br />
-            <i>Hinweis: Einzelprojekte sind nur in Ausnahmefällen möglich.</i>
+            Wir brauchen daher ca. 40 Projekte effektiv und für eine gute Auswahl ca. total 50 Projekte.<br />
         </p>
         <h3>Termine</h3>
         <p>
@@ -113,7 +112,7 @@
         </p>
         <ul>
             <li>
-                29.05.2015: Deadline Projekteinreichung
+                01.06.2015: Deadline Projekteinreichung
             </li>
             <li>
                 08.06.2015: Projektvorstellung
@@ -133,16 +132,16 @@
         </ul>
         <h3>Frühere Beispiel-Projekte</h3>
         <ul>
-            <li><a href="Content/examples/08.pdf">Erkennung von schweizerdeutschen Fachausdrücken im Beratungsumfeld</a></li>
-            <li><a href="Content/examples/11.pdf">FaceSimilarity</a></li>
-            <li><a href="Content/examples/56.pdf">Docker IPython Notebook Multi-User-Server</a></li>
+            <li><a href="Content/examples/08.pdf" class="pdf">Erkennung von schweizerdeutschen Fachausdrücken im Beratungsumfeld</a></li>
+            <li><a href="Content/examples/11.pdf" class="pdf">FaceSimilarity</a></li>
+            <li><a href="Content/examples/56.pdf" class="pdf">Docker IPython Notebook Multi-User-Server</a></li>
         </ul>
         <h3>FAQ</h3>
         <h4>Wer darf Projekte einreichen?</h4>
         <p>Jeder. Externe Auftraggeber (ohne KTI-Projekt) müssen die Arbeiten aber bezahlen (CHF 1500 + MWSt). Externe Auftraggeber besprechen die Projekte am besten mit euch direkt oder mit mir. Für Externe gibt es hier weitere Informationen: <a href="http://www.fhnw.ch/technik/dienstleistung/studierendenprojekte">http://www.fhnw.ch/technik/dienstleistung/studierendenprojekte</a>. U.u. macht es Sinn Industriepartner jetzt über diese Möglichkeit zu informieren. Studierende dürfen nur in Ausnahmefällen Projekte selbst einreichen, Details dazu im <a href="https://web.fhnw.ch/plattformen/technik-i-ip/hs15">Handbuch auf Plone</a>.</p>
         <h4>Wer betreut die Durchführung der Projekte?</h4>
         <p>
-            Als Betreuer kommen alle Dozierenden an den Instituten (z.B. Manfred Vogel, Christoph Stamm, André Csillaghy, Dominik Gruntz, …) in Frage. Es besteht aber die Möglichkeit in einem 2er-Team (z.B. Dozierender + WiMi) zu arbeiten. Wer also kein Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach Absprache mit einem Dozierenden machen: Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
+            Als Betreuer kommen alle Dozierenden an den Instituten (z.B. Manfred Vogel, Christoph Stamm, André Csillaghy, Dominik Gruntz, …) in Frage. Es besteht aber die Möglichkeit in einem 2er-Team (z.B. DozentIn + WiMi) zu arbeiten. Wer also nicht doziert, aber trotzdem ein Projekt betreuen möchte, kann das nach Absprache mit einem Dozierenden trotzdem tun: Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
         </p>
         <h4>Wie gross ist der Aufwand für die Betreuung? Was muss ich tun?</h4>
         <p>
@@ -176,6 +175,6 @@
             Alle Projekte, die letztes Jahr nicht gewählt wurden, werden wir durchgehen und mit euch das weitere Vorgehen klären. Ihr braucht nichts weiter zu unternehmen.
         </p>
         <h4>Ich habe noch andere Fragen.</h4>
-        <p>Im Handbuch findet Ihr weitere Antworten. Meldet euch bei Fragen.</p>
+        <p>Im <a href="https://web.fhnw.ch/plattformen/technik-i-ip/hs15">Handbuch</a> findet Ihr weitere Antworten. Oder Ihr meldet euch bei uns.</p>
     </div>
 </asp:Content>

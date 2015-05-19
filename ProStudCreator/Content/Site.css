@@ -20,6 +20,8 @@ body {
     white-space: normal;
 }
 
+
+
 .nowrap
 {
     white-space: nowrap;
@@ -123,13 +125,28 @@ h2 {
     font-family: Arial 12px !important;
 }
 
-.imageHeight img {
+img.imageHeight {
     height: 55px !important;
     /*
         like img-rounded 
     */
     border-radius: 6px;
 }
+
+
+.pdf {
+    background:url("pdf.png") 0.1em 50% no-repeat;
+    background-size:1em 1em;
+    padding-left:1.2em;
+}
+
+.glyph-pdf {
+    background:url("pdf.png") 50% 50% no-repeat;
+    background-size:1.5em;
+    padding-left:2em;
+    background-color:#fff;
+}
+
 
 .btnHeight {
     height: 30px;
@@ -224,7 +241,6 @@ marginLeftZero input[type="email"], input[type="submit"] {
     background-color: #F5A9A9 !important;
     border-color: #FE2E2E !important;
 }
-/* MANAGEPASSWORT.ASPX */
 
 .passwordMarginTop, .passwordForgotTop {
     margin-top: 90px;
@@ -232,4 +248,9 @@ marginLeftZero input[type="email"], input[type="submit"] {
 
 .rollbackMarginRight {
     margin-right: 5px;
+}
+
+h4 {
+    margin-top:40px;
+    font-style:italic;
 }

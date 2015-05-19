@@ -1,7 +1,5 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ProStudCreator.SiteMaster" %>
-
 <!DOCTYPE html>
-
 <html lang="de">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -14,15 +12,9 @@
     </asp:PlaceHolder>
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <style>
-        .menuBar {
-            margin-top: 15px;
-            font-size: 20px;
-        }
-    </style>
-    <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+    <%--<asp:ContentPlaceHolder ID="Stylesheets" runat="server">
         <link rel="stylesheet" href="/Content/Site.css" type="text/css" />
-    </asp:ContentPlaceHolder>
+    </asp:ContentPlaceHolder>--%>
 </head>
 <body>
     <form runat="server">
@@ -49,30 +41,17 @@
         <div class="navbar navbar-inverse navbar-fixed-top non-selectable" style="background-color: #f5f5f5">
             <div class="container">
                 <div class="navbar-header">
-                    <img class="navbar-brand" runat="server" src="pictures/Logo.png" />
+                    <div class="navbar-brand">
+                        <img runat="server" src="pictures/Logo.png" />
+                        <a href="projectlist"><h2 style="display:inline;text-decoration:none;color:#000;margin-left:30px;vertical-align:middle;">IP5/IP6 Projekte</h2></a>
+                    </div>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <asp:LoginView runat="server" ViewStateMode="Disabled">
-                        <AnonymousTemplate>
-                            <ul class="nav navbar-nav navbar-right menuBar">
-                                <li><a runat="server" href="~/Account/Register">Register</a></li>
-                                <li><a runat="server" href="~/Account/Login">Login</a></li>
-                            </ul>
-                        </AnonymousTemplate>
-                        <LoggedInTemplate>
-                            <ul class="nav navbar-nav navbar-left menuBar">
-                                <li><a runat="server" href="/projectlist.aspx">Projectlist</a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right menuBar">
-                                <li><a runat="server" href="~/Account/ManagePassword" title="Manage your account"><%: Context.User.Identity.GetUserName()  %></a></li>
-                                <li><p style="font-size: 20px; margin-top: 8px;">|</p></li>
-                                <li>
-                                    <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Logout" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
-                                </li>
-                            </ul>
-                        </LoggedInTemplate>
-                    </asp:LoginView>
-                </div>
+                <%-- <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav menuBar">
+                        <li>
+                        </li>
+                    </ul>
+                </div>--%>
             </div>
         </div>
         <div class="container body-content">
@@ -80,7 +59,12 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz</p>
+                <div class="pull-left">
+                    &copy;<%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz
+                </div>
+                <div class="pull-right">
+                    Angemeldet als <%: ProStudCreator.ShibUser.GetEmail()  %>
+                </div>
             </footer>
         </div>
     </form>
