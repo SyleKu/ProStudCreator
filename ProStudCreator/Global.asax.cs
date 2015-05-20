@@ -1,6 +1,9 @@
-﻿using System;
+﻿using iTextSharp.text.io;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -16,6 +19,8 @@ namespace ProStudCreator
             // Code, der beim Anwendungsstart ausgeführt wird
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            StreamUtil.AddToResourceSearch(Assembly.Load("itext-hyph-xml"));
         }
     }
 }

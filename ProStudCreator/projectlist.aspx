@@ -104,7 +104,7 @@
             </li>
         </ul>
         <p>
-            Wir brauchen daher ca. 40 Projekte effektiv und für eine gute Auswahl ca. total 50 Projekte.<br />
+            Wir benötigen daher ca. 40 Projekte effektiv und für eine gute Auswahl ca. total 50 Projekte.<br />
         </p>
         <h3>Termine</h3>
         <p>
@@ -130,7 +130,7 @@
                 vor 10.04.2016: Verteidigung IP6
             </li>
         </ul>
-        <h3>Frühere Beispiel-Projekte</h3>
+        <h3>Projektbeispiele</h3>
         <ul>
             <li><a href="Content/examples/08.pdf" class="pdf">Erkennung von schweizerdeutschen Fachausdrücken im Beratungsumfeld</a></li>
             <li><a href="Content/examples/11.pdf" class="pdf">FaceSimilarity</a></li>

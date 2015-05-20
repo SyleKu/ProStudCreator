@@ -16,16 +16,16 @@ namespace ProStudCreator
         private int? id;
         private Project project;
         private ProjectType projectPriority = new ProjectType();
-        private System.DateTime today = DateTime.Now;
+        private DateTime today = DateTime.Now;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (ShibUser.IsAdmin())
             {
                 AdminView.Visible = true;
             }
-            if (base.Request.QueryString["id"] != null)
+            if (Request.QueryString["id"] != null)
             {
-                id = new int?(int.Parse(base.Request.QueryString["id"]));
+                id = new int?(int.Parse(Request.QueryString["id"]));
                 project = db.Projects.Single((Project p) => (int?)p.Id == id);
             }
             if (base.IsPostBack)
@@ -65,13 +65,9 @@ namespace ProStudCreator
                 SiteTitle.Text = "Neues Projekt anlegen";
                 saveProject.Text = "Speichern";
                 if (id.HasValue)
-                {
                     RetrieveProjectToEdit();
-                }
-                if (base.Request.QueryString["show"] != null)
-                {
+                if (Request.QueryString["show"] != null)
                     RetrieveProjectToView();
-                }
             }
         }
         private void RetrieveProjectToEdit()
@@ -156,9 +152,8 @@ namespace ProStudCreator
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
             {
                 if (project.PublishedDate == Semester.CurrentSemester - 1)
-                {
                     moveProjectToTheNextSemester.Visible = true;
-                }
+
                 rollbackProject.Visible = true;
             }
         }
@@ -211,7 +206,7 @@ namespace ProStudCreator
             InitialPositionContent.ReadOnly = true;
             ObjectivContent.ReadOnly = true;
             AddPictureLabel.Visible = false;
-            ImageLabel.Text = "Image:";
+            ImageLabel.Text = "Bild:";
             AddPicture.Visible = false;
             DeleteImageButton.Visible = false;
             ObjectivContent.ReadOnly = true;
@@ -435,7 +430,7 @@ namespace ProStudCreator
                 }
             }
             db.SubmitChanges();
-            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id, base.Request) > 1);
+            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id, Request) > 1);
             db.SubmitChanges();
         }
         protected void cancelNewProject_Click(object sender, EventArgs e)
@@ -497,25 +492,16 @@ namespace ProStudCreator
             SaveProject();
             string message = null;
             if (message == null && !project.Advisor1Name.IsValidName())
-            {
                 message = "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            }
             if (message == null && !project.Advisor1Mail.IsValidEmail())
-            {
                 message = "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            }
             if (message == null && project.Advisor2Name != "" && !project.Advisor2Name.IsValidName())
-            {
                 message = "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            }
             if (message == null && project.Advisor2Name != "" && !project.Advisor2Mail.IsValidEmail())
-            {
                 message = "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            }
             if (message == null && project.Advisor2Name == "" && project.Advisor2Mail != "")
-            {
                 message = "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            }
+
             bool validTopicAssignment;
             if (message == null)
             {
@@ -555,7 +541,7 @@ namespace ProStudCreator
         {
             project.Picture = null;
             db.SubmitChanges();
-            Response.Redirect(base.Request.RawUrl);
+            Response.Redirect(Request.RawUrl);
         }
         protected void POneTeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {

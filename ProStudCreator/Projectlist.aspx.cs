@@ -34,41 +34,41 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             IQueryable<Project> projects =
-                from i in this.db.Projects
+                from i in db.Projects
                 where true
                 select i;
             if (ShibUser.IsAdmin())
             {
-                this.AllProjectsAsPDF.Visible = true;
-                this.AdminView.Visible = true;
-                this.AdminViewPDF.Visible = true;
-                this.CheckProjects.DataSource =
+                AllProjectsAsPDF.Visible = true;
+                AdminView.Visible = true;
+                AdminViewPDF.Visible = true;
+                CheckProjects.DataSource =
                     from item in projects
                     where (int)item.State == 1 && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
                     select item into i
-                    select this.getProjectSingleElement(i);
-                if (this.ListFilter.SelectedValue == "AllFutureProjects")
+                    select getProjectSingleElement(i);
+                if (ListFilter.SelectedValue == "AllFutureProjects")
                 {
                     projects =
                         from p in projects
                         where p.PublishedDate >= Semester.CurrentSemester.StartDate && (int)p.State == 3
                         select p;
                 }
-                else if (this.ListFilter.SelectedValue == "AllPastProjects")
+                else if (ListFilter.SelectedValue == "AllPastProjects")
                 {
                     projects =
                         from p in projects
                         where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && (int)p.State == 3
                         select p;
                 }
-                else if (this.ListFilter.SelectedValue == "InProgress")
+                else if (ListFilter.SelectedValue == "InProgress")
                 {
                     projects =
                         from item in projects
                         where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
                         select item;
                 }
-                else if (this.ListFilter.SelectedValue == "Submitted")
+                else if (ListFilter.SelectedValue == "Submitted")
                 {
                     projects =
                         from item in projects
@@ -85,16 +85,16 @@ namespace ProStudCreator
             }
             else
             {
-                this.ListFilter.Items[0].Attributes.CssStyle.Add("display", "none");
-                this.ListFilter.Items[1].Attributes.CssStyle.Add("display", "none");
-                if (this.ListFilter.SelectedValue == "InProgress")
+                ListFilter.Items[0].Attributes.CssStyle.Add("display", "none");
+                ListFilter.Items[1].Attributes.CssStyle.Add("display", "none");
+                if (ListFilter.SelectedValue == "InProgress")
                 {
                     projects =
                         from item in projects
                         where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
                         select item;
                 }
-                else if (this.ListFilter.SelectedValue == "Submitted")
+                else if (ListFilter.SelectedValue == "Submitted")
                 {
                     projects =
                         from item in projects
@@ -109,11 +109,11 @@ namespace ProStudCreator
                         select item;
                 }
             }
-            this.AllProjects.DataSource =
+            AllProjects.DataSource =
                 from i in projects
-                select this.getProjectSingleElement(i);
-            this.CheckProjects.DataBind();
-            this.AllProjects.DataBind();
+                select getProjectSingleElement(i);
+            CheckProjects.DataBind();
+            AllProjects.DataBind();
         }
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
@@ -144,7 +144,7 @@ namespace ProStudCreator
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                Project project = this.db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
+                Project project = db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
                 Color? col = null;
                 if (project.State == ProjectState.Published)
                 {
@@ -191,23 +191,23 @@ namespace ProStudCreator
                                 if (commandName == "SinglePDF")
                                 {
                                     int idPDF = System.Convert.ToInt32(e.CommandArgument);
-                                    this.CreateSinglePDF(idPDF);
+                                    CreateSinglePDF(idPDF);
                                 }
                             }
                             else
                             {
-                                Project projectr = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
+                                Project projectr = db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
                                 projectr.State = ProjectState.InProgress;
-                                this.db.SubmitChanges();
-                                Response.Redirect(base.Request.RawUrl);
+                                db.SubmitChanges();
+                                Response.Redirect(Request.RawUrl);
                             }
                         }
                         else
                         {
-                            Project project = this.db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
+                            Project project = db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
                             project.Delete();
-                            this.db.SubmitChanges();
-                            Response.Redirect(base.Request.RawUrl);
+                            db.SubmitChanges();
+                            Response.Redirect(Request.RawUrl);
                         }
                     }
                     else
@@ -225,16 +225,16 @@ namespace ProStudCreator
         {
             float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
             byte[] bytesInStream;
-            using (System.IO.MemoryStream output = new System.IO.MemoryStream())
+            using (var output = new MemoryStream())
             {
-                using (Document document = new Document(PageSize.A4, margin, margin, margin, margin))
+                using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
                 {
                     PdfCreator pdfCreator = new PdfCreator();
-                    pdfCreator.CreatePDF(document, output, Enumerable.Repeat<int>(idPDF, 1));
+                    pdfCreator.AppendToPDF(document, output, Enumerable.Repeat<int>(idPDF, 1));
                 }
                 bytesInStream = output.ToArray();
             }
-            Project project = this.db.Projects.Single((Project i) => i.Id == idPDF);
+            var project = db.Projects.Single(i => i.Id == idPDF);
             Response.Clear();
             Response.ContentType = "application/force-download";
             Response.AddHeader("content-disposition", "attachment; filename=" + project.Department.DepartmentName + project.ProjectNr.ToString("00") + ".pdf");
@@ -243,17 +243,17 @@ namespace ProStudCreator
         }
         protected void AllProjectsAsPDF_Click(object sender, EventArgs e)
         {
-            if (this.AllProjects.Rows.Count != 0)
+            if (AllProjects.Rows.Count != 0)
             {
                 float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
                 byte[] bytesInStream;
-                using (System.IO.MemoryStream output = new System.IO.MemoryStream())
+                using (var output = new MemoryStream())
                 {
-                    using (Document document = new Document(PageSize.A4, margin, margin, margin, margin))
+                    using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
                     {
                         PdfCreator pdfCreator = new PdfCreator();
-                        pdfCreator.CreatePDF(document, output,
-                            from pse in (System.Collections.Generic.IEnumerable<ProjectSingleElement>)this.AllProjects.DataSource
+                        pdfCreator.AppendToPDF(document, output,
+                            from pse in (IEnumerable<ProjectSingleElement>)AllProjects.DataSource
                             select pse.id);
                     }
                     bytesInStream = output.ToArray();

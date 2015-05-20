@@ -7,14 +7,16 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.html;
 using System.Web.UI.WebControls;
+using iTextSharp.text.pdf.hyphenation;
 
 namespace ProStudCreator
 {
     public class PdfCreator
     {
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        HyphenationAuto hyph = new HyphenationAuto("de", "none", 2, 2);
 
-        public void CreatePDF(Document document, MemoryStream output, IEnumerable<int> projectIds)
+        public void AppendToPDF(Document document, MemoryStream output, IEnumerable<int> projectIds)
         {
             PdfWriter writer = PdfWriter.GetInstance(document, output);
 
@@ -31,7 +33,11 @@ namespace ProStudCreator
             writer.PageEvent = ef;
             document.Open();
             foreach (int projectId in projectIds)
-                WritePDF(db.Projects.Single(item => item.Id == projectId), document);
+            {
+                var proj = db.Projects.Single(item => item.Id == projectId);
+                ef.CurrentProject = proj;
+                WritePDF(proj, document);
+            }
         }
 
         private void WritePDF(Project currentProject, Document document)
@@ -39,6 +45,13 @@ namespace ProStudCreator
             var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
             var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
 
+            var fontRegularLink = new Font(fontRegular);
+            fontRegularLink.Color = BaseColor.BLUE;
+            fontRegularLink.SetStyle("underline");
+
+            const float LINE_HEIGHT = 1.1f;
+            const float SPACING_BEFORE_TITLE = 16f;
+            const float SPACING_AFTER_TITLE = 2f;
 
             var proj = currentProject;
             var currentProjectType = getCurrentProjectTypeOne(proj);
@@ -55,72 +68,15 @@ namespace ProStudCreator
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            PdfPTable tableTitle = new PdfPTable(1);
-            tableTitle.SpacingAfter = 8f;
-
             var title = new Paragraph(proj.Department.DepartmentName + currentProject.ProjectNr.ToString("00") + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
+            title.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
             title.SpacingBefore = 8f;
-            tableTitle.DefaultCell.Border = Rectangle.NO_BORDER;
-            title.Alignment = Element.ALIGN_JUSTIFIED;
-            tableTitle.HorizontalAlignment = Element.ALIGN_LEFT;
-            tableTitle.WidthPercentage = 100f;
-            tableTitle.AddCell(title);
-            document.Add(tableTitle);
-
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/projectTypTransparent.png"));
-            if (proj.Picture != null)
-            {
-                byte[] imageBytes = proj.Picture.ToArray();
-                image = iTextSharp.text.Image.GetInstance(imageBytes);
-                // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
-                // image.ScaleAbsoluteWidth(160f);
-                float h = image.ScaledHeight;
-                float w = image.ScaledWidth;
-                image.Alignment = iTextSharp.text.Image.TEXTWRAP | iTextSharp.text.Image.ALIGN_RIGHT;
-                //float scalePercent;
-
-                float width = PageSize.A4.Width - document.RightMargin - document.LeftMargin;
-                float height = PageSize.A4.Height - document.TopMargin - document.BottomMargin;
-
-                if (w > h)
-                {
-                    image.ScaleToFit(250f, 150f);
-                }
-                else if (h >= 300 || w >= 200)
-                {
-                    image.ScaleToFit(150f, 250f);
-                }
-
-                else
-                {
-                    image.ScaleToFit(100f, 200f);
-                }
-                /*
-            else if (h > w)
-            {
-                // only scale image if it's height is __greater__ than
-                // the document's height, accounting for margins
-                if (h > height)
-                {
-                    scalePercent = height / h;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
-                }
-            }
-            else
-            {
-                // same for image width        
-                if (w > width)
-                {
-                    scalePercent = width / w;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
-                }
-            }
-            */
-                // image.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin - image.ScaledHeight);
-            }
+            title.SpacingAfter = 16f;
+            title.SetLeading(0.0f, LINE_HEIGHT);
+            document.Add(title);
 
             var projectTable = new PdfPTable(5);
-            projectTable.SpacingAfter = 8f;
+            projectTable.SpacingAfter = 6f;
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
@@ -128,17 +84,11 @@ namespace ProStudCreator
 
 
 
-            var text = new Paragraph();
-            text.Alignment = Element.ALIGN_JUSTIFIED | Element.ALIGN_LEFT;
-            text.SetLeading(1.0f, 2.0f);
-
-
-            text = new Paragraph("Betreuer:", fontHeading);
-            var advisorCell = new PdfPCell(text);
-            advisorCell.Border = Rectangle.NO_BORDER;
-            projectTable.AddCell(advisorCell);
-
-            projectTable.AddCell(new Paragraph(proj.Advisor1Name + ", " + proj.Advisor1Mail, fontRegular));
+            projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
+            projectTable.AddCell(new Anchor(proj.Advisor1Name, fontRegularLink)
+            {
+                Reference = "mailto:"+proj.Advisor1Mail
+            });
             projectTable.AddCell("");
             projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
             projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
@@ -146,7 +96,10 @@ namespace ProStudCreator
             if (proj.Advisor2Name != "")
             {
                 projectTable.AddCell("");
-                projectTable.AddCell(new Paragraph(proj.Advisor2Name + ", " + proj.Advisor2Mail, fontRegular));
+                projectTable.AddCell(new Anchor(proj.Advisor2Name, fontRegularLink)
+                {
+                    Reference = "mailto:" + proj.Advisor2Mail
+                });
             }
             else
             {
@@ -159,19 +112,16 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
 
-            if (proj.ClientName != "" || proj.Advisor2Name != "")
+            if (proj.ClientName != "" || proj.ClientMail != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
-
             }
             else
             {
                 projectTable.AddCell("");
                 projectTable.AddCell("");
             }
-
-
 
             projectTable.AddCell(new Paragraph("Teamgrösse:", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
@@ -180,122 +130,118 @@ namespace ProStudCreator
             document.Add(projectTable);
 
             if (proj.Picture != null)
-                document.Add(image);
-
-            int paragraphSpacing = 20;
-
-            for (int i = 0; i < 5; i++)
             {
-                switch (i)
-                {
-                    case 0:
-                        if (proj.InitialPosition != "")
-                        {
-                            text = new Paragraph("Ausgangslage:", fontHeading);
-                            document.Add(text);
+                var image = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
+                // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
+                // image.ScaleAbsoluteWidth(160f);
+                float h = image.ScaledHeight;
+                float w = image.ScaledWidth;
+                image.Alignment = iTextSharp.text.Image.TEXTWRAP | Element.ALIGN_RIGHT;
 
-                            text = new Paragraph(proj.InitialPosition, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 1:
-                        if (proj.Objective != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Ziel der Arbeit:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.Objective, fontRegular);
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 2:
-                        if (proj.ProblemStatement != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Problemstellung:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.ProblemStatement, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 3:
-                        if (proj.References != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Technologien/Fachliche Schwerpunkte/Referenzen:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.References, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 4:
-                        if (proj.Remarks != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Bemerkungen:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.Remarks, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-
-                    /* CANCELLED PART!
-                    case 5:
-                    text = new Paragraph("Wichtigkeit:", fontHeading);
-                    document.Add(text);
-                    if (proj.Importance)
-                    {
-                        text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                    }
-                    else
-                    {
-                        text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                    }
-                    document.Add(text);
-                    break;
-                     */
-                    default:
-                        break;
-                }
+                if (w > h)
+                    image.ScaleToFit(250f, 150f);
+                else if (h >= 300 || w >= 200)
+                    image.ScaleToFit(150f, 250f);
+                else
+                    image.ScaleToFit(100f, 200f);
+                document.Add(image);
             }
+
+            if (proj.InitialPosition != "")
+            {
+                document.Add(new Paragraph("Ausgangslage", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular);
+                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                text.SpacingAfter = 1f;
+                text.SetLeading(0.0f, LINE_HEIGHT);
+                text.Alignment = Element.ALIGN_JUSTIFIED;
+                text.IndentationRight = 10f;
+                document.Add(text);
+            }
+            if (proj.Objective != "")
+            {
+                document.Add(new Paragraph("Ziel der Arbeit", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+
+                var text = proj.Objective.ToLinkedParagraph(fontRegular);
+                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                text.SetLeading(0.0f, LINE_HEIGHT);
+                text.Alignment = Element.ALIGN_JUSTIFIED;
+                text.IndentationRight = 10f;
+                document.Add(text);
+            }
+            if (proj.ProblemStatement != "")
+            {
+                document.Add(new Paragraph("Problemstellung", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular);
+                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                text.SpacingAfter = 1f;
+                text.SetLeading(0.0f, 1.0f);
+                text.Alignment = Element.ALIGN_JUSTIFIED;
+                text.IndentationRight = 10f;
+                document.Add(text);
+            }
+            if (proj.References != "")
+            {
+                document.Add(new Paragraph("Technologien/Fachliche Schwerpunkte/Referenzen", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+                var text = proj.References.ToLinkedParagraph(fontRegular);
+                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                text.SpacingAfter = 1f;
+                text.SetLeading(0.0f, LINE_HEIGHT);
+                text.Alignment = Element.ALIGN_JUSTIFIED;
+                text.IndentationRight = 10f;
+                document.Add(text);
+            }
+            if (proj.Remarks != "")
+            {
+                document.Add(new Paragraph("Bemerkungen", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+                var text = proj.Remarks.ToLinkedParagraph(fontRegular);
+                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                text.SpacingAfter = 1f;
+                text.SetLeading(0.0f, LINE_HEIGHT);
+                text.Alignment = Element.ALIGN_JUSTIFIED;
+                text.IndentationRight = 10f;
+                document.Add(text);
+            }
+
             if (proj.Reservation1Name != "")
             {
-                text = new Paragraph(paragraphSpacing, "Reservation:", fontHeading);
-                document.Add(text);
+                document.Add(new Paragraph("Reservation", fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
 
-                if (proj.Reservation2Name != "")
-                {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + " und " + proj.Reservation2Name + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, 1.0f);
-                }
-                else
-                {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, 1.0f);
-                }
+                var text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + (proj.Reservation2Name!="" ? " und " + proj.Reservation2Name : "") + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                text.SpacingAfter = 1f;
+                text.SetLeading(0.0f, LINE_HEIGHT);
                 document.Add(text);
             }
+
             document.NewPage();
         }
 
@@ -308,6 +254,7 @@ namespace ProStudCreator
              * you'll end up with a much bigger file size.
              */
             public iTextSharp.text.Image ImageHeader { get; set; }
+            public Project CurrentProject { get; set;  }
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
@@ -349,31 +296,15 @@ namespace ProStudCreator
                 // FOOTER 
                 //////////////////////////////////////////////////////
 
-                // cell height 
-                float cellHeightFooter = document.TopMargin;
-                // PDF document size      
-                Rectangle page2 = document.PageSize;
-
                 // create two column table
-                PdfPTable foot = new PdfPTable(1);
-                foot.TotalWidth = page2.Width + 2;
+                var foot = new PdfPTable(1);
+                foot.TotalWidth = document.PageSize.Width + 2;
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                var today = DateTime.Now;
-                var projectSaison = "";
-                if (today.Month >= 1 && today.Month <= 5)
-                {
-                    projectSaison = "HS" + today.ToString("yy");
-                }
-                else
-                {
-                    projectSaison = "FS" + today.AddYears(+1).ToString("yy");
-                }
-
                 // add image; PdfPCell() overload sizes image to fit cell
-                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik / i4DS / Studierendenprojekte " + projectSaison, new Font(Font.FontFamily.HELVETICA, 8)));
+                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik/"+ CurrentProject.Department.DepartmentName +"/Studierendenprojekte " + CurrentProject.GetSemester().ToString(), new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
-                cell.FixedHeight = cellHeightFooter - 15;
+                cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;
                 cell.PaddingTop = 8;
                 cell.PaddingBottom = 0;
@@ -383,72 +314,51 @@ namespace ProStudCreator
             }
         }
 
-        private String getCurrentProjectTypeOne(Project proj)
+        private string getCurrentProjectTypeOne(Project proj)
         {
-            var projectType = "";
-
             if (proj.TypeDesignUX)
-            {
-                projectType = "projectTypDesignUX.png";
-            }
+                return "projectTypDesignUX.png";
             else if (proj.TypeHW)
-            {
-                projectType = "projectTypHW.png";
-            }
+                return "projectTypHW.png";
             else if (proj.TypeCGIP)
-            {
-                projectType = "projectTypCGIP.png";
-            }
+                return "projectTypCGIP.png";
             else if (proj.TypeMathAlg)
-            {
-                projectType = "projectTypMathAlg.png";
-            }
+                return "projectTypMathAlg.png";
             else if (proj.TypeAppWeb)
-            {
-                projectType = "projectTypAppWeb.png";
-            }
+                return "projectTypAppWeb.png";
             else
-            {
-                projectType = "projectTypDBBigData.png";
-            }
-
-            return projectType;
+                return "projectTypDBBigData.png";
         }
 
-        private String getCurrentProjectTypeTwo(Project proj)
+        private string getCurrentProjectTypeTwo(Project proj)
         {
-            var projectType = "";
-
-
             if (proj.TypeHW && proj.TypeDesignUX)
-                projectType = "projectTypHW.png";
+                return "projectTypHW.png";
             else if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
-                projectType = "projectTypCGIP.png";
+                return "projectTypCGIP.png";
             else if (proj.TypeMathAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
-                projectType = "projectTypMathAlg.png";
+                return "projectTypMathAlg.png";
             else if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg))
-                projectType = "projectTypAppWeb.png";
+                return "projectTypAppWeb.png";
             else if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb))
-                projectType = "projectTypDBBigData.png";
+                return "projectTypDBBigData.png";
             else
-                projectType = "projectTypTransparent.png";
-
-            return projectType;
+                return "projectTypTransparent.png";
         }
         public int CalcNumberOfPages(int idPDF, HttpRequest currentRequest)
         {
-            float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
-            int numberOfPages;
+            var margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
             using (var output = new MemoryStream())
             {
-                using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
+                using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
                 {
-                    CreatePDF(document, output, Enumerable.Repeat(idPDF, 1));
+                    AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
                 }
-                PdfReader pdfReader = new PdfReader(output.ToArray());
-                numberOfPages = pdfReader.NumberOfPages;
+                using (var pdfReader = new PdfReader(output.ToArray()))
+                {
+                    return pdfReader.NumberOfPages;
+                }
             }
-            return numberOfPages;
         }
     }
 }
