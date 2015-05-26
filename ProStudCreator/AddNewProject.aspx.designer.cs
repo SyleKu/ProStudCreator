@@ -121,6 +121,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox Employer;
         
         /// <summary>
+        /// EmployerPerson control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox EmployerPerson;
+        
+        /// <summary>
         /// EmployerMail control.
         /// </summary>
         /// <remarks>
@@ -418,6 +427,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button submitProject;
         
         /// <summary>
+        /// saveCloseProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button saveCloseProject;
+        
+        /// <summary>
         /// saveProject control.
         /// </summary>
         /// <remarks>
@@ -425,15 +443,6 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button saveProject;
-        
-        /// <summary>
-        /// editProject control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button editProject;
         
         /// <summary>
         /// cancelProject control.

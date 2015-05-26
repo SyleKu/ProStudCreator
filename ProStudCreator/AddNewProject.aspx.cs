@@ -57,6 +57,10 @@ namespace ProStudCreator
                 {
                     Department.SelectedValue = dep.Value.ToString();
                 }
+
+                POneTeamSize.SelectedIndex = POneTeamSize.Items.Count - 1;
+                PTwoTeamSize.SelectedIndex = 0;
+
                 NameBetreuer2.Text = ShibUser.GetFullName();
                 EMail2.Text = ShibUser.GetEmail();
                 DataBind();
@@ -66,8 +70,6 @@ namespace ProStudCreator
                 saveProject.Text = "Speichern";
                 if (id.HasValue)
                     RetrieveProjectToEdit();
-                if (Request.QueryString["show"] != null)
-                    RetrieveProjectToView();
             }
         }
         private void RetrieveProjectToEdit()
@@ -86,6 +88,7 @@ namespace ProStudCreator
             }
             ProjectName.Text = project.Name;
             Employer.Text = project.ClientName;
+            EmployerPerson.Text = project.ClientPerson;
             EmployerMail.Text = project.ClientMail;
             NameBetreuer1.Text = project.Advisor1Name;
             EMail1.Text = project.Advisor1Mail;
@@ -121,10 +124,10 @@ namespace ProStudCreator
                 DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
                 projectType[5] = true;
             }
-            POneType.Text = project.POneType.Description;
-            PTwoType.Text = ((project.PTwoType == null) ? null : project.PTwoType.Description);
-            POneTeamSize.Text = project.POneTeamSize.Description;
-            PTwoTeamSize.Text = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Description);
+            POneType.SelectedValue = project.POneType.Id.ToString();
+            PTwoType.SelectedValue = ((project.PTwoType == null) ? null : project.PTwoType.Id.ToString());
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+            PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
             InitialPositionContent.Text = project.InitialPosition;
             Image1.Visible = true;
             if (project.Picture != null)
@@ -143,12 +146,9 @@ namespace ProStudCreator
             RemarksContent.Text = project.Remarks;
             submitProject.Visible = (id.HasValue && project.State == ProjectState.InProgress);
             ReservationNameOne.Text = project.Reservation1Name;
-            if (project.Reservation2Name != "")
-            {
-                ReservationNameTwo.Text = project.Reservation2Name;
-                ReservationNameTwo.Visible = true;
-            }
-            Department.Text = project.Department.DepartmentName;
+            ReservationNameTwo.Text = project.Reservation2Name;
+            UpdateReservationNameTwoVisibility();
+            Department.SelectedValue = project.Department.Id.ToString();
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
             {
                 if (project.PublishedDate == Semester.CurrentSemester - 1)
@@ -156,74 +156,10 @@ namespace ProStudCreator
 
                 rollbackProject.Visible = true;
             }
-        }
-        private void RetrieveProjectToView()
-        {
-            Page.Title = "Projekt betrachten";
-            SiteTitle.Text = "Projekt betrachten";
-            saveProject.Visible = false;
-            editProject.Visible = true;
-            if (ShibUser.IsAdmin() && project.State == ProjectState.Submitted)
+
+            if(project.State == ProjectState.Submitted)
             {
-                publishProject.Visible = true;
-                refuseProject.Visible = true;
-                submitProject.Visible = false;
-            }
-            else if (ShibUser.IsAdmin() && project.State == ProjectState.InProgress)
-            {
-                publishProject.Visible = false;
-                refuseProject.Visible = false;
-                submitProject.Visible = true;
-            }
-            else if (project.State == ProjectState.InProgress)
-            {
-                submitProject.Visible = true;
-            }
-            else
-            {
-                saveProject.Visible = false;
-                publishProject.Visible = false;
-                refuseProject.Visible = false;
-                submitProject.Visible = false;
-            }
-            ProjectName.ReadOnly = true;
-            Employer.ReadOnly = true;
-            EmployerMail.ReadOnly = true;
-            NameBetreuer1.ReadOnly = true;
-            EMail1.ReadOnly = true;
-            NameBetreuer2.ReadOnly = true;
-            EMail2.ReadOnly = true;
-            DesignUX.Enabled = false;
-            HW.Enabled = false;
-            CGIP.Enabled = false;
-            MathAlg.Enabled = false;
-            AppWeb.Enabled = false;
-            DBBigData.Enabled = false;
-            POneType.Enabled = false;
-            POneTeamSize.Enabled = false;
-            PTwoType.Enabled = false;
-            PTwoTeamSize.Enabled = false;
-            InitialPositionContent.ReadOnly = true;
-            ObjectivContent.ReadOnly = true;
-            AddPictureLabel.Visible = false;
-            ImageLabel.Text = "Bild:";
-            AddPicture.Visible = false;
-            DeleteImageButton.Visible = false;
-            ObjectivContent.ReadOnly = true;
-            ProblemStatementContent.ReadOnly = true;
-            ReferencesContent.ReadOnly = true;
-            RemarksContent.ReadOnly = true;
-            ReservationNameOne.Enabled = false;
-            ReservationNameTwo.Enabled = false;
-            Department.Enabled = false;
-            if (project.State == ProjectState.Published)
-            {
-                newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
-                moveProjectToTheNextSemester.Visible = (rollbackProject.Visible = (saveProject.Visible = ShibUser.IsAdmin()));
-            }
-            else if (project.State == ProjectState.Rejected)
-            {
-                newProjectDiv.Attributes.Add("class", "refusedProjectBackground well newProjectSettings non-selectable");
+                rollbackProject.Visible = true;
             }
         }
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
@@ -310,31 +246,18 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
-        protected void editProject_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("AddNewProject?id=" + id);
-        }
+
         protected void saveProjectButton(object sender, EventArgs e)
         {
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt == ".JPEG" || fileExt == ".JPG" || fileExt == ".PNG" || fileExt == "")
-            {
-                SaveProject();
-                Response.Redirect("projectlist");
-            }
-            else
-            {
-                var message = "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";
-                var sb = new StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(message);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
-            }
+            SaveProject();
         }
+
+        protected void saveCloseProjectButton(object sender, EventArgs e)
+        {
+            SaveProject();
+            Response.Redirect("projectlist");
+        }
+
         private void SaveProject()
         {
             if (project == null)
@@ -349,10 +272,13 @@ namespace ProStudCreator
             project.LastEditedBy = ShibUser.GetEmail();
             project.Name = ProjectName.Text.Trim();
             project.ClientName = Employer.Text.Trim();
+            project.ClientPerson = EmployerPerson.Text.Trim();
             project.ClientMail = EmployerMail.Text.Trim().ToLowerInvariant();
             project.Advisor1Name = NameBetreuer1.Text.Trim();
             project.Advisor1Mail = EMail1.Text.Trim().ToLowerInvariant();
-            if (NameBetreuer2.Text != "" && EMail2.Text != "")
+            project.Advisor2Name = NameBetreuer2.Text.Trim();
+            project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
+            /*if (NameBetreuer2.Text != "" && EMail2.Text != "")
             {
                 project.Advisor2Name = NameBetreuer2.Text.Trim();
                 project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
@@ -368,7 +294,7 @@ namespace ProStudCreator
                 project.Advisor1Mail = project.Advisor2Mail;
                 project.Advisor2Name = "";
                 project.Advisor2Mail = "";
-            }
+            }*/
             project.TypeDesignUX = projectType[0];
             project.TypeHW = projectType[1];
             project.TypeCGIP = projectType[2];
@@ -444,6 +370,10 @@ namespace ProStudCreator
             db.SubmitChanges();
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
+            if(project.Advisor1Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor1Mail);
+            if(project.Advisor2Mail!="" && project.Advisor2Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor2Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
             mailMessage.Subject = "Projekt '" + project.Name + "' veröffentlicht";
             mailMessage.Body = string.Concat(new string[]
@@ -480,6 +410,10 @@ namespace ProStudCreator
             db.SubmitChanges();
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
+            if(project.Advisor1Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor1Mail);
+            if (project.Advisor2Mail!=null && project.Creator!=project.Advisor2Mail)
+                mailMessage.To.Add(project.Advisor2Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
             mailMessage.Subject = "Projekt '" + project.Name + "' abgelehnt";
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
@@ -501,6 +435,14 @@ namespace ProStudCreator
                 message = "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
             if (message == null && project.Advisor2Name == "" && project.Advisor2Mail != "")
                 message = "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+            if (message == null && project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+                message = "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+            if (message == null && project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+                message = "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+
+            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
+            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
+                message = "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";
 
             bool validTopicAssignment;
             if (message == null)
@@ -543,24 +485,28 @@ namespace ProStudCreator
             db.SubmitChanges();
             Response.Redirect(Request.RawUrl);
         }
-        protected void POneTeamSize_SelectedIndexChanged(object sender, EventArgs e)
+        protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1) || (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0))
-                ReservationNameTwo.Visible = false;
-            else
-                ReservationNameTwo.Visible = true;
+            UpdateReservationNameTwoVisibility();
         }
-        protected void PTwoTeamSize_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void UpdateReservationNameTwoVisibility()
         {
-            if ((POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1) || (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0))
-                ReservationNameTwo.Visible = false;
-            else
-                ReservationNameTwo.Visible = true;
+            ReservationNameTwo.Visible = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
         }
+
         protected void rollbackProject_Click(object sender, EventArgs e)
         {
-            project.Unpublish();
-            db.SubmitChanges();
+            if (project.State == ProjectState.Published && ShibUser.IsAdmin())
+            {
+                project.Unpublish();
+                db.SubmitChanges();
+            }
+            else
+            {
+                project.Unsubmit();
+                db.SubmitChanges();
+            }
             Response.Redirect("projectlist");
         }
         protected void cancelRefusion_Click(object sender, EventArgs e)

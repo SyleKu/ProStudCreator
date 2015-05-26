@@ -65,21 +65,21 @@ namespace ProStudCreator
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 0
                         select item;
                 }
                 else if (ListFilter.SelectedValue == "Submitted")
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 1
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 1
                         select item;
                 }
                 else
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 3
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 3
                         select item;
                 }
             }
@@ -91,21 +91,21 @@ namespace ProStudCreator
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 0
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail==ShibUser.GetEmail() || item.Advisor2Mail==ShibUser.GetEmail()) && (int)item.State == 0
                         select item;
                 }
                 else if (ListFilter.SelectedValue == "Submitted")
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 1
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 1
                         select item;
                 }
                 else
                 {
                     projects =
                         from item in projects
-                        where item.Creator == ShibUser.GetEmail() && (int)item.State == 3
+                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 3
                         select item;
                 }
             }
@@ -177,50 +177,30 @@ namespace ProStudCreator
         }
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
-            string commandName = e.CommandName;
-            if (commandName != null)
+            var id = Convert.ToInt32(e.CommandArgument);
+            switch (e.CommandName)
             {
-                if (!(commandName == "showProject"))
-                {
-                    if (!(commandName == "editProject"))
-                    {
-                        if (!(commandName == "deleteProject"))
-                        {
-                            if (!(commandName == "revokeSubmission"))
-                            {
-                                if (commandName == "SinglePDF")
-                                {
-                                    int idPDF = System.Convert.ToInt32(e.CommandArgument);
-                                    CreateSinglePDF(idPDF);
-                                }
-                            }
-                            else
-                            {
-                                Project projectr = db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
-                                projectr.State = ProjectState.InProgress;
-                                db.SubmitChanges();
-                                Response.Redirect(Request.RawUrl);
-                            }
-                        }
-                        else
-                        {
-                            Project project = db.Projects.Single((Project i) => i.Id == System.Convert.ToInt32(e.CommandArgument));
-                            project.Delete();
-                            db.SubmitChanges();
-                            Response.Redirect(Request.RawUrl);
-                        }
-                    }
-                    else
-                    {
-                        Response.Redirect("AddNewProject?id=" + e.CommandArgument);
-                    }
-                }
-                else
-                {
-                    Response.Redirect("AddNewProject?id=" + e.CommandArgument + "&show=true");
-                }
+                case "SinglePDF":
+                    CreateSinglePDF(id);
+                    break;
+                case "revokeSubmission":
+                    Project projectr = db.Projects.Single((Project i) => i.Id == id);
+                    projectr.State = ProjectState.InProgress;
+                    db.SubmitChanges();
+                    Response.Redirect(Request.RawUrl);
+                    break;
+                case "deleteProject":
+                    Project project = db.Projects.Single((Project i) => i.Id == id);
+                    project.Delete();
+                    db.SubmitChanges();
+                    Response.Redirect(Request.RawUrl);
+                    break;
+                case "editProject":
+                    Response.Redirect("AddNewProject?id=" + id);
+                    break;
             }
         }
+
         private void CreateSinglePDF(int idPDF)
         {
             float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));

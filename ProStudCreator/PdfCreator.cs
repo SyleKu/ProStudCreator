@@ -68,8 +68,7 @@ namespace ProStudCreator
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            var title = new Paragraph(proj.Department.DepartmentName + currentProject.ProjectNr.ToString("00") + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
-            title.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+            var title = new Paragraph(proj.Department.DepartmentName + currentProject.ProjectNr.ToString("00") + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD)).Hyphenate(hyph);
             title.SpacingBefore = 8f;
             title.SpacingAfter = 16f;
             title.SetLeading(0.0f, LINE_HEIGHT);
@@ -101,10 +100,15 @@ namespace ProStudCreator
                     Reference = "mailto:" + proj.Advisor2Mail
                 });
             }
-            else
+            else if(proj.ClientName != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
+            }
+            else
+            {
+                projectTable.AddCell("");
+                projectTable.AddCell("");
             }
 
             projectTable.AddCell(new Paragraph("Arbeitsumfang:", fontHeading));
@@ -112,7 +116,7 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
 
-            if (proj.ClientName != "" || proj.ClientMail != "")
+            if (proj.ClientName != "" && proj.Advisor2Name != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
@@ -155,8 +159,8 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular);
-                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                
+                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -172,8 +176,7 @@ namespace ProStudCreator
                 });
 
 
-                var text = proj.Objective.ToLinkedParagraph(fontRegular);
-                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                var text = proj.Objective.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
                 text.IndentationRight = 10f;
@@ -187,8 +190,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular);
-                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, 1.0f);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -203,8 +205,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.References.ToLinkedParagraph(fontRegular);
-                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                var text = proj.References.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -219,8 +220,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.Remarks.ToLinkedParagraph(fontRegular);
-                text.Chunks.ToList().ForEach(chk => chk.SetHyphenation(hyph));
+                var text = proj.Remarks.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;

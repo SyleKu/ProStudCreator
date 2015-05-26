@@ -174,26 +174,23 @@ img.imageHeight {
 }
 
 .teamSizeMarginLeft {
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
-.contentDesign div {
+/*.contentDesign .control-label {
     margin-left: 100px !important;
-}
-
-.contentDesign span {
     text-align: left !important;
 }
 
 .contentDesign input[type="email"], input[type="submit"], .contentReservation {
     margin-left: 20px;
-}
+}*/
 
 .contentDesign textarea {
     height: 250px;
     min-height: 140px;
     max-height: 500px;
-    width: 740px;
+    /*width: 740px;*/
     resize: vertical;
 }
 
