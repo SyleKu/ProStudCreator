@@ -84,10 +84,14 @@ namespace ProStudCreator
 
 
             projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
-            projectTable.AddCell(new Anchor(proj.Advisor1Name, fontRegularLink)
-            {
-                Reference = "mailto:"+proj.Advisor1Mail
-            });
+            if (proj.Advisor1Name != "")
+                projectTable.AddCell(new Anchor(proj.Advisor1Name, fontRegularLink)
+                {
+                    Reference = "mailto:" + proj.Advisor1Mail
+                });
+            else
+                projectTable.AddCell(new Paragraph("?", fontRegular));
+
             projectTable.AddCell("");
             projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
             projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
@@ -160,7 +164,7 @@ namespace ProStudCreator
                 });
 
                 
-                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
+                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular,hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -176,7 +180,7 @@ namespace ProStudCreator
                 });
 
 
-                var text = proj.Objective.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
+                var text = proj.Objective.ToLinkedParagraph(fontRegular, hyph);
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
                 text.IndentationRight = 10f;
@@ -190,7 +194,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
+                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular, hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, 1.0f);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -205,7 +209,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.References.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
+                var text = proj.References.ToLinkedParagraph(fontRegular, hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;
@@ -220,7 +224,7 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.Remarks.ToLinkedParagraph(fontRegular).Hyphenate(hyph);
+                var text = proj.Remarks.ToLinkedParagraph(fontRegular, hyph);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 text.Alignment = Element.ALIGN_JUSTIFIED;

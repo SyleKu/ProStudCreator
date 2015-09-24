@@ -67,7 +67,7 @@ namespace ProStudCreator
 
             if (!ShibUser.IsAuthenticated())
             {
-                throw new System.UnauthorizedAccessException();
+                throw new System.UnauthorizedAccessException(ShibUser.GetDebugInfo());
             }
         }
 

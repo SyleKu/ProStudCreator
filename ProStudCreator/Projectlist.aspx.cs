@@ -29,91 +29,70 @@ namespace ProStudCreator
         protected RadioButtonList ListFilter;
         protected GridView AllProjects;
         protected Button newProject;
-        protected PlaceHolder AdminViewPDF;
-        protected Button AllProjectsAsPDF;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            IQueryable<Project> projects =
-                from i in db.Projects
-                where true
-                select i;
+            IQueryable<Project> projects = db.Projects.Select(i => i);
             if (ShibUser.IsAdmin())
             {
-                AllProjectsAsPDF.Visible = true;
                 AdminView.Visible = true;
-                AdminViewPDF.Visible = true;
                 CheckProjects.DataSource =
                     from item in projects
                     where (int)item.State == 1 && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
                     select item into i
                     select getProjectSingleElement(i);
-                if (ListFilter.SelectedValue == "AllFutureProjects")
-                {
+            }
+
+            switch (ListFilter.SelectedValue)
+            {
+                case "AllPastProjects":
+                    projects =
+                        from p in projects
+                        where p.PublishedDate >= (Semester.CurrentSemester - 2).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 2).EndDate && (int)p.State == 3
+                        orderby p.ProjectNr
+                        select p;
+                    break;
+                case "AllFutureProjects":
                     projects =
                         from p in projects
                         where p.PublishedDate >= Semester.CurrentSemester.StartDate && (int)p.State == 3
+                        orderby p.ProjectNr
                         select p;
-                }
-                else if (ListFilter.SelectedValue == "AllPastProjects")
-                {
+                    break;
+                case "AllCurrentProjects":
                     projects =
                         from p in projects
                         where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && (int)p.State == 3
+                        orderby p.ProjectNr
                         select p;
-                }
-                else if (ListFilter.SelectedValue == "InProgress")
-                {
+                    break;
+                case "InProgress":
                     projects =
                         from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 0
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (item.State == ProjectState.InProgress || item.State==ProjectState.Rejected)
                         select item;
-                }
-                else if (ListFilter.SelectedValue == "Submitted")
-                {
+                    break;
+                case "Submitted":
                     projects =
                         from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 1
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Submitted
+                        orderby item.ProjectNr
                         select item;
-                }
-                else
-                {
+                    break;
+                case "Published":
                     projects =
                         from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 3
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Published
+                        orderby item.ProjectNr
                         select item;
-                }
+                    break;
             }
-            else
-            {
-                ListFilter.Items[0].Attributes.CssStyle.Add("display", "none");
-                ListFilter.Items[1].Attributes.CssStyle.Add("display", "none");
-                if (ListFilter.SelectedValue == "InProgress")
-                {
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail==ShibUser.GetEmail() || item.Advisor2Mail==ShibUser.GetEmail()) && (int)item.State == 0
-                        select item;
-                }
-                else if (ListFilter.SelectedValue == "Submitted")
-                {
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 1
-                        select item;
-                }
-                else
-                {
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (int)item.State == 3
-                        select item;
-                }
-            }
+
             AllProjects.DataSource =
                 from i in projects
                 select getProjectSingleElement(i);
-            CheckProjects.DataBind();
             AllProjects.DataBind();
+            CheckProjects.DataBind();
         }
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
@@ -122,17 +101,10 @@ namespace ProStudCreator
                 id = i.Id,
                 advisorName = string.Concat(new string[]
                 {
-                    "<a href=\"mailto:",
-                    i.Advisor1Mail,
-                    "\">",
-                    base.Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;"),
-                    "</a><br /><a href=\"mailto:",
-                    i.Advisor2Mail,
-                    "\">",
-                    base.Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;"),
-                    "</a>"
+                    (i.Advisor1Name!="") ? "<a href=\"mailto:" + i.Advisor1Mail + "\">"+Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;")+"</a>" : "?",
+                    (i.Advisor2Name!="") ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" + Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>" : ""
                 }),
-                projectName = ((i.ProjectNr == 0) ? "??" : i.ProjectNr.ToString()) + ": " + i.Name,
+                projectName = ((i.ProjectNr == 0) ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
                 Institute = i.Department.DepartmentName,
                 p5 = i.POneType.P5 || (i.PTwoType != null && i.PTwoType.P5),
                 p6 = i.POneType.P6 || (i.PTwoType != null && i.PTwoType.P6),
@@ -145,14 +117,25 @@ namespace ProStudCreator
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 Project project = db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
+
+                if(project.State==ProjectState.Published)
+                {
+                    if (!ShibUser.IsAdmin())
+                    {
+                        e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
+                        e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                    }
+                }
+                else if (!project.HasEditPermission())
+                {
+                    e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
+                    e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                }
+
                 Color? col = null;
                 if (project.State == ProjectState.Published)
                 {
                     col = new Color?(ColorTranslator.FromHtml("#A9F5A9"));
-                    if (!ShibUser.IsAdmin())
-                    {
-                        e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
-                    }
                 }
                 else if (project.State == ProjectState.Rejected)
                 {

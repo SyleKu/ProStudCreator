@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Neues Projekt" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="refusedReason" class="well newProjectSettings non-selectable" runat="server" visible="false">
@@ -20,7 +20,7 @@
             <div class="form-group" style="margin-top: 15px">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="100" placeholder="Projektname"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="80" placeholder="Projektname"></asp:TextBox>
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
@@ -31,9 +31,11 @@
                 </div>
                 <div class="col-sm-3">
                     <asp:TextBox runat="server" ID="EmployerPerson" CssClass="form-control" placeholder="Vorname Nachname der Kontaktperson"></asp:TextBox>
+                    <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
                 </div>
                 <div class="col-sm-3">
                     <asp:TextBox runat="server" ID="EmployerMail" CssClass="form-control" placeholder="E-Mail des Kunden" TextMode="Email"></asp:TextBox>
+                    <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
                 </div>
             </div>
             <div class="form-group">
@@ -99,7 +101,7 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" />
+                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
@@ -109,7 +111,7 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <div class="col-sm-9">
-                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="false" />
+                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
                 </div>
             </div>
             <hr />

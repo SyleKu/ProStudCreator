@@ -251,3 +251,9 @@ h4 {
     margin-top:40px;
     font-style:italic;
 }
+
+small {
+    color:#bbb;
+    font-size:9px;
+    font-style:italic;
+}
