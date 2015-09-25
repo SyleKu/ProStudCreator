@@ -67,12 +67,19 @@ namespace ProStudCreator
             _p.PublishedDate = _p.ModificationDate = DateTime.Now;
             DateTime semesterStart = ((Semester)_p.PublishedDate).StartDate;
             DateTime semesterEnd = ((Semester)_p.PublishedDate).EndDate;
+
+            // Generate new project number.
+            // Must be unique within the semester & department.
+            // Range: 1..99
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
             {
                 int[] nrs = (
                     from p in dbx.Projects
-                    where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd && p.Id != _p.Id && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
+                    where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
+                        && p.Id != _p.Id
+                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
                     select p.ProjectNr).ToArray<int>();
+
                 if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
                 {
                     _p.ProjectNr = 1;
@@ -88,8 +95,8 @@ namespace ProStudCreator
 
         public static string FixupParagraph(this string _p)
         {
-            _p = _p.Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«','"').Replace('»', '"').Replace('¬',' ')
-                .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—','-').Replace('–','-').Replace(' ','-').Replace("•","-");
+            _p = _p.Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«', '"').Replace('»', '"').Replace('¬', ' ')
+                .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—', '-').Replace('–', '-').Replace("•", "-");
 
             for (string oldP = null; oldP != _p; )
             {
