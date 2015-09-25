@@ -43,13 +43,13 @@ namespace ProStudCreator
     partial void UpdateProjectType(ProjectType instance);
     partial void DeleteProjectType(ProjectType instance);
     #endregion
-		
-		public ProStudentCreatorDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
-		{
-			OnCreated();
-		}
-		
+
+        public ProStudentCreatorDBDataContext() :
+            base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
+        {
+            OnCreated();
+        }
+
 		public ProStudentCreatorDBDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
@@ -497,7 +497,7 @@ namespace ProStudCreator
 		
 		private bool _Important;
 		
-		private global::ProStudCreator.ProjectState _Published;
+		private global::ProStudCreator.ProjectState _State;
 		
 		private int _DepartmentId;
 		
@@ -514,6 +514,8 @@ namespace ProStudCreator
 		private int _ProjectNr;
 		
 		private string _ClientPerson;
+		
+		private bool _Refused;
 		
 		private EntityRef<Department> _Department;
 		
@@ -535,8 +537,8 @@ namespace ProStudCreator
     partial void OnNameChanged();
     partial void OnCreatorChanging(string value);
     partial void OnCreatorChanged();
-    partial void OnClientNameChanging(string value);
-    partial void OnClientNameChanged();
+    partial void OnClientCompanyChanging(string value);
+    partial void OnClientCompanyChanged();
     partial void OnClientMailChanging(string value);
     partial void OnClientMailChanged();
     partial void OnAdvisor1NameChanging(string value);
@@ -603,6 +605,8 @@ namespace ProStudCreator
     partial void OnProjectNrChanged();
     partial void OnClientPersonChanging(string value);
     partial void OnClientPersonChanged();
+    partial void OnRefusedChanging(bool value);
+    partial void OnRefusedChanged();
     #endregion
 		
 		public Project()
@@ -675,8 +679,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Employer", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string ClientName
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Employer", DbType="NVarChar(100) NULL", CanBeNull=false)]
+		public string ClientCompany
 		{
 			get
 			{
@@ -686,16 +690,16 @@ namespace ProStudCreator
 			{
 				if ((this._Employer != value))
 				{
-					this.OnClientNameChanging(value);
+					this.OnClientCompanyChanging(value);
 					this.SendPropertyChanging();
 					this._Employer = value;
-					this.SendPropertyChanged("ClientName");
-					this.OnClientNameChanged();
+					this.SendPropertyChanged("ClientCompany");
+					this.OnClientCompanyChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployerEmail", DbType="NVarChar(100)", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployerEmail", DbType="NVarChar(100) NULL", CanBeNull=false)]
 		public string ClientMail
 		{
 			get
@@ -1191,20 +1195,20 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Published", DbType="int NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="int NOT NULL", CanBeNull=false)]
 		public global::ProStudCreator.ProjectState State
 		{
 			get
 			{
-				return this._Published;
+				return this._State;
 			}
 			set
 			{
-				if ((this._Published != value))
+				if ((this._State != value))
 				{
 					this.OnStateChanging(value);
 					this.SendPropertyChanging();
-					this._Published = value;
+					this._State = value;
 					this.SendPropertyChanged("State");
 					this.OnStateChanged();
 				}
@@ -1355,7 +1359,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientPerson", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientPerson", DbType="NVarChar(100) NULL", CanBeNull=false)]
 		public string ClientPerson
 		{
 			get
@@ -1371,6 +1375,26 @@ namespace ProStudCreator
 					this._ClientPerson = value;
 					this.SendPropertyChanged("ClientPerson");
 					this.OnClientPersonChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Refused", DbType="Bit NOT NULL")]
+		public bool Refused
+		{
+			get
+			{
+				return this._Refused;
+			}
+			set
+			{
+				if ((this._Refused != value))
+				{
+					this.OnRefusedChanging(value);
+					this.SendPropertyChanging();
+					this._Refused = value;
+					this.SendPropertyChanged("Refused");
+					this.OnRefusedChanged();
 				}
 			}
 		}

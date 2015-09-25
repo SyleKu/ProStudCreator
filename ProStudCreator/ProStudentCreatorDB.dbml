@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="aspnet-ProStudCreator-20140818043155" Class="ProStudentCreatorDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=(LocalDb)\v11.0;AttachDbFilename=|DataDirectory|\aspnet-ProStudCreator-20140818043155.mdf;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DefaultConnection" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -23,8 +22,8 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Creator" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="ClientName" Storage="_Employer" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="ClientMail" Storage="_EmployerEmail" Type="System.String" DbType="NVarChar(100)" CanBeNull="false" />
+      <Column Name="ClientCompany" Storage="_Employer" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="false" />
+      <Column Name="ClientMail" Storage="_EmployerEmail" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="false" />
       <Column Name="Advisor1Name" Storage="_Advisor" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Advisor2Name" Storage="_Advisor2" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Advisor1Mail" Storage="_AdvisorMail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
@@ -56,7 +55,8 @@
       <Column Name="PublishedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="ProjectNr" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
-      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="false" />
+      <Column Name="Refused" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Department_Project" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
       <Association Name="ProjectTeamSize_Project" Member="POneTeamSize" ThisKey="P1TeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
       <Association Name="ProjectTeamSize_Project1" Member="PTwoTeamSize" ThisKey="P2TeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
