@@ -80,6 +80,7 @@ namespace ProStudCreator
 
                 POneTeamSize.SelectedIndex = 1;
                 PTwoTeamSize.SelectedIndex = 0;
+                UpdateReservationNameTwoVisibility();   // Solves issue #12 (number of reservation fields doesn't match when creating new project)
 
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Bild hinzufügen:";
@@ -172,7 +173,7 @@ namespace ProStudCreator
             submitProject.Visible = (id.HasValue && project.State == ProjectState.InProgress);
             ReservationNameOne.Text = project.Reservation1Name;
             ReservationNameTwo.Text = project.Reservation2Name;
-            UpdateReservationNameTwoVisibility();
+            
             Department.SelectedValue = project.Department.Id.ToString();
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
             {
@@ -416,7 +417,8 @@ namespace ProStudCreator
                 " veröffentlicht.\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/"
             });
             var smtpClient = new SmtpClient();
-            smtpClient.Send(mailMessage);
+            // DEBUG - SMTP server rejects mails, so currently disabled sending
+            //smtpClient.Send(mailMessage);
             Response.Redirect("projectlist");
         }
         protected void refuseProject_Click(object sender, EventArgs e)
