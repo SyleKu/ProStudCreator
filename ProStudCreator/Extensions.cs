@@ -77,7 +77,7 @@ namespace ProStudCreator
                     from p in dbx.Projects
                     where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
                         && p.Id != _p.Id
-                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
+                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted || (p.State == ProjectState.InProgress && p.ProjectNr > 0))   // Last condition: If project was given an ID then withdrawn, it should keep that ID.
                         && p.Department == _p.Department
                     select p.ProjectNr).ToArray<int>();
 
