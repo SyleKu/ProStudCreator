@@ -38,7 +38,7 @@ namespace ProStudCreator
                 AdminView.Visible = true;
                 CheckProjects.DataSource =
                     from item in projects
-                    where (int)item.State == 1 && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
+                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
                     select item into i
                     select getProjectSingleElement(i);
             }
@@ -48,28 +48,28 @@ namespace ProStudCreator
                 case "AllPastProjects":
                     projects =
                         from p in projects
-                        where p.PublishedDate >= (Semester.CurrentSemester - 2).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 2).EndDate && (int)p.State == 3
+                        where p.PublishedDate >= (Semester.CurrentSemester - 2).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 2).EndDate && p.State == ProjectState.Published
                         orderby p.ProjectNr
                         select p;
                     break;
                 case "AllFutureProjects":
                     projects =
                         from p in projects
-                        where p.PublishedDate >= Semester.CurrentSemester.StartDate && (int)p.State == 3
+                        where p.PublishedDate >= Semester.CurrentSemester.StartDate && p.State == ProjectState.Published
                         orderby p.ProjectNr
                         select p;
                     break;
                 case "AllCurrentProjects":
                     projects =
                         from p in projects
-                        where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && (int)p.State == 3
+                        where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && p.State == ProjectState.Published
                         orderby p.ProjectNr
                         select p;
                     break;
                 case "InProgress":
                     projects =
                         from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (item.State == ProjectState.InProgress || item.State==ProjectState.Rejected)
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (item.State == ProjectState.InProgress || item.State == ProjectState.Rejected)
                         select item;
                     break;
                 case "Submitted":
