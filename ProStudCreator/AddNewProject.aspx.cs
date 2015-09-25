@@ -369,7 +369,19 @@ namespace ProStudCreator
                 project.Reservation1Name = project.Reservation2Name;
                 project.Reservation2Name = "";
             }
+
+            
+            int oldDepartmentId = project.DepartmentId;
             project.DepartmentId = int.Parse(Department.SelectedValue);
+            
+            // If project changed departments & already has a ProjectNr, generate a new one
+            if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
+            {
+                project.ProjectNr = 0;  // 'Remove' project number to allow finding a new one.
+                project.GenerateProjectNr();
+            }
+            
+
             if (AddPicture.HasFile)
             {
                 using (var input = AddPicture.PostedFile.InputStream)
