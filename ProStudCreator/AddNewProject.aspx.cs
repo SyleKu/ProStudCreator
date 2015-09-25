@@ -112,7 +112,7 @@ namespace ProStudCreator
                 refuseProject.Visible = true;
             }
             ProjectName.Text = project.Name;
-            Employer.Text = project.ClientName;
+            Employer.Text = project.ClientCompany;
             EmployerPerson.Text = project.ClientPerson;
             EmployerMail.Text = project.ClientMail;
             NameBetreuer1.Text = project.Advisor1Name;
@@ -302,7 +302,7 @@ namespace ProStudCreator
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
             project.Name = ProjectName.Text.FixupParagraph();
-            project.ClientName = Employer.Text.FixupParagraph();
+            project.ClientCompany = Employer.Text.FixupParagraph();
             project.ClientPerson = EmployerPerson.Text.FixupParagraph();
             project.ClientMail = EmployerMail.Text.Trim().ToLowerInvariant();
             project.Advisor1Name = NameBetreuer1.Text.FixupParagraph();

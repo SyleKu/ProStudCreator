@@ -104,10 +104,10 @@ namespace ProStudCreator
                     Reference = "mailto:" + proj.Advisor2Mail
                 });
             }
-            else if(proj.ClientName != "")
+            else if(proj.ClientCompany!= "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
+                projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
             }
             else
             {
@@ -120,10 +120,10 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
 
-            if (proj.ClientName != "" && proj.Advisor2Name != "")
+            if (proj.ClientCompany != "" && proj.Advisor2Name != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.ClientName, fontRegular));
+                projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
             }
             else
             {
