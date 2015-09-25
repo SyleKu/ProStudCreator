@@ -65,31 +65,7 @@ namespace ProStudCreator
         public static void Submit(this Project _p)
         {
             _p.PublishedDate = _p.ModificationDate = DateTime.Now;
-            DateTime semesterStart = ((Semester)_p.PublishedDate).StartDate;
-            DateTime semesterEnd = ((Semester)_p.PublishedDate).EndDate;
-
-            // Generate new project number.
-            // Must be unique within the semester & department.
-            // Range: 1..99
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                int[] nrs = (
-                    from p in dbx.Projects
-                    where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
-                        && p.Id != _p.Id
-                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted || (p.State == ProjectState.InProgress && p.ProjectNr > 0))   // Last condition: If project was given an ID then withdrawn, it should keep that ID.
-                        && p.Department == _p.Department
-                    select p.ProjectNr).ToArray<int>();
-
-                if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
-                {
-                    _p.ProjectNr = 1;
-                    while (nrs.Contains(_p.ProjectNr))
-                    {
-                        _p.ProjectNr++;
-                    }
-                }
-            }
+            GenerateProjectNr(_p);
             _p.State = ProjectState.Submitted;
         }
 
@@ -119,6 +95,12 @@ namespace ProStudCreator
         public static void Publish(this Project _p)
         {
             _p.PublishedDate = (_p.ModificationDate = DateTime.Now);
+            GenerateProjectNr(_p);
+            _p.State = ProjectState.Published;
+        }
+
+        public static void GenerateProjectNr(this Project _p)
+        {
             DateTime semesterStart = ((Semester)_p.PublishedDate).StartDate;
             DateTime semesterEnd = ((Semester)_p.PublishedDate).EndDate;
 
@@ -129,7 +111,7 @@ namespace ProStudCreator
                     from p in dbx.Projects
                     where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
                         && p.Id != _p.Id
-                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted )
+                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
                         && p.Department == _p.Department
                     select p.ProjectNr).ToArray<int>();
                 if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
@@ -141,7 +123,6 @@ namespace ProStudCreator
                     }
                 }
             }
-            _p.State = ProjectState.Published;
         }
         public static void Delete(this Project _p)
         {
