@@ -78,6 +78,7 @@ namespace ProStudCreator
                     where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
                         && p.Id != _p.Id
                         && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
+                        && p.Department == _p.Department
                     select p.ProjectNr).ToArray<int>();
 
                 if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
@@ -120,11 +121,16 @@ namespace ProStudCreator
             _p.PublishedDate = (_p.ModificationDate = DateTime.Now);
             DateTime semesterStart = ((Semester)_p.PublishedDate).StartDate;
             DateTime semesterEnd = ((Semester)_p.PublishedDate).EndDate;
+
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
             {
+                // Get project numbers from this semester & same department
                 int[] nrs = (
                     from p in dbx.Projects
-                    where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd && p.Id != _p.Id && (p.State == ProjectState.Published || p.State == ProjectState.Submitted )
+                    where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
+                        && p.Id != _p.Id
+                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted )
+                        && p.Department == _p.Department
                     select p.ProjectNr).ToArray<int>();
                 if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
                 {
