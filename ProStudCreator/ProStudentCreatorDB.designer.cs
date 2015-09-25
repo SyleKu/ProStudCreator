@@ -43,13 +43,13 @@ namespace ProStudCreator
     partial void UpdateProjectType(ProjectType instance);
     partial void DeleteProjectType(ProjectType instance);
     #endregion
-
-        public ProStudentCreatorDBDataContext() :
-            base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
-        {
-            OnCreated();
-        }
-
+		
+		public ProStudentCreatorDBDataContext() : 
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
+		{
+			OnCreated();
+		}
+		
 		public ProStudentCreatorDBDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
@@ -497,7 +497,7 @@ namespace ProStudCreator
 		
 		private bool _Important;
 		
-		private global::ProStudCreator.ProjectState _State;
+		private global::ProStudCreator.ProjectState _Published;
 		
 		private int _DepartmentId;
 		
@@ -679,7 +679,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Employer", DbType="NVarChar(100) NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Employer", DbType="NVarChar(255) NULL", CanBeNull=false)]
 		public string ClientCompany
 		{
 			get
@@ -1195,20 +1195,20 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="int NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Published", DbType="int NOT NULL", CanBeNull=false)]
 		public global::ProStudCreator.ProjectState State
 		{
 			get
 			{
-				return this._State;
+				return this._Published;
 			}
 			set
 			{
-				if ((this._State != value))
+				if ((this._Published != value))
 				{
 					this.OnStateChanging(value);
 					this.SendPropertyChanging();
-					this._State = value;
+					this._Published = value;
 					this.SendPropertyChanged("State");
 					this.OnStateChanged();
 				}
