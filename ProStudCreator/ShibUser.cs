@@ -6,7 +6,7 @@ namespace ProStudCreator
 {
     public static class ShibUser
     {
-        static bool BYPASS_AUTH = false;
+        static bool BYPASS_AUTH = true;
 
         public static bool IsAuthenticated()
         {
@@ -43,7 +43,7 @@ namespace ProStudCreator
         public static string GetEmail()
         {
             if (BYPASS_AUTH)
-                return "de@iru.ch";
+                return "stephen.randles@fhnw.ch";
 
             string mail = HttpContext.Current.Request.Headers["mail"];
             string result;
@@ -60,14 +60,14 @@ namespace ProStudCreator
         public static string GetFirstName()
         {
             if (BYPASS_AUTH)
-                return "Simon";
+                return "Stephen";
 
             return HttpContext.Current.Request.Headers["givenName"];
         }
         public static string GetLastName()
         {
             if (BYPASS_AUTH)
-                return "Felix";
+                return "Randles";
 
             return HttpContext.Current.Request.Headers["surname"];
         }
