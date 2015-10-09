@@ -78,7 +78,7 @@ namespace ProStudCreator
         public static int? GetDepartmentId()
         {
             if (BYPASS_AUTH)
-                return null;
+                return 0;
 
             int? result;
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
