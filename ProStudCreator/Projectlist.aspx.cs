@@ -30,9 +30,15 @@ namespace ProStudCreator
         protected GridView AllProjects;
         protected Button newProject;
 
+        // SR test
+        IQueryable<Project> projects;
+        //~SR test
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            IQueryable<Project> projects = db.Projects.Select(i => i);
+            projects = db.Projects.Select(i => i);
+
+            // Display project approval list if user is admin
             if (ShibUser.IsAdmin())
             {
                 AdminView.Visible = true;
@@ -43,6 +49,16 @@ namespace ProStudCreator
                     select getProjectSingleElement(i);
             }
 
+            AllProjects.DataSource =
+                from i in filterRelevantProjects(projects)
+                select getProjectSingleElement(i);
+            AllProjects.DataBind();
+            CheckProjects.DataBind();
+        }
+
+        private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects)
+        {
+            IQueryable<Project> projects = allProjects;
             switch (ListFilter.SelectedValue)
             {
                 case "AllPastProjects":
@@ -87,13 +103,9 @@ namespace ProStudCreator
                         select item;
                     break;
             }
-
-            AllProjects.DataSource =
-                from i in projects
-                select getProjectSingleElement(i);
-            AllProjects.DataBind();
-            CheckProjects.DataBind();
+            return projects;
         }
+
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
             return new ProjectSingleElement
@@ -160,6 +172,8 @@ namespace ProStudCreator
         }
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
+            if (e.CommandName == "Sort") return;
+
             var id = Convert.ToInt32(e.CommandArgument);
             switch (e.CommandName)
             {
@@ -183,6 +197,7 @@ namespace ProStudCreator
                     break;
             }
         }
+
 
         private void CreateSinglePDF(int idPDF)
         {
@@ -239,6 +254,15 @@ namespace ProStudCreator
                 sb.Append("</script>");
                 ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
             }
+        }
+
+        protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            //AllProjects.DataSource =
+            //    from i in filterRelevantProjects(projects)
+            //    orderby "department desc" // Doesn't allow sorting based on string param
+            //    select getProjectSingleElement(i);
+            //AllProjects.DataBind();
         }
     }
 }
