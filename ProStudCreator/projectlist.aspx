@@ -38,16 +38,16 @@
     <div class="well usernSettings non-selectable">
         <div class="radioButtonSettings non-selectable">
             <asp:RadioButtonList ID="ListFilter" RepeatDirection="Horizontal" runat="server" AutoPostBack="true">
-                <asp:ListItem Value="AllPastProjects">Dieses Semester</asp:ListItem>
-                <asp:ListItem Value="AllCurrentProjects">Nächstes Semester</asp:ListItem>
-                <asp:ListItem Value="AllFutureProjects">Zukünftiges Semester</asp:ListItem>
+                <asp:ListItem Value="AllPastProjects">Vergangene Semester</asp:ListItem>
+                <asp:ListItem Value="AllCurrentProjects">Laufendes Semester</asp:ListItem>
+                <asp:ListItem Value="AllFutureProjects">N&auml;chstes Semester</asp:ListItem>
                 <asp:ListItem Value="InProgress" Selected="True">Eigene, nicht eingereicht</asp:ListItem>
                 <asp:ListItem Value="Submitted">Eigene, Eingereicht</asp:ListItem>
                 <%--<asp:ListItem Value="Published">Eigene, Veröffentlicht</asp:ListItem>--%>
             </asp:RadioButtonList>
         </div>
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">
-            <asp:GridView ID="AllProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" OnRowDataBound="AllProjects_RowDataBound">
+            <asp:GridView ID="AllProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" OnRowDataBound="AllProjects_RowDataBound" AllowSorting="True" OnSorting="AllProjects_Sorting">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
                 <Columns>
                     <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" HtmlEncode="false" ItemStyle-Wrap="false" />
