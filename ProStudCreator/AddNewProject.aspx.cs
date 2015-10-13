@@ -112,6 +112,7 @@ namespace ProStudCreator
                 publishProject.Visible = true;
                 refuseProject.Visible = true;
             }
+
             ProjectName.Text = project.Name;
             Employer.Text = project.ClientCompany;
             EmployerPerson.Text = project.ClientPerson;
@@ -120,6 +121,7 @@ namespace ProStudCreator
             EMail1.Text = project.Advisor1Mail;
             NameBetreuer2.Text = project.Advisor2Name;
             EMail2.Text = project.Advisor2Mail;
+
             if (project.TypeDesignUX)
             {
                 DesignUX.ImageUrl = "pictures/projectTypDesignUX.png";
@@ -150,10 +152,12 @@ namespace ProStudCreator
                 DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
                 projectType[5] = true;
             }
+
             POneType.SelectedValue = project.POneType.Id.ToString();
             PTwoType.SelectedValue = ((project.PTwoType == null) ? null : project.PTwoType.Id.ToString());
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
             PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
+
             InitialPositionContent.Text = project.InitialPosition;
             Image1.Visible = true;
             if (project.Picture != null)
@@ -166,13 +170,17 @@ namespace ProStudCreator
                 ImageLabel.Visible = false;
                 Image1.Visible = false;
             }
+
             ObjectivContent.Text = project.Objective;
             ProblemStatementContent.Text = project.ProblemStatement;
             ReferencesContent.Text = project.References;
             RemarksContent.Text = project.Remarks;
             submitProject.Visible = (id.HasValue && project.State == ProjectState.InProgress);
+
             Reservation1Name.Text = project.Reservation1Name;
+            Reservation1Mail.Text = project.Reservation1Mail;
             Reservation2Name.Text = project.Reservation2Name;
+            Reservation2Mail.Text = project.Reservation2Mail;
             
             Department.SelectedValue = project.Department.Id.ToString();
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
@@ -349,14 +357,20 @@ namespace ProStudCreator
 
             // Student reservations
             project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
-            if (Reservation2Name.Visible)
+            project.Reservation1Mail = Reservation1Mail.Text.Trim().ToLowerInvariant();
+
+            if (Reservation2Name.Visible)   // TODO Check team size instead of visibility (just because it makes more sense)
             {
                 project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
+                project.Reservation2Mail = Reservation2Mail.Text.Trim().ToLowerInvariant();
             }
             else
             {
                 project.Reservation2Name = "";
+                project.Reservation2Mail = "";
             }
+
+            // Move reservation 2 to 1 if 1 isn't specified
             if (project.Reservation1Name == "" && project.Reservation2Name != "")
             {
                 project.Reservation1Name = project.Reservation2Name;
