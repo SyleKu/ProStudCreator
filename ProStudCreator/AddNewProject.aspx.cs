@@ -171,8 +171,8 @@ namespace ProStudCreator
             ReferencesContent.Text = project.References;
             RemarksContent.Text = project.Remarks;
             submitProject.Visible = (id.HasValue && project.State == ProjectState.InProgress);
-            ReservationNameOne.Text = project.Reservation1Name;
-            ReservationNameTwo.Text = project.Reservation2Name;
+            Reservation1Name.Text = project.Reservation1Name;
+            Reservation2Name.Text = project.Reservation2Name;
             
             Department.SelectedValue = project.Department.Id.ToString();
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
@@ -287,7 +287,7 @@ namespace ProStudCreator
 
         private void SaveProject()
         {
-            if (project == null)
+            if (project == null)    // New project
             {
                 project = new Project();
                 project.Creator = ShibUser.GetEmail();
@@ -297,11 +297,13 @@ namespace ProStudCreator
             }
             else
             {
+                // Allow edit for authorised users only
                 if (!ShibUser.IsAdmin() && project.Creator != ShibUser.GetEmail() && project.ClientMail != ShibUser.GetEmail() && project.Advisor1Mail != ShibUser.GetEmail() && project.Advisor2Mail != ShibUser.GetEmail())
                     throw new UnauthorizedAccessException();
             }
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
+
             project.Name = ProjectName.Text.FixupParagraph();
             project.ClientCompany = Employer.Text.FixupParagraph();
             project.ClientPerson = EmployerPerson.Text.FixupParagraph();
@@ -310,29 +312,16 @@ namespace ProStudCreator
             project.Advisor1Mail = EMail1.Text.Trim().ToLowerInvariant();
             project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
             project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
-            /*if (NameBetreuer2.Text != "" && EMail2.Text != "")
-            {
-                project.Advisor2Name = NameBetreuer2.Text.Trim();
-                project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
-            }
-            else
-            {
-                project.Advisor2Name = "";
-                project.Advisor2Mail = "";
-            }
-            if (project.Advisor1Name == "" && project.Advisor1Mail == "")
-            {
-                project.Advisor1Name = project.Advisor2Name;
-                project.Advisor1Mail = project.Advisor2Mail;
-                project.Advisor2Name = "";
-                project.Advisor2Mail = "";
-            }*/
+
+            // Project types
             project.TypeDesignUX = projectType[0];
             project.TypeHW = projectType[1];
             project.TypeCGIP = projectType[2];
             project.TypeMathAlg = projectType[3];
             project.TypeAppWeb = projectType[4];
             project.TypeDBBigData = projectType[5];
+
+            // Team size
             project.P1TypeId = int.Parse(POneType.SelectedValue);
             project.P1TeamSizeId = int.Parse(POneTeamSize.SelectedValue);
             if (PTwoType.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
@@ -350,15 +339,19 @@ namespace ProStudCreator
                 project.P2TeamSizeId = null;
                 project.P2TypeId = null;
             }
+
+            // Long texts (description etc.)
             project.InitialPosition = InitialPositionContent.Text.FixupParagraph();
             project.Objective = ObjectivContent.Text.FixupParagraph();
             project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
             project.References = ReferencesContent.Text.FixupParagraph();
             project.Remarks = RemarksContent.Text.FixupParagraph();
-            project.Reservation1Name = ReservationNameOne.Text.FixupParagraph();
-            if (ReservationNameTwo.Visible)
+
+            // Student reservations
+            project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
+            if (Reservation2Name.Visible)
             {
-                project.Reservation2Name = ReservationNameTwo.Text.FixupParagraph();
+                project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
             }
             else
             {
@@ -399,6 +392,7 @@ namespace ProStudCreator
                     project.Picture = new Binary(data);
                 }
             }
+
             db.SubmitChanges();
             project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id, Request) > 1);
             db.SubmitChanges();
@@ -412,6 +406,8 @@ namespace ProStudCreator
             project.State = ProjectState.Published;
             project.PublishedDate = DateTime.Now;
             db.SubmitChanges();
+
+            // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
             if(project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
@@ -431,6 +427,7 @@ namespace ProStudCreator
             var smtpClient = new SmtpClient();
             // DEBUG - SMTP server rejects mails, so currently disabled sending
             //smtpClient.Send(mailMessage);
+
             Response.Redirect("projectlist");
         }
         protected void refuseProject_Click(object sender, EventArgs e)
@@ -453,6 +450,7 @@ namespace ProStudCreator
         {
             project.Reject();
             db.SubmitChanges();
+
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
             if (project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
@@ -464,11 +462,14 @@ namespace ProStudCreator
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
+
             Response.Redirect("projectlist");
         }
         protected void submitProject_Click(object sender, EventArgs e)
         {
             SaveProject();
+
+            // Perform input validation & generate error messages
             string message = null;
             if (message == null && !project.Advisor1Name.IsValidName())
                 message = "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
@@ -540,8 +541,8 @@ namespace ProStudCreator
         private void toggleReservationTwoVisible()
         {
             bool showResTwo = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
-            ReservationNameTwo.Visible = showResTwo;
-            ReservationMailTwo.Visible = showResTwo;
+            Reservation2Name.Visible = showResTwo;
+            Reservation2Mail.Visible = showResTwo;
         }
 
         protected void rollbackProject_Click(object sender, EventArgs e)

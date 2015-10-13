@@ -355,40 +355,40 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox RemarksContent;
         
         /// <summary>
-        /// ReservationNameOne control.
+        /// Reservation1Name control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ReservationNameOne;
+        protected global::System.Web.UI.WebControls.TextBox Reservation1Name;
         
         /// <summary>
-        /// ReservationMailOne control.
+        /// Reservation1Mail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ReservationMailOne;
+        protected global::System.Web.UI.WebControls.TextBox Reservation1Mail;
         
         /// <summary>
-        /// ReservationNameTwo control.
+        /// Reservation2Name control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ReservationNameTwo;
+        protected global::System.Web.UI.WebControls.TextBox Reservation2Name;
         
         /// <summary>
-        /// ReservationMailTwo control.
+        /// Reservation2Mail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ReservationMailTwo;
+        protected global::System.Web.UI.WebControls.TextBox Reservation2Mail;
         
         /// <summary>
         /// Department control.
