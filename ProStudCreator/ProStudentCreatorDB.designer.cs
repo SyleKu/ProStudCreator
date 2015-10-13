@@ -517,6 +517,10 @@ namespace ProStudCreator
 		
 		private bool _Refused;
 		
+		private string _Reservation1Mail;
+		
+		private string _Reservation2Mail;
+		
 		private EntityRef<Department> _Department;
 		
 		private EntityRef<ProjectTeamSize> _POneTeamSize;
@@ -607,6 +611,10 @@ namespace ProStudCreator
     partial void OnClientPersonChanged();
     partial void OnRefusedChanging(bool value);
     partial void OnRefusedChanged();
+    partial void OnReservation1MailChanging(string value);
+    partial void OnReservation1MailChanged();
+    partial void OnReservation2MailChanging(string value);
+    partial void OnReservation2MailChanged();
     #endregion
 		
 		public Project()
@@ -1395,6 +1403,46 @@ namespace ProStudCreator
 					this._Refused = value;
 					this.SendPropertyChanged("Refused");
 					this.OnRefusedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation1Mail", DbType="NVARCHAR(100) NOT NULL", CanBeNull=false)]
+		public string Reservation1Mail
+		{
+			get
+			{
+				return this._Reservation1Mail;
+			}
+			set
+			{
+				if ((this._Reservation1Mail != value))
+				{
+					this.OnReservation1MailChanging(value);
+					this.SendPropertyChanging();
+					this._Reservation1Mail = value;
+					this.SendPropertyChanged("Reservation1Mail");
+					this.OnReservation1MailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation2Mail", DbType="NVARCHAR(100) NOT NULL", CanBeNull=false)]
+		public string Reservation2Mail
+		{
+			get
+			{
+				return this._Reservation2Mail;
+			}
+			set
+			{
+				if ((this._Reservation2Mail != value))
+				{
+					this.OnReservation2MailChanging(value);
+					this.SendPropertyChanging();
+					this._Reservation2Mail = value;
+					this.SendPropertyChanged("Reservation2Mail");
+					this.OnReservation2MailChanged();
 				}
 			}
 		}
