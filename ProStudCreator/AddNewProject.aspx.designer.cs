@@ -364,6 +364,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ReservationNameOne;
         
         /// <summary>
+        /// ReservationMailOne control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ReservationMailOne;
+        
+        /// <summary>
         /// ReservationNameTwo control.
         /// </summary>
         /// <remarks>
@@ -371,6 +380,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ReservationNameTwo;
+        
+        /// <summary>
+        /// ReservationMailTwo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ReservationMailTwo;
         
         /// <summary>
         /// Department control.

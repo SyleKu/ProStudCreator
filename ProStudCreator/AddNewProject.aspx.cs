@@ -80,7 +80,7 @@ namespace ProStudCreator
 
                 POneTeamSize.SelectedIndex = 1;
                 PTwoTeamSize.SelectedIndex = 0;
-                UpdateReservationNameTwoVisibility();   // Solves issue #12 (number of reservation fields doesn't match when creating new project)
+                toggleReservationTwoVisible();   // Solves issue #12 (number of reservation fields doesn't match when creating new project)
 
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Bild hinzufügen:";
@@ -534,12 +534,14 @@ namespace ProStudCreator
 
         protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateReservationNameTwoVisibility();
+            toggleReservationTwoVisible();
         }
 
-        private void UpdateReservationNameTwoVisibility()
+        private void toggleReservationTwoVisible()
         {
-            ReservationNameTwo.Visible = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
+            bool showResTwo = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
+            ReservationNameTwo.Visible = showResTwo;
+            ReservationMailTwo.Visible = showResTwo;
         }
 
         protected void rollbackProject_Click(object sender, EventArgs e)

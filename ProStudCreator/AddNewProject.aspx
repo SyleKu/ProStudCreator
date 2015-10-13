@@ -140,20 +140,31 @@
                     <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                 </div>
             </div>
-            <asp:UpdatePanel runat="server" class="form-group">
+            <asp:UpdatePanel runat="server">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
                     <asp:AsyncPostBackTrigger ControlID="PTwoTeamSize" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
-                    <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
-                    <div class="col-sm-3">
-                        <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
+                    <div class="form-group">
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="ReservationNameOne" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
+                        </div>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="ReservationMailOne" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
+                        </div>
                     </div>
-                    <div class="col-sm-3">
-                        <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)" Visible="false"></asp:TextBox>
+
+                    <div class="form-group">
+                        <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="ReservationNameTwo" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)" Visible="false"></asp:TextBox>
+                        </div>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="ReservationMailTwo" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email" Visible="false"></asp:TextBox>
+                        </div>
                     </div>
-                    <div class="col-sm-3"></div>
                 </ContentTemplate>
             </asp:UpdatePanel>
             <div class="form-group">
