@@ -173,6 +173,11 @@
                     <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control" Width="160px"></asp:DropDownList>
                 </div>
             </div>
+
+            <div class="form-group">
+                <asp:ValidationSummary ID="ValidationSummary1" runat="server" ShowMessageBox="true" ShowSummary="true" />
+            </div>
+
         </div>
         <div style="text-align:right;">
             <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClientClick="return confirm('Wirklich veröffentlichen?');" OnClick="publishProject_Click"></asp:Button>
