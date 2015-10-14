@@ -6,70 +6,75 @@ namespace ProStudCreator
 {
     public static class ShibUser
     {
-        static bool BYPASS_AUTH = true;
 
         public static bool IsAuthenticated()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return true;
-
-            return ShibUser.IsStaff() && ShibUser.GetDepartmentId().HasValue;
+            #else
+                return ShibUser.IsStaff() && ShibUser.GetDepartmentId().HasValue;
+            #endif
         }
         public static bool IsAdmin()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return true;
-
-            if (HttpContext.Current.Items["IsAdmin"] == null)
-            {
-                HttpContext.Current.Items["IsAdmin"] = ConfigurationManager.AppSettings["admins"].Split(new char[]
+            #else
+                if (HttpContext.Current.Items["IsAdmin"] == null)
                 {
-                    ';'
-                }).Contains(ShibUser.GetEmail());
-            }
-            return (bool)HttpContext.Current.Items["IsAdmin"];
+                    HttpContext.Current.Items["IsAdmin"] = ConfigurationManager.AppSettings["admins"].Split(new char[]
+                    {
+                        ';'
+                    }).Contains(ShibUser.GetEmail());
+                }
+                return (bool)HttpContext.Current.Items["IsAdmin"];
+            #endif
         }
         public static bool IsStaff()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return true;
-
-            string aff = HttpContext.Current.Request.Headers["affiliation"];
-            return aff != null && aff.Split(new char[]
-            {
-                ';'
-            }).Contains("staff");
+            #else
+                string aff = HttpContext.Current.Request.Headers["affiliation"];
+                return aff != null && aff.Split(new char[]
+                {
+                    ';'
+                }).Contains("staff");
+            #endif
         }
         public static string GetEmail()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return "stephen.randles@fhnw.ch";
-
-            string mail = HttpContext.Current.Request.Headers["mail"];
-            string result;
-            if (mail == null)
-            {
-                result = null;
-            }
-            else
-            {
-                result = mail.Trim().ToLowerInvariant();
-            }
-            return result;
+            #else
+                string mail = HttpContext.Current.Request.Headers["mail"];
+                string result;
+                if (mail == null)
+                {
+                    result = null;
+                }
+                else
+                {
+                    result = mail.Trim().ToLowerInvariant();
+                }
+                return result;
+            #endif
         }
         public static string GetFirstName()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return "Stephen";
-
-            return HttpContext.Current.Request.Headers["givenName"];
+            #else
+                return HttpContext.Current.Request.Headers["givenName"];
+            #endif
         }
         public static string GetLastName()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return "Randles";
-
-            return HttpContext.Current.Request.Headers["surname"];
+            #else
+                return HttpContext.Current.Request.Headers["surname"];
+            #endif
         }
         public static string GetPhoneNumber()
         {
@@ -77,43 +82,45 @@ namespace ProStudCreator
         }
         public static int? GetDepartmentId()
         {
-            if (BYPASS_AUTH)
-                return 0;
-
-            int? result;
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
-                if (dep == null)
+            #if DEBUG
+                return 0; // Department 0 = i4Ds
+            #else
+                int? result;
+                using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
                 {
-                    result = null;
+                    Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
+                    if (dep == null)
+                    {
+                        result = null;
+                    }
+                    else
+                    {
+                        result = new int?(dep.Id);
+                    }
                 }
-                else
-                {
-                    result = new int?(dep.Id);
-                }
-            }
-            return result;
+                return result;
+            #endif
         }
         public static string GetDepartmentName()
         {
-            if (BYPASS_AUTH)
+            #if DEBUG
                 return null;
-
-            string result;
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
-                if (dep == null)
+            #else
+                string result;
+                using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
                 {
-                    result = null;
+                    Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
+                    if (dep == null)
+                    {
+                        result = null;
+                    }
+                    else
+                    {
+                        result = dep.DepartmentName;
+                    }
                 }
-                else
-                {
-                    result = dep.DepartmentName;
-                }
-            }
-            return result;
+                return result;
+            #endif
         }
 
         public static string GetDebugInfo()
