@@ -83,7 +83,6 @@ namespace ProStudCreator
 
                 POneTeamSize.SelectedIndex = 1;
                 PTwoTeamSize.SelectedIndex = 0;
-                toggleReservationTwoVisible();
 
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Bild hinzufügen:";
@@ -100,6 +99,8 @@ namespace ProStudCreator
                     Page.Title = "Neues Projekt";
                     SiteTitle.Text = "Neues Projekt anlegen";
                 }
+
+                toggleReservationTwoVisible();
             }
         }
         private void RetrieveProjectToEdit()
