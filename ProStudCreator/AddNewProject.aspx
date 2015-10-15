@@ -159,10 +159,10 @@
                     <div class="form-group">
                         <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)" Visible="false"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)"></asp:TextBox>
                         </div>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email" Visible="false"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email"></asp:TextBox>
                         </div>
                     </div>
                 </ContentTemplate>
