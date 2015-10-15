@@ -23,6 +23,8 @@ namespace ProStudCreator
             {
                 AdminView.Visible = true;
             }
+
+            // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
                 id = new int?(int.Parse(Request.QueryString["id"]));
@@ -32,6 +34,7 @@ namespace ProStudCreator
                     throw new UnauthorizedAccessException();
             }
 
+            // Project picture
             if (project != null && project.Picture != null)
             {
                 Image1.Visible = true;
@@ -42,7 +45,7 @@ namespace ProStudCreator
             {
                 ImageLabel.Visible = false;
                 Image1.Visible = false;
-            }
+            }            
 
             if (base.IsPostBack)
             {
@@ -80,12 +83,11 @@ namespace ProStudCreator
 
                 POneTeamSize.SelectedIndex = 1;
                 PTwoTeamSize.SelectedIndex = 0;
-                toggleReservationTwoVisible();   // Solves issue #12 (number of reservation fields doesn't match when creating new project)
+                toggleReservationTwoVisible();
 
                 ViewState["Types"] = projectType;
                 AddPictureLabel.Text = "Bild hinzufügen:";
                 
-                saveProject.Text = "Speichern";
                 if (id.HasValue)
                 {
                     Page.Title = "Projekt bearbeiten";
