@@ -64,7 +64,8 @@ namespace ProStudCreator
 
         public static void Submit(this Project _p)
         {
-            _p.PublishedDate = _p.ModificationDate = DateTime.Now;
+            _p.PublishedDate = DateTime.Now;
+            _p.ModificationDate = DateTime.Now;
             GenerateProjectNr(_p);
             _p.State = ProjectState.Submitted;
         }
@@ -92,10 +93,18 @@ namespace ProStudCreator
             return _p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail();
         }
 
+        public static void InitNew(this Project _p)
+        {
+            _p.Creator = ShibUser.GetEmail();
+            _p.CreateDate = DateTime.Now;
+            _p.PublishedDate = DateTime.Now;
+            _p.State = ProjectState.InProgress;
+        }
+
         public static void Publish(this Project _p)
         {
-            _p.PublishedDate = (_p.ModificationDate = DateTime.Now);
-            GenerateProjectNr(_p);
+            _p.PublishedDate = DateTime.Now;
+            _p.ModificationDate = DateTime.Now;
             _p.State = ProjectState.Published;
         }
 
