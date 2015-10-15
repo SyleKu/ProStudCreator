@@ -515,8 +515,6 @@ namespace ProStudCreator
 		
 		private string _ClientPerson;
 		
-		private bool _Refused;
-		
 		private string _Reservation1Mail;
 		
 		private string _Reservation2Mail;
@@ -609,8 +607,6 @@ namespace ProStudCreator
     partial void OnProjectNrChanged();
     partial void OnClientPersonChanging(string value);
     partial void OnClientPersonChanged();
-    partial void OnRefusedChanging(bool value);
-    partial void OnRefusedChanged();
     partial void OnReservation1MailChanging(string value);
     partial void OnReservation1MailChanged();
     partial void OnReservation2MailChanging(string value);
@@ -1383,26 +1379,6 @@ namespace ProStudCreator
 					this._ClientPerson = value;
 					this.SendPropertyChanged("ClientPerson");
 					this.OnClientPersonChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Refused", DbType="Bit NOT NULL")]
-		public bool Refused
-		{
-			get
-			{
-				return this._Refused;
-			}
-			set
-			{
-				if ((this._Refused != value))
-				{
-					this.OnRefusedChanging(value);
-					this.SendPropertyChanging();
-					this._Refused = value;
-					this.SendPropertyChanged("Refused");
-					this.OnRefusedChanged();
 				}
 			}
 		}

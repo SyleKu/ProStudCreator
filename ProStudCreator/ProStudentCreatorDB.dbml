@@ -57,7 +57,6 @@
       <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="ProjectNr" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="false" />
-      <Column Name="Refused" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Reservation1Mail" Type="System.String" DbType="NVARCHAR(100) NOT NULL" CanBeNull="false" />
       <Column Name="Reservation2Mail" Type="System.String" DbType="NVARCHAR(100) NOT NULL" CanBeNull="false" />
       <Association Name="Department_Project" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
