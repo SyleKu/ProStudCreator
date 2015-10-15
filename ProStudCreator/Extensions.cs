@@ -145,6 +145,19 @@ namespace ProStudCreator
             _p.State = ProjectState.Submitted;
         }
 
+        public static int getProjectTeamSize(this Project _p)
+        {
+            if (_p.POneTeamSize.Size2 ||
+               (_p.PTwoTeamSize != null && _p.PTwoTeamSize.Size2))
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
         public static Semester GetSemester(this Project _p)
         {
             switch(_p.State)
