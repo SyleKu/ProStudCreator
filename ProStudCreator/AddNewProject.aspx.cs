@@ -438,9 +438,10 @@ namespace ProStudCreator
                 ShibUser.GetFullName(),
                 " veröffentlicht.\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/"
             });
+            #if !DEBUG
             var smtpClient = new SmtpClient();
-            // DEBUG - SMTP server rejects mails, so currently disabled sending
-            //smtpClient.Send(mailMessage);
+            smtpClient.Send(mailMessage);
+            #endif
 
             Response.Redirect("projectlist");
         }
