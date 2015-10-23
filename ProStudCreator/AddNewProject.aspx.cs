@@ -191,20 +191,9 @@ namespace ProStudCreator
 
             Department.SelectedValue = project.Department.Id.ToString();
 
-            if (project.State == ProjectState.Published && project.PublishedDate == Semester.CurrentSemester - 1)
-            {
-                moveProjectToTheNextSemester.Visible = true;
-            }
-
-            if (project.State == ProjectState.Published && ShibUser.IsAdmin())
-            {
-                rollbackProject.Visible = true;
-            }
-
-            if (project.State == ProjectState.Submitted)
-            {
-                rollbackProject.Visible = true;
-            }
+            moveProjectToTheNextSemester.Visible = project.State == ProjectState.Published && project.PublishedDate == Semester.CurrentSemester;
+            rollbackProject.Visible = project.State == ProjectState.Published && ShibUser.IsAdmin();
+            rollbackProject.Visible = project.State == ProjectState.Submitted;
         }
 
 
