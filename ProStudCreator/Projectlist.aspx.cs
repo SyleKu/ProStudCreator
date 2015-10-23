@@ -49,17 +49,27 @@ namespace ProStudCreator
                     select getProjectSingleElement(i);
             }
 
+            if (!base.IsPostBack && Session["listFilter"] != null)
+            {
+                // Apply filter from session if loading "first time"
+                ListFilter.SelectedValue = (string)Session["listFilter"];
+            }
+            else
+            {
+                Session["listFilter"] = ListFilter.SelectedValue;
+            }
+
             AllProjects.DataSource =
-                from i in filterRelevantProjects(projects)
+                from i in filterRelevantProjects(projects, (string)Session["listFilter"])
                 select getProjectSingleElement(i);
             AllProjects.DataBind();
             CheckProjects.DataBind();
         }
 
-        private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects)
+        private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects, string filter)
         {
             IQueryable<Project> projects = allProjects;
-            switch (ListFilter.SelectedValue)
+            switch (filter)
             {
                 case "AllPastProjects":
                     projects =
