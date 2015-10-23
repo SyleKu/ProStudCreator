@@ -169,8 +169,8 @@
             </asp:UpdatePanel>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Institut:"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control" Width="160px"></asp:DropDownList>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control"></asp:DropDownList>
                 </div>
             </div>
 
