@@ -108,6 +108,7 @@ namespace ProStudCreator
                 toggleReservationTwoVisible();
             }
         }
+
         private void RetrieveProjectToEdit()
         {
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
@@ -189,11 +190,14 @@ namespace ProStudCreator
             Reservation2Mail.Text = project.Reservation2Mail;
 
             Department.SelectedValue = project.Department.Id.ToString();
+
+            if (project.State == ProjectState.Published && project.PublishedDate == Semester.CurrentSemester - 1)
+            {
+                moveProjectToTheNextSemester.Visible = true;
+            }
+
             if (project.State == ProjectState.Published && ShibUser.IsAdmin())
             {
-                if (project.PublishedDate == Semester.CurrentSemester - 1)
-                    moveProjectToTheNextSemester.Visible = true;
-
                 rollbackProject.Visible = true;
             }
 
@@ -586,6 +590,7 @@ namespace ProStudCreator
             publishProject.Visible = true;
         }
 
+        // Admin only or not?
         protected void moveProjectToTheNextSemester_Click(object sender, EventArgs e)
         {
             project.State = ProjectState.InProgress;
