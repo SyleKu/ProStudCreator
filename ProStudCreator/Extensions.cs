@@ -196,11 +196,12 @@ namespace ProStudCreator
             "([\\p{L}0-9\\-]+\\.)+" + //host name
             "[a-zA-Z0-9\\-]{2,}\\z" //TLD
         );
-        private static readonly Regex portExtender = new Regex("^:[0-9]{0,5}\\z");
-        private static readonly Regex portMatcher = new Regex("^:[0-9]{1,5}\\z");
-        private static readonly Regex invalidTLDFollower = new Regex("^[\\p{L}0-9\\-]\\z");
-        private static readonly Regex docExtender = new Regex("^/[/a-zA-Z0-9#\\?%\\(\\)\\~\\+\\-_\\.\\,\\=\\&\\;@]*\\z");
-        private static readonly Regex docShortener = new Regex("^[\\.\\,\\!\\;\\:\\?]\\z");
+        private static readonly Regex portExtender = new Regex(@"^:[0-9]{0,5}\z");
+        private static readonly Regex portMatcher = new Regex(@"^:[0-9]{1,5}\z");
+        private static readonly Regex invalidTLDFollower = new Regex(@"^[\p{L}0-9\-]\z");
+        private static readonly Regex docExtender = new Regex(@"^/[/a-zA-Z0-9#\?%\(\)\~\+\-_\.\,\=\&\;@]*\z");
+        private static readonly Regex docShortener = new Regex(@"^[\.\,\!\;\:\?]\z");
+        private static readonly Regex domainExtender = new Regex(@"^[A-z0-9\-\.]+\z");
 
         public class URLTuple
         {
@@ -265,6 +266,7 @@ namespace ProStudCreator
                             //add protocol prefix to url if available
                             var hasProtocol = false;
                             if (isValid)
+                            {
                                 if (urlStart >= 4 && "://" == word.Substring(urlStart - 3, urlStart - (urlStart - 3)))
                                 {
                                     int protocolStart = urlStart - 2;
@@ -278,6 +280,17 @@ namespace ProStudCreator
                                             isValid = false;
                                     }
                                 }
+                            }
+
+                            // Extend to end of domain name (if hyphenation happens inside hostname, e.g. top-level domain is cut off)
+                            if (isValid)
+                            {
+                                int domainEnd = urlEnd;
+                                while (domainEnd < word.Length && domainExtender.IsMatch(word.Substring(urlEnd, domainEnd + 1 - urlEnd)))
+                                    domainEnd++;
+
+                                urlEnd = domainEnd;
+                            }
 
                             //add port number
                             if (isValid)
