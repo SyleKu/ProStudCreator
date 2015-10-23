@@ -45,7 +45,7 @@ namespace ProStudCreator
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["aspnet_ProStudCreator_TEST_20140818043155ConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
