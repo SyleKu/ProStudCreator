@@ -168,9 +168,25 @@ namespace ProStudCreator
                 || (_p.UserCanEdit() && _p.State != ProjectState.Submitted && _p.State != ProjectState.Published);
         }
 
+        public static bool UserCanPublish(this Project _p)
+        {
+            return _p.State == ProjectState.Submitted && ShibUser.IsAdmin();
+        }
+
         public static bool UserCanUnpublish(this Project _p)
         {
             return _p.State == ProjectState.Published && ShibUser.IsAdmin();
+        }
+
+        public static bool UserCanRefuse(this Project _p)
+        {
+            return (_p.State == ProjectState.Submitted || _p.State == ProjectState.Published)
+                && ShibUser.IsAdmin();
+        }
+
+        public static bool UserCanSubmit(this Project _p)
+        {
+            return _p.UserCanEdit() && _p.State == ProjectState.InProgress;
         }
 
         public static bool UserCanUnsubmit(this Project _p)

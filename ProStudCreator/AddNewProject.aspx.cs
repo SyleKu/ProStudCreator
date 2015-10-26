@@ -22,10 +22,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (ShibUser.IsAdmin())
-            {
-                AdminView.Visible = true;
-            }
+            AdminView.Visible = ShibUser.IsAdmin();
 
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
@@ -34,7 +31,9 @@ namespace ProStudCreator
                 project = db.Projects.Single((Project p) => (int?)p.Id == id);
 
                 if (!project.UserCanEdit())
+                {
                     throw new UnauthorizedAccessException();
+                }
             }
 
             // Project picture
@@ -112,13 +111,7 @@ namespace ProStudCreator
         private void RetrieveProjectToEdit()
         {
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
-            saveProject.Visible = true;
             AddPictureLabel.Text = "Bild ändern:";
-            if (ShibUser.IsAdmin() && project.State == ProjectState.Submitted)
-            {
-                publishProject.Visible = true;
-                refuseProject.Visible = true;
-            }
 
             ProjectName.Text = project.Name;
             Employer.Text = project.ClientCompany;
@@ -182,7 +175,6 @@ namespace ProStudCreator
             ProblemStatementContent.Text = project.ProblemStatement;
             ReferencesContent.Text = project.References;
             RemarksContent.Text = project.Remarks;
-            submitProject.Visible = (id.HasValue && project.State == ProjectState.InProgress);
 
             Reservation1Name.Text = project.Reservation1Name;
             Reservation1Mail.Text = project.Reservation1Mail;
@@ -190,6 +182,12 @@ namespace ProStudCreator
             Reservation2Mail.Text = project.Reservation2Mail;
 
             Department.SelectedValue = project.Department.Id.ToString();
+
+            // Button visibility
+            saveProject.Visible = true;
+            submitProject.Visible = id.HasValue && project.UserCanSubmit();
+            publishProject.Visible = project.UserCanPublish();
+            refuseProject.Visible = project.UserCanRefuse();
 
             moveProjectToTheNextSemester.Visible = project.UserCanMoveToNextSemester();
             rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
