@@ -95,20 +95,20 @@ namespace ProStudCreator
                 case "InProgress":
                     projects =
                         from item in projects
-                        where item.UserIsOwner() && (item.State == ProjectState.InProgress || item.State == ProjectState.Rejected)
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (item.State == ProjectState.InProgress || item.State == ProjectState.Rejected)
                         select item;
                     break;
                 case "Submitted":
                     projects =
                         from item in projects
-                        where item.UserIsOwner() && item.State == ProjectState.Submitted
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Submitted
                         orderby item.ProjectNr
                         select item;
                     break;
                 case "Published":
                     projects =
                         from item in projects
-                        where item.UserIsOwner() && item.State == ProjectState.Published
+                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Published
                         orderby item.ProjectNr
                         select item;
                     break;
