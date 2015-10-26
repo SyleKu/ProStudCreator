@@ -83,22 +83,35 @@ namespace ProStudCreator
         public static int? GetDepartmentId()
         {
             #if DEBUG
-                return 0; // Department 0 = i4Ds
+            return 0; // Department 0 = i4Ds
+            
             #else
-                int? result;
-                using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            int? result;
+            string userOU = HttpContext.Current.Request.Headers["orgunit-dn"];
+
+            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            {
+                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => userOU.Contains(d.OUCode));
+                if (dep == null)
                 {
-                    Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
-                    if (dep == null)
+                    // TODO Replace makeshift fix for "Studiengang Informatik" users
+                    if (userOU.Contains(",OU=62_I,"))
                     {
-                        result = null;
+                        result = 0; // Default to i4Ds. Could be defined by user somehow.
                     }
                     else
                     {
-                        result = new int?(dep.Id);
+                        result = null;
                     }
+
+                    
                 }
-                return result;
+                else
+                {
+                    result = new int?(dep.Id);
+                }
+            }
+            return result;
             #endif
         }
         public static string GetDepartmentName()
