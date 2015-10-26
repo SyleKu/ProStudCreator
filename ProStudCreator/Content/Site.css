@@ -209,7 +209,7 @@ marginLeftZero input[type="email"], input[type="submit"] {
     max-width: 580px !important;
 }
 
-.publishProject {
+.publishProject, .greenButton {
     background-color: #A9F5A9;
 }
 

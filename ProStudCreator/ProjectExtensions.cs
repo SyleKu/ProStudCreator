@@ -109,16 +109,6 @@ namespace ProStudCreator
             _p.State = ProjectState.Submitted;
         }
 
-        public static void MoveToNextSemester(this Project _p)
-        {
-            if (!_p.UserCanMoveToNextSemester())
-                throw new UnauthorizedAccessException();
-
-            _p.State = ProjectState.InProgress;
-            _p.PublishedDate = DateTime.Now;
-            _p.ModificationDate = DateTime.Now;
-        }
-
         #endregion
 
         #region Getters
@@ -166,12 +156,6 @@ namespace ProStudCreator
             return (_p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail());
         }
 
-        public static bool UserCanMoveToNextSemester(this Project _p)
-        {
-            return ShibUser.IsAdmin()
-                || (_p.UserCanEdit() && _p.State != ProjectState.Submitted && _p.State != ProjectState.Published);
-        }
-
         public static bool UserCanPublish(this Project _p)
         {
             return _p.State == ProjectState.Submitted && ShibUser.IsAdmin();
@@ -190,7 +174,7 @@ namespace ProStudCreator
 
         public static bool UserCanSubmit(this Project _p)
         {
-            return _p.UserCanEdit() && _p.State == ProjectState.InProgress;
+            return _p.UserCanEdit() && (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected);
         }
 
         public static bool UserCanUnsubmit(this Project _p)

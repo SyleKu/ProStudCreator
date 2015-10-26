@@ -188,8 +188,6 @@ namespace ProStudCreator
             submitProject.Visible = id.HasValue && project.UserCanSubmit();
             publishProject.Visible = project.UserCanPublish();
             refuseProject.Visible = project.UserCanReject();
-
-            moveProjectToTheNextSemester.Visible = project.UserCanMoveToNextSemester();
             rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
         }
 
@@ -506,6 +504,7 @@ namespace ProStudCreator
             project.Publish();
             db.SubmitChanges();
 
+            #if !DEBUG
             // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
@@ -523,7 +522,7 @@ namespace ProStudCreator
                 ShibUser.GetFullName(),
                 " veröffentlicht.\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/"
             });
-            #if !DEBUG
+            
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
             #endif
@@ -552,6 +551,7 @@ namespace ProStudCreator
             project.Reject();
             db.SubmitChanges();
 
+            #if !DEBUG
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
             if (project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
@@ -563,7 +563,7 @@ namespace ProStudCreator
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
-
+            #endif
             Response.Redirect("projectlist");
         }
 
@@ -573,14 +573,6 @@ namespace ProStudCreator
             refusedReason.Visible = false;
             refuseProject.Visible = true;
             publishProject.Visible = true;
-        }
-
-        // Admin only or not?
-        protected void moveProjectToTheNextSemester_Click(object sender, EventArgs e)
-        {
-            project.MoveToNextSemester();
-            db.SubmitChanges();
-            Response.Redirect("projectlist");
         }
 
         protected void rollbackProject_Click(object sender, EventArgs e)
@@ -597,9 +589,9 @@ namespace ProStudCreator
             Response.Redirect("projectlist");
         }
 
-        #endregion
+#endregion
 
-        #region Other view event handlers
+#region Other view event handlers
 
         protected void deleteImage_Click(object sender, EventArgs e)
         {
@@ -613,7 +605,7 @@ namespace ProStudCreator
             toggleReservationTwoVisible();
         }
 
-        #endregion
+#endregion
 
     }
 }
