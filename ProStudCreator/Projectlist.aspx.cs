@@ -148,7 +148,7 @@ namespace ProStudCreator
                         e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
                     }
                 }
-                else if (!project.HasEditPermission())
+                else if (!project.UserCanEdit())
                 {
                     e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
                     e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
