@@ -158,8 +158,12 @@ namespace ProStudCreator
 
         public static bool UserCanEdit(this Project _p)
         {
-            return ShibUser.IsAdmin()
-                || (_p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail());
+            return ShibUser.IsAdmin() || _p.UserIsOwner();
+        }
+
+        public static bool UserIsOwner(this Project _p)
+        {
+            return (_p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail());
         }
 
         public static bool UserCanMoveToNextSemester(this Project _p)
@@ -178,7 +182,7 @@ namespace ProStudCreator
             return _p.State == ProjectState.Published && ShibUser.IsAdmin();
         }
 
-        public static bool UserCanRefuse(this Project _p)
+        public static bool UserCanReject(this Project _p)
         {
             return (_p.State == ProjectState.Submitted || _p.State == ProjectState.Published)
                 && ShibUser.IsAdmin();
