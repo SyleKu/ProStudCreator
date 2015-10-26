@@ -187,7 +187,7 @@ namespace ProStudCreator
             saveProject.Visible = true;
             submitProject.Visible = id.HasValue && project.UserCanSubmit();
             publishProject.Visible = project.UserCanPublish();
-            refuseProject.Visible = project.UserCanRefuse();
+            refuseProject.Visible = project.UserCanReject();
 
             moveProjectToTheNextSemester.Visible = project.UserCanMoveToNextSemester();
             rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
