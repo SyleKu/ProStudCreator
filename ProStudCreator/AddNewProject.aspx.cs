@@ -33,7 +33,7 @@ namespace ProStudCreator
                 id = new int?(int.Parse(Request.QueryString["id"]));
                 project = db.Projects.Single((Project p) => (int?)p.Id == id);
 
-                if (!ShibUser.IsAdmin() && project.Creator != ShibUser.GetEmail() && project.ClientMail != ShibUser.GetEmail() && project.Advisor1Mail != ShibUser.GetEmail() && project.Advisor2Mail != ShibUser.GetEmail())
+                if (!project.UserCanEdit())
                     throw new UnauthorizedAccessException();
             }
 
@@ -191,9 +191,8 @@ namespace ProStudCreator
 
             Department.SelectedValue = project.Department.Id.ToString();
 
-            moveProjectToTheNextSemester.Visible = project.State == ProjectState.Published && project.PublishedDate == Semester.CurrentSemester;
-            rollbackProject.Visible = project.State == ProjectState.Published && ShibUser.IsAdmin();
-            rollbackProject.Visible = project.State == ProjectState.Submitted;
+            moveProjectToTheNextSemester.Visible = project.UserCanMoveToNextSemester();
+            rollbackProject.Visible = project.UserCanUnpublish();
         }
 
 
@@ -210,8 +209,7 @@ namespace ProStudCreator
             }
             else
             {
-                // Allow edit for authorised users only
-                if (!ShibUser.IsAdmin() && project.Creator != ShibUser.GetEmail() && project.ClientMail != ShibUser.GetEmail() && project.Advisor1Mail != ShibUser.GetEmail() && project.Advisor2Mail != ShibUser.GetEmail())
+                if (!project.UserCanEdit())
                     throw new UnauthorizedAccessException();
             }
             project.ModificationDate = DateTime.Now;
@@ -582,24 +580,22 @@ namespace ProStudCreator
         // Admin only or not?
         protected void moveProjectToTheNextSemester_Click(object sender, EventArgs e)
         {
-            project.State = ProjectState.InProgress;
-            project.PublishedDate = (project.ModificationDate = DateTime.Now);
+            project.MoveToNextSemester();
             db.SubmitChanges();
             Response.Redirect("projectlist");
         }
 
         protected void rollbackProject_Click(object sender, EventArgs e)
         {
-            if (project.State == ProjectState.Published && ShibUser.IsAdmin())
+            if (project.UserCanUnpublish())
             {
                 project.Unpublish();
-                db.SubmitChanges();
             }
-            else
+            else if (project.UserCanUnsubmit())
             {
                 project.Unsubmit();
-                db.SubmitChanges();
             }
+            db.SubmitChanges();
             Response.Redirect("projectlist");
         }
 
