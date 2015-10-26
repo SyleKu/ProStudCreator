@@ -192,7 +192,7 @@ namespace ProStudCreator
             Department.SelectedValue = project.Department.Id.ToString();
 
             moveProjectToTheNextSemester.Visible = project.UserCanMoveToNextSemester();
-            rollbackProject.Visible = project.UserCanUnpublish();
+            rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
         }
 
 
