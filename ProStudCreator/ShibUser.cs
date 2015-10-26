@@ -6,7 +6,6 @@ namespace ProStudCreator
 {
     public static class ShibUser
     {
-
         public static bool IsAuthenticated()
         {
             #if DEBUG
@@ -103,8 +102,6 @@ namespace ProStudCreator
                     {
                         result = null;
                     }
-
-                    
                 }
                 else
                 {
@@ -117,22 +114,22 @@ namespace ProStudCreator
         public static string GetDepartmentName()
         {
             #if DEBUG
-                return null;
+            return null;
             #else
-                string result;
-                using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            string result;
+            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            {
+                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
+                if (dep == null)
                 {
-                    Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
-                    if (dep == null)
-                    {
-                        result = null;
-                    }
-                    else
-                    {
-                        result = dep.DepartmentName;
-                    }
+                    result = null;
                 }
-                return result;
+                else
+                {
+                    result = dep.DepartmentName;
+                }
+            }
+            return result;
             #endif
         }
 
