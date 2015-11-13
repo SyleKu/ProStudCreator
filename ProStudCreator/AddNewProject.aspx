@@ -1,6 +1,27 @@
 ﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
 
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+        var hasUnsavedChanges = false;
+
+        $(document).ready(function () {
+            // Attach event handlers once page is loaded
+            $(":input").change(function () {
+                hasUnsavedChanges = true;
+            });
+            $("#projectTypes :input").click(function () {
+                hasUnsavedChanges = true;
+            });
+        });
+
+        $(window).on('beforeunload', function () {
+            if (hasUnsavedChanges) {
+                return "Änderungen wurden noch nicht gespeichert. Seite wirklich verlassen?";
+            }
+        });
+    </script>
+
     <div id="refusedReason" class="well newProjectSettings non-selectable" runat="server" visible="false">
         <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
         <div class="form-group">
@@ -62,7 +83,7 @@
             <asp:UpdatePanel runat="server" class="form-group">
                 <ContentTemplate>
                     <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Themengebiet:"></asp:Label>
-                    <div class="col-sm-9">
+                    <div id="projectTypes" class="col-sm-9">
                         <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ToolTip="Design, Usability, User Interfaces, ..." ImageUrl="pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" CausesValidation="false" />
                         <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ToolTip="Hardwarenah, Embedded, Low-level, ..." ImageUrl="pictures/projectTypHWUnchecked.png" OnClick="HW_Click" CausesValidation="false" />
                         <asp:ImageButton CssClass="img-rounded" ID="CGIP" Height="60px" runat="server" ToolTip="Computergrafik, 3D, Bildverarbeitung, ..." ImageUrl="pictures/projectTypCGIPUnchecked.png" OnClick="CGIP_Click" CausesValidation="false" />
@@ -180,12 +201,12 @@
 
         </div>
         <div style="text-align:right;">
-            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClientClick="return confirm('Wirklich veröffentlichen?');" OnClick="publishProject_Click"></asp:Button>
-            <asp:Button runat="server" ID="refuseProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click"></asp:Button>
-            <asp:Button runat="server" ID="rollbackProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClientClick="return confirm('Projekt wirklich zurückziehen?');" OnClick="rollbackProject_Click"></asp:Button>
-            <asp:Button runat="server" ID="submitProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClientClick="return confirm('Dieses Projekt einreichen?');" OnClick="submitProject_Click"></asp:Button>
-            <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>
-            <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern"></asp:Button>
+            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="publishProject_Click" OnClientClick="var ok=confirm('Projekt wirklich veröffentlichen?'), if (ok) { hasUnsavedChanges = false; } return ok;"></asp:Button>
+            <asp:Button runat="server" ID="refuseProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="var ok=confirm('Projekt wirklich ablehnen?'); if (ok) { hasUnsavedChanges = false; } return ok;"></asp:Button>
+            <asp:Button runat="server" ID="rollbackProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="var ok=confirm('Projekt wirklich zurückziehen?'); if (ok) { hasUnsavedChanges = false; } return ok;"></asp:Button>
+            <asp:Button runat="server" ID="submitProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="var ok=confirm('Dieses Projekt einreichen?'); if (ok) { hasUnsavedChanges = false; } return ok;"></asp:Button>
+            <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+            <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
             
             <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
         </div>
