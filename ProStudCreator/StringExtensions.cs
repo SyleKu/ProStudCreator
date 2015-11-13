@@ -64,6 +64,8 @@ namespace ProStudCreator
 
         public static string FixupParagraph(this string _p)
         {
+            _p = _p.Normalize(); // Convert to composite characters (e.g. a¨ -> ä). http://unicode.org/reports/tr15/
+
             _p = _p.Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«', '"').Replace('»', '"').Replace('¬', ' ')
                 .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—', '-').Replace('–', '-').Replace("•", "-");
 
