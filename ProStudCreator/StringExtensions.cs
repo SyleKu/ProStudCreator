@@ -66,14 +66,16 @@ namespace ProStudCreator
         {
             _p = _p.Normalize(); // Convert to composite characters (e.g. a¨ -> ä). http://unicode.org/reports/tr15/
 
-            _p = _p.Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«', '"').Replace('»', '"').Replace('¬', ' ')
+            _p = _p.Replace("\r\n", "\n").Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«', '"').Replace('»', '"').Replace('¬', ' ')
                 .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—', '-').Replace('–', '-').Replace("•", "-");
 
             for (string oldP = null; oldP != _p;)
             {
                 oldP = _p;
-                _p = _p.Replace("\n\n", "\n").Replace("  ", " ").Replace(" ,", ",").Replace("( ", "(").Replace(" )", ")").Replace(" /", "/").Replace("/ ", "/").Replace(" %", "%").Trim();
+                _p = _p.Replace("  ", " ").Replace(" ,", ",").Replace("( ", "(").Replace(" )", ")").Replace(" /", "/").Replace("/ ", "/").Replace(" %", "%").Trim();
             }
+
+            _p = Regex.Replace(_p, @"(\s*\n\s*){3,}", "\n\n");   // Limit to 2 consecutive newlines. Also include whitespace surrounding the empty lines.
 
             return _p;
         }
