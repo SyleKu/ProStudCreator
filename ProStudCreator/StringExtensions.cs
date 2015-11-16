@@ -410,11 +410,17 @@ namespace ProStudCreator
 
                 if (currentList == null)
                 {
+                    if (emptyLine.IsMatch(currentLine))
+                    {
+                        para.Add("\n");
+                    }
+
                     para.SpacingAfter = 2f;
                     paragraphs.Add(para);
                 }                    
                 else
                 {
+                    // We're in a list, store paragraph in the list for outputting later
                     currentList.First = 1 + listIndexOffset - currentList.Size; // Maintain user's list index
                     currentList.Add(new ListItem(para));
                 }
