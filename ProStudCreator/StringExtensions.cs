@@ -103,9 +103,9 @@ namespace ProStudCreator
         private static readonly Regex domainExtender = new Regex(@"^[A-z0-9\-\.]+\z");
 
         private static readonly Regex emptyLine = new Regex(@"^\s*\z");
-        private static readonly Regex listUnordered = new Regex(@"^\s*([\*\-])\s*");   // Examples: - List Item, * List Item
-        private static readonly Regex listAlpha = new Regex(@"^\s*((?<index>[A-z])[\)\.])\s*");    // Examples: a) List Item, A. List Item
-        private static readonly Regex listNumeric = new Regex(@"^\s*((?<index>\d+)[\)\.])\s*");  // Examples: 1) List Item, 2. List Item
+        private static readonly Regex listUnordered = new Regex(@"^\s*([\*\-])");               // Examples: - List Item, * List Item
+        private static readonly Regex listAlpha = new Regex(@"^\s*((?<index>[A-z])[\)\.])");    // Examples: a) List Item, A. List Item
+        private static readonly Regex listNumeric = new Regex(@"^\s*((?<index>\d+)[\)\.])");    // Examples: 1) List Item, 2. List Item
 
         public class URLTuple
         {
@@ -332,14 +332,12 @@ namespace ProStudCreator
             linkStyle.Color = BaseColor.BLUE;
             linkStyle.SetStyle("underline");
 
-            var lines = _paragraph.Split('\n');
-
             List currentList = null;
+            var lines = _paragraph.Split('\n');
+            
             foreach (var line in lines)
             {
                 var para = new Paragraph();
-                para.SpacingAfter = 2f;
-
                 var currentLine = line;
 
                 int listIndexOffset = 0;
@@ -387,42 +385,39 @@ namespace ProStudCreator
                 }
                 else
                 {
+                    // This line isn't part of a list.
+                    // If we just reached the end of a list, save it & start a new paragraph.
                     if (currentList != null)
                     {
-                        // End of list
-                        para.Add("\n");
                         para.Add(currentList);
+                        paragraphs.Add(para);
+                        para = new Paragraph();
                         currentList = null;
                     }
                 }
-
-                // If we're in a list, add item to it
-                if (currentList != null)
+               
+                foreach (var chk in currentLine.RecognizeURLs())
                 {
-                    var c = new Chunk(currentLine, _font);
+                    var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);
                     if (_hyph != null)
                         c.SetHyphenation(_hyph);
 
-                    currentList.First = 1 + listIndexOffset - currentList.Size;
-                    currentList.Add(new ListItem(c));
+                    if (chk.URL == null)
+                        para.Add(c);
+                    else
+                        para.Add(new Anchor(c) { Reference = chk.URL });
                 }
-                // Otherwise, just process text (hyphenation, URLs)
+
+                if (currentList == null)
+                {
+                    para.SpacingAfter = 2f;
+                    paragraphs.Add(para);
+                }                    
                 else
-                { 
-                    foreach (var chk in currentLine.RecognizeURLs())
-                    {
-                        var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);
-                        if (_hyph != null)
-                            c.SetHyphenation(_hyph);
-
-                        if (chk.URL == null)
-                            para.Add(c);
-                        else
-                            para.Add(new Anchor(c) { Reference = chk.URL });
-                    }
+                {
+                    currentList.First = 1 + listIndexOffset - currentList.Size; // Maintain user's list index
+                    currentList.Add(new ListItem(para));
                 }
-
-                paragraphs.Add(para);
             }
 
             // Last line -> List finished
