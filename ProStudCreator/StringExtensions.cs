@@ -102,6 +102,11 @@ namespace ProStudCreator
         private static readonly Regex docShortener = new Regex(@"^[\.\,\!\;\:\?]\z");
         private static readonly Regex domainExtender = new Regex(@"^[A-z0-9\-\.]+\z");
 
+        private static readonly Regex emptyLine = new Regex(@"^\s*\z");
+        private static readonly Regex listUnordered = new Regex(@"^\s*([\*\-])");   // Examples: - List Item, * List Item
+        private static readonly Regex listAlpha = new Regex(@"^\s*([A-z]+[\)\.])");    // Examples: a) List Item, A. List Item
+        private static readonly Regex listNumeric = new Regex(@"^\s*(\d+[\)\.])");  // Examples: 1) List Item, 2. List Item
+
         public class URLTuple
         {
             public string Text;
@@ -329,12 +334,14 @@ namespace ProStudCreator
 
             var lines = _paragraph.Split('\n');
 
-            List currentList=null;
-            foreach(var line in lines)
+            List currentList = null;
+            foreach (var line in lines)
             {
                 var currentLine = line;
-                var currentLineIsList = line.StartsWith("* ") || line.StartsWith("- ");
-                if (currentLineIsList)
+
+                // Check if line represents a list.
+                // If so, start new list of corresponding type (unordered, alphabetical, numerical)
+                if (listUnordered.IsMatch(currentLine))
                 {
                     currentLine = currentLine.TrimStart('*', '-', ' ');
                     if (currentList == null)
@@ -344,13 +351,41 @@ namespace ProStudCreator
                         currentList.IndentationLeft = 5f;
                     }
                 }
+                else if (listAlpha.IsMatch(currentLine))
+                {
+                    currentLine = listAlpha.Replace(currentLine, "");
+
+                    if (currentList == null)
+                    {
+                        currentList = new List(false, List.ALPHABETICAL, 10f);
+                        currentList.Lowercase = true;
+                        currentList.PostSymbol = ")";
+                        currentList.IndentationLeft = 5f;
+                    }
+                }
+                else if (listNumeric.IsMatch(currentLine))
+                {
+                    currentLine = listNumeric.Replace(currentLine, "");
+
+                    if (currentList == null)
+                    {
+                        currentList = new List(true, false, 10f);
+                        currentList.IndentationLeft = 5f;
+                    }
+                }
                 else
                 {
-                    text.Add(currentList);
-                    currentList = null;
+                    if (currentList != null)
+                    {
+                        // End of list
+                        text.Add("\n");
+                        text.Add(currentList);
+                        currentList = null;
+                    }
                 }
 
-                if(currentList!=null)
+                // If we're in a list, add item to it
+                if (currentList != null)
                 {
                     var c = new Chunk(currentLine, _font);
                     if (_hyph != null)
@@ -358,28 +393,23 @@ namespace ProStudCreator
 
                     currentList.Add(new ListItem(c));
                 }
+                // Otherwise, just process text (hyphenation, URLs)
                 else
+                { 
                     foreach (var chk in currentLine.RecognizeURLs())
                     {
                         var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);
                         if (_hyph != null)
                             c.SetHyphenation(_hyph);
 
-                        if (currentList == null)
-                        {
-                            if (chk.URL == null)
-                                text.Add(c);
-                            else
-                                text.Add(new Anchor(c) { Reference = chk.URL });
-                        }
+                        if (emptyLine.IsMatch(chk.Text))
+                            text.Add("\n");
+                        if (chk.URL == null)
+                            text.Add(c);
                         else
-                        {
-                            if (chk.URL == null)
-                                currentList.Add(new ListItem(c));
-                            else
-                                currentList.Add(new ListItem(new Anchor(c) { Reference = chk.URL }));
-                        }
+                            text.Add(new Anchor(c) { Reference = chk.URL });
                     }
+                }
             }
 
             if (currentList != null)
