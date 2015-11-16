@@ -164,12 +164,15 @@ namespace ProStudCreator
                 });
 
                 
-                var text = proj.InitialPosition.ToLinkedParagraph(fontRegular,hyph);
-                text.SpacingAfter = 1f;
-                text.SetLeading(0.0f, LINE_HEIGHT);
-                text.Alignment = Element.ALIGN_JUSTIFIED;
-                text.IndentationRight = 10f;
-                document.Add(text);
+                foreach(var text in proj.InitialPosition.ToLinkedParagraph(fontRegular,hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+
+                }
             }
             if (proj.Objective != "")
             {
@@ -180,11 +183,13 @@ namespace ProStudCreator
                 });
 
 
-                var text = proj.Objective.ToLinkedParagraph(fontRegular, hyph);
-                text.SetLeading(0.0f, LINE_HEIGHT);
-                text.Alignment = Element.ALIGN_JUSTIFIED;
-                text.IndentationRight = 10f;
-                document.Add(text);
+                foreach (var text in proj.Objective.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+                }
             }
             if (proj.ProblemStatement != "")
             {
@@ -194,12 +199,15 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.ProblemStatement.ToLinkedParagraph(fontRegular, hyph);
-                text.SpacingAfter = 1f;
-                text.SetLeading(0.0f, 1.0f);
-                text.Alignment = Element.ALIGN_JUSTIFIED;
-                text.IndentationRight = 10f;
-                document.Add(text);
+                foreach (var text in proj.ProblemStatement.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, 1.0f);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+                }
+                
             }
             if (proj.References != "")
             {
@@ -209,12 +217,14 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.References.ToLinkedParagraph(fontRegular, hyph);
-                text.SpacingAfter = 1f;
-                text.SetLeading(0.0f, LINE_HEIGHT);
-                text.Alignment = Element.ALIGN_JUSTIFIED;
-                text.IndentationRight = 10f;
-                document.Add(text);
+                foreach (var text in proj.References.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+                }
             }
             if (proj.Remarks != "")
             {
@@ -224,12 +234,14 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = proj.Remarks.ToLinkedParagraph(fontRegular, hyph);
-                text.SpacingAfter = 1f;
-                text.SetLeading(0.0f, LINE_HEIGHT);
-                text.Alignment = Element.ALIGN_JUSTIFIED;
-                text.IndentationRight = 10f;
-                document.Add(text);
+                foreach (var text in proj.Remarks.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+                }
             }
 
             if (proj.Reservation1Name != "")

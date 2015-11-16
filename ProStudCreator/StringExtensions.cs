@@ -103,9 +103,9 @@ namespace ProStudCreator
         private static readonly Regex domainExtender = new Regex(@"^[A-z0-9\-\.]+\z");
 
         private static readonly Regex emptyLine = new Regex(@"^\s*\z");
-        private static readonly Regex listUnordered = new Regex(@"^\s*([\*\-])");   // Examples: - List Item, * List Item
-        private static readonly Regex listAlpha = new Regex(@"^\s*([A-z]+[\)\.])");    // Examples: a) List Item, A. List Item
-        private static readonly Regex listNumeric = new Regex(@"^\s*(\d+[\)\.])");  // Examples: 1) List Item, 2. List Item
+        private static readonly Regex listUnordered = new Regex(@"^\s*([\*\-])\s*");   // Examples: - List Item, * List Item
+        private static readonly Regex listAlpha = new Regex(@"^\s*((?<index>[A-z])[\)\.])\s*");    // Examples: a) List Item, A. List Item
+        private static readonly Regex listNumeric = new Regex(@"^\s*((?<index>\d+)[\)\.])\s*");  // Examples: 1) List Item, 2. List Item
 
         public class URLTuple
         {
@@ -324,26 +324,32 @@ namespace ProStudCreator
             return _paragraph;
         }
 
-        public static Paragraph ToLinkedParagraph(this string _paragraph, Font _font, HyphenationAuto _hyph = null)
+        public static IEnumerable<Paragraph> ToLinkedParagraph(this string _paragraph, Font _font, HyphenationAuto _hyph = null)
         {
+            var paragraphs = new List<Paragraph>();
+
             var linkStyle = new Font(_font);
             linkStyle.Color = BaseColor.BLUE;
             linkStyle.SetStyle("underline");
-
-            var text = new Paragraph();
 
             var lines = _paragraph.Split('\n');
 
             List currentList = null;
             foreach (var line in lines)
             {
+                var para = new Paragraph();
+                para.SpacingAfter = 2f;
+
                 var currentLine = line;
+
+                int listIndexOffset = 0;
 
                 // Check if line represents a list.
                 // If so, start new list of corresponding type (unordered, alphabetical, numerical)
                 if (listUnordered.IsMatch(currentLine))
                 {
                     currentLine = currentLine.TrimStart('*', '-', ' ');
+
                     if (currentList == null)
                     {
                         currentList = new List(List.UNORDERED, 10f);
@@ -353,6 +359,9 @@ namespace ProStudCreator
                 }
                 else if (listAlpha.IsMatch(currentLine))
                 {
+                    char itemSymbol = listAlpha.Match(currentLine).Groups["index"].Value.ToLower().ToCharArray()[0];
+                    listIndexOffset = itemSymbol - 'a';
+
                     currentLine = listAlpha.Replace(currentLine, "");
 
                     if (currentList == null)
@@ -365,6 +374,9 @@ namespace ProStudCreator
                 }
                 else if (listNumeric.IsMatch(currentLine))
                 {
+                    int itemSymbol = int.Parse(listNumeric.Match(currentLine).Groups["index"].Value);
+                    listIndexOffset = itemSymbol - 1;
+
                     currentLine = listNumeric.Replace(currentLine, "");
 
                     if (currentList == null)
@@ -378,8 +390,8 @@ namespace ProStudCreator
                     if (currentList != null)
                     {
                         // End of list
-                        text.Add("\n");
-                        text.Add(currentList);
+                        para.Add("\n");
+                        para.Add(currentList);
                         currentList = null;
                     }
                 }
@@ -391,6 +403,7 @@ namespace ProStudCreator
                     if (_hyph != null)
                         c.SetHyphenation(_hyph);
 
+                    currentList.First = 1 + listIndexOffset - currentList.Size;
                     currentList.Add(new ListItem(c));
                 }
                 // Otherwise, just process text (hyphenation, URLs)
@@ -402,23 +415,25 @@ namespace ProStudCreator
                         if (_hyph != null)
                             c.SetHyphenation(_hyph);
 
-                        if (emptyLine.IsMatch(chk.Text))
-                            text.Add("\n");
                         if (chk.URL == null)
-                            text.Add(c);
+                            para.Add(c);
                         else
-                            text.Add(new Anchor(c) { Reference = chk.URL });
+                            para.Add(new Anchor(c) { Reference = chk.URL });
                     }
                 }
+
+                paragraphs.Add(para);
             }
 
+            // Last line -> List finished
             if (currentList != null)
             {
-                text.Add(currentList);
-                currentList = null;
+                var para = new Paragraph();
+                para.Add(currentList);
+                paragraphs.Add(para);
             }
 
-            return text;
+            return paragraphs;
         }
     }
 }
