@@ -17,14 +17,39 @@
             return ok;
         }
 
+        // Attach event handlers once page is loaded
         $(document).ready(function () {
-            // Attach event handlers once page is loaded
             $(":input").change(function () {
                 hasUnsavedChanges = true;
             });
             $("#projectTypes :input").click(function () {
                 hasUnsavedChanges = true;
             });
+
+            // Textarea max. length checks
+            $("textarea[maxlength]").after(function () {
+                return '<span class="text-muted text-right"><span id="' + $(this).attr('id') + '_len">' + $(this).val().length + "</span> / " + $(this).attr('maxlength') + "</span>";
+            });
+            $("textarea[maxlength]").on("change paste keyup", function () {
+
+                var currLen = $(this).val().length;
+                var maxLen = $(this).attr('maxlength');
+
+                var lengthDisp = $("#" + $(this).attr('id') + "_len");
+                if (currLen >= maxLen) {
+                    lengthDisp.parent().addClass("alert-warning");
+                } else {
+                    lengthDisp.parent().removeClass("alert-warning");
+                }
+
+                lengthDisp.text(currLen);
+
+                // textarea maxlength is supported by all modern browsers. For archaic browsers, uncomment:
+                //if (currLen > maxLen) {
+                //    $(this).val( $(this).val().substring(0, maxLen) );
+                //}                
+            });
+
         });
 
         $(window).on('beforeunload', function () {
@@ -128,7 +153,7 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">
