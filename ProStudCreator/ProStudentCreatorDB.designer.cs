@@ -45,7 +45,7 @@ namespace ProStudCreator
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["aspnet_ProStudCreator_TEST_20140818043155ConnectionString"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -259,6 +259,8 @@ namespace ProStudCreator
 		
 		private bool _Size2;
 		
+		private string _ExportValue;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -275,6 +277,8 @@ namespace ProStudCreator
     partial void OnSize1Changed();
     partial void OnSize2Changing(bool value);
     partial void OnSize2Changed();
+    partial void OnExportValueChanging(string value);
+    partial void OnExportValueChanged();
     #endregion
 		
 		public ProjectTeamSize()
@@ -360,6 +364,26 @@ namespace ProStudCreator
 					this._Size2 = value;
 					this.SendPropertyChanged("Size2");
 					this.OnSize2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExportValue", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string ExportValue
+		{
+			get
+			{
+				return this._ExportValue;
+			}
+			set
+			{
+				if ((this._ExportValue != value))
+				{
+					this.OnExportValueChanging(value);
+					this.SendPropertyChanging();
+					this._ExportValue = value;
+					this.SendPropertyChanged("ExportValue");
+					this.OnExportValueChanged();
 				}
 			}
 		}
@@ -1628,6 +1652,8 @@ namespace ProStudCreator
 		
 		private bool _P6;
 		
+		private string _ExportValue;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -1644,6 +1670,8 @@ namespace ProStudCreator
     partial void OnP5Changed();
     partial void OnP6Changing(bool value);
     partial void OnP6Changed();
+    partial void OnExportValueChanging(string value);
+    partial void OnExportValueChanged();
     #endregion
 		
 		public ProjectType()
@@ -1729,6 +1757,26 @@ namespace ProStudCreator
 					this._P6 = value;
 					this.SendPropertyChanged("P6");
 					this.OnP6Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExportValue", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string ExportValue
+		{
+			get
+			{
+				return this._ExportValue;
+			}
+			set
+			{
+				if ((this._ExportValue != value))
+				{
+					this.OnExportValueChanging(value);
+					this.SendPropertyChanging();
+					this._ExportValue = value;
+					this.SendPropertyChanged("ExportValue");
+					this.OnExportValueChanged();
 				}
 			}
 		}

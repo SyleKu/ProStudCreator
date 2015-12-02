@@ -231,11 +231,11 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="PdfCreator.cs" />
+    <Compile Include="ProjectExtensions.cs" />
     <Compile Include="Projectlist.aspx.cs">
       <DependentUpon>Projectlist.aspx</DependentUpon>
     </Compile>
@@ -259,6 +259,7 @@
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
