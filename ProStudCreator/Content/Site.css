@@ -20,6 +20,19 @@ body {
     white-space: normal;
 }
 
+.termine td, .termine th {
+    padding-right:16px;
+    vertical-align:top;
+}
+
+
+ol li {
+    margin-bottom:8px;
+}
+
+    ol li ul li {
+        margin-bottom:initial;
+    }
 
 
 .nowrap
@@ -134,8 +147,28 @@ img.imageHeight {
 }
 
 
+.doc {
+    background:url("doc.png") 0.1em 50% no-repeat;
+    background-size:1em 1em;
+    padding-left:1.2em;
+}
+
+.ppt {
+    background:url("ppt.png") 0.1em 50% no-repeat;
+    background-size:1em 1em;
+    padding-left:1.2em;
+}
+
+
+
 .pdf {
     background:url("pdf.png") 0.1em 50% no-repeat;
+    background-size:1em 1em;
+    padding-left:1.2em;
+}
+
+.xls {
+    background:url("xls.png") 0.1em 50% no-repeat;
     background-size:1em 1em;
     padding-left:1.2em;
 }
@@ -248,8 +281,22 @@ marginLeftZero input[type="email"], input[type="submit"] {
 }
 
 h4 {
-    margin-top:40px;
+    margin-top:64px;
     font-style:italic;
+}
+
+h4:first-of-type {
+    margin-top:initial;
+}
+
+
+h3 {
+    margin-top:64px;
+    font-style:italic;
+}
+
+h3:first-of-type {
+    margin-top:initial;
 }
 
 small {

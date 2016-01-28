@@ -114,16 +114,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="About.aspx" />
     <Content Include="AddNewProject.aspx" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155.mdf" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155_log.ldf">
       <DependentUpon>aspnet-ProStudCreator-20140818043155.mdf</DependentUpon>
     </Content>
-    <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\doc.png" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\ppt.png" />
+    <Content Include="Content\xls.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -137,6 +138,12 @@
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\Bewertungsbogen_P5_P9.xlsx" />
+    <Content Include="Content\Externe_Projekteingabe.pdf" />
+    <Content Include="Content\Leitfaden_Berichte_4.0.pdf" />
+    <Content Include="Content\P5_P6_Guide_20151117.pdf" />
+    <Content Include="Content\Poster_TemplateI_150923.pptx" />
+    <Content Include="Content\Vorlage_Bericht_2016.dot" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>
@@ -184,7 +191,6 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
@@ -209,28 +215,7 @@
       <DependentUpon>AddNewProject.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="About.aspx.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="About.aspx.designer.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-    </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

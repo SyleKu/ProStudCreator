@@ -3,10 +3,10 @@ namespace ProStudCreator
 {
     public enum ProjectState
     {
-        InProgress,
-        Submitted,
-        Rejected,
-        Published,
-        Deleted
+        InProgress=0,
+        Submitted=1,
+        Rejected=2,
+        Published=3,
+        Deleted=4
     }
 }
