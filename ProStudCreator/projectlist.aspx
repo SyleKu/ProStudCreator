@@ -277,5 +277,10 @@
         <p>
             Wir organisieren die Experten für Dich, etwa zur Halbzeit des Projekts.
         </p>
+        <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
+        <p>
+            Ihr könnt für eure Studierenden über <a href="http://web.fhnw.ch/plattformen/cs-support/bestellformulare">http://web.fhnw.ch/plattformen/cs-support/bestellformulare</a>
+            diverse Ressourcen bestellen. Es stehen Git- und SVN-Repositories zur Verfügung. Selbst können die Studierenden keine Ressourcen beantragen.
+        </p>
     </div>
 </asp:Content>
