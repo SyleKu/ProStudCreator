@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Ablauf.aspx" />
     <Content Include="AddNewProject.aspx" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155.mdf" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155_log.ldf">
@@ -125,6 +126,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\ppt.png" />
     <Content Include="Content\xls.png" />
+    <Content Include="FAQ.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -194,6 +196,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="Termine.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -207,6 +210,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ablauf.aspx.cs">
+      <DependentUpon>Ablauf.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ablauf.aspx.designer.cs">
+      <DependentUpon>Ablauf.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AddNewProject.aspx.cs">
       <DependentUpon>AddNewProject.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -216,6 +226,13 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="FAQ.aspx.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FAQ.aspx.designer.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -245,6 +262,13 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Termine.aspx.cs">
+      <DependentUpon>Termine.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Termine.aspx.designer.cs">
+      <DependentUpon>Termine.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -6,6 +6,9 @@ body {
     font-size: 16px;
 }
 
+a :hover{
+    text-decoration: underline !important;
+}
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -249,18 +252,18 @@ marginLeftZero input[type="email"], input[type="submit"] {
     .publishProject:hover {
         background-color: #58FA82;
         border-color: #58FA58;
-    }
+    } 
 
 .refuseProject {
     background-color: #F5A9A9;
     margin-right: 5px;
 }
 
-    .refuseProject:hover {
+   .refuseProject:hover {
         background-color: #F78181;
         border-color: #FE2E2E;
         margin-right: 5px;
-    }
+    } 
 
 .publishedProjectBackground {
     background-color: #A9F5A9 !important;
