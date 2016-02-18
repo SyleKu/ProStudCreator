@@ -17,6 +17,20 @@
             return ok;
         }
 
+        function isContentStud(currentObject) {
+            var txtBoxValue = currentObject.value;
+            var term = "@students.fhnw.ch";
+            var index = txtBoxValue.indexOf(term);
+            if(index == -1){
+                alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
+                currentObject.style.borderColor = 'red';
+            }
+            else {
+                currentObject.style.borderColor = 'green';
+            }
+
+        }
+
         // Attach event handlers once page is loaded
         $(document).ready(function () {
             $(":input").change(function () {
@@ -210,7 +224,7 @@
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
                         </div>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
+                            <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
                         </div>
                     </div>
 
@@ -220,7 +234,7 @@
                             <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)"></asp:TextBox>
                         </div>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email"></asp:TextBox>
+                            <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email"></asp:TextBox>
                         </div>
                     </div>
                 </ContentTemplate>
