@@ -361,7 +361,7 @@ namespace ProStudCreator
             else
                 return "projectTypTransparent.png";
         }
-        public int CalcNumberOfPages(int idPDF, HttpRequest currentRequest)
+        public int CalcNumberOfPages(int idPDF)
         {
             var margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
             using (var output = new MemoryStream())

@@ -67,6 +67,33 @@ namespace ProStudCreator {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl newProjectDiv;
         
         /// <summary>
+        /// PdfupdatePanel-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel PdfupdatePanel;
+        
+        /// <summary>
+        /// Pdfupdatelabel-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Pdfupdatelabel;
+        
+        /// <summary>
+        /// Pdfupdatetimer-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.Timer Pdfupdatetimer;
+        
+        /// <summary>
         /// SiteTitle-Steuerelement
         /// </summary>
         /// <remarks>

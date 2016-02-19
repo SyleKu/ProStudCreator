@@ -27,9 +27,8 @@ namespace ProStudCreator
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
-                id = new int?(int.Parse(Request.QueryString["id"]));
+                id = int.Parse(Request.QueryString["id"]);
                 project = db.Projects.Single((Project p) => (int?)p.Id == id);
-
                 if (!project.UserCanEdit())
                 {
                     throw new UnauthorizedAccessException();
@@ -315,7 +314,7 @@ namespace ProStudCreator
             }
 
             db.SubmitChanges();
-            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id, Request) > 1);
+            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id) > 1);
             db.SubmitChanges();
         }
 
@@ -613,7 +612,11 @@ namespace ProStudCreator
             toggleReservationTwoVisible();
         }
 
-#endregion
+        #endregion
 
+        protected void Timer1_Tick(object sender, EventArgs e)
+        {
+
+        }
     }
 }

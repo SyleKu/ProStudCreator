@@ -1,8 +1,9 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ProStudCreator.SiteMaster" %>
+
 <!DOCTYPE html>
 <html lang="de">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %></title>
@@ -10,7 +11,7 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <%--<asp:ContentPlaceHolder ID="Stylesheets" runat="server">
         <link rel="stylesheet" href="/Content/Site.css" type="text/css" />
@@ -43,11 +44,19 @@
                 <div class="navbar-header" style="width: 100%">
                     <div class="navbar-brand" style="width: 100%">
                         <img runat="server" src="pictures/Logo.png" />
-                        <a href="projectlist" style="margin-left: 5%;"><h2 style="display:inline;text-decoration:none;color:#000;vertical-align:middle;">IP5/IP6 Projekte</h2></a>
-                        <a href="Termine" style="margin-left: 5%;"><h2 style="display:inline;text-decoration:none;color:#000;vertical-align:middle;">Termine</h2></a>
-                        <a href="Ablauf" style="margin-left: 5%;"><h2 style="display:inline;text-decoration:none;color:#000;vertical-align:middle;"> Ablauf</h2></a>               
-                        <a href="FAQ" style="margin-left: 5%;"><h2 style="display:inline;text-decoration:none;color:#000;vertical-align:middle;">FAQ</h2></a>
-                 </div>
+                        <a href="projectlist" style="margin-left: 5%;">
+                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">IP5/IP6 Projekte</h2>
+                        </a>
+                        <a href="Termine" style="margin-left: 5%;">
+                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Termine</h2>
+                        </a>
+                        <a href="Ablauf" style="margin-left: 5%;">
+                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Ablauf</h2>
+                        </a>
+                        <a href="FAQ" style="margin-left: 5%;">
+                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">FAQ</h2>
+                        </a>
+                    </div>
                 </div>
                 <%-- <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav menuBar">
