@@ -1,4 +1,4 @@
-﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FAQ.aspx.cs" Inherits="ProStudCreator.FAQ" %>
+﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="FAQ.aspx.cs" Inherits="ProStudCreator.FAQ" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well usernSettings non-selectable">
@@ -38,7 +38,7 @@
         </p>
         <h4>Können Studierende eigene Projekte einreichen?</h4>
         <p>
-            Studierende können ihren Arbeitgeber ermutigen, ein externes Projekt einzureichen. Sie können aber nicht selbst Auftraggeber sein.
+            Studierende können ihren Arbeitgeber ermutigen, ein externes Projekt einzureichen. Sie können aber nicht selbst Projekte einreichen oder Auftraggeber sein.
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
@@ -50,7 +50,7 @@
         </p>
         <h4>Kann ich Einzelprojekte einreichen?</h4>
         <p>
-            Einzelprojekte sind aus Skalierungsgründen nur in Ausnahmefällen möglich. Der Betreuungsaufwand für viele Einzelprojekte ist zu gross.
+            Einzelprojekte sind aus Skalierungsgründen nur in Ausnahmefällen möglich. Der Betreuungsaufwand für viele Einzelprojekte wäre zu gross.
         </p>
         <h4>Wie läuft die Zuteilung der Projekte?</h4>
         <p>
@@ -83,5 +83,11 @@
             Ihr könnt für eure Studierenden über <a href="http://web.fhnw.ch/plattformen/cs-support/bestellformulare">http://web.fhnw.ch/plattformen/cs-support/bestellformulare</a>
             diverse Ressourcen bestellen. Es stehen Git- und SVN-Repositories zur Verfügung. Selbst können die Studierenden keine Ressourcen beantragen.
         </p>
+        <h4>Wer bezahlt Spesen, die anfallen?</h4>
+        <p>
+            Der Auftraggeber. Die Studierenden müssen/sollen das direkt mit dem Auftraggeber abrechnen.
+        </p>
+        <h4>Was mache ich mit allen Unterlagen nach dem Ende der Arbeit?</h4>
+        <p>Bitte Aufbewahren, bis die Rekursfrist abgelaufen ist (30 Tage nach Notenbekanntgabe).</p>
     </div>
 </asp:Content>

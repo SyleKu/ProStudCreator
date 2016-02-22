@@ -109,8 +109,8 @@
         <asp:Button runat="server" ID="refuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="refuseDefinitiveNewProject_Click"></asp:Button>
         <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
-    <div id="newProjectDiv" class="well newProjectSettings non-selectable" runat="server">
-        <div id="fixedupdatepanel">
+    <div class="well newProjectSettings non-selectable">
+        <div id="fixedupdatepanel" style="display:none">
             <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                 <ContentTemplate>
                     <asp:Label ID="Pdfupdatelabel" runat="server" Text="Panel nor Refreshed yet"></asp:Label>

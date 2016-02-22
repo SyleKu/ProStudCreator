@@ -135,6 +135,7 @@
     <Content Include="pictures\LogoPDF.png" />
     <Content Include="Content\pdf.png" />
     <Content Include="pictures\projectTypTransparent.png" />
+    <Content Include="Content\Prozess.PNG" />
     <Content Include="ProStudentCreatorDB.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
