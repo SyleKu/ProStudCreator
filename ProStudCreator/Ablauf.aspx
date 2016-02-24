@@ -19,14 +19,15 @@
             <li>Die Studierenden arbeiten am Projekt. Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).
                 Wenn Du möchtest, gibst Du folgende Hilfsmittel ab:
                 <ul>
+                    <li><a href="Content/Webauftritt_2015HS.pdf" class="pdf">Anleitung zum obligatorischen Websummary</a></li>
+                    <li><a href="Content/Leitfaden_Berichte_4.01.pdf" class="pdf">Offizieller Leitfaden für Berichte</a></li>
                     <li><a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
-                    <li><a href="Content/Leitfaden_Berichte_4.0.pdf" class="pdf">Offizieller Leitfaden für Berichte</a></li>
                     <li><a href="Content/P5_P6_Guide_20151117.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a></li>
                 </ul>
             </li>
             <li>Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
-            <li>Die Studierenden erstellen das Websummary.</li>
+            <li>Die Studierenden <a href="Content/Webauftritt_2015HS.pdf" class="pdf">erstellen das Websummary</a>.</li>
             <li>Fülle nach der Projektabgabe den Bewertungsbogen aus.</li>
             <li>Schlusspräsentation mit 20-40 Minuten Präsentation, und 20-40 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Bei IP5 ist die Schlusspräsentation optional.</li>
             <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
