@@ -8,7 +8,7 @@ namespace ProStudCreator
         {
             get
             {
-                return DateTime.Now;
+                return (Semester)DateTime.Now;
             }
         }
         public DateTime StartDate
@@ -25,12 +25,12 @@ namespace ProStudCreator
                 return (this + 1).StartDate.AddTicks(-1L);
             }
         }
-        public static implicit operator Semester(DateTime _dt)
+        public static explicit operator Semester(DateTime _dt)
         {
-            DateTime offset = _dt.AddMonths(-2).AddDays(-20.0);
+            DateTime offset = _dt.AddMonths(-1).AddDays(-20.0);
             return new Semester
             {
-                semesterId = _dt.Year * 2 + _dt.Month / 6
+                semesterId = _dt.Year * 2 + (_dt.Month-1) / 6
             };
         }
         public static Semester operator +(Semester _s, int _add)
@@ -70,16 +70,13 @@ namespace ProStudCreator
         }
         public override bool Equals(object obj)
         {
-            bool result;
             if (obj is Semester)
-            {
-                result = (this == (Semester)obj);
-            }
-            else
-            {
-                result = (obj is DateTime && this == (DateTime)obj);
-            }
-            return result;
+                return (this == (Semester)obj); //rely on overloaded == operator
+
+            if(obj is DateTime)
+                return (this == (DateTime)obj);
+
+            return false;
         }
         public override int GetHashCode()
         {
@@ -90,7 +87,7 @@ namespace ProStudCreator
         {
             get
             {
-                return semesterId / 2;
+                return (semesterId+1) / 2;
             }
         }
 
@@ -101,7 +98,7 @@ namespace ProStudCreator
         {
             get
             {
-                if ((semesterId & 1) == 0)
+                if (((semesterId+1) & 1) == 0)
                     return "FS";
                 else
                     return "HS";

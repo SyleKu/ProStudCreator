@@ -6,6 +6,9 @@ body {
     font-size: 16px;
 }
 
+a :hover {
+    text-decoration: underline !important;
+}
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -20,10 +23,22 @@ body {
     white-space: normal;
 }
 
+.termine td, .termine th {
+    padding-right: 16px;
+    vertical-align: top;
+}
 
 
-.nowrap
-{
+ol li {
+    margin-bottom: 8px;
+}
+
+    ol li ul li {
+        margin-bottom: initial;
+    }
+
+
+.nowrap {
     white-space: nowrap;
 }
 
@@ -134,17 +149,37 @@ img.imageHeight {
 }
 
 
+.doc {
+    background: url("doc.png") 0.1em 50% no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.2em;
+}
+
+.ppt {
+    background: url("ppt.png") 0.1em 50% no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.2em;
+}
+
+
+
 .pdf {
-    background:url("pdf.png") 0.1em 50% no-repeat;
-    background-size:1em 1em;
-    padding-left:1.2em;
+    background: url("pdf.png") 0.1em 50% no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.2em;
+}
+
+.xls {
+    background: url("xls.png") 0.1em 50% no-repeat;
+    background-size: 1em 1em;
+    padding-left: 1.2em;
 }
 
 .glyph-pdf {
-    background:url("pdf.png") 50% 50% no-repeat;
-    background-size:1.5em;
-    padding-left:2em;
-    background-color:#fff;
+    background: url("pdf.png") 50% 50% no-repeat;
+    background-size: 1.5em;
+    padding-left: 2em;
+    background-color: #fff;
 }
 
 
@@ -248,12 +283,33 @@ marginLeftZero input[type="email"], input[type="submit"] {
 }
 
 h4 {
-    margin-top:40px;
-    font-style:italic;
+    margin-top: 64px;
+    font-style: italic;
 }
 
+    h4:first-of-type {
+        margin-top: initial;
+    }
+
+
+h3 {
+    margin-top: 64px;
+    font-style: italic;
+}
+
+    h3:first-of-type {
+        margin-top: initial;
+    }
+
 small {
-    color:#bbb;
-    font-size:9px;
-    font-style:italic;
+    color: #bbb;
+    font-size: 9px;
+    font-style: italic;
+}
+
+#fixedupdatepanel {
+    color: red;
+    margin-left: 1%;
+    padding-top: 355px;
+    position: fixed;
 }

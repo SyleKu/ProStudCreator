@@ -17,6 +17,20 @@
             return ok;
         }
 
+        function isContentStud(currentObject) {
+            var txtBoxValue = currentObject.value;
+            var term = "@students.fhnw.ch";
+            var index = txtBoxValue.indexOf(term);
+            if (index == -1) {
+                alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
+                currentObject.style.borderColor = 'red';
+            }
+            else {
+                currentObject.style.borderColor = 'green';
+            }
+
+        }
+
         // Attach event handlers once page is loaded
         $(document).ready(function () {
             $(":input").change(function () {
@@ -51,6 +65,27 @@
             });
 
         });
+        $(document).ready(function () {
+            var count = 0; // 
+            var focusCount = 0;
+
+            $('input[type=textbox]').focus(function () {
+
+                focusCount = $(this).val().length;
+                count = 0;
+                // get total text length
+                $('input[type=textbox]').each(function () {
+                    count += $(this).val().length;
+                });
+                // remove text length of focused input from total count
+                count -= focusCount;
+            });
+
+            $('input[type=textbox]').keyup(function () {
+                focusCount = $(this).val().length;
+                $('#charNum').text(2600 - (count + focusCount));
+            });
+        });
 
         $(window).on('beforeunload', function () {
             if (hasUnsavedChanges) {
@@ -58,7 +93,13 @@
             }
         });
     </script>
-
+    <script runat="server" type="text/c#"> // script for updatepanel
+        protected void Pdfupdatetimer_Tick(object sender, EventArgs e)
+        {
+            Pdfupdatelabel.Text = "Panel refreshed at: " +
+    DateTime.Now.ToLongTimeString();
+        }
+    </script>
     <div id="refusedReason" class="well newProjectSettings non-selectable" runat="server" visible="false">
         <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
         <div class="form-group">
@@ -68,8 +109,16 @@
         <asp:Button runat="server" ID="refuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="refuseDefinitiveNewProject_Click"></asp:Button>
         <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
-
-    <div id="newProjectDiv" class="well newProjectSettings non-selectable" runat="server">
+    <div class="well newProjectSettings non-selectable">
+        <div id="fixedupdatepanel" style="display:none">
+            <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
+                <ContentTemplate>
+                    <asp:Label ID="Pdfupdatelabel" runat="server" Text="Panel nor Refreshed yet"></asp:Label>
+                    <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick">
+                    </asp:Timer>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
@@ -134,20 +183,20 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px"/>
+                    <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
                 </div>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true"/>
+                    <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
                 </div>
                 <div class="col-sm-3"></div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px"/>
+                    <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
                 </div>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true"/>
+                    <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
                 </div>
             </div>
             <div class="form-group">
@@ -210,7 +259,7 @@
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
                         </div>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
+                            <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
                         </div>
                     </div>
 
@@ -220,7 +269,7 @@
                             <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)"></asp:TextBox>
                         </div>
                         <div class="col-sm-3">
-                            <asp:TextBox runat="server" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)"  TextMode="Email"></asp:TextBox>
+                            <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
                         </div>
                     </div>
                 </ContentTemplate>
@@ -235,16 +284,15 @@
             <div class="form-group">
                 <asp:ValidationSummary ID="ValidationSummary1" runat="server" ShowMessageBox="true" ShowSummary="true" />
             </div>
-
         </div>
-        <div style="text-align:right;">
+        <div style="text-align: right;">
             <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="publishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-            <asp:Button runat="server" ID="refuseProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
-            <asp:Button runat="server" ID="rollbackProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
-            <asp:Button runat="server" ID="submitProject" Visible="false" style="margin-right:32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
+            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
+            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
             <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
             <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-            
+
             <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
         </div>
     </div>

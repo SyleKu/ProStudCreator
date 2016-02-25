@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="aspnet-ProStudCreator-20140818043155" Class="ProStudentCreatorDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-ProStudCreator_TEST-20140818043155.mdf;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_TEST_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=(LocalDb)\v11.0;AttachDbFilename=|DataDirectory|\aspnet-ProStudCreator-20140818043155.mdf;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DefaultConnection" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -14,6 +14,7 @@
       <Column Name="Description" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Size1" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Size2" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ExportValue" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="ProjectTeamSize_Project" Member="Projects" ThisKey="Id" OtherKey="P1TeamSizeId" Type="Project" />
       <Association Name="ProjectTeamSize_Project1" Member="Projects1" ThisKey="Id" OtherKey="P2TeamSizeId" Type="Project" />
     </Type>
@@ -56,7 +57,7 @@
       <Column Name="PublishedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="LastEditedBy" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="ProjectNr" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
-      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NULL" CanBeNull="false" />
+      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100)" CanBeNull="false" />
       <Column Name="Reservation1Mail" Type="System.String" DbType="NVARCHAR(100) NOT NULL" CanBeNull="false" />
       <Column Name="Reservation2Mail" Type="System.String" DbType="NVARCHAR(100) NOT NULL" CanBeNull="false" />
       <Association Name="Department_Project" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
@@ -72,6 +73,7 @@
       <Column Name="Description" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="P5" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="P6" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ExportValue" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="ProjectType_Project" Member="Projects" ThisKey="Id" OtherKey="P1TypeId" Type="Project" />
       <Association Name="ProjectType_Project1" Member="Projects1" ThisKey="Id" OtherKey="P2TypeId" Type="Project" />
     </Type>

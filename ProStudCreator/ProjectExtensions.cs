@@ -118,12 +118,12 @@ namespace ProStudCreator
             switch (_p.State)
             {
                 case ProjectState.Published:
-                    return _p.PublishedDate;
+                    return (Semester)_p.PublishedDate;
                 case ProjectState.Deleted:
                 case ProjectState.InProgress:
                 case ProjectState.Rejected:
                 case ProjectState.Submitted:
-                    return _p.ModificationDate;
+                    return (Semester)_p.ModificationDate;
                 default:
                     throw new NotImplementedException();
             }
