@@ -116,9 +116,9 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="AddNewProject.aspx" />
-    <Content Include="App_Data\aspnet-ProStudCreator-20140818043155.mdf" />
-    <Content Include="App_Data\aspnet-ProStudCreator-20140818043155_log.ldf">
-      <DependentUpon>aspnet-ProStudCreator-20140818043155.mdf</DependentUpon>
+    <Content Include="App_Data\aspnet-ProStudCreator_TEST-20140818043155.mdf" />
+    <Content Include="App_Data\aspnet-ProStudCreator_TEST-20140818043155_log.ldf">
+      <DependentUpon>aspnet-ProStudCreator_TEST-20140818043155.mdf</DependentUpon>
     </Content>
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
@@ -231,11 +231,12 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="PdfCreator.cs" />
+    <Compile Include="ProjectExtensions.cs" />
     <Compile Include="Projectlist.aspx.cs">
       <DependentUpon>Projectlist.aspx</DependentUpon>
     </Compile>
