@@ -165,6 +165,11 @@ namespace ProStudCreator
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
             PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
 
+            LanguageGerman.Checked = project.LanguageGerman;
+            LanguageEnglish.Checked = project.LanguageEnglish;
+
+            DurationOneSemester.Checked = project.DurationOneSemester;
+
             InitialPositionContent.Text = project.InitialPosition;
             Image1.Visible = true;
             if (project.Picture != null)
@@ -234,6 +239,13 @@ namespace ProStudCreator
             project.TypeMathAlg = projectType[3];
             project.TypeAppWeb = projectType[4];
             project.TypeDBBigData = projectType[5];
+
+            // Languages
+            project.LanguageGerman = LanguageGerman.Checked;
+            project.LanguageEnglish = LanguageEnglish.Checked;
+
+            // Duration
+            project.DurationOneSemester = DurationOneSemester.Checked;
 
             // Team size
             project.P1TypeId = int.Parse(POneType.SelectedValue);
@@ -491,6 +503,9 @@ namespace ProStudCreator
             int numAssignedTypes = projectType.Count(a => a);
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+
+            if (! (project.LanguageGerman || project.LanguageEnglish))
+                return "Bitte wählen Sie mindestens eine Sprache aus.";
 
             var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
             if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")

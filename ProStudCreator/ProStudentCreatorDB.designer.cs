@@ -195,6 +195,8 @@ namespace ProStudCreator
 		
 		private bool _LanguageEnglish;
 		
+		private bool _DurationOneSemester;
+		
 		private EntityRef<Department> _Department;
 		
 		private EntityRef<ProjectTeamSize> _POneTeamSize;
@@ -291,6 +293,8 @@ namespace ProStudCreator
     partial void OnLanguageGermanChanged();
     partial void OnLanguageEnglishChanging(bool value);
     partial void OnLanguageEnglishChanged();
+    partial void OnDurationOneSemesterChanging(bool value);
+    partial void OnDurationOneSemesterChanged();
     #endregion
 		
 		public Project()
@@ -1139,6 +1143,26 @@ namespace ProStudCreator
 					this._LanguageEnglish = value;
 					this.SendPropertyChanged("LanguageEnglish");
 					this.OnLanguageEnglishChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DurationOneSemester", DbType="bit NOT NULL")]
+		public bool DurationOneSemester
+		{
+			get
+			{
+				return this._DurationOneSemester;
+			}
+			set
+			{
+				if ((this._DurationOneSemester != value))
+				{
+					this.OnDurationOneSemesterChanging(value);
+					this.SendPropertyChanging();
+					this._DurationOneSemester = value;
+					this.SendPropertyChanged("DurationOneSemester");
+					this.OnDurationOneSemesterChanged();
 				}
 			}
 		}

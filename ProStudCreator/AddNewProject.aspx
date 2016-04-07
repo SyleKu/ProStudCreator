@@ -181,6 +181,20 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
             <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox ID="LanguageGerman" CssClass="checkbox" Text="Deutsch" Checked="true" runat="server" CausesValidation="true" />
+                    <asp:CheckBox ID="LanguageEnglish" CssClass="checkbox" Text="Englisch" runat="server" CausesValidation="true" />
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." runat="server" />
+                    <p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>
+                </div>
+            </div>
+            <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
