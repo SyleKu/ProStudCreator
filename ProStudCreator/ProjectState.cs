@@ -1,12 +1,13 @@
 ﻿using System;
 namespace ProStudCreator
 {
-    public enum ProjectState
+    public static class ProjectState
     {
-        InProgress=0,
-        Submitted=1,
-        Rejected=2,
-        Published=3,
-        Deleted=4
+        public const int
+            InProgress = 0,
+            Submitted = 1,
+            Rejected = 2,
+            Published = 3,
+            Deleted = 4;
     }
 }
