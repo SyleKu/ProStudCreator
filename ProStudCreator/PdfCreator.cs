@@ -8,6 +8,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html;
 using System.Web.UI.WebControls;
 using iTextSharp.text.pdf.hyphenation;
+using System.Text;
 
 namespace ProStudCreator
 {
@@ -53,6 +54,10 @@ namespace ProStudCreator
             const float SPACING_BEFORE_TITLE = 16f;
             const float SPACING_AFTER_TITLE = 2f;
 
+            //
+            // Header contents
+            //
+
             var proj = currentProject;
             var currentProjectType = getCurrentProjectTypeOne(proj);
 
@@ -81,8 +86,7 @@ namespace ProStudCreator
             projectTable.WidthPercentage = 100f;
             projectTable.SetWidths(new float[] { 22, 50, 25, 25, 25 });
 
-
-
+            //  Row 1
             projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
             if (proj.Advisor1Name != "")
                 projectTable.AddCell(new Anchor(proj.Advisor1Name, fontRegularLink)
@@ -96,6 +100,7 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
             projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
 
+            // Row 2
             if (proj.Advisor2Name != "")
             {
                 projectTable.AddCell("");
@@ -119,7 +124,7 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
-
+            // Row 3
             if (proj.ClientCompany != "" && proj.Advisor2Name != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
@@ -135,8 +140,27 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
             projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description, fontRegular));
 
+            // Row 4
+            var strLang = "";
+            if (proj.LanguageGerman)  strLang += "Deutsch";
+            if (proj.LanguageEnglish)
+            {
+                if (strLang.Length > 0) strLang += ", ";
+                strLang += "Englisch";
+            }
+
+            projectTable.AddCell(new Paragraph("Sprachen:", fontHeading));
+            projectTable.AddCell(new Paragraph(strLang.ToString(), fontRegular));
+            projectTable.AddCell("");
+            projectTable.AddCell("");
+            projectTable.AddCell("");
+
+            // End header
             document.Add(projectTable);
 
+            //
+            // Body
+            //
             if (proj.Picture != null)
             {
                 var image = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
@@ -244,15 +268,35 @@ namespace ProStudCreator
                 }
             }
 
+            //
+            // Footer
+            //
+
+            var strComments = "";
             if (proj.Reservation1Name != "")
             {
-                document.Add(new Paragraph("Reservation", fontHeading)
+                strComments += "Dieses Projekt ist für " + proj.Reservation1Name;
+                if (proj.Reservation2Name != "") strComments += " und " + proj.Reservation2Name;
+                strComments += " reserviert.\n";
+            }
+
+            if (proj.DurationOneSemester)
+            {
+                strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
+            }
+
+            if (strComments.Length > 0)
+            {
+                document.Add(new Paragraph("Bemerkungen", fontHeading)
                 {
                     SpacingBefore = SPACING_BEFORE_TITLE,
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var text = new Paragraph("Dieses Projekt ist für " + proj.Reservation1Name + (proj.Reservation2Name!="" ? " und " + proj.Reservation2Name : "") + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
+                var fontRegularRed = new Font(fontRegular);
+                fontRegularRed.Color = BaseColor.RED;
+
+                var text = new Paragraph(strComments.ToString(), fontRegularRed);
                 text.SpacingAfter = 1f;
                 text.SetLeading(0.0f, LINE_HEIGHT);
                 document.Add(text);

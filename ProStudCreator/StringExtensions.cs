@@ -338,6 +338,8 @@ namespace ProStudCreator
             foreach (var line in lines)
             {
                 var para = new Paragraph();
+                para.Font = new Font(_font);
+
                 var currentLine = line;
 
                 int listIndexOffset = 0;
