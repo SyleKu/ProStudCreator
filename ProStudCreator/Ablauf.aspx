@@ -19,7 +19,7 @@
             <li>Die Studierenden arbeiten am Projekt. Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).
                 Du gibst den Studierenden folgende Hilfsmittel ab:
                 <ul>
-                    <li><a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare mit offiziellen Unterlagen (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a></li>
+                    <li>Ein Hinweis, dass auf diesem <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a> Unterlagen zu finden sind.</li>
                     <li><a href="Content/Webauftritt_2015HS.pdf" class="pdf">Anleitung zum obligatorischen Websummary</a></li>
                     <li>Optional: <a href="Content/P5_P6_Guide_20151117.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a></li>
                     <li>Optional: <a href="Content/Leitfaden_Berichte_4.01.pdf" class="pdf">Offizieller Leitfaden für Berichte</a></li>
