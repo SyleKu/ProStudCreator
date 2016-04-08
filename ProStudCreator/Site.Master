@@ -76,6 +76,9 @@
                 </div>
                 <div class="pull-right">
                     Angemeldet als <%: ProStudCreator.ShibUser.GetEmail()  %> <%: ProStudCreator.ShibUser.IsAdmin() ? " (Admin)" : "" %>
+                    <% if (inDebugMode) { %>
+                    <strong style="color: red">(DEBUG MODE)</strong>
+                    <% } %>
                 </div>
             </footer>
         </div>

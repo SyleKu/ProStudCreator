@@ -15,6 +15,8 @@ namespace ProStudCreator
         private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
         private string _antiXsrfTokenValue;
 
+        public bool inDebugMode = false;
+
         protected void Page_Init(object sender, EventArgs e)
         {
             // Der Code unten schützt vor XSRF-Angriffen.
@@ -73,7 +75,9 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            #if DEBUG
+            inDebugMode = true;
+            #endif
         }
 
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
