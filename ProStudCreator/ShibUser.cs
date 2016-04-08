@@ -1,7 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 namespace ProStudCreator
 {
     public static class ShibUser

@@ -5,10 +5,6 @@ using System.Linq;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.text.html;
-using System.Web.UI.WebControls;
-using iTextSharp.text.pdf.hyphenation;
-using System.Text;
 
 namespace ProStudCreator
 {
