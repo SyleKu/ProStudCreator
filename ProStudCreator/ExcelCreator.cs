@@ -71,9 +71,9 @@ namespace ProStudCreator
             row.CreateCell(1).SetCellValue(p.Name);
             row.CreateCell(2).SetCellValue(dispName);
             row.CreateCell(3).SetCellValue(p.POneType.Export());
-            row.CreateCell(4).SetCellValue(p.PTwoType?.Export());
+            row.CreateCell(4).SetCellValue(p.PTwoType != null ? p.PTwoType.Export() : p.POneType.Export());
             row.CreateCell(5).SetCellValue(p.POneTeamSize.Export());
-            row.CreateCell(6).SetCellValue(p.PTwoTeamSize?.Export());
+            row.CreateCell(6).SetCellValue( p.PTwoTeamSize != null ? p.PTwoTeamSize.Export() : p.POneTeamSize.Export() );
             row.CreateCell(7).SetCellValue("-");    // Major undefined
             row.CreateCell(8).SetCellValue(0);      // Importance undefined
             row.CreateCell(9).SetCellValue(p.Advisor1Mail);
