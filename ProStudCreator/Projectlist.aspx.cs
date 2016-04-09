@@ -266,6 +266,23 @@ namespace ProStudCreator
             }
         }
 
+        protected void AllProjectsAsExcel_Click(object sender, EventArgs e)
+        {
+            byte[] bytesInStream;
+            using (var output = new MemoryStream())
+            {
+                ExcelCreator.generateProjectList(output);
+                bytesInStream = output.ToArray();
+            }
+
+            Response.Clear();
+            Response.ContentType = "application/Excel";
+            Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte-" + Semester.CurrentSemester + ".xlsx");
+            Response.BinaryWrite(bytesInStream);
+            Response.End();
+
+        }
+
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
             //AllProjects.DataSource =
@@ -274,5 +291,7 @@ namespace ProStudCreator
             //    select getProjectSingleElement(i);
             //AllProjects.DataBind();
         }
+
+
     }
 }

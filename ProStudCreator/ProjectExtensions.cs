@@ -181,5 +181,23 @@ namespace ProStudCreator
         }
 
         #endregion
+
+        #region LINQ-derived type extensions
+        
+        public static string Export(this ProjectType pt)
+        {
+            if (pt.P5 && !pt.P6) return "P5";
+            else if (!pt.P5 && pt.P6) return "P6";
+            else return "both";
+        }
+
+        public static string Export(this ProjectTeamSize pts)
+        {
+            if (pts.Size1 && !pts.Size2) return "1";
+            else if (!pts.Size1 && pts.Size2) return "2";
+            else return "1;2";
+        }
+        #endregion
+
     }
 }
