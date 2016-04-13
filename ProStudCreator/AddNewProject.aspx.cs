@@ -628,10 +628,22 @@ namespace ProStudCreator
         }
 
         #endregion
-
-        protected void Timer1_Tick(object sender, EventArgs e)
+#region Timer tick
+        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //funtion for better workflow with long texts
         {
-
+            if (project != null) {
+                if (project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id) > 1))
+                { 
+                    Pdfupdatelabel.ForeColor = System.Drawing.Color.Red;
+                    Pdfupdatelabel.Text = "Ihr Text ist zu lang";
+                }
+                else
+                {
+                    Pdfupdatelabel.ForeColor = System.Drawing.Color.Green;
+                    Pdfupdatelabel.Text = "Länge OK";
+                }
+            }
         }
     }
 }
+#endregion
