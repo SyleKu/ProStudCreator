@@ -93,13 +93,6 @@
             }
         });
     </script>
-    <script runat="server" type="text/c#"> // script for updatepanel
-        protected void Pdfupdatetimer_Tick(object sender, EventArgs e)
-        {
-            Pdfupdatelabel.Text = "Panel refreshed at: " +
-    DateTime.Now.ToLongTimeString();
-        }
-    </script>
     <div id="refusedReason" class="well newProjectSettings non-selectable" runat="server" visible="false">
         <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
         <div class="form-group">
@@ -110,10 +103,10 @@
         <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
     <div class="well newProjectSettings non-selectable">
-        <div id="fixedupdatepanel" style="display:none">
+        <div id="fixedupdatepanel">
             <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                 <ContentTemplate>
-                    <asp:Label ID="Pdfupdatelabel" runat="server" Text="Panel nor Refreshed yet"></asp:Label>
+                    <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
                     <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick">
                     </asp:Timer>
                 </ContentTemplate>
@@ -166,7 +159,7 @@
                 <div class="col-sm-3"></div>
             </div>
             <hr />
-            <asp:UpdatePanel runat="server" class="form-group">
+            <asp:UpdatePanel runat="server" class="form-group" UpdateMode="Conditional">
                 <ContentTemplate>
                     <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Themengebiet:"></asp:Label>
                     <div id="projectTypes" class="col-sm-9">
@@ -261,7 +254,7 @@
                     <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                 </div>
             </div>
-            <asp:UpdatePanel runat="server">
+            <asp:UpdatePanel runat="server" UpdateMode="Conditional">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
                     <asp:AsyncPostBackTrigger ControlID="PTwoTeamSize" EventName="SelectedIndexChanged" />
