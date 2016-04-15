@@ -188,7 +188,7 @@ namespace ProStudCreator
             switch (e.CommandName)
             {
                 case "SinglePDF":
-                    CreateSinglePDF(id);
+                    CreateSinglePDF(db.Projects.Single((Project i) => i.Id == id));
                     break;
                 case "revokeSubmission":
                     Project projectr = db.Projects.Single((Project i) => i.Id == id);
@@ -209,7 +209,7 @@ namespace ProStudCreator
         }
 
 
-        private void CreateSinglePDF(int idPDF)
+        private void CreateSinglePDF(Project idPDF)
         {
             float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
             byte[] bytesInStream;
@@ -218,14 +218,13 @@ namespace ProStudCreator
                 using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
                 {
                     PdfCreator pdfCreator = new PdfCreator();
-                    pdfCreator.AppendToPDF(document, output, Enumerable.Repeat<int>(idPDF, 1));
+                    pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
                 }
                 bytesInStream = output.ToArray();
             }
-            var project = db.Projects.Single(i => i.Id == idPDF);
             Response.Clear();
             Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", "attachment; filename=" + project.Department.DepartmentName + project.ProjectNr.ToString("00") + ".pdf");
+            Response.AddHeader("content-disposition", "attachment; filename=" + idPDF.Department.DepartmentName + idPDF.ProjectNr.ToString("00") + ".pdf");
             Response.BinaryWrite(bytesInStream);
             Response.End();
         }
@@ -241,8 +240,11 @@ namespace ProStudCreator
                     {
                         PdfCreator pdfCreator = new PdfCreator();
                         pdfCreator.AppendToPDF(document, output,
-                            from pse in (IEnumerable<ProjectSingleElement>)AllProjects.DataSource
-                            select pse.id);
+                            ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource).Select(p => db.Projects.Single(pr => pr.Id==p.id))
+
+                            
+                            
+                            );
                     }
                     bytesInStream = output.ToArray();
                 }

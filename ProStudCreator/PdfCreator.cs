@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace ProStudCreator
 {
@@ -13,7 +15,7 @@ namespace ProStudCreator
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         HyphenationAuto hyph = new HyphenationAuto("de", "none", 2, 2);
 
-        public void AppendToPDF(Document document, MemoryStream output, IEnumerable<int> projectIds)
+        public void AppendToPDF(Document document, MemoryStream output, IEnumerable<Project> projects)
         {
             PdfWriter writer = PdfWriter.GetInstance(document, output);
 
@@ -29,12 +31,13 @@ namespace ProStudCreator
             // and add it to the PdfWriter
             writer.PageEvent = ef;
             document.Open();
-            foreach (int projectId in projectIds)
-            {
-                var proj = db.Projects.Single(item => item.Id == projectId);
-                ef.CurrentProject = proj;
-                WritePDF(proj, document);
-            }
+
+                foreach (Project project in projects)
+                {
+                    ef.CurrentProject = project;
+                    WritePDF(project, document);
+                } 
+            
         }
 
         private void WritePDF(Project currentProject, Document document)
@@ -401,14 +404,14 @@ namespace ProStudCreator
             else
                 return "projectTypTransparent.png";
         }
-        public int CalcNumberOfPages(int idPDF)
+        public int CalcNumberOfPages(Project PDF)
         {
             var margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
             using (var output = new MemoryStream())
             {
                 using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
                 {
-                    AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
+                        AppendToPDF(document, output, Enumerable.Repeat(PDF, 1));
                 }
                 using (var pdfReader = new PdfReader(output.ToArray()))
                 {

@@ -223,110 +223,10 @@ namespace ProStudCreator
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
 
-            project.Name = ProjectName.Text.FixupParagraph();
-            project.ClientCompany = Employer.Text.FixupParagraph();
-            project.ClientPerson = EmployerPerson.Text.FixupParagraph();
-            project.ClientMail = EmployerMail.Text.Trim().ToLowerInvariant();
-            project.Advisor1Name = NameBetreuer1.Text.FixupParagraph();
-            project.Advisor1Mail = EMail1.Text.Trim().ToLowerInvariant();
-            project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
-            project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
-
-            // Project types
-            project.TypeDesignUX = projectType[0];
-            project.TypeHW = projectType[1];
-            project.TypeCGIP = projectType[2];
-            project.TypeMathAlg = projectType[3];
-            project.TypeAppWeb = projectType[4];
-            project.TypeDBBigData = projectType[5];
-
-            // Languages
-            project.LanguageGerman = LanguageGerman.Checked;
-            project.LanguageEnglish = LanguageEnglish.Checked;
-
-            // Duration
-            project.DurationOneSemester = DurationOneSemester.Checked;
-
-            // Team size
-            project.P1TypeId = int.Parse(POneType.SelectedValue);
-            project.P1TeamSizeId = int.Parse(POneTeamSize.SelectedValue);
-            if (PTwoType.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
-            {
-                project.P2TypeId = null;
-                project.P2TeamSizeId = null;
-            }
-            else
-            {
-                project.P2TypeId = new int?(int.Parse(PTwoType.SelectedValue));
-                project.P2TeamSizeId = new int?(int.Parse(PTwoTeamSize.SelectedValue));
-            }
-            if (project.P1TeamSizeId == project.P2TeamSizeId && project.P1TypeId == project.P2TypeId)
-            {
-                project.P2TeamSizeId = null;
-                project.P2TypeId = null;
-            }
-
-            // Long texts (description etc.)
-            project.InitialPosition = InitialPositionContent.Text.FixupParagraph();
-            project.Objective = ObjectivContent.Text.FixupParagraph();
-            project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
-            project.References = ReferencesContent.Text.FixupParagraph();
-            project.Remarks = RemarksContent.Text.FixupParagraph();
-
-            // Student reservations
-            project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
-            project.Reservation1Mail = Reservation1Mail.Text.Trim().ToLowerInvariant();
-
-            if (Reservation2Name.Visible)   // TODO Check team size instead of visibility (just because it makes more sense)
-            {
-                project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
-                project.Reservation2Mail = Reservation2Mail.Text.Trim().ToLowerInvariant();
-            }
-            else
-            {
-                project.Reservation2Name = "";
-                project.Reservation2Mail = "";
-            }
-
-            // Move reservation 2 to 1 if 1 isn't specified
-            if (project.Reservation1Name == "" && project.Reservation2Name != "")
-            {
-                project.Reservation1Name = project.Reservation2Name;
-                project.Reservation2Name = "";
-            }
-
-
-            int oldDepartmentId = project.DepartmentId;
-            project.DepartmentId = int.Parse(Department.SelectedValue);
-
-            // If project changed departments & already has a ProjectNr, generate a new one
-            if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
-            {
-                project.ProjectNr = 0;  // 'Remove' project number to allow finding a new one.
-                project.GenerateProjectNr();
-            }
-
-
-            if (AddPicture.HasFile)
-            {
-                using (var input = AddPicture.PostedFile.InputStream)
-                {
-                    byte[] data = new byte[AddPicture.PostedFile.ContentLength];
-                    int offset = 0;
-                    for (; ; )
-                    {
-                        int read = input.Read(data, offset, data.Length - offset);
-                        if (read == 0)
-                            break;
-
-                        offset += read;
-                    }
-                    project.Picture = new Binary(data);
-                }
-            }
+            fillproject(project);
 
             db.SubmitChanges();
-            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id) > 1);
+            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
             db.SubmitChanges();
         }
 
@@ -628,12 +528,17 @@ namespace ProStudCreator
         }
 
         #endregion
-#region Timer tick
-        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //funtion for better workflow with long texts
+        #region Timer tick
+        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
         {
-            if (project != null) {
-                if (project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project.Id) > 1))
-                { 
+            if (project != null)
+            {
+                PdfCreator pdfc = new PdfCreator();
+
+                fillproject(project);
+           
+                if (pdfc.CalcNumberOfPages(project) > 1)
+                {
                     Pdfupdatelabel.ForeColor = System.Drawing.Color.Red;
                     Pdfupdatelabel.Text = "Ihr Text ist zu lang";
                 }
@@ -644,6 +549,112 @@ namespace ProStudCreator
                 }
             }
         }
+
+        public void fillproject(Project project)
+        {
+            project.Name = ProjectName.Text.FixupParagraph();
+            project.ClientCompany = Employer.Text.FixupParagraph();
+            project.ClientPerson = EmployerPerson.Text.FixupParagraph();
+            project.ClientMail = EmployerMail.Text.Trim().ToLowerInvariant();
+            project.Advisor1Name = NameBetreuer1.Text.FixupParagraph();
+            project.Advisor1Mail = EMail1.Text.Trim().ToLowerInvariant();
+            project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
+            project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
+
+            // Project types
+            project.TypeDesignUX = projectType[0];
+            project.TypeHW = projectType[1];
+            project.TypeCGIP = projectType[2];
+            project.TypeMathAlg = projectType[3];
+            project.TypeAppWeb = projectType[4];
+            project.TypeDBBigData = projectType[5];
+
+            // Languages
+            project.LanguageGerman = LanguageGerman.Checked;
+            project.LanguageEnglish = LanguageEnglish.Checked;
+
+            // Duration
+            project.DurationOneSemester = DurationOneSemester.Checked;
+
+            // Team size
+            project.P1TypeId = int.Parse(POneType.SelectedValue);
+            project.P1TeamSizeId = int.Parse(POneTeamSize.SelectedValue);
+            if (PTwoType.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
+            {
+                project.P2TypeId = null;
+                project.P2TeamSizeId = null;
+            }
+            else
+            {
+                project.P2TypeId = new int?(int.Parse(PTwoType.SelectedValue));
+                project.P2TeamSizeId = new int?(int.Parse(PTwoTeamSize.SelectedValue));
+            }
+            if (project.P1TeamSizeId == project.P2TeamSizeId && project.P1TypeId == project.P2TypeId)
+            {
+                project.P2TeamSizeId = null;
+                project.P2TypeId = null;
+            }
+
+            // Long texts (description etc.)
+            project.InitialPosition = InitialPositionContent.Text.FixupParagraph();
+            project.Objective = ObjectivContent.Text.FixupParagraph();
+            project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
+            project.References = ReferencesContent.Text.FixupParagraph();
+            project.Remarks = RemarksContent.Text.FixupParagraph();
+
+            // Student reservations
+            project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
+            project.Reservation1Mail = Reservation1Mail.Text.Trim().ToLowerInvariant();
+
+            if (Reservation2Name.Visible)   // TODO Check team size instead of visibility (just because it makes more sense)
+            {
+                project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
+                project.Reservation2Mail = Reservation2Mail.Text.Trim().ToLowerInvariant();
+            }
+            else
+            {
+                project.Reservation2Name = "";
+                project.Reservation2Mail = "";
+            }
+
+            // Move reservation 2 to 1 if 1 isn't specified
+            if (project.Reservation1Name == "" && project.Reservation2Name != "")
+            {
+                project.Reservation1Name = project.Reservation2Name;
+                project.Reservation2Name = "";
+            }
+
+
+            int oldDepartmentId = project.DepartmentId;
+            project.DepartmentId = int.Parse(Department.SelectedValue);
+
+            // If project changed departments & already has a ProjectNr, generate a new one
+            if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
+            {
+                project.ProjectNr = 0;  // 'Remove' project number to allow finding a new one.
+                project.GenerateProjectNr();
+            }
+
+
+            if (AddPicture.HasFile)
+            {
+                using (var input = AddPicture.PostedFile.InputStream)
+                {
+                    byte[] data = new byte[AddPicture.PostedFile.ContentLength];
+                    int offset = 0;
+                    for (;;)
+                    {
+                        int read = input.Read(data, offset, data.Length - offset);
+                        if (read == 0)
+                            break;
+
+                        offset += read;
+                    }
+                    project.Picture = new Binary(data);
+                }
+            }
+        }
+
     }
 }
 #endregion
