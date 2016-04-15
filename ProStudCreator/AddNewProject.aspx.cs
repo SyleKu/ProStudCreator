@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Linq;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -539,17 +540,19 @@ namespace ProStudCreator
            
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
-                    Pdfupdatelabel.ForeColor = System.Drawing.Color.Red;
-                    Pdfupdatelabel.Text = "Ihr Text ist zu lang";
+                    Pdfupdatelabel.Text = "Das PDF passt nicht auf eine Seite!";
+                    Pdfupdatelabel.ForeColor = Color.Red;
+
                 }
                 else
                 {
-                    Pdfupdatelabel.ForeColor = System.Drawing.Color.Green;
-                    Pdfupdatelabel.Text = "Länge OK";
+                    Pdfupdatelabel.Text = "Das PDF passt auf eine Seite!";
+                    Pdfupdatelabel.ForeColor = Color.Green;
                 }
             }
         }
-
+        #endregion
+        #region fillproject
         public void fillproject(Project project)
         {
             project.Name = ProjectName.Text.FixupParagraph();

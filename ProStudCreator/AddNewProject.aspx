@@ -103,15 +103,6 @@
         <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
     <div class="well newProjectSettings non-selectable">
-        <div id="fixedupdatepanel">
-            <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
-                <ContentTemplate>
-                    <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
-                    <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick">
-                    </asp:Timer>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-        </div>
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
@@ -293,6 +284,15 @@
             </div>
         </div>
         <div style="text-align: right;">
+            <div id="fixedupdatepanel">
+                <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
+                    <ContentTemplate>
+                        <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
+                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick">
+                        </asp:Timer>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
             <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="publishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
             <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
             <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
