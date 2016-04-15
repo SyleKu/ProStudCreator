@@ -94,7 +94,7 @@ namespace ProStudCreator
         {
             get
             {
-                return semesterId / 2;
+                return (semesterId+1) / 2;
             }
         }
 
@@ -105,7 +105,7 @@ namespace ProStudCreator
         {
             get
             {
-                if ((semesterId & 1) == 0)
+                if ((semesterId+1 & 1) == 0)
                     return "FS";
                 else
                     return "HS";
