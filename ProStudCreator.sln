@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProStudCreator", "ProStudCreator\ProStudCreator.csproj", "{C3EBD71B-7B1F-49D1-8D61-073DB3A2779A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProStudCreatorTest", "ProStudCreatorTest\ProStudCreatorTest.csproj", "{5084C515-B151-47DB-89D4-52DE28FA7B7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C3EBD71B-7B1F-49D1-8D61-073DB3A2779A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3EBD71B-7B1F-49D1-8D61-073DB3A2779A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3EBD71B-7B1F-49D1-8D61-073DB3A2779A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5084C515-B151-47DB-89D4-52DE28FA7B7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5084C515-B151-47DB-89D4-52DE28FA7B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5084C515-B151-47DB-89D4-52DE28FA7B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5084C515-B151-47DB-89D4-52DE28FA7B7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
