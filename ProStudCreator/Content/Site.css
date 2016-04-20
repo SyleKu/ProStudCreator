@@ -310,6 +310,9 @@ small {
 #fixedupdatepanel {
     color: black;
     margin-left: 1%;
-    padding-top: 355px;
-    position: fixed;
+    margin-top: 0.25%;
+    position: absolute;
+    float: left;
+    text-align:left;
+    font-size: large;
 }
