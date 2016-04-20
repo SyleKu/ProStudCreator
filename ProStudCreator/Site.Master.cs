@@ -69,7 +69,7 @@ namespace ProStudCreator
 
             if (!ShibUser.IsAuthenticated())
             {
-                throw new System.UnauthorizedAccessException(ShibUser.GetDebugInfo());
+                throw new HttpException(403, "Nicht berechtigt");
             }
         }
 
@@ -80,11 +80,18 @@ namespace ProStudCreator
             #endif
         }
 
+        private void Page_Error(object sender, EventArgs e)
+        {
+
+        }
+
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
             Context.GetOwinContext().Authentication.SignOut();
             Response.Redirect("/Account/Login.aspx");
         }
+
+
     }
 
 }
