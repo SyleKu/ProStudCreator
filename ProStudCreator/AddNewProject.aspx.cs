@@ -540,12 +540,12 @@ namespace ProStudCreator
            
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
-                    Pdfupdatelabel.Text = "Das PDF ist länger als eine Seite!";
+                    Pdfupdatelabel.Text = "Länge: Das PDF ist länger als eine Seite!";
                     Pdfupdatelabel.ForeColor = Color.Red;
                 }
                 else
                 {
-                    Pdfupdatelabel.Text = "Das PDF hat nur eine Seite!";
+                    Pdfupdatelabel.Text = "Länge: OK (1 Seite)";
                     Pdfupdatelabel.ForeColor = Color.Green;
                 }
             }
