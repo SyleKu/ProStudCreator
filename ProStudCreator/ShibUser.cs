@@ -86,6 +86,7 @@ namespace ProStudCreator
             #else
             int? result;
             string userOU = HttpContext.Current.Request.Headers["orgunit-dn"];
+            if (userOU.Length == 0) return null;
 
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
             {
@@ -115,10 +116,14 @@ namespace ProStudCreator
             #if DEBUG
             return null;
             #else
+
+            string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
+            if (orgUnitDn == null) return null; // Custom auth header not passed.
+
             string result;
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => HttpContext.Current.Request.Headers["orgunit-dn"].Contains(d.OUCode));
+            {                
+                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
                 if (dep == null)
                 {
                     result = null;
