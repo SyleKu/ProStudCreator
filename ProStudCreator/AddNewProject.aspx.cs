@@ -436,15 +436,12 @@ namespace ProStudCreator
             if(project.Advisor2Mail!=null && project.Advisor2Mail.IsValidEmail() && project.Advisor2Mail!=project.Creator)
                 mailMessage.To.Add(project.Advisor2Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
-            mailMessage.Subject = "Projekt '" + project.Name + "' veröffentlicht";
-            mailMessage.Body = string.Concat(new string[]
-            {
-                "Dein Projekt '",
-                project.Name,
-                "' wurde von ",
-                ShibUser.GetFirstName(),
-                " veröffentlicht.\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/"
-            });
+            mailMessage.Subject = $"Projekt '{project.Name}' veröffentlicht";
+            mailMessage.Body = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} veröffentlicht.\n"
+                + "\n"
+                + "----------------------\n"
+                + "Automatische Nachricht von ProStudCreator\n"
+                + "https://www.cs.technik.fhnw.ch/prostud/";
             
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
@@ -459,15 +456,14 @@ namespace ProStudCreator
             refuseProject.Visible = false;
             publishProject.Visible = false;
             saveProject.Visible = false;
-            refusedReasonText.Text = string.Concat(new string[]
-            {
-                "Dein Projekt '",
-                project.Name,
-                "' wurde von ",
-                ShibUser.GetFirstName(),
-                " abgelehnt.\n\nDies sind die Gründe dafür:\n\n\n\nFreundliche Grüsse\n",
-                ShibUser.GetFirstName()
-            });
+            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von { ShibUser.GetFirstName() } abgelehnt.\n"
+                +"\n"
+                +"Dies sind die Gründe dafür:\n"
+                +"\n"
+                +"\n"
+                +"\n
+                +"Freundliche Grüsse\n"
+                +ShibUser.GetFirstName();
         }
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
@@ -482,7 +478,7 @@ namespace ProStudCreator
             if (project.Advisor2Mail!=null && project.Advisor2Mail.IsValidEmail() && project.Creator!=project.Advisor2Mail)
                 mailMessage.To.Add(project.Advisor2Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
-            mailMessage.Subject = "Projekt '" + project.Name + "' abgelehnt";
+            mailMessage.Subject = $"Projekt '{project.Name}' abgelehnt";
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
