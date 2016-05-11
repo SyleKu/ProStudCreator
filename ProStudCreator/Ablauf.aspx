@@ -5,7 +5,8 @@
         <h3>Durchführung eines Projektes</h3>
         <ol>
             <li>Den <a href="Content/Bewertungsbogen_P5_P9.xlsx" class="xls">Bewertungsbogen</a> herunterlagen</li>
-            <li>Die Gewichtung passend festlegen (im Bereich 0 bis 2). Die Gewichtung muss bis vor der
+            <li>Die Gewichtung der Einzelpunkte passend festlegen (im Bereich 0 bis 2). Die Gewichtung der
+                Zwischennoten (z.B. "FACHLICHES") nicht verändern. Die Gewichtung muss bis vor der
                 Projektvereinbarung mit den Studierenden besprochen und fixiert sein.
             </li>
             <li>Die Studierenden verfassen in den ersten Wochen eine Projektvereinbarung. Eine Vorlage dafür

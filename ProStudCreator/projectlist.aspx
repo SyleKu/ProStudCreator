@@ -42,8 +42,8 @@
                 <asp:ListItem Value="AllCurrentProjects">Laufendes Semester</asp:ListItem>
                 <asp:ListItem Value="AllFutureProjects">N&auml;chstes Semester</asp:ListItem>
                 <asp:ListItem Value="InProgress" Selected="True">Eigene, nicht eingereicht</asp:ListItem>
-                <asp:ListItem Value="Submitted">Eigene, Eingereicht</asp:ListItem>
-                <%--<asp:ListItem Value="Published">Eigene, Veröffentlicht</asp:ListItem>--%>
+                <asp:ListItem Value="Submitted">Eigene, eingereicht</asp:ListItem>
+                <%--<asp:ListItem Value="Published">Eigene, veröffentlicht</asp:ListItem>--%>
             </asp:RadioButtonList>
         </div>
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">

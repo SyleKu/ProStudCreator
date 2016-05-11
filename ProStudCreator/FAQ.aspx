@@ -10,7 +10,7 @@
             </p>
         <p>Als IP5 kommen viele Arbeiten in Frage: z.B. Webapplikationen ab einer gewissen Komplexität, Visualisierungen, Bildverarbeitung, …. Die Studierenden sollen ein klares Ziel haben und der Arbeitsumfang soll angemessen sein. Üblicherweise geht es darum, bestehende Technologien/Algorithmen/Methoden anzuwenden und sich auf das IP6 vorzubereiten. Im IP6 werden die Weichen mehr Richtung Wissenschaft gestellt. Laut Richtlinien sollen die Studierenden in der Bachelorthesis eine „bestimmte Aufgabe wissenschaftlich reflektiert, theoretisch und praktisch sowie selbständig lösen“.
             </p>
-        <p>Geradlinige Arbeiten sind <b>NICHT</b> geeignet. Es darf nicht von vornherein klar sein, wie man ein Aufgabe löst. Das Ziel der Arbeit soll hingegen klar definiert sein. Achte darauf, dass die Aufgabenstellung eine gewisse intellektuelle Flughöhe erreicht, aber gegen oben nicht begrenzt ist. Ideale Arbeiten enthalten einen offenen Teil, wo sich die Studierenden austoben können.
+        <p>Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es darf nicht von vornherein klar sein, wie man ein Aufgabe löst. Das Ziel der Arbeit soll hingegen klar definiert sein. Achte darauf, dass die Aufgabenstellung eine gewisse intellektuelle Flughöhe erreicht, aber gegen oben nicht begrenzt ist. Ideale Arbeiten enthalten einen offenen Teil, wo sich die Studierenden austoben können.
             </p>
         <h4>Was gehört in einen Projektbeschrieb?</h4>
         <p>
@@ -42,7 +42,7 @@
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
-            Als Betreuer kommen alle Dozierenden am i4Ds (z.B. Manfred, André, Doris, Sarah, Ruedi, Stefan, Simon, …) in Frage. Es besteht aber häufig auch die Möglichkeit in einem Zweier-Team (z.B. Dozierender + WiMi) zu arbeiten. Wer also kein Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach Absprache machen. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
+            Als Betreuer kommen alle Dozierenden am i4Ds (z.B. Manfred, André, Doris, Sarah, Ruedi, Stefan, Simon, …) und am IMVS (z.B. Jürg, Christoph, Hannes, Peter, Martin, Dominik, Bernhard, Wolfgang, Daniel, …) in Frage. Es besteht aber häufig auch die Möglichkeit in einem Zweier-Team (z.B. Dozierender + WiMi) zu arbeiten. Wer also kein Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach Absprache machen. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
         </p>
         <h4>Wie gross ist der Aufwand für die Betreuung? Was muss ich tun?</h4>
         <p>
@@ -63,7 +63,8 @@
         <h4>Wie kann Projekte verlängern?</h4>
         <p>
             IP5 können als IP6 verlängert werden. Wie bei allen anderen IP6 musst Du dazu rechtzeitig einen Projektbeschrieb einreichen. Für 
-            Folgeprojekte gelten die allgemeinen Anforderungen ebenfalls.
+            Folgeprojekte gelten die allgemeinen Anforderungen ebenfalls, d.h. für diese Folgeprojekte muss eine neue Herausforderung definiert
+			werden, z.B. eine weitere oder schwierigere Problemstellung (daher ist die neue Projektbeschreibung nötig).
         </p>
         <h4>Muss ich nicht gewählte Projekte erneut einreichen?</h4>
         <p>
@@ -77,6 +78,7 @@
         <h4>Wer organisiert Experten für meine Projekte?</h4>
         <p>
             Wir organisieren die Experten für Dich, etwa zur Halbzeit des Projekts.
+			Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere uns doch.
         </p>
         <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
         <p>
