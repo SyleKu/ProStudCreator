@@ -13,7 +13,7 @@ namespace ProStudCreator
     public partial class AddNewProject : Page
     {
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        private bool[] projectType = new bool[6];
+        private bool[] projectType = new bool[8];
         private int? id;
         private Project project;
         private ProjectType projectPriority = new ProjectType();
@@ -159,6 +159,16 @@ namespace ProStudCreator
             {
                 DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
                 projectType[5] = true;
+            }
+            if (project.TypeSysSec)
+            {
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
+            }
+            if (project.TypeSE)
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
             }
 
             POneType.SelectedValue = project.POneType.Id.ToString();
@@ -325,6 +335,35 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+        protected void SysSec_Click(object sender, ImageClickEventArgs e)
+        {
+            if (SysSec.ImageUrl == "pictures/projectTypSysSecUnchecked.png")
+            {
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
+            }
+            else
+            {
+                SysSec.ImageUrl = "pictures/projectTypSysSecUnchecked.png";
+                projectType[6] = false;
+            }
+            ViewState["Types"] = projectType;
+        }
+
+        protected void SE_Click(object sender, ImageClickEventArgs e)
+        {
+            if (SE.ImageUrl == "pictures/projectTypSEUnchecked.png")
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
+            }
+            else
+            {
+                SE.ImageUrl = "pictures/projectTypSEUnchecked.png";
+                projectType[7] = false;
+            }
+            ViewState["Types"] = projectType;
+        }
         #endregion
 
         #region Click handlers: Buttons (user)
@@ -461,7 +500,7 @@ namespace ProStudCreator
                 +"Dies sind die Gründe dafür:\n"
                 +"\n"
                 +"\n"
-                +"\n
+                +"\n"
                 +"Freundliche Grüsse\n"
                 +ShibUser.GetFirstName();
         }
@@ -510,7 +549,7 @@ namespace ProStudCreator
 
 #endregion
 
-#region Other view event handlers
+        #region Other view event handlers
 
         protected void deleteImage_Click(object sender, EventArgs e)
         {
@@ -525,6 +564,7 @@ namespace ProStudCreator
         }
 
         #endregion
+
         #region Timer tick
         protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
         {
@@ -547,6 +587,7 @@ namespace ProStudCreator
             }
         }
         #endregion
+
         #region fillproject
         public void fillproject(Project project)
         {
@@ -559,13 +600,15 @@ namespace ProStudCreator
             project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
             project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
 
-            // Project types
+            // Project categories
             project.TypeDesignUX = projectType[0];
             project.TypeHW = projectType[1];
             project.TypeCGIP = projectType[2];
             project.TypeMathAlg = projectType[3];
             project.TypeAppWeb = projectType[4];
             project.TypeDBBigData = projectType[5];
+            project.TypeSysSec = projectType[6];
+            project.TypeSE = projectType[7];
 
             // Languages
             project.LanguageGerman = LanguageGerman.Checked;
@@ -652,7 +695,6 @@ namespace ProStudCreator
                 }
             }
         }
-
     }
 }
 #endregion

@@ -197,6 +197,10 @@ namespace ProStudCreator
 		
 		private bool _DurationOneSemester;
 		
+		private bool _TypeSysSec;
+		
+		private bool _TypeSE;
+		
 		private EntityRef<Department> _Department;
 		
 		private EntityRef<ProjectTeamSize> _POneTeamSize;
@@ -295,6 +299,10 @@ namespace ProStudCreator
     partial void OnLanguageEnglishChanged();
     partial void OnDurationOneSemesterChanging(bool value);
     partial void OnDurationOneSemesterChanged();
+    partial void OnTypeSysSecChanging(bool value);
+    partial void OnTypeSysSecChanged();
+    partial void OnTypeSEChanging(bool value);
+    partial void OnTypeSEChanged();
     #endregion
 		
 		public Project()
@@ -1163,6 +1171,46 @@ namespace ProStudCreator
 					this._DurationOneSemester = value;
 					this.SendPropertyChanged("DurationOneSemester");
 					this.OnDurationOneSemesterChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeSysSec", DbType="Bit NOT NULL")]
+		public bool TypeSysSec
+		{
+			get
+			{
+				return this._TypeSysSec;
+			}
+			set
+			{
+				if ((this._TypeSysSec != value))
+				{
+					this.OnTypeSysSecChanging(value);
+					this.SendPropertyChanging();
+					this._TypeSysSec = value;
+					this.SendPropertyChanged("TypeSysSec");
+					this.OnTypeSysSecChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeSE", DbType="Bit NOT NULL")]
+		public bool TypeSE
+		{
+			get
+			{
+				return this._TypeSE;
+			}
+			set
+			{
+				if ((this._TypeSE != value))
+				{
+					this.OnTypeSEChanging(value);
+					this.SendPropertyChanging();
+					this._TypeSE = value;
+					this.SendPropertyChanged("TypeSE");
+					this.OnTypeSEChanged();
 				}
 			}
 		}

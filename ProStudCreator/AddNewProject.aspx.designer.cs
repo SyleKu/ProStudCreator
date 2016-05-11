@@ -220,6 +220,24 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.ImageButton DBBigData;
         
         /// <summary>
+        /// SysSec control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton SysSec;
+        
+        /// <summary>
+        /// SE control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton SE;
+        
+        /// <summary>
         /// LanguageGerman control.
         /// </summary>
         /// <remarks>
