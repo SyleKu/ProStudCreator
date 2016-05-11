@@ -96,7 +96,8 @@ namespace ProStudCreator
                     // TODO Replace makeshift fix for "Studiengang Informatik" users
                     if (userOU.Contains(",OU=62_I,"))
                     {
-                        result = 0; // Default to i4Ds. Could be defined by user somehow.
+                        // TODO Could be defined by a mapping in DB
+                        result = 1; // Default to IMVS.
                     }
                     else
                     {
