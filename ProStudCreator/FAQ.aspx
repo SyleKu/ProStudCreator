@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="FAQ.aspx.cs" Inherits="ProStudCreator.FAQ" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well usernSettings non-selectable">
+    <div class="well usernSettings">
         <h3>FAQ</h3>
         <h4>Welche Projekte eignen sich als IP5? Welche als IP6 (Bachelorthesis)?</h4>
         <p>

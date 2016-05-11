@@ -1,11 +1,11 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="Ablauf.aspx.cs" Inherits="ProStudCreator.Ablauf" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well usernSettings non-selectable">
+    <div class="well usernSettings">
         <h3>Durchführung eines Projektes</h3>
         <ol>
             <li>Den <a href="Content/Bewertungsbogen_P5_P9.xlsx" class="xls">Bewertungsbogen</a> herunterlagen</li>
-            <li>Die Gewichtung der Einzelpunkte passend festlegen (im Bereich 0 bis 2). Die Gewichtung der
+            <li>Die Gewichtung der Einzelpunkte passend festlegen. Die Gewichtung der
                 Zwischennoten (z.B. "FACHLICHES") nicht verändern. Die Gewichtung muss bis vor der
                 Projektvereinbarung mit den Studierenden besprochen und fixiert sein.
             </li>
