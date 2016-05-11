@@ -240,11 +240,11 @@ namespace ProStudCreator
                     {
                         PdfCreator pdfCreator = new PdfCreator();
                         pdfCreator.AppendToPDF(document, output,
-                            ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource).Select(p => db.Projects.Single(pr => pr.Id==p.id))
-
-                            
-                            
-                            );
+                            ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
+                                .Select(p => db.Projects.Single(pr => pr.Id==p.id))
+                                .OrderBy(p => p.Reservation1Name)
+                                .ThenBy(p => p.ProjectNr)
+                        );
                     }
                     bytesInStream = output.ToArray();
                 }
