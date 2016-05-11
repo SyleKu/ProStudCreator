@@ -47,7 +47,7 @@ namespace ProStudCreator
                 p.PublishedDate >= Semester.CurrentSemester.StartDate
                 && p.PublishedDate < Semester.CurrentSemester.EndDate
                 && p.State == ProjectState.Published
-            ).OrderBy(p => p.Reservation1Mail).ThenBy(p => p.ProjectNr).ToArray();
+            ).OrderBy(p => p.ProjectNr).ToArray();
 
             for (var i=0; i < projects.Length; i++)
             {
