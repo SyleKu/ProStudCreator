@@ -14,7 +14,7 @@
     
     --%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well usernSettings non-selectable">
+    <div class="well usernSettings">
         <h3>Termine</h3>
         <p>
             <i>Hinweis: Plane bei der Einreichung genügend Zeit für Iterationen ein!</i>
