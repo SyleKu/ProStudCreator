@@ -385,12 +385,19 @@ namespace ProStudCreator
                 return "projectTypMathAlg.png";
             else if (proj.TypeAppWeb)
                 return "projectTypAppWeb.png";
+            else if (proj.TypeSysSec)
+                return "projectTypSysSec.png";
+            else if (proj.TypeSE)
+                return "projectTypSE.png";
             else
                 return "projectTypDBBigData.png";
         }
 
         private string getCurrentProjectTypeTwo(Project proj)
         {
+            // Note: Complicated conditional statements relate to the order of returns in getCurrentProjectTypeOne
+            // TODO Consider extracting logic to a method that returns two project types. e.g. put in a list and pull out first two relevant types.
+
             if (proj.TypeHW && proj.TypeDesignUX)
                 return "projectTypHW.png";
             else if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
@@ -401,6 +408,10 @@ namespace ProStudCreator
                 return "projectTypAppWeb.png";
             else if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb))
                 return "projectTypDBBigData.png";
+            else if (proj.TypeSysSec && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb || proj.TypeDBBigData))
+                return "projectTypSysSec.png";
+            else if (proj.TypeSE && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb || proj.TypeDBBigData || proj.TypeSysSec))
+                return "projectTypSE.png";
             else
                 return "projectTypTransparent.png";
         }
