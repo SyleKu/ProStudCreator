@@ -44,22 +44,22 @@
             <tr>
                 <td>Abgabe IP5 Voll-/Teilzeit</td>
                 <td>24.06.2016</td>
-                <td>Mitte 01.2017</td>
+                <td>20.01.2017</td>
             </tr>
             <tr>
                 <td>Abgabe IP5 Berufsbegleitend</td>
                 <td>09.12.2016</td>
-                <td>Mitte 06.2017</td>
+                <td>16.06.2017</td>
             </tr>
             <tr>
                 <td>Abgabe IP6 (normal)</td>
                 <td>19.08.2016</td>
-                <td>Mitte 03.2017</td>
+                <td>31.03.2017 (Voll-/Teilzeit)<br/>19.03.2017 (Berufsbegleitend)</td>
             </tr>
             <tr>
                 <td>Abgabe IP6 (Variante b)</td>
                 <td>?</td>
-                <td>Mitte 08.2017</td>
+                <td>18.08.2017</td>
             </tr>
             <tr>
                 <td>Verteidigung IP6</td>

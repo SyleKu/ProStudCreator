@@ -191,6 +191,8 @@
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\Webauftritt_IP5_2016HS.pdf" />
+    <Content Include="Content\Webauftritt_IP6_2016HS.pdf" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>
