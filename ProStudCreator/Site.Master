@@ -75,7 +75,7 @@
                     &copy;<%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz
                 </div>
                 <div class="pull-right">
-                    Angemeldet als <%: ProStudCreator.ShibUser.GetEmail() + "(" + ProStudCreator.ShibUser.GetDepartmentName() + ")"  %> <%: ProStudCreator.ShibUser.IsAdmin() ? " (Admin)" : "" %>
+                    Angemeldet als <%: ProStudCreator.ShibUser.GetEmail() + " (" + ProStudCreator.ShibUser.GetDepartmentName() + ")"  %> <%: ProStudCreator.ShibUser.IsAdmin() ? " (Admin)" : "" %>
                     <% if (inDebugMode) { %>
                     <strong style="color: red">(DEBUG MODE)</strong>
                     <% } %>
