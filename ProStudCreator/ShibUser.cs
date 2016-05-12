@@ -94,7 +94,7 @@ namespace ProStudCreator
         public static string GetDepartmentName()
         {
             #if DEBUG
-            return null;
+            return "i4Ds";
             #else
 
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
