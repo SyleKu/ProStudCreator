@@ -177,6 +177,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="pictures\LogoPDF.png" />
     <Content Include="Content\pdf.png" />
+    <Content Include="pictures\projectTypSE.png" />
+    <Content Include="pictures\projectTypSEUnchecked.png" />
+    <Content Include="pictures\projectTypSysSec.png" />
+    <Content Include="pictures\projectTypSysSecUnchecked.png" />
     <Content Include="pictures\projectTypTransparent.png" />
     <Content Include="Content\Prozess.PNG" />
     <Content Include="Content\Bewertungsbogen_P5_P9.xlsx" />
