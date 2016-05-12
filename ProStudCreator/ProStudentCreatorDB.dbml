@@ -59,6 +59,7 @@
       <Column Name="DepartmentName" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="OUCode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
+      <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMaps" ThisKey="Id" OtherKey="departmentId" Type="UserDepartmentMap" />
     </Type>
   </Table>
   <Table Name="dbo.ProjectTeamSize" Member="ProjectTeamSizes">
@@ -81,6 +82,13 @@
       <Column Name="ExportValue" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="ProjectType_Project" Member="Projects" ThisKey="Id" OtherKey="P1TypeId" Type="Project" />
       <Association Name="ProjectType_Project1" Member="Projects1" ThisKey="Id" OtherKey="P2TypeId" Type="Project" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserDepartmentMap" Member="UserDepartmentMaps">
+    <Type Name="UserDepartmentMap">
+      <Column Name="email" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="departmentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="departmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

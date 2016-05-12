@@ -42,6 +42,9 @@ namespace ProStudCreator
     partial void InsertProjectType(ProjectType instance);
     partial void UpdateProjectType(ProjectType instance);
     partial void DeleteProjectType(ProjectType instance);
+    partial void InsertUserDepartmentMap(UserDepartmentMap instance);
+    partial void UpdateUserDepartmentMap(UserDepartmentMap instance);
+    partial void DeleteUserDepartmentMap(UserDepartmentMap instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
@@ -103,6 +106,14 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<ProjectType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<UserDepartmentMap> UserDepartmentMaps
+		{
+			get
+			{
+				return this.GetTable<UserDepartmentMap>();
 			}
 		}
 	}
@@ -1420,6 +1431,8 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects;
 		
+		private EntitySet<UserDepartmentMap> _UserDepartmentMaps;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1435,6 +1448,7 @@ namespace ProStudCreator
 		public Department()
 		{
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			this._UserDepartmentMaps = new EntitySet<UserDepartmentMap>(new Action<UserDepartmentMap>(this.attach_UserDepartmentMaps), new Action<UserDepartmentMap>(this.detach_UserDepartmentMaps));
 			OnCreated();
 		}
 		
@@ -1511,6 +1525,19 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_UserDepartmentMaps", ThisKey="Id", OtherKey="departmentId")]
+		public EntitySet<UserDepartmentMap> UserDepartmentMaps
+		{
+			get
+			{
+				return this._UserDepartmentMaps;
+			}
+			set
+			{
+				this._UserDepartmentMaps.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1538,6 +1565,18 @@ namespace ProStudCreator
 		}
 		
 		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = null;
+		}
+		
+		private void attach_UserDepartmentMaps(UserDepartmentMap entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = this;
+		}
+		
+		private void detach_UserDepartmentMaps(UserDepartmentMap entity)
 		{
 			this.SendPropertyChanging();
 			entity.Department = null;
@@ -1969,6 +2008,133 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.PTwoType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserDepartmentMap")]
+	public partial class UserDepartmentMap : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _email;
+		
+		private System.Nullable<int> _departmentId;
+		
+		private EntityRef<Department> _Department;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnemailChanging(string value);
+    partial void OnemailChanged();
+    partial void OndepartmentIdChanging(System.Nullable<int> value);
+    partial void OndepartmentIdChanged();
+    #endregion
+		
+		public UserDepartmentMap()
+		{
+			this._Department = default(EntityRef<Department>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this.OnemailChanging(value);
+					this.SendPropertyChanging();
+					this._email = value;
+					this.SendPropertyChanged("email");
+					this.OnemailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_departmentId", DbType="Int")]
+		public System.Nullable<int> departmentId
+		{
+			get
+			{
+				return this._departmentId;
+			}
+			set
+			{
+				if ((this._departmentId != value))
+				{
+					if (this._Department.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OndepartmentIdChanging(value);
+					this.SendPropertyChanging();
+					this._departmentId = value;
+					this.SendPropertyChanged("departmentId");
+					this.OndepartmentIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_Department", ThisKey="departmentId", OtherKey="Id", IsForeignKey=true)]
+		public Department Department
+		{
+			get
+			{
+				return this._Department.Entity;
+			}
+			set
+			{
+				Department previousValue = this._Department.Entity;
+				if (((previousValue != value) 
+							|| (this._Department.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Department.Entity = null;
+						previousValue.UserDepartmentMaps.Remove(this);
+					}
+					this._Department.Entity = value;
+					if ((value != null))
+					{
+						value.UserDepartmentMaps.Add(this);
+						this._departmentId = value.Id;
+					}
+					else
+					{
+						this._departmentId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Department");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

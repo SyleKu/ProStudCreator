@@ -84,32 +84,11 @@ namespace ProStudCreator
             return 0; // Department 0 = i4Ds
             
             #else
-            int? result;
-            string userOU = HttpContext.Current.Request.Headers["orgunit-dn"];
-            if (userOU.Length == 0) return null;
+            string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
+            Department dep = GetDepartment(orgUnitDn);
 
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => userOU.Contains(d.OUCode));
-                if (dep == null)
-                {
-                    // TODO Replace makeshift fix for "Studiengang Informatik" users
-                    if (userOU.Contains(",OU=62_I,"))
-                    {
-                        // TODO Could be defined by a mapping in DB
-                        result = 1; // Default to IMVS.
-                    }
-                    else
-                    {
-                        result = null;
-                    }
-                }
-                else
-                {
-                    result = new int?(dep.Id);
-                }
-            }
-            return result;
+            if (dep == null) return null;
+            else return dep.Id;
             #endif
         }
         public static string GetDepartmentName()
@@ -119,22 +98,11 @@ namespace ProStudCreator
             #else
 
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
-            if (orgUnitDn == null) return null; // Custom auth header not passed.
+            Department dep = GetDepartment(orgUnitDn);
 
-            string result;
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {                
-                Department dep = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
-                if (dep == null)
-                {
-                    result = null;
-                }
-                else
-                {
-                    result = dep.DepartmentName;
-                }
-            }
-            return result;
+            if (dep != null) return dep.DepartmentName;
+            else return null;
+
             #endif
         }
 
@@ -147,5 +115,27 @@ namespace ProStudCreator
         {
             return ShibUser.GetFirstName() + " " + ShibUser.GetLastName();
         }
+
+        private static Department GetDepartment(string orgUnitDn)
+        {
+            if (orgUnitDn == null) orgUnitDn = "";
+
+            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            {
+                Department dept;
+                dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+
+                if (dept == null)
+                {
+                    // Check if user is specifically mapped to a department. If so, return that dept.
+                    string userEmail = ShibUser.GetEmail();
+                    var userDeptMap = dbx.UserDepartmentMaps.SingleOrDefault(m => m.email == userEmail);
+                    dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.departmentId);
+                }
+
+                return dept;
+            }
+        }
+
     }
 }
