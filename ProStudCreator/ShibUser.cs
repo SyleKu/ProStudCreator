@@ -100,8 +100,7 @@ namespace ProStudCreator
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
             Department dep = GetDepartment(orgUnitDn);
 
-            if (dep != null) return dep.DepartmentName;
-            else return null;
+            return dep.DepartmentName ?? null;
 
             #endif
         }
@@ -130,7 +129,9 @@ namespace ProStudCreator
                     // Check if user is specifically mapped to a department. If so, return that dept.
                     string userEmail = ShibUser.GetEmail();
                     var userDeptMap = dbx.UserDepartmentMaps.SingleOrDefault(m => m.email == userEmail);
-                    dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.departmentId);
+
+                    if (userDeptMap == null) return null;
+                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.departmentId);
                 }
 
                 return dept;
