@@ -7,11 +7,7 @@ namespace ProStudCreator
     {
         public static bool IsAuthenticated()
         {
-            #if DEBUG
-                return true;
-            #else
-                return ShibUser.IsStaff() && ShibUser.GetDepartmentId().HasValue;
-            #endif
+            return ShibUser.IsStaff() && ShibUser.GetDepartmentId().HasValue;
         }
         public static bool IsAdmin()
         {
