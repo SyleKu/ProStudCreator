@@ -21,12 +21,16 @@
             var txtBoxValue = currentObject.value;
             var term = "@students.fhnw.ch";
             var index = txtBoxValue.indexOf(term);
-            if (index == -1) {
-                alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
-                currentObject.style.borderColor = 'red';
-            }
-            else {
-                currentObject.style.borderColor = 'green';
+            if (currentObject.value != "") {
+                if (index == -1) {
+                    alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
+                    currentObject.style.borderColor = 'red';
+                }
+                else {
+                    currentObject.style.borderColor = 'green';
+                }
+            } else {
+                currentObject.style.borderColor = '#ccc';
             }
 
         }
