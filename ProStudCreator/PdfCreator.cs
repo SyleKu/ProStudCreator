@@ -225,7 +225,7 @@ namespace ProStudCreator
                 foreach (var text in proj.ProblemStatement.ToLinkedParagraph(fontRegular, hyph))
                 {
                     text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, 1.0f);
+                    text.SetLeading(0.0f, LINE_HEIGHT);
                     text.Alignment = Element.ALIGN_JUSTIFIED;
                     text.IndentationRight = 10f;
                     document.Add(text);
