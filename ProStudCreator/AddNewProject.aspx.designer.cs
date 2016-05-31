@@ -238,22 +238,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.ImageButton SE;
         
         /// <summary>
-        /// LanguageGerman-Steuerelement
+        /// Language-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox LanguageGerman;
-        
-        /// <summary>
-        /// LanguageEnglish-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox LanguageEnglish;
+        protected global::System.Web.UI.WebControls.DropDownList Language;
         
         /// <summary>
         /// continuation-Steuerelement

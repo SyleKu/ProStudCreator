@@ -178,8 +178,21 @@ namespace ProStudCreator
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
             PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
 
-            LanguageGerman.Checked = project.LanguageGerman;
-            LanguageEnglish.Checked = project.LanguageEnglish;
+            if (project.LanguageEnglish == true && project.LanguageGerman == true)
+            {
+                Language.SelectedValue = "Deutsch und Englisch";
+            }
+            else if (project.LanguageEnglish == true && project.LanguageGerman != true)
+            {
+                Language.SelectedValue = "Nur Englisch";
+            }
+            else if(project.LanguageEnglish != true && project.LanguageGerman == true)
+            {
+                Language.SelectedValue = "Nur Deutsch";
+            }
+
+            //LanguageGerman.Checked = project.LanguageGerman;
+            //LanguageEnglish.Checked = project.LanguageEnglish;
 
             continuation.Checked = project.IsContinuation;
 
@@ -631,8 +644,29 @@ namespace ProStudCreator
             project.TypeSE = projectType[7];
 
             // Languages
-            project.LanguageGerman = LanguageGerman.Checked;
-            project.LanguageEnglish = LanguageEnglish.Checked;
+            if (Language.SelectedValue == "Deutsch und Englisch")
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = true;
+
+            }else if (Language.SelectedValue == "Nur Deutsch")
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = false;
+
+            }else if (Language.SelectedValue == "Nur Englisch")
+            {
+                project.LanguageGerman = false;
+                project.LanguageEnglish = true;
+            }
+            else
+            {
+                project.LanguageGerman = false;
+                project.LanguageEnglish = false;
+            }
+
+            //project.LanguageGerman = LanguageGerman.Checked;
+            //project.LanguageEnglish = LanguageEnglish.Checked;
 
             // continuation
             project.IsContinuation = continuation.Checked;

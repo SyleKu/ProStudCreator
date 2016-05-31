@@ -175,12 +175,8 @@
             </asp:UpdatePanel>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
-                <div class="col-sm-8">
-                    <asp:CheckBox ID="LanguageGerman" CssClass="checkbox" Text="Deutsch" Checked="true" runat="server" CausesValidation="true" />
-                </div>
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="oder:"></asp:Label>
-                <div class="col-sm-6">
-                    <asp:CheckBox ID="LanguageEnglish" CssClass="checkbox" Text="Englisch" runat="server" CausesValidation="true" Checked="true"/>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control"><asp:ListItem Text="Englisch und Deutsch" /><asp:ListItem Text="Nur Deutsch"/><asp:ListItem Text="Nur Englisch" /></asp:DropDownList>
                 </div>
             </div>
             <div class="form-group">

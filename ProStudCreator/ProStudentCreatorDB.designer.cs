@@ -216,8 +216,6 @@ namespace ProStudCreator
 		
 		private bool _continuation;
 		
-		private int _Language;
-		
 		private EntityRef<Department> _Department;
 		
 		private EntityRef<ProjectTeamSize> _POneTeamSize;
@@ -324,8 +322,6 @@ namespace ProStudCreator
     partial void OnImgDescriptionChanged();
     partial void OnIsContinuationChanging(bool value);
     partial void OnIsContinuationChanged();
-    partial void OnLanguageChanging(int value);
-    partial void OnLanguageChanged();
     #endregion
 		
 		public Project()
@@ -1274,26 +1270,6 @@ namespace ProStudCreator
 					this._continuation = value;
 					this.SendPropertyChanged("IsContinuation");
 					this.OnIsContinuationChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Language", DbType="Int NOT NULL")]
-		public int Language
-		{
-			get
-			{
-				return this._Language;
-			}
-			set
-			{
-				if ((this._Language != value))
-				{
-					this.OnLanguageChanging(value);
-					this.SendPropertyChanging();
-					this._Language = value;
-					this.SendPropertyChanged("Language");
-					this.OnLanguageChanged();
 				}
 			}
 		}
