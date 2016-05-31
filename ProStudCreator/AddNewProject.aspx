@@ -237,16 +237,17 @@
                     <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-3 col-md-offset-3">
-                    <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Bild Beschreibung" Visible="true"></asp:TextBox>
+                <div class="form-group">
+                    <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
+                    <div class="col-md-9">
+                        <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="200"></asp:TextBox>
+                    </div>
                 </div>
-            </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">
