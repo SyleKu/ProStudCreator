@@ -44,6 +44,8 @@ namespace ProStudCreator
         {
             var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
             var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+            var fontsmall = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+            fontsmall.SetColor(100, 100, 100);
 
             var fontRegularLink = new Font(fontRegular);
             fontRegularLink.Color = BaseColor.BLUE;
@@ -162,6 +164,16 @@ namespace ProStudCreator
             //
             if (proj.Picture != null)
             {
+                if (proj.ImgDescription != "" && proj.ImgDescription != null)
+                {
+                    foreach (var text in proj.ImgDescription.ToLinkedParagraph(fontsmall, hyph))
+                    {
+                        text.SpacingAfter = SPACING_AFTER_TITLE;
+                        text.Alignment = Element.ALIGN_RIGHT;
+                        document.Add(text);
+                    }
+                }
+
                 var image = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
                 // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
                 // image.ScaleAbsoluteWidth(160f);
@@ -186,8 +198,8 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                
-                foreach(var text in proj.InitialPosition.ToLinkedParagraph(fontRegular,hyph))
+
+                foreach (var text in proj.InitialPosition.ToLinkedParagraph(fontRegular, hyph))
                 {
                     text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, LINE_HEIGHT);
@@ -197,6 +209,7 @@ namespace ProStudCreator
 
                 }
             }
+
             if (proj.Objective != "")
             {
                 document.Add(new Paragraph("Ziel der Arbeit", fontHeading)
@@ -282,6 +295,11 @@ namespace ProStudCreator
             if (proj.DurationOneSemester)
             {
                 strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
+            }
+
+            if (proj.continuation == true)
+            {
+                strComments += "Dieses Projekt ist eine Fortführung eines früheren Projekts.\n";
             }
 
             if (strComments.Length > 0)

@@ -181,6 +181,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Fortführung:"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox ID="continuation" CssClass="checkbox" Text="Dieses Projekt ist eine Fortführung eines früheren Projektes." runat="server" CausesValidation="true" />
+                </div>
+            </div>
+
+            <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
                 <div class="col-sm-6">
                     <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." runat="server" />
@@ -215,17 +222,21 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
+                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" OnLoad="Page_Load" /><small>(max. 1MB)</small>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
                 </div>
-                <div class="col-sm-2"></div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <div class="col-sm-9">
-                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
+                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-md-offset-3">
+                    <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Bild Beschreibung" Visible="true"></asp:TextBox>
                 </div>
             </div>
             <hr />

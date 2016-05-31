@@ -42,6 +42,8 @@ namespace ProStudCreator
                 Image1.Visible = true;
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
+                imgdescription.Visible = true;
+                imgdescription.Text = project.ImgDescription;
             }
             else
             {
@@ -179,6 +181,8 @@ namespace ProStudCreator
             LanguageGerman.Checked = project.LanguageGerman;
             LanguageEnglish.Checked = project.LanguageEnglish;
 
+            continuation.Checked = project.continuation;
+
             DurationOneSemester.Checked = project.DurationOneSemester;
 
             InitialPositionContent.Text = project.InitialPosition;
@@ -187,6 +191,8 @@ namespace ProStudCreator
             {
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
+                imgdescription.Visible = true;
+                imgdescription.Text = project.ImgDescription;                
             }
             else
             {
@@ -374,25 +380,7 @@ namespace ProStudCreator
         protected void saveProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-
-            string errorMessage = reservationMessage();
-
-            //Generate JavaScript alert with error message
-            if (errorMessage != null)
-            {
-                var sb = new StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(errorMessage);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
-            }
-            else
-            {
-                Response.Redirect("AddNewProject?id=" + project.Id);
-            }
+            Response.Redirect("AddNewProject?id=" + project.Id);            
         }
         /// <summary>
         /// Save the current state of the form and return to project list.
@@ -400,25 +388,7 @@ namespace ProStudCreator
         protected void saveCloseProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-
-            string errorMessage = reservationMessage();
-
-            //Generate JavaScript alert with error message
-            if (errorMessage != null)
-            {
-                var sb = new StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(errorMessage);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
-            }
-            else
-            {
-                Response.Redirect("projectlist");
-            }
+            Response.Redirect("projectlist");          
         }
 
 
@@ -490,11 +460,6 @@ namespace ProStudCreator
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
-            return null;
-        }
-
-        private string reservationMessage()
-        {
             if (project.Reservation1Mail != "" && project.Reservation1Name == "")
                 return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
@@ -507,9 +472,11 @@ namespace ProStudCreator
             else if (project.Reservation2Name != "" && project.Reservation2Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
 
+            if (project.Picture != null && project.ImgDescription == "")
+                return "Bitte beschriften Sie ihr Bild";
+
             return null;
         }
-
         #endregion
 
         #region Click handlers: Buttons (admin only)
@@ -667,6 +634,9 @@ namespace ProStudCreator
             project.LanguageGerman = LanguageGerman.Checked;
             project.LanguageEnglish = LanguageEnglish.Checked;
 
+            // continuation
+            project.continuation = continuation.Checked;
+
             // Duration
             project.DurationOneSemester = DurationOneSemester.Checked;
 
@@ -729,6 +699,11 @@ namespace ProStudCreator
                 project.GenerateProjectNr();
             }
 
+            //picture description
+            if (AddPicture.HasFile)
+            {
+                project.ImgDescription = imgdescription.Text.FixupParagraph();
+            }
 
             if (AddPicture.HasFile)
             {
