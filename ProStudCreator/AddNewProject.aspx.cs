@@ -181,7 +181,7 @@ namespace ProStudCreator
             LanguageGerman.Checked = project.LanguageGerman;
             LanguageEnglish.Checked = project.LanguageEnglish;
 
-            continuation.Checked = project.continuation;
+            continuation.Checked = project.IsContinuation;
 
             DurationOneSemester.Checked = project.DurationOneSemester;
 
@@ -635,7 +635,7 @@ namespace ProStudCreator
             project.LanguageEnglish = LanguageEnglish.Checked;
 
             // continuation
-            project.continuation = continuation.Checked;
+            project.IsContinuation = continuation.Checked;
 
             // Duration
             project.DurationOneSemester = DurationOneSemester.Checked;

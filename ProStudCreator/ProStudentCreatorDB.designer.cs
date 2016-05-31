@@ -320,8 +320,8 @@ namespace ProStudCreator
     partial void OnTypeSEChanged();
     partial void OnImgDescriptionChanging(string value);
     partial void OnImgDescriptionChanged();
-    partial void OncontinuationChanging(bool value);
-    partial void OncontinuationChanged();
+    partial void OnIsContinuationChanging(bool value);
+    partial void OnIsContinuationChanged();
     #endregion
 		
 		public Project()
@@ -1255,7 +1255,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_continuation", DbType="bit NOT NULL")]
-		public bool continuation
+		public bool IsContinuation
 		{
 			get
 			{
@@ -1265,11 +1265,11 @@ namespace ProStudCreator
 			{
 				if ((this._continuation != value))
 				{
-					this.OncontinuationChanging(value);
+					this.OnIsContinuationChanging(value);
 					this.SendPropertyChanging();
 					this._continuation = value;
-					this.SendPropertyChanged("continuation");
-					this.OncontinuationChanged();
+					this.SendPropertyChanged("IsContinuation");
+					this.OnIsContinuationChanged();
 				}
 			}
 		}

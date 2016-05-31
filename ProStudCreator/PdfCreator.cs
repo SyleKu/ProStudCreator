@@ -297,11 +297,6 @@ namespace ProStudCreator
                 strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
 
-            if (proj.continuation == true)
-            {
-                strComments += "Dieses Projekt ist eine Fortführung eines früheren Projekts.\n";
-            }
-
             if (strComments.Length > 0)
             {
                 document.Add(new Paragraph("Bemerkungen", fontHeading)
