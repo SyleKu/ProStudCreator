@@ -142,13 +142,11 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description, fontRegular));
 
             // Row 4
-            var strLang = "";
-            if (proj.LanguageGerman)  strLang += "Deutsch";
-            if (proj.LanguageEnglish)
-            {
-                if (strLang.Length > 0) strLang += ", ";
-                strLang += "Englisch";
-            }
+            var strLang = "Deutsch oder Englisch";
+            if (proj.LanguageEnglish && !proj.LanguageGerman)
+                strLang = "Englisch";
+            if (proj.LanguageGerman && !proj.LanguageEnglish)
+                strLang = "Deutsch";
 
             projectTable.AddCell(new Paragraph("Sprachen:", fontHeading));
             projectTable.AddCell(new Paragraph(strLang.ToString(), fontRegular));
