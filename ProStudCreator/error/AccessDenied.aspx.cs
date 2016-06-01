@@ -13,15 +13,8 @@ namespace ProStudCreator.error
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            string deptName = deptName = ShibUser.GetDepartmentName();
-
-            errorMsg += "Login:\t" + ShibUser.GetEmail() + "\n";
-
-            if (deptName==null)
-                errorMsg += "Abteilung: Konnte nicht abgerufen werden.\n";
-            else
-                errorMsg += "Abteilung: " + ShibUser.GetDepartmentName() + "\n";
-            
+            errorMsg += "Login:\t" + (ShibUser.GetEmail() ?? "(Nicht verfübar)") + "\n";
+            errorMsg += "Abteilung: " + (ShibUser.GetDepartmentName() ?? "(Nicht verfübar)") + "\n";
         }
     }
 }
