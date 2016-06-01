@@ -178,17 +178,17 @@ namespace ProStudCreator
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
             PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
 
-            if (project.LanguageEnglish == true && project.LanguageGerman == true)
-            {
-                Language.SelectedValue = "Deutsch und Englisch";
-            }
-            else if (project.LanguageEnglish == true && project.LanguageGerman != true)
+            if (project.LanguageEnglish && !project.LanguageGerman)
             {
                 Language.SelectedValue = "Nur Englisch";
             }
-            else if(project.LanguageEnglish != true && project.LanguageGerman == true)
+            else if(!project.LanguageEnglish && project.LanguageGerman)
             {
                 Language.SelectedValue = "Nur Deutsch";
+            }
+            else
+            {
+                Language.SelectedValue = "Deutsch oder Englisch";
             }
 
             //LanguageGerman.Checked = project.LanguageGerman;

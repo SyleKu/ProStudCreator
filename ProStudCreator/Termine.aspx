@@ -69,7 +69,7 @@
             <tr>
                 <td>Ausstellung Bachelorthesen</td>
                 <td>19.08.2016</td>
-                <td>?</td>
+                <td>keine</td>
             </tr>
         </table>
     </div>
