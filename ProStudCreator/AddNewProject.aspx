@@ -21,12 +21,16 @@
             var txtBoxValue = currentObject.value;
             var term = "@students.fhnw.ch";
             var index = txtBoxValue.indexOf(term);
-            if (index == -1) {
-                alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
-                currentObject.style.borderColor = 'red';
-            }
-            else {
-                currentObject.style.borderColor = 'green';
+            if (currentObject.value != "") {
+                if (index == -1) {
+                    alert("Geben Sie eine E-Mail Adresse an, welche mit @students.fhnw.ch endet");
+                    currentObject.style.borderColor = 'red';
+                }
+                else {
+                    currentObject.style.borderColor = 'green';
+                }
+            } else {
+                currentObject.style.borderColor = '#ccc';
             }
 
         }
@@ -171,11 +175,17 @@
             </asp:UpdatePanel>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
-                <div class="col-sm-6">
-                    <asp:CheckBox ID="LanguageGerman" CssClass="checkbox" Text="Deutsch" Checked="true" runat="server" CausesValidation="true" />
-                    <asp:CheckBox ID="LanguageEnglish" CssClass="checkbox" Text="Englisch" runat="server" CausesValidation="true" />
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control"><asp:ListItem Text="Englisch und Deutsch" /><asp:ListItem Text="Nur Deutsch"/><asp:ListItem Text="Nur Englisch" /></asp:DropDownList>
                 </div>
             </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Fortführung:"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox ID="continuation" CssClass="checkbox" Text="Dieses Projekt ist eine Fortführung eines früheren Projektes." runat="server" CausesValidation="true" />
+                </div>
+            </div>
+
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
                 <div class="col-sm-6">
@@ -211,24 +221,29 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
+                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label"/><small>(max. 1MB)</small>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
                 </div>
-                <div class="col-sm-2"></div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <div class="col-sm-9">
-                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
+                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
                 </div>
             </div>
+                <div class="form-group">
+                    <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
+                    <div class="col-md-9">
+                        <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="200"></asp:TextBox>
+                    </div>
+                </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">

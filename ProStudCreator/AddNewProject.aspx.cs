@@ -42,6 +42,8 @@ namespace ProStudCreator
                 Image1.Visible = true;
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
+                imgdescription.Visible = true;
+                imgdescription.Text = project.ImgDescription;
             }
             else
             {
@@ -68,7 +70,7 @@ namespace ProStudCreator
                 ProblemStatementContent.Attributes.Add("placeholder", "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
                 ReferencesContent.Attributes.Add("placeholder", "Beispiel:\n- JavaScript\n- Komplexe Datenstrukturen\n- Three.js/WebGL");
                 RemarksContent.Attributes.Add("placeholder", "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
-                
+
                 POneType.DataSource = db.ProjectTypes;
                 POneTeamSize.DataSource = db.ProjectTeamSizes;
                 PTwoType.DataSource = Enumerable.Repeat<ProjectType>(new ProjectType
@@ -81,7 +83,7 @@ namespace ProStudCreator
                     Description = "-",
                     Id = -1
                 }, 1).Concat(db.ProjectTeamSizes);
-                
+
                 Department.DataSource = db.Departments;
                 int? dep = ShibUser.GetDepartmentId();
                 if (dep.HasValue)
@@ -176,8 +178,23 @@ namespace ProStudCreator
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
             PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
 
-            LanguageGerman.Checked = project.LanguageGerman;
-            LanguageEnglish.Checked = project.LanguageEnglish;
+            if (project.LanguageEnglish == true && project.LanguageGerman == true)
+            {
+                Language.SelectedValue = "Deutsch und Englisch";
+            }
+            else if (project.LanguageEnglish == true && project.LanguageGerman != true)
+            {
+                Language.SelectedValue = "Nur Englisch";
+            }
+            else if(project.LanguageEnglish != true && project.LanguageGerman == true)
+            {
+                Language.SelectedValue = "Nur Deutsch";
+            }
+
+            //LanguageGerman.Checked = project.LanguageGerman;
+            //LanguageEnglish.Checked = project.LanguageEnglish;
+
+            continuation.Checked = project.IsContinuation;
 
             DurationOneSemester.Checked = project.DurationOneSemester;
 
@@ -187,6 +204,8 @@ namespace ProStudCreator
             {
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
+                imgdescription.Visible = true;
+                imgdescription.Text = project.ImgDescription;                
             }
             else
             {
@@ -238,7 +257,7 @@ namespace ProStudCreator
 
             db.SubmitChanges();
             project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
-            db.SubmitChanges();
+            db.SubmitChanges();   
         }
 
         private void toggleReservationTwoVisible()
@@ -374,7 +393,7 @@ namespace ProStudCreator
         protected void saveProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-            Response.Redirect("AddNewProject?id=" + project.Id);
+            Response.Redirect("AddNewProject?id=" + project.Id);            
         }
         /// <summary>
         /// Save the current state of the form and return to project list.
@@ -382,10 +401,10 @@ namespace ProStudCreator
         protected void saveCloseProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-            Response.Redirect("projectlist");
+            Response.Redirect("projectlist");          
         }
 
-        
+
         protected void cancelNewProject_Click(object sender, EventArgs e)
         {
             Response.Redirect("projectlist");
@@ -454,9 +473,23 @@ namespace ProStudCreator
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
+            if (project.Reservation1Mail != "" && project.Reservation1Name == "")
+                return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            else if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+                return "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            else if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+
+            else if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            if (project.Picture != null && project.ImgDescription == "")
+                return "Bitte beschriften Sie ihr Bild";
+
             return null;
         }
-
         #endregion
 
         #region Click handlers: Buttons (admin only)
@@ -466,7 +499,7 @@ namespace ProStudCreator
             project.Publish();
             db.SubmitChanges();
 
-            #if !DEBUG
+#if !DEBUG
             // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
@@ -484,7 +517,7 @@ namespace ProStudCreator
             
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
-            #endif
+#endif
 
             Response.Redirect("projectlist");
         }
@@ -509,7 +542,7 @@ namespace ProStudCreator
             project.Reject();
             db.SubmitChanges();
 
-            #if !DEBUG
+#if !DEBUG
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
             if (project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
@@ -521,7 +554,7 @@ namespace ProStudCreator
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
-            #endif
+#endif
             Response.Redirect("projectlist");
         }
 
@@ -547,7 +580,7 @@ namespace ProStudCreator
             Response.Redirect("projectlist");
         }
 
-#endregion
+        #endregion
 
         #region Other view event handlers
 
@@ -573,7 +606,7 @@ namespace ProStudCreator
                 PdfCreator pdfc = new PdfCreator();
 
                 fillproject(project);
-           
+
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
                     Pdfupdatelabel.Text = "Länge: Das PDF ist länger als eine Seite!";
@@ -611,8 +644,32 @@ namespace ProStudCreator
             project.TypeSE = projectType[7];
 
             // Languages
-            project.LanguageGerman = LanguageGerman.Checked;
-            project.LanguageEnglish = LanguageEnglish.Checked;
+            if (Language.SelectedValue == "Deutsch und Englisch")
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = true;
+
+            }else if (Language.SelectedValue == "Nur Deutsch")
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = false;
+
+            }else if (Language.SelectedValue == "Nur Englisch")
+            {
+                project.LanguageGerman = false;
+                project.LanguageEnglish = true;
+            }
+            else
+            {
+                project.LanguageGerman = false;
+                project.LanguageEnglish = false;
+            }
+
+            //project.LanguageGerman = LanguageGerman.Checked;
+            //project.LanguageEnglish = LanguageEnglish.Checked;
+
+            // continuation
+            project.IsContinuation = continuation.Checked;
 
             // Duration
             project.DurationOneSemester = DurationOneSemester.Checked;
@@ -676,6 +733,11 @@ namespace ProStudCreator
                 project.GenerateProjectNr();
             }
 
+            //picture description
+            if (AddPicture.HasFile)
+            {
+                project.ImgDescription = imgdescription.Text.FixupParagraph();
+            }
 
             if (AddPicture.HasFile)
             {
