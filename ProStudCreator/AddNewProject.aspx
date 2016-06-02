@@ -176,7 +176,7 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control"><asp:ListItem Text="Englisch und Deutsch" /><asp:ListItem Text="Nur Deutsch"/><asp:ListItem Text="Nur Englisch" /></asp:DropDownList>
+                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control"><asp:ListItem Text="Deutsch oder Englisch" /><asp:ListItem Text="Nur Deutsch"/><asp:ListItem Text="Nur Englisch" /></asp:DropDownList>
                 </div>
             </div>
             <div class="form-group">

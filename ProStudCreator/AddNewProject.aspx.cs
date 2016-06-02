@@ -180,7 +180,7 @@ namespace ProStudCreator
 
             if (project.LanguageEnglish == true && project.LanguageGerman == true)
             {
-                Language.SelectedValue = "Deutsch und Englisch";
+                Language.SelectedValue = "Deutsch oder Englisch";
             }
             else if (project.LanguageEnglish == true && project.LanguageGerman != true)
             {
@@ -189,6 +189,10 @@ namespace ProStudCreator
             else if(project.LanguageEnglish != true && project.LanguageGerman == true)
             {
                 Language.SelectedValue = "Nur Deutsch";
+            }
+            else
+            {
+                Language.SelectedValue = "Deutsch oder Englisch";
             }
 
             //LanguageGerman.Checked = project.LanguageGerman;
@@ -644,7 +648,7 @@ namespace ProStudCreator
             project.TypeSE = projectType[7];
 
             // Languages
-            if (Language.SelectedValue == "Deutsch und Englisch")
+            if (Language.SelectedValue == "Deutsch oder Englisch")
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = true;

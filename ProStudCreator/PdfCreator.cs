@@ -12,6 +12,14 @@ namespace ProStudCreator
 {
     public class PdfCreator
     {
+        public const float LINE_HEIGHT = 1.1f;
+        public const float SPACING_BEFORE_TITLE = 16f;
+        public float SPACING_AFTER_TITLE = 2f;
+
+        public Font fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+        public Font fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+        public Font fontsmall = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+
         ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         HyphenationAuto hyph = new HyphenationAuto("de", "none", 2, 2);
 
@@ -40,20 +48,13 @@ namespace ProStudCreator
             
         }
 
+
         private void WritePDF(Project currentProject, Document document)
         {
-            var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-            var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
-            var fontsmall = FontFactory.GetFont(FontFactory.HELVETICA, 8);
-            fontsmall.SetColor(100, 100, 100);
 
             var fontRegularLink = new Font(fontRegular);
             fontRegularLink.Color = BaseColor.BLUE;
             fontRegularLink.SetStyle("underline");
-
-            const float LINE_HEIGHT = 1.1f;
-            const float SPACING_BEFORE_TITLE = 16f;
-            const float SPACING_AFTER_TITLE = 2f;
 
             //
             // Header contents
@@ -142,13 +143,11 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description, fontRegular));
 
             // Row 4
-            var strLang = "";
-            if (proj.LanguageGerman)  strLang += "Deutsch";
-            if (proj.LanguageEnglish)
-            {
-                if (strLang.Length > 0) strLang += ", ";
-                strLang += "Englisch";
-            }
+            var strLang = "Deutsch oder Englisch";
+            if (proj.LanguageEnglish && !proj.LanguageGerman)
+                strLang = "Englisch";
+            if (proj.LanguageGerman && !proj.LanguageEnglish)
+                strLang = "Deutsch";
 
             projectTable.AddCell(new Paragraph("Sprachen:", fontHeading));
             projectTable.AddCell(new Paragraph(strLang.ToString(), fontRegular));
@@ -162,122 +161,36 @@ namespace ProStudCreator
             //
             // Body
             //
+
+            //pdf with image
             if (proj.Picture != null)
             {
-                if (proj.ImgDescription != "" && proj.ImgDescription != null)
-                {
-                    foreach (var text in proj.ImgDescription.ToLinkedParagraph(fontsmall, hyph))
-                    {
-                        text.SpacingAfter = SPACING_AFTER_TITLE;
-                        text.Alignment = Element.ALIGN_RIGHT;
-                        document.Add(text);
-                    }
-                }
+                var img = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
+                float height = img.ScaledHeight;
+                float width = img.ScaledWidth;
 
-                var image = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
-                // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
-                // image.ScaleAbsoluteWidth(160f);
-                float h = image.ScaledHeight;
-                float w = image.ScaledWidth;
-                image.Alignment = iTextSharp.text.Image.TEXTWRAP | Element.ALIGN_RIGHT;
-
-                if (w > h)
-                    image.ScaleToFit(250f, 150f);
-                else if (h >= 300 || w >= 200)
-                    image.ScaleToFit(150f, 250f);
-                else
-                    image.ScaleToFit(100f, 200f);
-                document.Add(image);
+                //checks witch layout should be used.
+                //if((height > 250f || width > 250f) && (proj.Objective.Length - proj.ProblemStatement.Length < 100) && (proj.Objective.Length - proj.ProblemStatement.Length > -100) ) //TODO if this layouts creates more then one site, the smalllayout should be used.
+                //{
+                //    tablelayout(proj, img, document);                               
+                //}
+                //else if(height > 400f || width > 400f) //TODO if this layout creates more then one page, the smallLayout should be used.
+                //{
+                //    bigimgLayout(proj, img, width, height, document);
+                //}
+                //else
+                //{
+                    smallLayout(proj, width, height, img, document);
+                //}
             }
-
-            if (proj.InitialPosition != "")
+            else
+            //pdf without image
             {
-                document.Add(new Paragraph("Ausgangslage", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-
-                foreach (var text in proj.InitialPosition.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    document.Add(text);
-
-                }
-            }
-
-            if (proj.Objective != "")
-            {
-                document.Add(new Paragraph("Ziel der Arbeit", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-
-                foreach (var text in proj.Objective.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    document.Add(text);
-                }
-            }
-            if (proj.ProblemStatement != "")
-            {
-                document.Add(new Paragraph("Problemstellung", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-                foreach (var text in proj.ProblemStatement.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    document.Add(text);
-                }
-                
-            }
-            if (proj.References != "")
-            {
-                document.Add(new Paragraph("Technologien/Fachliche Schwerpunkte/Referenzen", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-                foreach (var text in proj.References.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    document.Add(text);
-                }
-            }
-            if (proj.Remarks != "")
-            {
-                document.Add(new Paragraph("Bemerkungen", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-                foreach (var text in proj.Remarks.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    document.Add(text);
-                }
+                addparagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
+                addparagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
+                addparagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
+                addparagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
+                addparagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
             }
 
             //
@@ -442,6 +355,288 @@ namespace ProStudCreator
                     return pdfReader.NumberOfPages;
                 }
             }
+        }
+
+        private void celladjusting(PdfPCell cell)
+        {
+            cell.HorizontalAlignment = 0;
+            cell.Border = Rectangle.NO_BORDER;
+        }
+
+        private void add1coltitel(iTextSharp.text.pdf.PdfPTable table, String test, String titel)
+        {
+            if (test != "")
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(new Paragraph(titel, fontHeading)
+                {
+
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+
+                }));
+                celladjusting(cell);
+                table.AddCell(cell);
+
+            }
+            else
+            {
+                //filler because the layout would be wrong
+                PdfPCell filler = new PdfPCell();
+                celladjusting(filler);
+                table.AddCell(filler);
+            }
+        }
+
+        private void add1colcontent(iTextSharp.text.pdf.PdfPTable table, String test, String content)
+        {
+            if (test != "")
+            {
+                PdfPCell cell = new PdfPCell();
+
+                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    cell.AddElement(text);
+                }
+                celladjusting(cell);
+                table.AddCell(cell);
+            }
+            else
+            {
+                //filler because the layout would be wrong
+                PdfPCell filler = new PdfPCell();
+                celladjusting(filler);
+                table.AddCell(filler);
+            }
+        }
+
+        private void add2coltitel(iTextSharp.text.pdf.PdfPTable table, String test, String titel)
+        {
+            if (test != "")
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(new Paragraph(titel, fontHeading)
+                {
+
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+
+                }));
+
+                cell.Colspan = 2;
+                celladjusting(cell);
+                table.AddCell(cell);
+            }
+        }
+
+        private void add2colcontent(iTextSharp.text.pdf.PdfPTable table, String test, String content)
+        {
+            if (test != "")
+            {
+                PdfPCell cell = new PdfPCell();
+                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    cell.AddElement(text);
+                }
+                cell.Colspan = 2;
+                celladjusting(cell);
+                table.AddCell(cell);
+            }
+        }
+
+        private void addimgtotable(iTextSharp.text.pdf.PdfPTable table, iTextSharp.text.Image img, String content)
+        {
+            fontsmall.SetColor(100, 100, 100);
+            img.ScaleToFit(228f, 250f);
+            PdfPCell cell = new PdfPCell();
+            cell.AddElement(img);
+            Phrase p = new Phrase(new Chunk(content, fontsmall));
+            cell.AddElement(p);
+
+            celladjusting(cell);
+            table.AddCell(cell);
+        }
+
+        private void smallLayout(Project proj, float width, float height, iTextSharp.text.Image img, Document document)
+        {
+            // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
+            // image.ScaleAbsoluteWidth(160f); 
+
+            Paragraph p = new Paragraph();
+
+            p.Alignment = iTextSharp.text.Image.TEXTWRAP | Element.ALIGN_RIGHT;
+
+            img.Alignment = iTextSharp.text.Image.TEXTWRAP | Element.ALIGN_RIGHT;
+
+            if (width > height)
+            {
+                img.ScaleToFit(250f, 150f);
+            }
+            else if (height >= 300 || width >= 200)
+            {
+                img.ScaleToFit(150f, 250f);
+            }
+            else
+            {
+                img.ScaleToFit(100f, 200f);
+            }
+
+            document.Add(img);
+
+            //if (proj.ImgDescription != "")
+            //{
+            //    fontsmall.SetColor(100, 100, 100);
+            //    Paragraph pa = new Paragraph(proj.ImgDescription, fontsmall);
+            //    p.Add(pa);
+            //}
+
+            //document.Add(p);
+
+
+            addparagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
+            addparagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
+            addparagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
+            addparagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
+            addparagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
+        }
+
+        private void tablelayout(Project proj, iTextSharp.text.Image img, Document document)
+        {
+            //table settings
+            PdfPTable table = new PdfPTable(2);
+            table.DefaultCell.Border = Rectangle.NO_BORDER;
+            table.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.WidthPercentage = 100f;
+            table.SpacingAfter = 6f;
+            table.SetWidths(new float[] { 50, 50 });
+
+
+            //initailposition titel row0
+            add2coltitel(table, proj.InitialPosition, "Ausgangslage");
+
+            //initialposition content row0 
+            add2colcontent(table, proj.InitialPosition, proj.InitialPosition);
+
+            //Another row just to put some space between them
+            add2colcontent(table, "filler", "");
+
+            //add subtable for the rowspan
+            PdfPTable subtable = new PdfPTable(1);
+            subtable.DefaultCell.Border = Rectangle.NO_BORDER;
+            subtable.HorizontalAlignment = Element.ALIGN_CENTER;
+            subtable.WidthPercentage = 100f;
+            subtable.SpacingAfter = 6f;
+
+            //subtable row 1
+            add1coltitel(subtable, proj.Objective, "Ziel der Arbeit");
+
+            //subtable row 2
+            add1colcontent(subtable, proj.Objective, proj.Objective);
+
+            //subtable row 3
+            add1colcontent(subtable, "filler", "");
+
+            //subtable row 4
+            add1coltitel(subtable, proj.ProblemStatement, "Problemstellung");
+
+            //subtable row 5
+            add1colcontent(subtable, proj.ProblemStatement, proj.ProblemStatement);
+
+            //add subtable to table
+            PdfPCell subtablecell = new PdfPCell();
+            subtablecell.AddElement(subtable);
+            celladjusting(subtablecell);
+            table.AddCell(subtablecell);
+
+            //add image
+            addimgtotable(table, img, proj.ImgDescription);
+
+            //Another row just to put some space between them
+            add2colcontent(table, "filler", "");
+
+            //row3 titel
+            add2coltitel(table, proj.References, "Technologien/Fachliche Schwerpunkte/Referenzen");
+
+            //row3 content
+            add2colcontent(table, proj.References, proj.References);
+
+            //Another row just to put some space between them
+            add2colcontent(table, "filler", "");
+
+            //row4 titel
+            add2coltitel(table, proj.Remarks, "Bemerkungen");
+
+            //row4 content
+            add2colcontent(table, proj.Remarks, proj.Remarks);
+
+            //add the table to the pdf
+            document.Add(table);
+        }
+
+        private void addparagraph(String test, Document document, String title, String content)
+        {
+            if (test != "")
+            {
+                document.Add(new Paragraph(title, fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+
+                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    text.IndentationRight = 10f;
+                    document.Add(text);
+                }
+            }
+        }
+
+        private void bigimgLayout(Project proj, iTextSharp.text.Image img, float width, float height, Document document)
+        {
+            addparagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
+
+            img.Alignment = Element.ALIGN_LEFT;
+
+            if (width > height)
+            {
+                img.ScaleToFit(472f, 472f);
+            }
+            else if (height >= 500 || width >= 300)
+            {
+                img.ScaleToFit(250f, 450f);
+            }
+            else
+            {
+                img.ScaleToFit(150f, 350f);
+            }
+
+            img.SpacingBefore = SPACING_BEFORE_TITLE;
+            document.Add(img);
+
+            if (proj.ImgDescription != "")
+            {
+                fontsmall.SetColor(100, 100, 100);
+
+                Paragraph p = new Paragraph(proj.ImgDescription, fontsmall);
+                p.SpacingAfter = SPACING_AFTER_TITLE;
+                p.PaddingTop = -1f;
+                p.Alignment = Element.ALIGN_JUSTIFIED;
+
+                document.Add(p);
+            }
+
+            addparagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
+            addparagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
+            addparagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
+            addparagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
         }
     }
 }
