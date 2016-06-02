@@ -180,15 +180,15 @@ namespace ProStudCreator
 
             if (project.LanguageEnglish && !project.LanguageGerman)
             {
-                Language.SelectedValue = "Nur Englisch";
+                Language.SelectedIndex = 2;
             }
             else if(!project.LanguageEnglish && project.LanguageGerman)
             {
-                Language.SelectedValue = "Nur Deutsch";
+                Language.SelectedIndex = 1;
             }
             else
             {
-                Language.SelectedValue = "Deutsch oder Englisch";
+                Language.SelectedIndex = 0;
             }
 
             //LanguageGerman.Checked = project.LanguageGerman;
@@ -463,8 +463,8 @@ namespace ProStudCreator
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
-            if (! (project.LanguageGerman || project.LanguageEnglish))
-                return "Bitte wählen Sie mindestens eine Sprache aus.";
+            //if (! (project.LanguageGerman || project.LanguageEnglish))
+            //    return "Bitte wählen Sie mindestens eine Sprache aus.";
 
             var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
             if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
@@ -644,25 +644,25 @@ namespace ProStudCreator
             project.TypeSE = projectType[7];
 
             // Languages
-            if (Language.SelectedValue == "Deutsch oder Englisch")
+            if (Language.SelectedIndex == 0)
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = true;
 
-            }else if (Language.SelectedValue == "Nur Deutsch")
+            }else if (Language.SelectedIndex == 1)
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = false;
 
-            }else if (Language.SelectedValue == "Nur Englisch")
+            }else if (Language.SelectedIndex == 2)
             {
                 project.LanguageGerman = false;
                 project.LanguageEnglish = true;
             }
             else
             {
-                project.LanguageGerman = false;
-                project.LanguageEnglish = false;
+                project.LanguageGerman = true;
+                project.LanguageEnglish = true;
             }
 
             //project.LanguageGerman = LanguageGerman.Checked;
