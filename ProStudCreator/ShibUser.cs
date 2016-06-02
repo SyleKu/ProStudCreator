@@ -96,7 +96,7 @@ namespace ProStudCreator
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
             Department dep = GetDepartment(orgUnitDn);
 
-            return dep.DepartmentName ?? null;
+            return (dep == null) ? null : dep.DepartmentName;
 
             #endif
         }
