@@ -661,8 +661,7 @@ namespace ProStudCreator
             }
             else
             {
-                project.LanguageGerman = true;
-                project.LanguageEnglish = true;
+                throw new System.ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
             }
 
             //project.LanguageGerman = LanguageGerman.Checked;
