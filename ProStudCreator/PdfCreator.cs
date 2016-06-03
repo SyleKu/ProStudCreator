@@ -458,6 +458,7 @@ namespace ProStudCreator
 
                 foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
                 {
+                    text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, LINE_HEIGHT);
                     text.Alignment = Element.ALIGN_JUSTIFIED;
                     text.IndentationRight = 10f;
@@ -527,7 +528,7 @@ namespace ProStudCreator
         private void SmallLayout(Project proj, float width, float height, iTextSharp.text.Image img, Document document)
         {
 
-            if (proj.ImgDescription != "")
+            if (proj.ImgDescription != "") //TODO Try to add this comment below the image
             {
                 fontsmall.SetColor(100, 100, 100);
                 Paragraph pa = new Paragraph(proj.ImgDescription, fontsmall);
