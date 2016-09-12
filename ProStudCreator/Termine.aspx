@@ -45,7 +45,7 @@
                 <td class="warning">Mitte 01.2017</td>
                 <td>Anfang 07.2017</td>
             </tr>
-            <tr>
+            <tr><!-- \\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene -->
                 <td>Abgabe IP5 Voll-/Teilzeit</td>
                 <td>24.06.2016</td>
                 <td class="success">20.01.2017</td>
@@ -80,8 +80,8 @@
                 <td class="warning">Mitte 09.2017</td>
                 <td>Mitte 04.2018</td>
             </tr>
-            <tr>
-                <td>Ausstellung Bachelorthesen</td><!-- http://www.fhnw.ch/technik/bachelor/informationen/termine/studientermine -->
+            <tr><!-- http://www.fhnw.ch/technik/bachelor/informationen/termine/studientermine -->
+                <td>Ausstellung Bachelorthesen</td>
                 <td>19.08.2016</td>
                 <td class="success">keine</td>
                 <td class="warning">18.08.2017</td>
