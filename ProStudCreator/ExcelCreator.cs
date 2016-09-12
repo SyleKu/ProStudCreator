@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NPOI.SS.UserModel;
+using System.Collections.Generic;
 
 namespace ProStudCreator
 {
@@ -23,13 +24,18 @@ namespace ProStudCreator
                 "Modules",
                 "Fixe Zuteilung",
                 "Fixe Zuteilung 2",
-                "Kommentar"
+                "Kommentar",
+                "ID",
+                "SingleSemester",
+                "Continuation",
+                "German",
+                "English"
             };
 
         // References
         // - http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
 
-        public static void generateProjectList(Stream outStream)
+        public static void GenerateProjectList(Stream outStream, IEnumerable<Project> _projects)
         { 
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(SHEET_NAME);
@@ -43,11 +49,7 @@ namespace ProStudCreator
 
             // Project entries
             ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-            var projects = db.Projects.Where(p =>
-                p.PublishedDate >= Semester.CurrentSemester.StartDate
-                && p.PublishedDate < Semester.CurrentSemester.EndDate
-                && p.State == ProjectState.Published
-            ).OrderBy(p => p.ProjectNr).ToArray();
+            var projects = _projects.ToArray();
 
             for (var i=0; i < projects.Length; i++)
             {
@@ -82,8 +84,12 @@ namespace ProStudCreator
             row.CreateCell(12).SetCellValue(p.Reservation1Mail);
             row.CreateCell(13).SetCellValue(p.Reservation2Mail);
             row.CreateCell(14).SetCellValue("");  // Comment undefined
-            
-        }
+            row.CreateCell(15).SetCellValue(p.Id);
 
+            row.CreateCell(16).SetCellValue(p.DurationOneSemester ? 1 : 0);
+            row.CreateCell(17).SetCellValue(p.IsContinuation ? 1 : 0);
+            row.CreateCell(18).SetCellValue(p.LanguageGerman ? 1 : 0);
+            row.CreateCell(19).SetCellValue(p.LanguageEnglish ? 1 : 0);
+        }
     }
 }

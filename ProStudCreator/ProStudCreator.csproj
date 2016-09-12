@@ -175,6 +175,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="PDF.aspx" />
     <Content Include="pictures\LogoPDF.png" />
     <Content Include="Content\pdf.png" />
     <Content Include="pictures\projectTypSE.png" />
@@ -285,6 +286,13 @@
       <DependentUpon>AccessDenied.aspx</DependentUpon>
     </Compile>
     <Compile Include="ExcelCreator.cs" />
+    <Compile Include="PDF.aspx.cs">
+      <DependentUpon>PDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PDF.aspx.designer.cs">
+      <DependentUpon>PDF.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ProStudentCreatorDB.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

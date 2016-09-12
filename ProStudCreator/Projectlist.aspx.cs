@@ -75,21 +75,21 @@ namespace ProStudCreator
                     projects =
                         from p in projects
                         where p.PublishedDate >= (Semester.CurrentSemester - 2).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 2).EndDate && p.State == ProjectState.Published
-                        orderby p.ProjectNr
+                        orderby p.Department.DepartmentName, p.ProjectNr
                         select p;
                     break;
                 case "AllFutureProjects":
                     projects =
                         from p in projects
                         where p.PublishedDate >= Semester.CurrentSemester.StartDate && p.State == ProjectState.Published
-                        orderby p.ProjectNr
+                        orderby p.Department.DepartmentName, p.ProjectNr
                         select p;
                     break;
                 case "AllCurrentProjects":
                     projects =
                         from p in projects
                         where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && p.State == ProjectState.Published
-                        orderby p.ProjectNr
+                        orderby p.Department.DepartmentName, p.ProjectNr
                         select p;
                     break;
                 case "InProgress":
@@ -102,14 +102,14 @@ namespace ProStudCreator
                     projects =
                         from item in projects
                         where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Submitted
-                        orderby item.ProjectNr
+                        orderby item.Department.DepartmentName, item.ProjectNr
                         select item;
                     break;
                 case "Published":
                     projects =
                         from item in projects
                         where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Published
-                        orderby item.ProjectNr
+                        orderby item.Department.DepartmentName, item.ProjectNr
                         select item;
                     break;
             }
@@ -187,9 +187,6 @@ namespace ProStudCreator
             var id = Convert.ToInt32(e.CommandArgument);
             switch (e.CommandName)
             {
-                case "SinglePDF":
-                    CreateSinglePDF(db.Projects.Single((Project i) => i.Id == id));
-                    break;
                 case "revokeSubmission":
                     Project projectr = db.Projects.Single((Project i) => i.Id == id);
                     projectr.State = ProjectState.InProgress;
@@ -205,28 +202,11 @@ namespace ProStudCreator
                 case "editProject":
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
+                default:
+                    throw new Exception();
             }
         }
 
-
-        private void CreateSinglePDF(Project idPDF)
-        {
-            byte[] bytesInStream;
-            using (var output = new MemoryStream())
-            {
-                using (var document = PdfCreator.CreateDocument())
-                {
-                    PdfCreator pdfCreator = new PdfCreator();
-                    pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
-                }
-                bytesInStream = output.ToArray();
-            }
-            Response.Clear();
-            Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", "attachment; filename=" + idPDF.Department.DepartmentName + idPDF.ProjectNr.ToString("00") + ".pdf");
-            Response.BinaryWrite(bytesInStream);
-            Response.End();
-        }
         protected void AllProjectsAsPDF_Click(object sender, EventArgs e)
         {
             if (AllProjects.Rows.Count != 0)
@@ -240,7 +220,7 @@ namespace ProStudCreator
                         pdfCreator.AppendToPDF(document, output,
                             ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                                 .Select(p => db.Projects.Single(pr => pr.Id==p.id))
-                                .OrderBy(p => p.Reservation1Name)
+                                .OrderBy(p => p.Reservation1Name!=null)
                                 .ThenBy(p => p.ProjectNr)
                         );
                     }
@@ -271,16 +251,18 @@ namespace ProStudCreator
             byte[] bytesInStream;
             using (var output = new MemoryStream())
             {
-                ExcelCreator.generateProjectList(output);
+                ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
+                                .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                                .OrderBy(p => p.Reservation1Name!=null)
+                                .ThenBy(p => p.ProjectNr));
                 bytesInStream = output.ToArray();
             }
 
             Response.Clear();
             Response.ContentType = "application/Excel";
-            Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte-" + Semester.CurrentSemester + ".xlsx");
+            Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte.xlsx");
             Response.BinaryWrite(bytesInStream);
             Response.End();
-
         }
 
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
