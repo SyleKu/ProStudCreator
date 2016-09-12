@@ -22,7 +22,7 @@
                 <ul>
                     <li>Ein Hinweis, dass auf diesem <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a> Unterlagen zu finden sind.</li>
                     <li>Anleitung zum obligatorischen Websummary für <a href="Content/Webauftritt_IP5_2016HS.pdf" class="pdf">IP5</a> oder <a href="Content/Webauftritt_IP6_2016HS.pdf" class="pdf">IP6</a></li>
-                    <li>Optional: <a href="Content/P5_P6_Guide_20151117.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a></li>
+                    <li>Optional: <a href="Content/P5_P6_Guide_20160906.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a></li>
                     <li>Optional: <a href="Content/Leitfaden_Berichte_4.01.pdf" class="pdf">Offizieller Leitfaden für Berichte</a></li>
                     <li>Optional: <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                 </ul>

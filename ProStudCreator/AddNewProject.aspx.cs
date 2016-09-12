@@ -42,8 +42,8 @@ namespace ProStudCreator
                 Image1.Visible = true;
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
-                imgdescription.Visible = true;
-                imgdescription.Text = project.ImgDescription;
+                //imgdescription.Visible = true;
+                //imgdescription.Text = project.ImgDescription;
             }
             else
             {
@@ -204,7 +204,6 @@ namespace ProStudCreator
             {
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
-                imgdescription.Visible = true;
                 imgdescription.Text = project.ImgDescription;                
             }
             else
@@ -485,9 +484,9 @@ namespace ProStudCreator
             else if (project.Reservation2Name != "" && project.Reservation2Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
 
-            if (project.Picture != null && project.ImgDescription == "")
+            /*if (project.Picture != null && project.ImgDescription == "")
                 return "Bitte beschriften Sie ihr Bild";
-
+                */
             return null;
         }
         #endregion
@@ -734,10 +733,7 @@ namespace ProStudCreator
             }
 
             //picture description
-            if (AddPicture.HasFile)
-            {
-                project.ImgDescription = imgdescription.Text.FixupParagraph();
-            }
+            project.ImgDescription = imgdescription.Text.FixupParagraph();
 
             if (AddPicture.HasFile)
             {
