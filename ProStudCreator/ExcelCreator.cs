@@ -66,7 +66,7 @@ namespace ProStudCreator
 
         private static void projectToExcelRow(Project p, IRow row)
         {
-            string abbreviation = Semester.CurrentSemester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr;
+            string abbreviation = Semester.CurrentSemester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
             string dispName = abbreviation + "_" + p.Name;
 
             row.CreateCell(0).SetCellValue(abbreviation);

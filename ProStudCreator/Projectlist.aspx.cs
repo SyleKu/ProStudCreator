@@ -220,7 +220,8 @@ namespace ProStudCreator
                         pdfCreator.AppendToPDF(document, output,
                             ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                                 .Select(p => db.Projects.Single(pr => pr.Id==p.id))
-                                .OrderBy(p => p.Reservation1Name!=null)
+                                .OrderBy(p => p.Reservation1Name!="")
+                                .ThenBy(p => p.Department.DepartmentName)
                                 .ThenBy(p => p.ProjectNr)
                         );
                     }
@@ -253,7 +254,8 @@ namespace ProStudCreator
             {
                 ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                                 .Select(p => db.Projects.Single(pr => pr.Id == p.id))
-                                .OrderBy(p => p.Reservation1Name!=null)
+                                .OrderBy(p => p.Reservation1Name!="")
+                                .ThenBy(p => p.Department.DepartmentName)
                                 .ThenBy(p => p.ProjectNr));
                 bytesInStream = output.ToArray();
             }
@@ -273,7 +275,5 @@ namespace ProStudCreator
             //    select getProjectSingleElement(i);
             //AllProjects.DataBind();
         }
-
-
     }
 }
