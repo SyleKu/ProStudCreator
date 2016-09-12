@@ -211,11 +211,10 @@ namespace ProStudCreator
 
         private void CreateSinglePDF(Project idPDF)
         {
-            float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
             byte[] bytesInStream;
             using (var output = new MemoryStream())
             {
-                using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
+                using (var document = PdfCreator.CreateDocument())
                 {
                     PdfCreator pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
@@ -232,11 +231,10 @@ namespace ProStudCreator
         {
             if (AllProjects.Rows.Count != 0)
             {
-                float margin = Utilities.MillimetersToPoints(System.Convert.ToSingle(20));
                 byte[] bytesInStream;
                 using (var output = new MemoryStream())
                 {
-                    using (var document = new Document(PageSize.A4, margin, margin, margin, margin))
+                    using (var document = PdfCreator.CreateDocument())
                     {
                         PdfCreator pdfCreator = new PdfCreator();
                         pdfCreator.AppendToPDF(document, output,
