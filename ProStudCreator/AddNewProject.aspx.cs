@@ -256,7 +256,7 @@ namespace ProStudCreator
 
             db.SubmitChanges();
             project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
-            db.SubmitChanges();   
+            db.SubmitChanges();
         }
 
         private void toggleReservationTwoVisible()
@@ -495,6 +495,16 @@ namespace ProStudCreator
 
         protected void publishProject_Click(object sender, EventArgs e)
         {
+            project.ModificationDate = DateTime.Now;
+            project.LastEditedBy = ShibUser.GetEmail();
+
+            fillproject(project);
+
+            db.SubmitChanges();
+
+            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
+            db.SubmitChanges();
+
             project.Publish();
             db.SubmitChanges();
 
