@@ -27,9 +27,9 @@
                     <li>Optional: <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                 </ul>
             </li>
-            <li>Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
+            <li>Nur für FS-Projekte: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
-            <li>Die Studierenden <a href="Content/Webauftritt_2015HS.pdf" class="pdf">erstellen das Websummary</a>.</li>
+            <li><strong>NEU: KEIN WEBSUMMARY MEHR!</strong> <s>Die Studierenden <a href="Content/Webauftritt_2015HS.pdf" class="pdf">erstellen das Websummary</a>.</s></li>
             <li>Fülle nach der Projektabgabe den Bewertungsbogen aus.</li>
             <li>Schlusspräsentation mit 20-40 Minuten Präsentation, und 20-40 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
             <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
