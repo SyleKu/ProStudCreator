@@ -99,7 +99,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Returns whether it's a spring or autumn semester ("FS" or "HS")
+        /// Returns whether it's a spring (FS) or autumn semester (HS)
         /// </summary>
         public string FSHS
         {
@@ -113,12 +113,12 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Returns HS15 for example
+        /// Returns 16HS for example (year, semester)
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return FSHS+Year.ToString().Substring(2);
+            return Year.ToString().Substring(2)+FSHS;
         }
     }
 }
