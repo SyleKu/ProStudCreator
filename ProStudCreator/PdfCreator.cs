@@ -12,7 +12,6 @@ namespace ProStudCreator
 {
     public class PdfCreator
     {
-
         enum Layout
         {
             BigPictureInTheMiddle,
@@ -51,13 +50,11 @@ namespace ProStudCreator
             writer.PageEvent = ef;
             document.Open();
 
-                foreach (Project project in projects)
-                {
-                    ef.CurrentProject = project;
-                    WritePDF(project, document);
-         
-                } 
-            
+            foreach (Project project in projects)
+            {
+                ef.CurrentProject = project;
+                WritePDF(project, document);
+            } 
         }
 
         private void AppendToPDF(MemoryStream output, IEnumerable<Project> projects, Layout layout, Document document)
@@ -89,22 +86,20 @@ namespace ProStudCreator
 
         private void WritePDF(Project currentProject, Document document)
         {
-
             foreach (Layout l in Enum.GetValues(typeof(Layout)))
             {
                 if ( CalcNumberOfPages(currentProject, l) == 1)
-                    {
-                        WritePDF(currentProject, document, l);
-                        return;
-                    }
-                 
+                {
+                    WritePDF(currentProject, document, l);
+                    return;
+                }
             }
+
             WritePDF(currentProject, document, Layout.PictureRightFloat);
         }
 
         private void WritePDF(Project currentProject, Document document, Layout layout)
         {
-
             var fontRegularLink = new Font(fontRegular);
             fontRegularLink.Color = BaseColor.BLUE;
             fontRegularLink.SetStyle("underline");
@@ -218,38 +213,52 @@ namespace ProStudCreator
             //pdf with image
             if (proj.Picture != null)
             {
-                var img = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
-                float height = img.ScaledHeight;
-                float width = img.ScaledWidth;
+                try
+                {
+                    var img = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
+                    float height = img.ScaledHeight;
+                    float width = img.ScaledWidth;
 
-                //checks witch layout should be used.
-                switch (layout)
-                {            
-                    case Layout.BigPictureInTheMiddle:
-                        BigImgLayout(proj, img, document);
-                        break;
-                    case Layout.PictureRightNoFloat:
-                        TableLayout(proj, img, document);
-                        break;
-                    case Layout.PictureRightFloat:
-                        SmallLayout(proj, width, height, img, document);
-                        break;
+                    //checks witch layout should be used.
+                    switch (layout)
+                    {
+                        case Layout.BigPictureInTheMiddle:
+                            BigImgLayout(proj, img, document);
+                            break;
+                        case Layout.PictureRightNoFloat:
+                            TableLayout(proj, img, document);
+                            break;
+                        case Layout.PictureRightFloat:
+                            SmallLayout(proj, width, height, img, document);
+                            break;
+                    }
                 }
-            } else
-            {
+                catch(IOException)
+                {
+                    //could not parse the image...
 
+                    //pdf without image
+                    AddParagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
+                    AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
+                    AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
+                    AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
+                    AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
+                }
+            }
+            else
+            {
                 //pdf without image
                 AddParagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
                 AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
                 AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
                 AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
                 AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
-
             }
+
+            
             //
             // Footer
             //
-
             var strComments = "";
             if (proj.Reservation1Name != "")
             {
