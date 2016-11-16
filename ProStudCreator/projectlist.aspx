@@ -53,7 +53,7 @@
         <hr />
         <div class="radioButtonSettings non-selectable marginProject">
             <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-4" TextAlign="Right">
-                <asp:ListItem Value="AllProjects">Alle Projekte</asp:ListItem>
+                <asp:ListItem Value="AllProjects">Veröffentlichte Projekte</asp:ListItem>
                 <asp:ListItem Value="OwnProjects" Selected="True">Nur eigene Projekte</asp:ListItem>
             </asp:RadioButtonList>
         </div>
