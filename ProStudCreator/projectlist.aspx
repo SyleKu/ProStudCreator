@@ -108,7 +108,7 @@
             = Abgelehnt&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
             = PDF >1 Seite&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ffaa82" />
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ff8c40" />
             = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <div style="margin-top: 16px;">
