@@ -76,6 +76,11 @@ hr {
     margin: 18px 0;
 }
 
+.textPadding input[type="checkbox"] {
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
 .non-selectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -312,6 +317,21 @@ small {
     margin-top: 0.25%;
     position: absolute;
     float: left;
-    text-align:left;
+    text-align: left;
     font-size: large;
+}
+
+.floatleft {
+    float: left;
+}
+
+.outerfloat {
+    display:inline-block;
+    width:100%;
+    align-items:center;
+    text-align:center;
+}
+
+.marginProject{
+    margin-left:20px;
 }
