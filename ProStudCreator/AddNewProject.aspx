@@ -236,7 +236,7 @@
                 <div class="form-group">
                     <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
                     <div class="col-md-9">
-                        <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="200"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="100"></asp:TextBox>
                     </div>
                 </div>
             <hr />

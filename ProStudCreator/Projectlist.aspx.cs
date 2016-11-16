@@ -198,7 +198,8 @@ namespace ProStudCreator
         }
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Sort") return;
+            if (e.CommandName == "Sort")
+                return;
 
             var id = Convert.ToInt32(e.CommandArgument);
             switch (e.CommandName)
@@ -219,7 +220,7 @@ namespace ProStudCreator
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
                 default:
-                    throw new Exception();
+                    throw new Exception("Unknown command "+e.CommandName);
             }
         }
 
