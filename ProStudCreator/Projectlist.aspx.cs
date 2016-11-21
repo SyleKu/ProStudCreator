@@ -35,22 +35,12 @@ namespace ProStudCreator
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            Semester.DataSource = new int[] {1,32,5,6456 }.Concat(db.Semester.OrderByDescending(s => s.StartDate).Select(s => s.Id));
+            Semester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
             Semester.DataBind();
             var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
             Semester.SelectedValue = currentSemester.ToString();
             Semester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", "0"));
             Semester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("--------------------------", "."));
-        }
-
-        private IEnumerable<Semester> Hurz()
-        {
-
-            yield return new Semester();
-            yield return new Semester();
-
-            foreach (var s in db.Semester.OrderByDescending(s => s.StartDate))
-                yield return s;
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -86,7 +76,7 @@ namespace ProStudCreator
             AllProjects.DataBind();
             CheckProjects.DataBind();
 
-            //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest.
+            //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
             Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
         }
 
