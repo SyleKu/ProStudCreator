@@ -607,15 +607,6 @@ namespace ProStudCreator
             //subtable row 2
             Add1ColContent(subtable, proj.Objective, proj.Objective);
 
-            //subtable row 3
-            Add1ColContent(subtable, "filler", "");
-
-            //subtable row 4
-            Add1ColTitle(subtable, proj.ProblemStatement, "Problemstellung");
-
-            //subtable row 5
-            Add1ColContent(subtable, proj.ProblemStatement, proj.ProblemStatement);
-
             //add subtable to table
             PdfPCell subtablecell = new PdfPCell();
             subtablecell.AddElement(subtable);
@@ -624,6 +615,15 @@ namespace ProStudCreator
 
             //add image
             AddImgtoTable(table, img, proj.ImgDescription);
+
+            //Another row just to put some space between them
+            Add2ColContent(table, "filler", "");
+
+            //subtable row 4
+            Add2ColTitle(table, proj.ProblemStatement, "Problemstellung");
+
+            //subtable row 5
+            Add2ColContent(table, proj.ProblemStatement, proj.ProblemStatement);
 
             //Another row just to put some space between them
             Add2ColContent(table, "filler", "");
