@@ -39,8 +39,8 @@ namespace ProStudCreator
             Semester.DataBind();
             var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
             Semester.SelectedValue = currentSemester.ToString();
-            Semester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", "0"));
-            Semester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("--------------------------", "."));
+            Semester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
+            Semester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -91,11 +91,11 @@ namespace ProStudCreator
             switch (filter)
             {
                 case "OwnProjects":
-                    if (Semester.SelectedValue == "0")
+                    if (Semester.SelectedValue == "")
                     {
                         projects =
                             from p in projects
-                            where p.Creator == ShibUser.GetEmail()
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail()) && p.State != ProjectState.Deleted
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
@@ -103,13 +103,15 @@ namespace ProStudCreator
                     {
                         projects =
                             from p in projects
-                            where (p.Creator == ShibUser.GetEmail() && p.State == ProjectState.Published && p.Semester.Id.ToString() == Semester.SelectedValue) || ((p.State == ProjectState.InProgress || p.State == ProjectState.Submitted || p.State == ProjectState.Deleted) && Semester.SelectedValue == ProStudCreator.Semester.NextSemester.Id.ToString())
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
+                                && (p.State != ProjectState.Deleted)
+                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State==ProjectState.Published) || (int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id && p.Semester == null) || ((p.State !=ProjectState.Deleted && p.State != ProjectState.Published) && int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id) ))
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
                     break;
                 case "AllProjects":
-                    if (Semester.SelectedValue == "0")
+                    if (Semester.SelectedValue == "")
                     {
                         projects =
                             from p in projects
@@ -121,7 +123,7 @@ namespace ProStudCreator
                     {
                         projects =
                             from p in projects
-                            where p.State == ProjectState.Published && p.Semester.Id.ToString() == Semester.SelectedValue
+                            where p.State == ProjectState.Published && p.Semester.Id == int.Parse(Semester.SelectedValue)
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
@@ -222,7 +224,7 @@ namespace ProStudCreator
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
                 default:
-                    throw new Exception("Unknown command "+e.CommandName);
+                    throw new Exception("Unknown command " + e.CommandName);
             }
         }
 

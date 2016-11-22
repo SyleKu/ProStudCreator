@@ -400,7 +400,7 @@ namespace ProStudCreator
         protected void saveCloseProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-            Response.Redirect("projectlist");          
+            Response.Redirect("projectlist");      
         }
 
 
