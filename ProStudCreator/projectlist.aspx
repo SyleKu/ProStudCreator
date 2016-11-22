@@ -49,16 +49,15 @@
         <div class="col-sm-3">
             <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="Semester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
         </div>
-        <br />
-        <hr />
+        <div class="col-sm-1"></div>
         <div class="radioButtonSettings non-selectable marginProject">
-            <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-6" TextAlign="Right">
+            <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-5" TextAlign="Right">
                 <asp:ListItem Value="AllProjects">Veröffentlichte Projekte</asp:ListItem>
                 <asp:ListItem Value="OwnProjects" Selected="True">Nur eigene Projekte</asp:ListItem>
             </asp:RadioButtonList>
         </div>
         <br />
-        <br />
+        <hr />
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">
             <asp:GridView ID="AllProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" OnRowDataBound="AllProjects_RowDataBound" AllowSorting="True" OnSorting="AllProjects_Sorting">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
@@ -108,7 +107,7 @@
             = Abgelehnt&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
             = PDF >1 Seite&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ff8c40" />
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ffcc99" />
             = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <div style="margin-top: 16px;">

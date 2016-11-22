@@ -181,7 +181,7 @@ namespace ProStudCreator
                 }
                 else if (project.State == ProjectState.Submitted)
                 {
-                    col = new Color?(ColorTranslator.FromHtml("#ff8c40"));
+                    col = new Color?(ColorTranslator.FromHtml("#ffcc99"));
                 }
                 else if (project.OverOnePage)
                 {
