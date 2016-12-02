@@ -46,16 +46,18 @@
         </div>
     </asp:PlaceHolder>
     <div class="well usernSettings non-selectable">
-        <div class="radioButtonSettings non-selectable">
-            <asp:RadioButtonList ID="ListFilter" RepeatDirection="Horizontal" runat="server" AutoPostBack="true">
-                <asp:ListItem Value="AllPastProjects">Vergangene Semester</asp:ListItem>
-                <asp:ListItem Value="AllCurrentProjects">Laufendes Semester</asp:ListItem>
-                <asp:ListItem Value="AllFutureProjects">N&auml;chstes Semester</asp:ListItem>
-                <asp:ListItem Value="InProgress" Selected="True">Eigene, nicht eingereicht</asp:ListItem>
-                <asp:ListItem Value="Submitted">Eigene, eingereicht</asp:ListItem>
-                <%--<asp:ListItem Value="Published">Eigene, veröffentlicht</asp:ListItem>--%>
+        <div class="col-sm-3">
+            <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="Semester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="radioButtonSettings non-selectable marginProject">
+            <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-5" TextAlign="Right">
+                <asp:ListItem Value="AllProjects">Veröffentlichte Projekte</asp:ListItem>
+                <asp:ListItem Value="OwnProjects" Selected="True">Nur eigene Projekte</asp:ListItem>
             </asp:RadioButtonList>
         </div>
+        <br />
+        <hr />
         <div class="well" style="background-color: #ffffff; margin-top: 10px;">
             <asp:GridView ID="AllProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" OnRowDataBound="AllProjects_RowDataBound" AllowSorting="True" OnSorting="AllProjects_Sorting">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
@@ -95,14 +97,20 @@
                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
             </asp:GridView>
         </div>
-        <div style="font-size:70%">
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#CEECF5" /> <%--
+        <div style="font-size: 70%">
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#CEECF5" />
+            <%--
             <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight"/>--%> = In Bearbeitung&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#A9F5A9" /> = Veröffentlicht&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" /> = Abgelehnt&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" /> = PDF >1 Seite&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#A9F5A9" />
+            = Veröffentlicht&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" />
+            = Abgelehnt&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
+            = PDF >1 Seite&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ffcc99" />
+            = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
-        <div style="margin-top:16px;">
+        <div style="margin-top: 16px;">
             <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click" />
             <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont pdf" Text="Projekte als PDF" OnClick="AllProjectsAsPDF_Click" />
             <asp:Button runat="server" ID="AllProjectsAsExcel" CssClass="btn btn-default buttonFont" Text="Projektliste in Excel" OnClick="AllProjectsAsExcel_Click" />

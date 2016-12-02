@@ -116,6 +116,7 @@
       <Column Name="LogExpertPaid" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="LogDefenceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="LogDefenceRoom" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="SemesterId" Member="SemersterId" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="BillingStatus_Project" Member="BillingStatus" ThisKey="BillingStatusID" OtherKey="id" Type="BillingStatus" IsForeignKey="true" />
       <Association Name="Expert_Project" Member="Expert" ThisKey="LogExpertID" OtherKey="id" Type="Expert" IsForeignKey="true" />
@@ -125,6 +126,26 @@
       <Association Name="ProjectType_Project1" Member="PTwoType" ThisKey="P2TypeId" OtherKey="Id" Type="ProjectType" IsForeignKey="true" />
       <Association Name="ProjectTeamSize_Project" Member="POneTeamSize" ThisKey="P1TeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
       <Association Name="ProjectTeamSize_Project1" Member="PTwoTeamSize" ThisKey="P2TeamSizeId" OtherKey="Id" Type="ProjectTeamSize" IsForeignKey="true" />
+      <Association Name="Semester_Project" Member="Semester" Storage="_Semesters" ThisKey="SemersterId" OtherKey="Id" Type="Semester" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Semester">
+    <Type Name="Semester">
+      <Column Name="Id" AutoSync="OnInsert" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
+      <Column Name="ProjectSubmissionUntil" Storage="_ProjectSubmit" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
+      <Column Name="ProjectAllocation" Type="System.String" DbType="NVarChar(50)" CanBeNull="false" />
+      <Column Name="SubmissionIP5FullPartTime" Type="System.String" DbType="NVarChar(50)" CanBeNull="false" />
+      <Column Name="SubmissionIP5Accompanying" Type="System.String" DbType="NVarChar(50)" CanBeNull="false" />
+      <Column Name="SubmissionIP6Normal" Type="System.String" DbType="NVarChar(50)" CanBeNull="false" />
+      <Column Name="SubmissionIP6Variant2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DefenseIP6Start" Storage="_DefenseIP6" Type="System.String" DbType="NVarChar(50)" CanBeNull="false" />
+      <Column Name="DefenseIP6End" Storage="_DefenseIP6Alternative" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ExhibitionBachelorThesis" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="nchar(4)" CanBeNull="false" />
+      <Column Name="SemesterActiveUntil" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Semester_Project" Member="Project" ThisKey="Id" OtherKey="SemersterId" Type="Project" />
     </Type>
   </Table>
 </Database>

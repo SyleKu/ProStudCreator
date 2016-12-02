@@ -13,6 +13,24 @@ namespace ProStudCreator {
     public partial class Projectlist {
         
         /// <summary>
+        /// Semester control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList Semester;
+        
+        /// <summary>
+        /// whichOwner control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList whichOwner;
+        
+        /// <summary>
         /// AllProjectsAsPDF control.
         /// </summary>
         /// <remarks>

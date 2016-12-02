@@ -26,13 +26,22 @@ namespace ProStudCreator
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         protected PlaceHolder AdminView;
         protected GridView CheckProjects;
-        protected RadioButtonList ListFilter;
         protected GridView AllProjects;
         protected Button newProject;
 
         // SR test
         IQueryable<Project> projects;
         //~SR test
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            Semester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
+            Semester.DataBind();
+            var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
+            Semester.SelectedValue = currentSemester.ToString();
+            Semester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
+            Semester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -49,14 +58,16 @@ namespace ProStudCreator
                     select getProjectSingleElement(i);
             }
 
+
             if (!base.IsPostBack && Session["listFilter"] != null)
             {
-                // Apply filter from session if loading "first time"
-                ListFilter.SelectedValue = (string)Session["listFilter"];
+                whichOwner.SelectedValue = (string)Session["listFilter"];
+                Semester.SelectedValue = (string)Session["whichSemester"];
             }
             else
             {
-                Session["listFilter"] = ListFilter.SelectedValue;
+                Session["listFilter"] = whichOwner.SelectedValue;
+                Session["whichSemester"] = Semester.SelectedValue;
             }
 
             AllProjects.DataSource =
@@ -64,53 +75,58 @@ namespace ProStudCreator
                 select getProjectSingleElement(i);
             AllProjects.DataBind();
             CheckProjects.DataBind();
+
+            //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
+            Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
         }
+
+
+
+
 
         private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects, string filter)
         {
+
             IQueryable<Project> projects = allProjects;
             switch (filter)
             {
-                case "AllPastProjects":
-                    projects =
-                        from p in projects
-                        where p.PublishedDate >= (Semester.CurrentSemester - 2).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 2).EndDate && p.State == ProjectState.Published
-                        orderby p.Department.DepartmentName, p.ProjectNr
-                        select p;
+                case "OwnProjects":
+                    if (Semester.SelectedValue == "")
+                    {
+                        projects =
+                            from p in projects
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail()) && p.State != ProjectState.Deleted
+                            orderby p.Department.DepartmentName, p.ProjectNr
+                            select p;
+                    }
+                    else
+                    {
+                        projects =
+                            from p in projects
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
+                                && (p.State != ProjectState.Deleted)
+                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State==ProjectState.Published) || (int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id && p.Semester == null) || ((p.State !=ProjectState.Deleted && p.State != ProjectState.Published) && int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id) ))
+                            orderby p.Department.DepartmentName, p.ProjectNr
+                            select p;
+                    }
                     break;
-                case "AllFutureProjects":
-                    projects =
-                        from p in projects
-                        where p.PublishedDate >= Semester.CurrentSemester.StartDate && p.State == ProjectState.Published
-                        orderby p.Department.DepartmentName, p.ProjectNr
-                        select p;
-                    break;
-                case "AllCurrentProjects":
-                    projects =
-                        from p in projects
-                        where p.PublishedDate >= (Semester.CurrentSemester - 1).StartDate && p.PublishedDate <= (Semester.CurrentSemester - 1).EndDate && p.State == ProjectState.Published
-                        orderby p.Department.DepartmentName, p.ProjectNr
-                        select p;
-                    break;
-                case "InProgress":
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && (item.State == ProjectState.InProgress || item.State == ProjectState.Rejected)
-                        select item;
-                    break;
-                case "Submitted":
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Submitted
-                        orderby item.Department.DepartmentName, item.ProjectNr
-                        select item;
-                    break;
-                case "Published":
-                    projects =
-                        from item in projects
-                        where (item.Creator == ShibUser.GetEmail() || item.ClientMail == ShibUser.GetEmail() || item.Advisor1Mail == ShibUser.GetEmail() || item.Advisor2Mail == ShibUser.GetEmail()) && item.State == ProjectState.Published
-                        orderby item.Department.DepartmentName, item.ProjectNr
-                        select item;
+                case "AllProjects":
+                    if (Semester.SelectedValue == "")
+                    {
+                        projects =
+                            from p in projects
+                            where p.State == ProjectState.Published
+                            orderby p.Department.DepartmentName, p.ProjectNr
+                            select p;
+                    }
+                    else
+                    {
+                        projects =
+                            from p in projects
+                            where p.State == ProjectState.Published && p.Semester.Id == int.Parse(Semester.SelectedValue)
+                            orderby p.Department.DepartmentName, p.ProjectNr
+                            select p;
+                    }
                     break;
             }
             return projects;
@@ -140,7 +156,7 @@ namespace ProStudCreator
             {
                 Project project = db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
 
-                if(project.State==ProjectState.Published)
+                if (project.State == ProjectState.Published)
                 {
                     if (!ShibUser.IsAdmin())
                     {
@@ -162,6 +178,10 @@ namespace ProStudCreator
                 else if (project.State == ProjectState.Rejected)
                 {
                     col = new Color?(ColorTranslator.FromHtml("#F5A9A9"));
+                }
+                else if (project.State == ProjectState.Submitted)
+                {
+                    col = new Color?(ColorTranslator.FromHtml("#ffcc99"));
                 }
                 else if (project.OverOnePage)
                 {
@@ -204,7 +224,7 @@ namespace ProStudCreator
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
                 default:
-                    throw new Exception("Unknown command "+e.CommandName);
+                    throw new Exception("Unknown command " + e.CommandName);
             }
         }
 
@@ -220,8 +240,8 @@ namespace ProStudCreator
                         PdfCreator pdfCreator = new PdfCreator();
                         pdfCreator.AppendToPDF(document, output,
                             ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
-                                .Select(p => db.Projects.Single(pr => pr.Id==p.id))
-                                .OrderBy(p => p.Reservation1Name!="")
+                                .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                                .OrderBy(p => p.Reservation1Name != "")
                                 .ThenBy(p => p.Department.DepartmentName)
                                 .ThenBy(p => p.ProjectNr)
                         );
@@ -255,7 +275,7 @@ namespace ProStudCreator
             {
                 ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                                 .Select(p => db.Projects.Single(pr => pr.Id == p.id))
-                                .OrderBy(p => p.Reservation1Name!="")
+                                .OrderBy(p => p.Reservation1Name != "")
                                 .ThenBy(p => p.Department.DepartmentName)
                                 .ThenBy(p => p.ProjectNr));
                 bytesInStream = output.ToArray();

@@ -5,7 +5,6 @@ namespace ProStudCreator
 {
     public static class ProjectExtensions
     {        
-
         #region Actions
 
         public static void InitNew(this Project _p)
