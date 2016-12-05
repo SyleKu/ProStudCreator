@@ -261,7 +261,6 @@ namespace ProStudCreator
                     AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
                     AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
                     AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
-                    AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
                 }
             }
             else
@@ -271,7 +270,6 @@ namespace ProStudCreator
                 AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
                 AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
                 AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
-                AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
             }
 
 
@@ -279,6 +277,12 @@ namespace ProStudCreator
             // Footer
             //
             var strComments = "";
+            var strRemarks = "";
+            if (proj.Remarks != "")
+            {
+                strRemarks += proj.Remarks + "\n\n";
+            }
+
             if (proj.Reservation1Name != "")
             {
                 strComments += "Dieses Projekt ist für " + proj.Reservation1Name;
@@ -291,7 +295,7 @@ namespace ProStudCreator
                 strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
 
-            if (strComments.Length > 0)
+            if (strComments.Length > 0 || strRemarks.Length > 0)
             {
                 document.Add(new Paragraph("Bemerkungen", fontHeading)
                 {
@@ -299,13 +303,23 @@ namespace ProStudCreator
                     SpacingAfter = SPACING_AFTER_TITLE
                 });
 
-                var fontRegularRed = new Font(fontRegular);
-                fontRegularRed.Color = BaseColor.RED;
+                if (strRemarks.Length > 0)
+                {
+                    var remarks = new Paragraph(strRemarks.ToString(), fontRegular);
+                    remarks.SpacingAfter = 1f;
+                    remarks.SetLeading(0.0f, LINE_HEIGHT);
+                    document.Add(remarks);
+                }
+                if (strComments.Length > 0)
+                {
+                    var fontRegularRed = new Font(fontRegular);
+                    fontRegularRed.Color = BaseColor.RED;
 
-                var text = new Paragraph(strComments.ToString(), fontRegularRed);
-                text.SpacingAfter = 1f;
-                text.SetLeading(0.0f, LINE_HEIGHT);
-                document.Add(text);
+                    var text = new Paragraph(strComments.ToString(), fontRegularRed);
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    document.Add(text);
+                }
             }
 
             document.NewPage();
@@ -471,7 +485,6 @@ namespace ProStudCreator
             AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
             AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
             AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
-            AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
         }
 
         public iTextSharp.text.Image DescribedImage(PdfWriter writer, iTextSharp.text.Image img, String description, float heighttoscale, float widthtoscale)
@@ -502,7 +515,7 @@ namespace ProStudCreator
             int lineswriten = ct.LinesWritten;
 
             template.Height = height + lineswriten * descriptionheight;
-            
+
             //add the comment to the template
             ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
             ct.Go(false);
@@ -572,7 +585,6 @@ namespace ProStudCreator
             AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
             AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
             AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);
-            AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
         }
 
         public static Document CreateDocument()
