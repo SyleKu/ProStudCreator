@@ -65,7 +65,7 @@ namespace ProStudCreator
             _p = _p.Normalize(); // Convert to composite characters (e.g. a¨ -> ä). http://unicode.org/reports/tr15/
 
             _p = _p.Replace("\r\n", "\n").Replace('\r', '\n').Replace('“', '\"').Replace('”', '"').Replace('“', '\"').Replace('«', '"').Replace('»', '"').Replace('¬', ' ')
-                .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—', '-').Replace('–', '-').Replace("•", "-");
+                .Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace(' ', ' ').Replace('—', '-').Replace('–', '-').Replace("•", "-").Replace('’', '"').Replace('‘', '"');
 
             for (string oldP = null; oldP != _p;)
             {
