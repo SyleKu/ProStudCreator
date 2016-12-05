@@ -15,8 +15,18 @@ namespace ProStudCreator
         enum Layout
         {
             BigPictureInTheMiddle,
-            PictureRightNoFloat,
-            PictureRightFloat
+            MediumPictureInTheMiddle,
+            BigPictureRight,
+            SmallPictureInTheMiddle,
+            MediumPictureRight,
+            SmallPictureRight,
+        }
+
+        enum ImageSize
+        {
+            Big,
+            Medium,
+            Small,
         }
 
         public const float LINE_HEIGHT = 1.1f;
@@ -53,8 +63,8 @@ namespace ProStudCreator
             foreach (Project project in projects)
             {
                 ef.CurrentProject = project;
-                WritePDF(project, document);
-            } 
+                WritePDF(project, document, writer);
+            }
         }
 
         private void AppendToPDF(MemoryStream output, IEnumerable<Project> projects, Layout layout, Document document)
@@ -78,27 +88,27 @@ namespace ProStudCreator
             foreach (Project project in projects)
             {
                 ef.CurrentProject = project;
-                WritePDF(project, document, layout);
+                WritePDF(project, document, layout, writer);
 
             }
 
         }
 
-        private void WritePDF(Project currentProject, Document document)
+        private void WritePDF(Project currentProject, Document document, PdfWriter writer)
         {
             foreach (Layout l in Enum.GetValues(typeof(Layout)))
             {
-                if ( CalcNumberOfPages(currentProject, l) == 1)
+                if (CalcNumberOfPages(currentProject, l) == 1)
                 {
-                    WritePDF(currentProject, document, l);
+                    WritePDF(currentProject, document, l, writer);
                     return;
                 }
             }
 
-            WritePDF(currentProject, document, Layout.PictureRightFloat);
+            WritePDF(currentProject, document, Layout.SmallPictureRight, writer);
         }
 
-        private void WritePDF(Project currentProject, Document document, Layout layout)
+        private void WritePDF(Project currentProject, Document document, Layout layout, PdfWriter writer)
         {
             var fontRegularLink = new Font(fontRegular);
             fontRegularLink.Color = BaseColor.BLUE;
@@ -159,7 +169,7 @@ namespace ProStudCreator
                     Reference = "mailto:" + proj.Advisor2Mail
                 });
             }
-            else if(proj.ClientCompany!= "")
+            else if (proj.ClientCompany != "")
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
@@ -223,17 +233,26 @@ namespace ProStudCreator
                     switch (layout)
                     {
                         case Layout.BigPictureInTheMiddle:
-                            BigImgLayout(proj, img, document);
+                            PictureInTheMiddle(proj, img, document, ImageSize.Big);
                             break;
-                        case Layout.PictureRightNoFloat:
-                            TableLayout(proj, img, document);
+                        case Layout.BigPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Big, writer);
                             break;
-                        case Layout.PictureRightFloat:
-                            SmallLayout(proj, width, height, img, document);
+                        case Layout.MediumPictureInTheMiddle:
+                            PictureInTheMiddle(proj, img, document, ImageSize.Medium);
+                            break;
+                        case Layout.MediumPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Medium, writer);
+                            break;
+                        case Layout.SmallPictureInTheMiddle:
+                            PictureInTheMiddle(proj, img, document, ImageSize.Small);
+                            break;
+                        case Layout.SmallPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Small, writer);
                             break;
                     }
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     //could not parse the image...
 
@@ -255,7 +274,7 @@ namespace ProStudCreator
                 AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
             }
 
-            
+
             //
             // Footer
             //
@@ -267,7 +286,7 @@ namespace ProStudCreator
                 strComments += " reserviert.\n";
             }
 
-            if (proj.DurationOneSemester && (proj.POneType.P6 || proj.PTwoType?.P6==true))
+            if (proj.DurationOneSemester && (proj.POneType.P6 || proj.PTwoType?.P6 == true))
             {
                 strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
@@ -301,7 +320,7 @@ namespace ProStudCreator
              * you'll end up with a much bigger file size.
              */
             public iTextSharp.text.Image ImageHeader { get; set; }
-            public Project CurrentProject { get; set;  }
+            public Project CurrentProject { get; set; }
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
@@ -349,7 +368,7 @@ namespace ProStudCreator
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik/"+ CurrentProject.Department.DepartmentName +"/Studierendenprojekte " + CurrentProject.GetSemester().ToString(), new Font(Font.FontFamily.HELVETICA, 8)));
+                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik/" + CurrentProject.Department.DepartmentName + "/Studierendenprojekte " + CurrentProject.GetSemester().ToString(), new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;
@@ -411,7 +430,7 @@ namespace ProStudCreator
             {
                 minimumNumberOfPages = Math.Min(minimumNumberOfPages, CalcNumberOfPages(PDF, l));
             }
-                return minimumNumberOfPages;
+            return minimumNumberOfPages;
         }
 
         private int CalcNumberOfPages(Project PDF, Layout layout)
@@ -420,7 +439,7 @@ namespace ProStudCreator
             {
                 using (var document = CreateDocument())
                 {
-                        AppendToPDF(output, Enumerable.Repeat(PDF, 1), layout, document);
+                    AppendToPDF(output, Enumerable.Repeat(PDF, 1), layout, document);
                 }
                 using (var pdfReader = new PdfReader(output.ToArray()))
                 {
@@ -429,143 +448,24 @@ namespace ProStudCreator
             }
         }
 
-        private void Celladjusting(PdfPCell cell)
+        private void PictureRightLayout(Project proj, iTextSharp.text.Image img, Document document, ImageSize imgsize, PdfWriter writer)
         {
-            cell.HorizontalAlignment = 0;
-            cell.Border = Rectangle.NO_BORDER;
-        }
-
-        private void Add1ColTitle(iTextSharp.text.pdf.PdfPTable table, String test, String titel)
-        {
-            if (test != "")
-            {
-                PdfPCell cell = new PdfPCell(new Phrase(new Paragraph(titel, fontHeading)
-                {
-
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-
-                }));
-                Celladjusting(cell);
-                table.AddCell(cell);
-
-            }
-            else
-            {
-                //filler because the layout would be wrong
-                PdfPCell filler = new PdfPCell();
-                Celladjusting(filler);
-                table.AddCell(filler);
-            }
-        }
-
-        private void Add1ColContent(iTextSharp.text.pdf.PdfPTable table, String test, String content)
-        {
-            if (test != "")
-            {
-                PdfPCell cell = new PdfPCell();
-
-                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    cell.AddElement(text);
-                }
-                Celladjusting(cell);
-                table.AddCell(cell);
-            }
-            else
-            {
-                //filler because the layout would be wrong
-                PdfPCell filler = new PdfPCell();
-                Celladjusting(filler);
-                table.AddCell(filler);
-            }
-        }
-
-        private void Add2ColTitle(iTextSharp.text.pdf.PdfPTable table, String test, String titel)
-        {
-            if (test != "")
-            {
-                PdfPCell cell = new PdfPCell(new Phrase(new Paragraph(titel, fontHeading)
-                {
-
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-
-                }));
-
-                cell.Colspan = 2;
-                Celladjusting(cell);
-                table.AddCell(cell);
-            }
-        }
-
-        private void Add2ColContent(iTextSharp.text.pdf.PdfPTable table, String test, String content)
-        {
-            if (test != "")
-            {
-                PdfPCell cell = new PdfPCell();
-                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    cell.AddElement(text);
-                }
-                cell.Colspan = 2;
-                Celladjusting(cell);
-                table.AddCell(cell);
-            }
-        }
-
-        private void AddImgtoTable(iTextSharp.text.pdf.PdfPTable table, iTextSharp.text.Image img, String content)
-        {
-            fontsmall.SetColor(100, 100, 100);
-            img.ScaleToFit(228f, 250f);
-            PdfPCell cell = new PdfPCell();
-            cell.AddElement(img);
-            Phrase p = new Phrase(new Chunk(content, fontsmall));
-            cell.AddElement(p);
-
-            Celladjusting(cell);
-            table.AddCell(cell);
-        }
-
-        private void SmallLayout(Project proj, float width, float height, iTextSharp.text.Image img, Document document)
-        {
-
-            if (proj.ImgDescription != "") //TODO Try to add this comment below the image
-            {
-                fontsmall.SetColor(100, 100, 100);
-                Paragraph pa = new Paragraph(proj.ImgDescription, fontsmall);
-                pa.SpacingAfter = 0f;
-                pa.Alignment = Element.ALIGN_RIGHT;
-                document.Add(pa);
-            }
 
             // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
-            // image.ScaleAbsoluteWidth(160f); 
+            // image.ScaleAbsoluteWidth(160f);
 
-            img.Alignment = iTextSharp.text.Image.TEXTWRAP | Element.ALIGN_RIGHT;
-
-            if (width > height)
+            switch (imgsize)
             {
-                img.ScaleToFit(250f, 150f);
+                case ImageSize.Big:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 300, 300));
+                    break;
+                case ImageSize.Medium:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 200, 200));
+                    break;
+                case ImageSize.Small:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 100, 100));
+                    break;
             }
-            else if (height >= 300 || width >= 200)
-            {
-                img.ScaleToFit(150f, 250f);
-            }
-            else
-            {
-                img.ScaleToFit(100f, 200f);
-            }
-
-            img.SpacingBefore = 0;
-            document.Add(img);
 
             AddParagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
             AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
@@ -574,78 +474,40 @@ namespace ProStudCreator
             AddParagraph(proj.Remarks, document, "Bemerkungen", proj.Remarks);
         }
 
-        private void TableLayout(Project proj, iTextSharp.text.Image img, Document document)
+        public iTextSharp.text.Image DescribedImage(PdfWriter writer, iTextSharp.text.Image img, String description, float heighttoscale, float widthtoscale)
         {
-            //table settings
-            PdfPTable table = new PdfPTable(2);
-            table.DefaultCell.Border = Rectangle.NO_BORDER;
-            table.HorizontalAlignment = Element.ALIGN_CENTER;
-            table.WidthPercentage = 100f;
-            table.SpacingAfter = 6f;
-            table.SetWidths(new float[] { 50, 50 });
+            img.ScaleToFit(heighttoscale, widthtoscale);
+            float width = img.ScaledWidth;
+            float height = img.ScaledHeight;
 
+            //height used for one line of imgdescription
+            float descriptionheight = 11f;
 
-            //initailposition titel row0
-            Add2ColTitle(table, proj.InitialPosition, "Ausgangslage");
+            //set up template
+            PdfContentByte cb = writer.DirectContent;
+            PdfTemplate template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
 
-            //initialposition content row0 
-            Add2ColContent(table, proj.InitialPosition, proj.InitialPosition);
+            //set up ct for description
+            ColumnText ct = new ColumnText(template);
+            Phrase myText = new Phrase(description, fontsmall);
+            ct.SetSimpleColumn(myText, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
+            ct.Go(true);
+            //get the lines used to write the comment
+            int lineswriten = ct.LinesWritten;
+            template.Height = height + lineswriten * descriptionheight;
+            
+            //add the comment to the template
+            ct.SetSimpleColumn(myText, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
+            ct.Go(false);
 
-            //Another row just to put some space between them
-            Add2ColContent(table, "filler", "");
+            //add img to template
+            template.AddImage(img, width, 0, 0, height, template.Width - width, template.Height - height);
 
-            //add subtable for the rowspan
-            PdfPTable subtable = new PdfPTable(1);
-            subtable.DefaultCell.Border = Rectangle.NO_BORDER;
-            subtable.HorizontalAlignment = Element.ALIGN_CENTER;
-            subtable.WidthPercentage = 100f;
-            subtable.SpacingAfter = 6f;
-
-            //subtable row 1
-            Add1ColTitle(subtable, proj.Objective, "Ziel der Arbeit");
-
-            //subtable row 2
-            Add1ColContent(subtable, proj.Objective, proj.Objective);
-
-            //add subtable to table
-            PdfPCell subtablecell = new PdfPCell();
-            subtablecell.AddElement(subtable);
-            Celladjusting(subtablecell);
-            table.AddCell(subtablecell);
-
-            //add image
-            AddImgtoTable(table, img, proj.ImgDescription);
-
-            //Another row just to put some space between them
-            Add2ColContent(table, "filler", "");
-
-            //subtable row 4
-            Add2ColTitle(table, proj.ProblemStatement, "Problemstellung");
-
-            //subtable row 5
-            Add2ColContent(table, proj.ProblemStatement, proj.ProblemStatement);
-
-            //Another row just to put some space between them
-            Add2ColContent(table, "filler", "");
-
-            //row3 titel
-            Add2ColTitle(table, proj.References, "Technologien/Fachliche Schwerpunkte/Referenzen");
-
-            //row3 content
-            Add2ColContent(table, proj.References, proj.References);
-
-            //Another row just to put some space between them
-            Add2ColContent(table, "filler", "");
-
-            //row4 titel
-            Add2ColTitle(table, proj.Remarks, "Bemerkungen");
-
-            //row4 content
-            Add2ColContent(table, proj.Remarks, proj.Remarks);
-
-            //add the table to the pdf
-            document.Add(table);
+            iTextSharp.text.Image i = iTextSharp.text.Image.GetInstance(template);
+            i.Alignment = iTextSharp.text.Image.ALIGN_RIGHT | iTextSharp.text.Image.TEXTWRAP;
+            return i;
         }
+
 
         private void AddParagraph(String test, Document document, String title, String content)
         {
@@ -663,37 +525,28 @@ namespace ProStudCreator
                     text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, LINE_HEIGHT);
                     text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
                     document.Add(text);
                 }
             }
         }
 
-        private void BigImgLayout(Project proj, iTextSharp.text.Image img, Document document)
+        private void PictureInTheMiddle(Project proj, iTextSharp.text.Image img, Document document, ImageSize imgsize)
         {
-            if (proj.InitialPosition != "")
+            switch (imgsize)
             {
-                document.Add(new Paragraph("Ausgangslage", fontHeading)
-                {
-                    SpacingBefore = SPACING_BEFORE_TITLE,
-                    SpacingAfter = SPACING_AFTER_TITLE
-                });
-
-
-                foreach (var text in proj.InitialPosition.ToLinkedParagraph(fontRegular, hyph))
-                {
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, LINE_HEIGHT);
-                    text.Alignment = Element.ALIGN_JUSTIFIED;
-                    text.IndentationRight = 10f;
-                    text.SpacingAfter = SPACING_BEFORE_IMAGE;
-                    document.Add(text);
-                }
+                case ImageSize.Big:
+                    img.ScaleToFit(480f, 480f);
+                    break;
+                case ImageSize.Medium:
+                    img.ScaleToFit(390f, 390f);
+                    break;
+                case ImageSize.Small:
+                    img.ScaleToFit(290f, 290f);
+                    break;
             }
 
-            img.Alignment = Element.ALIGN_LEFT;
+            img.Alignment = Element.ALIGN_MIDDLE;
             img.SpacingBefore = SPACING_BEFORE_IMAGE;
-            img.ScaleToFit(472f, 472f);
 
             img.SpacingBefore = SPACING_BEFORE_TITLE;
             document.Add(img);
@@ -708,7 +561,7 @@ namespace ProStudCreator
 
                 document.Add(p);
             }
-
+            AddParagraph(proj.InitialPosition, document, "Ausgangslage", proj.InitialPosition);
             AddParagraph(proj.Objective, document, "Ziel der Arbeit", proj.Objective);
             AddParagraph(proj.ProblemStatement, document, "Problemstellung", proj.ProblemStatement);
             AddParagraph(proj.References, document, "Technologien/Fachliche Schwerpunkte/Referenzen", proj.References);

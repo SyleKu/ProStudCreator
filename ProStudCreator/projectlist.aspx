@@ -105,8 +105,6 @@
             = Veröffentlicht&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F5A9A9" />
             = Abgelehnt&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#F3F781" />
-            = PDF >1 Seite&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Button runat="server" Enabled="false" CssClass="btn btn-default btnHeight" BackColor="#ffcc99" />
             = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>

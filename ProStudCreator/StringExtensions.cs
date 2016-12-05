@@ -49,14 +49,14 @@ namespace ProStudCreator
             if (_email == null)
                 return false;
 
-            string[] parts = _email.Trim().Split(new char[] {'@'});
+            string[] parts = _email.Trim().Split(new char[] { '@' });
             if (parts.Length != 2)
                 return false;
 
             if (parts[0].Length < 2)
                 return false;
 
-            parts = parts[1].Split(new char[]{'.'});
+            parts = parts[1].Split(new char[] { '.' });
             return (parts.Length >= 2 && parts[0].Length >= 2 && parts[1].Length >= 2);
         }
 
@@ -290,7 +290,7 @@ namespace ProStudCreator
             return res;
         }
 
-        public static T Hyphenate<T>(this T _paragraph, HyphenationAuto _hyph) where T:IElement
+        public static T Hyphenate<T>(this T _paragraph, HyphenationAuto _hyph) where T : IElement
         {
             if (_paragraph is Chunk)
             {
@@ -298,10 +298,10 @@ namespace ProStudCreator
                 chk.SetHyphenation(_hyph);
                 chk.Chunks.ToList().ForEach(c => c.Hyphenate(_hyph));
             }
-            else if(_paragraph is Paragraph)
+            else if (_paragraph is Paragraph)
             {
                 var chk = ((Paragraph)((object)_paragraph));
-                
+
                 //CLR CRASH: (!!!!)
                 //chk.Chunks.ToList().ForEach(c => c.Hyphenate(_hyph));
 
@@ -332,7 +332,7 @@ namespace ProStudCreator
 
             List currentList = null;
             var lines = _paragraph.Split('\n');
-            
+
             foreach (var line in lines)
             {
                 var para = new Paragraph();
@@ -395,7 +395,7 @@ namespace ProStudCreator
                         currentList = null;
                     }
                 }
-               
+
                 foreach (var chk in currentLine.RecognizeURLs())
                 {
                     var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);
@@ -417,7 +417,7 @@ namespace ProStudCreator
 
                     para.SpacingAfter = 2f;
                     paragraphs.Add(para);
-                }                    
+                }
                 else
                 {
                     // We're in a list, store paragraph in the list for outputting later

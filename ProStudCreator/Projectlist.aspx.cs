@@ -183,10 +183,6 @@ namespace ProStudCreator
                 {
                     col = new Color?(ColorTranslator.FromHtml("#ffcc99"));
                 }
-                else if (project.OverOnePage)
-                {
-                    col = new Color?(ColorTranslator.FromHtml("#F3F781"));
-                }
                 if (col.HasValue)
                 {
                     foreach (TableCell cell in e.Row.Cells)
