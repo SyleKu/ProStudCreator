@@ -42,7 +42,7 @@
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
-            Als Betreuer kommen alle Dozierenden am i4Ds (z.B. Manfred, André, Doris, Sarah, Ruedi, Stefan, Simon, …) und am IMVS (z.B. Jürg, Christoph, Hannes, Peter, Martin, Dominik, Bernhard, Wolfgang, Daniel, …) in Frage. Es besteht aber häufig auch die Möglichkeit in einem Zweier-Team (z.B. Dozierender + WiMi) zu arbeiten. Wer also kein Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach Absprache machen. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
+            Als Betreuer kommen alle gewählten Dozierenden am i4Ds/IMVS in Frage. Es besteht häufig auch die Möglichkeit in einem Zweier-Team (z.B. gewählter Dozierender + WiMi) zu arbeiten. Wer also kein gewählter Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach Absprache machen. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
         </p>
         <h4>Wie gross ist der Aufwand für die Betreuung? Was muss ich tun?</h4>
         <p>
@@ -55,12 +55,12 @@
         <h4>Wie läuft die Zuteilung der Projekte?</h4>
         <p>
             Einige Projekte stellen Dominik Gruntz und Simon Felix den Studierenden vor. Die restlichen Projektbeschriebe werden als PDF abgegeben. Studierende bewerben sich dann auf die Projekte und werden automatisiert zugeteilt. Du kriegst vermutlich nicht Deine Wunschkandidaten.
-            Das Reservieren von Arbeiten ist nur in Ausnahmefällen möglich (Folgeprojekte oder Studierende, die an unseren Instituten arbeiten).
+            Das Reservieren von Arbeiten ist nur in Ausnahmefällen möglich (Folgeprojekte oder wenn Studierende beim Auftraggeber Arbeitnehmer sind).
         </p>
         <p>
             Sobald die Zuteilung der Projekte erfolgt ist, erhältst Du eine Rückmeldung, welche Projekte von Dir (nicht) gewählt wurden.
         </p>
-        <h4>Wie kann Projekte verlängern?</h4>
+        <h4>Wie kann man Projekte verlängern?</h4>
         <p>
             IP5 können als IP6 verlängert werden. Wie bei allen anderen IP6 musst Du dazu rechtzeitig einen Projektbeschrieb einreichen. Für 
             Folgeprojekte gelten die allgemeinen Anforderungen ebenfalls, d.h. für diese Folgeprojekte muss eine neue Herausforderung definiert
@@ -83,7 +83,7 @@
         <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
         <p>
             Ihr könnt für eure Studierenden über <a href="http://web.fhnw.ch/plattformen/cs-support/bestellformulare">http://web.fhnw.ch/plattformen/cs-support/bestellformulare</a>
-            diverse Ressourcen bestellen. Es stehen Git- und SVN-Repositories zur Verfügung. Selbst können die Studierenden keine Ressourcen beantragen.
+            diverse Ressourcen bestellen. Über <a href="https://gitlab.fhnw.ch/">https://gitlab.fhnw.ch/</a> können Git-Repos eröffnet werden.
         </p>
         <h4>Wer bezahlt Spesen, die anfallen?</h4>
         <p>
