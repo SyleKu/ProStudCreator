@@ -460,10 +460,10 @@ namespace ProStudCreator
                     document.Add(DescribedImage(writer, img, proj.ImgDescription, 300, 300));
                     break;
                 case ImageSize.Medium:
-                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 200, 200));
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 250, 250));
                     break;
                 case ImageSize.Small:
-                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 100, 100));
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 200, 200));
                     break;
             }
 
@@ -487,17 +487,24 @@ namespace ProStudCreator
             PdfContentByte cb = writer.DirectContent;
             PdfTemplate template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
 
+
+            Paragraph linkedPara = new Paragraph();
+            linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
+
+
             //set up ct for description
             ColumnText ct = new ColumnText(template);
-            Phrase myText = new Phrase(description, fontsmall);
-            ct.SetSimpleColumn(myText, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
+            Phrase imgDescription = new Phrase(linkedPara);
+            ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
             ct.Go(true);
+
             //get the lines used to write the comment
             int lineswriten = ct.LinesWritten;
+
             template.Height = height + lineswriten * descriptionheight;
             
             //add the comment to the template
-            ct.SetSimpleColumn(myText, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
+            ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
             ct.Go(false);
 
             //add img to template
@@ -538,7 +545,7 @@ namespace ProStudCreator
                     img.ScaleToFit(480f, 480f);
                     break;
                 case ImageSize.Medium:
-                    img.ScaleToFit(390f, 390f);
+                    img.ScaleToFit(380f, 380f);
                     break;
                 case ImageSize.Small:
                     img.ScaleToFit(290f, 290f);
@@ -557,7 +564,7 @@ namespace ProStudCreator
 
                 Paragraph p = new Paragraph(proj.ImgDescription, fontsmall);
                 p.PaddingTop = -1f;
-                p.Alignment = Element.ALIGN_JUSTIFIED;
+                p.Alignment = Element.ALIGN_CENTER;
 
                 document.Add(p);
             }
