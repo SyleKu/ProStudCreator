@@ -481,7 +481,7 @@ namespace ProStudCreator
             float height = img.ScaledHeight;
 
             //height used for one line of imgdescription
-            float descriptionheight = 11f;
+            float descriptionheight = 12f;
 
             //set up template
             PdfContentByte cb = writer.DirectContent;
