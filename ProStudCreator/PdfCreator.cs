@@ -502,7 +502,7 @@ namespace ProStudCreator
             PdfContentByte cb = writer.DirectContent;
             PdfTemplate template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
 
-            if (description != "")
+            if (description != "" && description != null)
             {
                 Paragraph linkedPara = new Paragraph();
                 linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
