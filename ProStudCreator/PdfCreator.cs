@@ -489,6 +489,8 @@ namespace ProStudCreator
 
         public iTextSharp.text.Image DescribedImage(PdfWriter writer, iTextSharp.text.Image img, String description, float heighttoscale, float widthtoscale)
         {
+            iTextSharp.text.Image i;
+
             img.ScaleToFit(heighttoscale, widthtoscale);
             float width = img.ScaledWidth;
             float height = img.ScaledHeight;
@@ -500,30 +502,33 @@ namespace ProStudCreator
             PdfContentByte cb = writer.DirectContent;
             PdfTemplate template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
 
+            if (description != "")
+            {
+                Paragraph linkedPara = new Paragraph();
+                linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
 
-            Paragraph linkedPara = new Paragraph();
-            linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
+                //set up ct for description
+                ColumnText ct = new ColumnText(template);
+                Phrase imgDescription = new Phrase(linkedPara);
+                ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
+                ct.Go(true);
 
+                //get the lines used to write the comment
+                int lineswriten = ct.LinesWritten;
 
-            //set up ct for description
-            ColumnText ct = new ColumnText(template);
-            Phrase imgDescription = new Phrase(linkedPara);
-            ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
-            ct.Go(true);
+                template.Height = height + lineswriten * descriptionheight;
 
-            //get the lines used to write the comment
-            int lineswriten = ct.LinesWritten;
-
-            template.Height = height + lineswriten * descriptionheight;
-
-            //add the comment to the template
-            ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
-            ct.Go(false);
-
+                //add the comment to the template
+                ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * lineswriten, 10, Element.ALIGN_JUSTIFIED);
+                ct.Go(false);
+            }else
+            {
+                template.Height = height + 5f;
+            }
             //add img to template
             template.AddImage(img, width, 0, 0, height, template.Width - width, template.Height - height);
-
-            iTextSharp.text.Image i = iTextSharp.text.Image.GetInstance(template);
+            i = iTextSharp.text.Image.GetInstance(template);
+            
             i.Alignment = iTextSharp.text.Image.ALIGN_RIGHT | iTextSharp.text.Image.TEXTWRAP;
             return i;
         }
