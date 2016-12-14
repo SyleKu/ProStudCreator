@@ -30,16 +30,31 @@ namespace ProStudCreator
             byte[] bytesInStream;
             using (var output = new MemoryStream())
             {
-                using (var document = PdfCreator.CreateDocument())
+                var document = PdfCreator.CreateDocument();
+                try
                 {
                     PdfCreator pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
+                    document.Dispose();
                 }
+                catch
+                {
+                    try
+                    {
+                        document.Dispose();
+                    }
+                    catch
+                    {
+
+                    }
+                    throw;
+                }
+
                 bytesInStream = output.ToArray();
             }
             Response.Clear();
 
-            if(forceDl)
+            if (forceDl)
             {
                 Response.ContentType = "application/force-download";
                 Response.AddHeader("content-disposition", "attachment; filename=" + idPDF.Department.DepartmentName + idPDF.ProjectNr.ToString("00") + ".pdf");
