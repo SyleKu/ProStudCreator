@@ -4,7 +4,7 @@ using System.Linq;
 namespace ProStudCreator
 {
     public static class ProjectExtensions
-    {        
+    {
         #region Actions
 
         public static void InitNew(this Project _p)
@@ -145,7 +145,7 @@ namespace ProStudCreator
 
         public static bool UserCanEdit(this Project _p)
         {
-            return ShibUser.IsAdmin() || _p.UserIsOwner();
+            return ShibUser.IsAdmin() || (_p.UserIsOwner() && (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected || _p.State == ProjectState.Submitted));
         }
 
         public static bool UserIsOwner(this Project _p)
@@ -182,7 +182,7 @@ namespace ProStudCreator
         #endregion
 
         #region LINQ-derived type extensions
-        
+
         public static string Export(this ProjectType pt)
         {
             if (pt.P5 && !pt.P6) return "P5";

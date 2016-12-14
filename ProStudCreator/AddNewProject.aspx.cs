@@ -32,7 +32,8 @@ namespace ProStudCreator
                 project = db.Projects.Single((Project p) => (int?)p.Id == id);
                 if (!project.UserCanEdit())
                 {
-                    throw new UnauthorizedAccessException();
+                    Response.Redirect("error/AccessDenied.aspx");
+                    Response.End();
                 }
             }
 
