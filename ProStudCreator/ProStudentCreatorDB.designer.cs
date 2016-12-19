@@ -1400,8 +1400,8 @@ namespace ProStudCreator
     partial void OnLogDefenceDateChanged();
     partial void OnLogDefenceRoomChanging(string value);
     partial void OnLogDefenceRoomChanged();
-    partial void OnSemersterIdChanging(System.Nullable<int> value);
-    partial void OnSemersterIdChanged();
+    partial void OnSemesterIdChanging(System.Nullable<int> value);
+    partial void OnSemesterIdChanged();
     #endregion
 		
 		public Project()
@@ -2671,8 +2671,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="SemesterId", Storage="_SemersterId", DbType="int")]
-		public System.Nullable<int> SemersterId
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SemersterId", DbType="int")]
+		public System.Nullable<int> SemesterId
 		{
 			get
 			{
@@ -2682,11 +2682,15 @@ namespace ProStudCreator
 			{
 				if ((this._SemersterId != value))
 				{
-					this.OnSemersterIdChanging(value);
+					if (this._Semesters.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSemesterIdChanging(value);
 					this.SendPropertyChanging();
 					this._SemersterId = value;
-					this.SendPropertyChanged("SemersterId");
-					this.OnSemersterIdChanged();
+					this.SendPropertyChanged("SemesterId");
+					this.OnSemesterIdChanged();
 				}
 			}
 		}
@@ -2976,7 +2980,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Project", Storage="_Semesters", ThisKey="SemersterId", OtherKey="Id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Project", Storage="_Semesters", ThisKey="SemesterId", OtherKey="Id", IsForeignKey=true)]
 		public Semester Semester
 		{
 			get
@@ -3399,7 +3403,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Project", Storage="_Project", ThisKey="Id", OtherKey="SemersterId")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Project", Storage="_Project", ThisKey="Id", OtherKey="SemesterId")]
 		public EntitySet<Project> Project
 		{
 			get

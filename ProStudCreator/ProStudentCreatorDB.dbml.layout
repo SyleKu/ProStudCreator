@@ -113,7 +113,7 @@
         <elementListCompartment Id="769894c1-97f6-4997-87d9-72fd89e1bd88" absoluteBounds="1.39, 13.71, 1.9700000000000002, 2.941609700520833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.375 : 14.1785392252604); (4.875 : 14.1785392252604)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.375 : 14.1785392252604); (4.875 : 14.1785392252604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Semester/Semester_Project" />
       <nodes>
         <classShapeMoniker Id="a9d37d51-caa9-4f8d-b1ec-f876a2697971" />
