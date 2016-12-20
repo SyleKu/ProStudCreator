@@ -109,7 +109,7 @@
             = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <div style="margin-top: 16px;">
-            <asp:Button runat="server" ID="newProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click" />
+            <asp:Button runat="server" ID="NewProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click" />
             <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont pdf" Text="Projekte als PDF" OnClick="AllProjectsAsPDF_Click" />
             <asp:Button runat="server" ID="AllProjectsAsExcel" CssClass="btn btn-default buttonFont" Text="Projektliste in Excel" OnClick="AllProjectsAsExcel_Click" />
         </div>

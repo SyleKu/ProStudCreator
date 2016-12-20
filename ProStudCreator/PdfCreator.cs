@@ -2,11 +2,13 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Image = iTextSharp.text.Image;
 
 namespace ProStudCreator
 {
@@ -43,7 +45,7 @@ namespace ProStudCreator
 
 
 
-        public void AppendToPDF(Document document, MemoryStream output, IEnumerable<Project> projects)
+        public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
             PdfWriter writer = PdfWriter.GetInstance(document, output);
 
@@ -64,10 +66,12 @@ namespace ProStudCreator
             {
                 ef.CurrentProject = project;
                 WritePDF(project, document, writer);
+                writer.Flush();
+                output.Flush();
             }
         }
 
-        private void AppendToPDF(MemoryStream output, IEnumerable<Project> projects, Layout layout, Document document)
+        private void AppendToPDF(Stream output, IEnumerable<Project> projects, Layout layout, Document document)
         {
 
             PdfWriter writer = PdfWriter.GetInstance(document, output);
@@ -139,8 +143,7 @@ namespace ProStudCreator
             title.SetLeading(0.0f, LINE_HEIGHT);
             document.Add(title);
 
-            var projectTable = new PdfPTable(5);
-            projectTable.SpacingAfter = 6f;
+            var projectTable = new PdfPTable(5) {SpacingAfter = 6f};
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
@@ -226,8 +229,6 @@ namespace ProStudCreator
                 try
                 {
                     var img = iTextSharp.text.Image.GetInstance(proj.Picture.ToArray());
-                    float height = img.ScaledHeight;
-                    float width = img.ScaledWidth;
 
                     //checks witch layout should be used.
                     switch (layout)
@@ -489,8 +490,6 @@ namespace ProStudCreator
 
         public iTextSharp.text.Image DescribedImage(PdfWriter writer, iTextSharp.text.Image img, String description, float heighttoscale, float widthtoscale)
         {
-            iTextSharp.text.Image i;
-
             img.ScaleToFit(heighttoscale, widthtoscale);
             float width = img.ScaledWidth;
             float height = img.ScaledHeight;
@@ -499,17 +498,17 @@ namespace ProStudCreator
             float descriptionheight = 12f;
 
             //set up template
-            PdfContentByte cb = writer.DirectContent;
-            PdfTemplate template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
+            var cb = writer.DirectContent;
+            var template = cb.CreateTemplate(width + 10f, height + (descriptionheight * 5));
 
-            if (description != "" && description != null)
+            if (!string.IsNullOrEmpty(description))
             {
-                Paragraph linkedPara = new Paragraph();
+                var linkedPara = new Paragraph();
                 linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
 
                 //set up ct for description
-                ColumnText ct = new ColumnText(template);
-                Phrase imgDescription = new Phrase(linkedPara);
+                var ct = new ColumnText(template);
+                var imgDescription = new Phrase(linkedPara);
                 ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * 5, 10, Element.ALIGN_JUSTIFIED);
                 ct.Go(true);
 
@@ -528,9 +527,9 @@ namespace ProStudCreator
             }
             //add img to template
             template.AddImage(img, width, 0, 0, height, template.Width - width, template.Height - height);
-            i = iTextSharp.text.Image.GetInstance(template);
+            var i = Image.GetInstance(template);
 
-            i.Alignment = iTextSharp.text.Image.ALIGN_RIGHT | iTextSharp.text.Image.TEXTWRAP;
+            i.Alignment = iTextSharp.text.Element.ALIGN_RIGHT | iTextSharp.text.Image.TEXTWRAP;
             return i;
         }
 
@@ -581,7 +580,7 @@ namespace ProStudCreator
             {
                 fontsmall.SetColor(100, 100, 100);
 
-                Paragraph p = new Paragraph(proj.ImgDescription, fontsmall);
+                var p = new Paragraph(proj.ImgDescription, fontsmall);
                 p.PaddingTop = -1f;
                 p.Alignment = Element.ALIGN_CENTER;
 

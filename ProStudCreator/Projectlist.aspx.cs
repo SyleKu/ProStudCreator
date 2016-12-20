@@ -1,9 +1,12 @@
 ﻿using iTextSharp.text;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -27,7 +30,7 @@ namespace ProStudCreator
         protected PlaceHolder AdminView;
         protected GridView CheckProjects;
         protected GridView AllProjects;
-        protected Button newProject;
+        protected Button NewProject;
 
         // SR test
         IQueryable<Project> projects;
@@ -105,7 +108,7 @@ namespace ProStudCreator
                             from p in projects
                             where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
                                 && (p.State != ProjectState.Deleted)
-                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State==ProjectState.Published) || (int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id && p.Semester == null) || ((p.State !=ProjectState.Deleted && p.State != ProjectState.Published) && int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id) ))
+                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State == ProjectState.Published) || (int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id)))
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
@@ -228,32 +231,43 @@ namespace ProStudCreator
         {
             if (AllProjects.Rows.Count != 0)
             {
-                byte[] bytesInStream;
-                using (var output = new MemoryStream())
-                {
-                    using (var document = PdfCreator.CreateDocument())
-                    {
-                        PdfCreator pdfCreator = new PdfCreator();
-                        pdfCreator.AppendToPDF(document, output,
-                            ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
-                                .Select(p => db.Projects.Single(pr => pr.Id == p.id))
-                                .OrderBy(p => p.Reservation1Name != "")
-                                .ThenBy(p => p.Department.DepartmentName)
-                                .ThenBy(p => p.ProjectNr)
-                        );
-                    }
-                    bytesInStream = output.ToArray();
-                }
                 Response.Clear();
                 Response.ContentType = "application/force-download";
                 Response.AddHeader("content-disposition", "attachment; filename=AllProjects.pdf");
-                Response.BinaryWrite(bytesInStream);
+                Response.Buffer = false;
+
+                var output = Response.OutputStream;
+                var document = PdfCreator.CreateDocument();
+                try
+                {
+                    var pdfCreator = new PdfCreator();
+                    pdfCreator.AppendToPDF(document, output,
+                        ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
+                            .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                            .OrderBy(p => p.Reservation1Name != "")
+                            .ThenBy(p => p.Department.DepartmentName)
+                            .ThenBy(p => p.ProjectNr)
+                    );
+                    document.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    try
+                    {
+                        document.Dispose();
+                    }
+                    catch { }
+                    if (!exception.Message.Contains("0x800704CD"))
+                    {
+                        throw;
+                    }
+                }
                 Response.End();
             }
             else
             {
                 string message = "In dieser Kategorie sind keine Projekte vorhanden!";
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
                 sb.Append("alert('");
