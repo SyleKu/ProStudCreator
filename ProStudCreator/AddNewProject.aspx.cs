@@ -183,7 +183,7 @@ namespace ProStudCreator
             {
                 Language.SelectedIndex = 2;
             }
-            else if(!project.LanguageEnglish && project.LanguageGerman)
+            else if (!project.LanguageEnglish && project.LanguageGerman)
             {
                 Language.SelectedIndex = 1;
             }
@@ -205,7 +205,7 @@ namespace ProStudCreator
             {
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
-                imgdescription.Text = project.ImgDescription;                
+                imgdescription.Text = project.ImgDescription;
             }
             else
             {
@@ -393,7 +393,7 @@ namespace ProStudCreator
         protected void saveProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-            Response.Redirect("AddNewProject?id=" + project.Id);            
+            Response.Redirect("AddNewProject?id=" + project.Id);
         }
         /// <summary>
         /// Save the current state of the form and return to project list.
@@ -401,7 +401,7 @@ namespace ProStudCreator
         protected void saveCloseProjectButton(object sender, EventArgs e)
         {
             SaveProject();
-            Response.Redirect("projectlist");      
+            Response.Redirect("projectlist");
         }
 
 
@@ -473,6 +473,9 @@ namespace ProStudCreator
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
+            if (!ShibUser.IsAdmin() && ShibUser.GetEmail() != project.Advisor1Mail)
+                return "Nur Hauptbetreuer können Projekte einreichen.";
+
             if (project.Reservation1Mail != "" && project.Reservation1Name == "")
                 return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
@@ -539,13 +542,13 @@ namespace ProStudCreator
             publishProject.Visible = false;
             saveProject.Visible = false;
             refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von { ShibUser.GetFirstName() } abgelehnt.\n"
-                +"\n"
-                +"Dies sind die Gründe dafür:\n"
-                +"\n"
-                +"\n"
-                +"\n"
-                +"Freundliche Grüsse\n"
-                +ShibUser.GetFirstName();
+                + "\n"
+                + "Dies sind die Gründe dafür:\n"
+                + "\n"
+                + "\n"
+                + "\n"
+                + "Freundliche Grüsse\n"
+                + ShibUser.GetFirstName();
         }
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
@@ -598,7 +601,7 @@ namespace ProStudCreator
         {
             project.Picture = null;
             db.SubmitChanges();
-            Response.Redirect("AddNewProject?id="+project.Id);
+            Response.Redirect("AddNewProject?id=" + project.Id);
         }
 
         protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
@@ -659,12 +662,14 @@ namespace ProStudCreator
                 project.LanguageGerman = true;
                 project.LanguageEnglish = true;
 
-            }else if (Language.SelectedIndex == 1)
+            }
+            else if (Language.SelectedIndex == 1)
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = false;
 
-            }else if (Language.SelectedIndex == 2)
+            }
+            else if (Language.SelectedIndex == 2)
             {
                 project.LanguageGerman = false;
                 project.LanguageEnglish = true;
