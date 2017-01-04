@@ -36,7 +36,7 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             //var semestersToDisplay = db.Semester.Where(item => item == Semester.CurrentSemester || item == Semester.LastSemester || item == Semester.NextSemester || item == Semester.AfterNextSemester);
-            var semestersToDisplay = new Semester[] { Semester.CurrentSemester, Semester.LastSemester, Semester.NextSemester, Semester.AfterNextSemester };
+            var semestersToDisplay = new Semester[] {Semester.LastSemester, Semester.CurrentSemester, Semester.NextSemester, Semester.AfterNextSemester };
 
 
             DataTable dt = new DataTable();
