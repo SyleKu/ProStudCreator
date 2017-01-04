@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Ablauf.aspx" />
+    <Content Include="ProjectInfoPage.aspx" />
     <Content Include="AddNewProject.aspx" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155.mdf" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155_log.ldf">
@@ -268,6 +269,13 @@
     </Compile>
     <Compile Include="Ablauf.aspx.designer.cs">
       <DependentUpon>Ablauf.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectInfoPage.aspx.cs">
+      <DependentUpon>ProjectInfoPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProjectInfoPage.aspx.designer.cs">
+      <DependentUpon>ProjectInfoPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="AddNewProject.aspx.cs">
       <DependentUpon>AddNewProject.aspx</DependentUpon>

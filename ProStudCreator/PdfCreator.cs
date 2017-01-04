@@ -69,6 +69,8 @@ namespace ProStudCreator
                 writer.Flush();
                 output.Flush();
             }
+
+
         }
 
         private void AppendToPDF(Stream output, IEnumerable<Project> projects, Layout layout, Document document)

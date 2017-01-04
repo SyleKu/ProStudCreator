@@ -242,25 +242,30 @@ namespace ProStudCreator
                 {
                     var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output,
-                        ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
-                            .Select(p => db.Projects.Single(pr => pr.Id == p.id))
-                            .OrderBy(p => p.Reservation1Name != "")
-                            .ThenBy(p => p.Department.DepartmentName)
-                            .ThenBy(p => p.ProjectNr)
+                        ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
+                        .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                        .OrderBy(p => p.Reservation1Name != "")
+                        .ThenBy(p => p.Department.DepartmentName)
+                        .ThenBy(p => p.ProjectNr)
                     );
                     document.Dispose();
                 }
-                catch (Exception exception)
+                catch (iTextSharp.text.DocumentException documentException) when(documentException.Message.Contains("0x800704CD"))
                 {
                     try
                     {
                         document.Dispose();
                     }
                     catch { }
-                    if (!exception.Message.Contains("0x800704CD"))
+                }
+                catch (Exception)
+                {
+                    try
                     {
-                        throw;
+                        document.Dispose();
                     }
+                    catch { }
+                    throw;
                 }
                 Response.End();
             }

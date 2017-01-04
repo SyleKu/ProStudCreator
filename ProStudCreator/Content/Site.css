@@ -326,12 +326,20 @@ small {
 }
 
 .outerfloat {
-    display:inline-block;
-    width:100%;
-    align-items:center;
-    text-align:center;
+    display: inline-block;
+    width: 100%;
+    align-items: center;
+    text-align: center;
 }
 
-.marginProject{
-    margin-left:20px;
+.marginProject {
+    margin-left: 20px;
+}
+
+.rightbutton {
+    float: right;
+}
+
+.alignbottom {
+    padding-top: 7px;
 }

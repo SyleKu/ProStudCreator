@@ -551,6 +551,8 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects1;
 		
+		private EntitySet<Project> _Project;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -571,6 +573,7 @@ namespace ProStudCreator
 		{
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
 			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
+			this._Project = new EntitySet<Project>(new Action<Project>(this.attach_Project), new Action<Project>(this.detach_Project));
 			OnCreated();
 		}
 		
@@ -700,6 +703,19 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectType_Project2", Storage="_Project", ThisKey="Id", OtherKey="LogProjectTypeID")]
+		public EntitySet<Project> Project
+		{
+			get
+			{
+				return this._Project;
+			}
+			set
+			{
+				this._Project.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -742,6 +758,18 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.PTwoType = null;
+		}
+		
+		private void attach_Project(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.LogProjectType = this;
+		}
+		
+		private void detach_Project(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.LogProjectType = null;
 		}
 	}
 	
@@ -1274,6 +1302,8 @@ namespace ProStudCreator
 		
 		private EntityRef<Semester> _Semesters;
 		
+		private EntityRef<ProjectType> _LogProjectType;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1416,6 +1446,7 @@ namespace ProStudCreator
 			this._POneTeamSize = default(EntityRef<ProjectTeamSize>);
 			this._PTwoTeamSize = default(EntityRef<ProjectTeamSize>);
 			this._Semesters = default(EntityRef<Semester>);
+			this._LogProjectType = default(EntityRef<ProjectType>);
 			OnCreated();
 		}
 		
@@ -2478,6 +2509,10 @@ namespace ProStudCreator
 			{
 				if ((this._LogProjectTypeID != value))
 				{
+					if (this._LogProjectType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnLogProjectTypeIDChanging(value);
 					this.SendPropertyChanging();
 					this._LogProjectTypeID = value;
@@ -3010,6 +3045,40 @@ namespace ProStudCreator
 						this._SemersterId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Semester");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ProjectType_Project2", Storage="_LogProjectType", ThisKey="LogProjectTypeID", OtherKey="Id", IsForeignKey=true)]
+		public ProjectType LogProjectType
+		{
+			get
+			{
+				return this._LogProjectType.Entity;
+			}
+			set
+			{
+				ProjectType previousValue = this._LogProjectType.Entity;
+				if (((previousValue != value) 
+							|| (this._LogProjectType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._LogProjectType.Entity = null;
+						previousValue.Project.Remove(this);
+					}
+					this._LogProjectType.Entity = value;
+					if ((value != null))
+					{
+						value.Project.Add(this);
+						this._LogProjectTypeID = value.Id;
+					}
+					else
+					{
+						this._LogProjectTypeID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("LogProjectType");
 				}
 			}
 		}
