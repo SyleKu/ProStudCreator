@@ -113,7 +113,7 @@ namespace ProStudCreator
             ProjectExhibition.Text = project.Semester.ExhibitionBachelorThesis;
 
             //Disable the Textbox if Title can't be changed anymore
-            ProjectTitle.Enabled = btnProjectTitle.Visible =
+            ProjectTitle.Enabled =
                 (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
                  ShibUser.GetEmail() == project.Advisor2Mail)
                 && deliveryDate.AddDays(-28) > today;
@@ -172,7 +172,19 @@ namespace ProStudCreator
             }
         }
 
-        protected void ProjectTitleChanged(object sender, EventArgs e)
+        private void ReturnAlert(String message)
+        {
+            var sb = new StringBuilder();
+            sb.Append("<script type = 'text/javascript'>");
+            sb.Append("window.onload=function(){");
+            sb.Append("alert('");
+            sb.Append(message);
+            sb.Append("')};");
+            sb.Append("</script>");
+            ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
+        }
+
+        protected void BtnSaveChanges_OnClick(object sender, EventArgs e)
         {
             var oldTitle = project.Name;
             if (project.UserCanEdit())
@@ -189,6 +201,14 @@ namespace ProStudCreator
                 }
                 else
                 {
+                    if (SemesterDropdown.SelectedIndex != 0)
+                    {
+                        project.BillingStatusID = int.Parse(SemesterDropdown.SelectedValue);
+                    }
+                    else
+                    {
+                        project.BillingStatusID = null;
+                    }
                     project.Name = ProjectTitle.Text.FixupParagraph();
                     project.ModificationDate = DateTime.Now;
                     project.LastEditedBy = ShibUser.GetEmail();
@@ -202,26 +222,19 @@ namespace ProStudCreator
             }
         }
 
-        protected void SemesterDropdown_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void BtnCancel_OnClick(object sender, EventArgs e)
         {
-            if (SemesterDropdown.SelectedIndex == 0) return;
-            project.BillingStatusID = SemesterDropdown.SelectedIndex;
-            project.LastEditedBy = ShibUser.GetEmail();
-            project.ModificationDate = DateTime.Now;
-            db.SubmitChanges();
             Response.Redirect("ProjectInfoPage?id=" + project.Id);
         }
 
-        private void ReturnAlert(String message)
+        protected void SemesterDropdown_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            var sb = new StringBuilder();
-            sb.Append("<script type = 'text/javascript'>");
-            sb.Append("window.onload=function(){");
-            sb.Append("alert('");
-            sb.Append(message);
-            sb.Append("')};");
-            sb.Append("</script>");
-            ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
+            BtnSaveChanges.Visible = BtnCancel.Visible = true;
+        }
+
+        protected void ProjectTitle_OnTextChanged(object sender, EventArgs e)
+        {
+            BtnSaveChanges.Visible = BtnCancel.Visible = true;
         }
     }
 }

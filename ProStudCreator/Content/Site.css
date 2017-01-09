@@ -343,3 +343,7 @@ small {
 .alignbottom {
     padding-top: 7px;
 }
+
+.redButton {
+    background-color: #F78181;
+}

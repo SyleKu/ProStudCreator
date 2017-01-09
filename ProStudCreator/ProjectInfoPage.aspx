@@ -3,21 +3,18 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well newProjectSettings non-selectable">
-        <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" ForeColor="#ff0000" Text="Diese Funktion ist noch in Entwicklung!"></asp:Label> 
+        <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group" style="text-align: left">
                 <asp:Label runat="server" Text="Projektname:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control"></asp:TextBox>
-                </div>
-                <div class="col-sm-3">
-                    <asp:Button runat="server" ID="btnProjectTitle" OnClick="ProjectTitleChanged" CssClass="btn btn-default greenButton" Text="Titel ändern"></asp:Button>
+                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control" OnTextChanged="ProjectTitle_OnTextChanged" AutoPostBack="true"></asp:TextBox>
                 </div>
             </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" Text="Studierende:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" ID="Student1Name" CssClass="col-sm-3 alignbottom" ></asp:Label>
+                <asp:Label runat="server" ID="Student1Name" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <asp:Label runat="server" ID="Student2Name" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <br />
                 <br />
@@ -56,12 +53,15 @@
             </div>
             <hr />
             <div class="form-group">
-                <asp:Label runat="server" Text="Kostenstatus:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="SemesterDropdown" AutoPostBack="true" CssClass="form-control" OnSelectedIndexChanged="SemesterDropdown_OnSelectedIndexChanged"></asp:DropDownList>
                 </div>
             </div>
-
+        </div>
+        <div style="text-align: right;">
+            <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default greenButton" Visible="False" Text="Speichern"></asp:Button>
+            <asp:Button runat="server" ID="BtnCancel" OnClick="BtnCancel_OnClick" CssClass="btn btn-default redButton" Visible="False" Text="Abbrechen"></asp:Button>
         </div>
     </div>
 </asp:Content>
