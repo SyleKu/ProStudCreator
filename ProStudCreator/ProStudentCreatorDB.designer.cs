@@ -912,6 +912,8 @@ namespace ProStudCreator
 		
 		private string _Mail;
 		
+		private string _Unternehmen;
+		
 		private EntitySet<Project> _Projects;
 		
     #region Extensibility Method Definitions
@@ -924,6 +926,8 @@ namespace ProStudCreator
     partial void OnNameChanged();
     partial void OnMailChanging(string value);
     partial void OnMailChanged();
+    partial void OnUnternehmenChanging(string value);
+    partial void OnUnternehmenChanged();
     #endregion
 		
 		public Expert()
@@ -988,6 +992,26 @@ namespace ProStudCreator
 					this._Mail = value;
 					this.SendPropertyChanged("Mail");
 					this.OnMailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Unternehmen", DbType="varchar(100)")]
+		public string Unternehmen
+		{
+			get
+			{
+				return this._Unternehmen;
+			}
+			set
+			{
+				if ((this._Unternehmen != value))
+				{
+					this.OnUnternehmenChanging(value);
+					this.SendPropertyChanging();
+					this._Unternehmen = value;
+					this.SendPropertyChanged("Unternehmen");
+					this.OnUnternehmenChanged();
 				}
 			}
 		}

@@ -44,6 +44,7 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Mail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Member="Unternehmen" Type="System.String" DbType="varchar(100)" CanBeNull="true" />
       <Association Name="Expert_Project" Member="Projects" ThisKey="id" OtherKey="LogExpertID" Type="Project" />
     </Type>
   </Table>

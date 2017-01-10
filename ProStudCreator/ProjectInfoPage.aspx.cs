@@ -65,11 +65,11 @@ namespace ProStudCreator
                 : "";
 
 
-            if (project?.LogProjectTypeID == 1)
+            if (project.LogProjectType.P5 && !project.LogProjectType.P6)
             {
                 ExpertName.Text = "Bei IP5 Projekte gibt es keine Experten.";
             }
-            else if (project?.LogProjectTypeID == 2)
+            else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
             {
                 ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
                     ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
