@@ -64,22 +64,29 @@ namespace ProStudCreator
                   Server.HtmlEncode(project.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
-
-            if (project.LogProjectType.P5 && !project.LogProjectType.P6)
+            if (project.LogProjectType != null)
             {
-                ExpertName.Text = "Bei IP5 Projekte gibt es keine Experten.";
-            }
-            else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
-            {
-                ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
-                    ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
-                      Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                    : "Wird noch organisiert";
+                if (project.LogProjectType.P5 && !project.LogProjectType.P6)
+                {
+                    ExpertName.Text = "Bei IP5 Projekte gibt es keine Experten.";
+                }
+                else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
+                {
+                    ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
+                        ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
+                          Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
+                        : "Wird noch organisiert";
+                }
+                else
+                {
+                    ExpertName.Text = "Noch nicht entschieden.";
+                }
             }
             else
             {
                 ExpertName.Text = "Noch nicht entschieden.";
             }
+
 
 
 
