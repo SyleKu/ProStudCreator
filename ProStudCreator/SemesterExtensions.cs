@@ -5,78 +5,36 @@ namespace ProStudCreator
 {
     public partial class Semester
     {
+        public static Semester CurrentSemester(ProStudentCreatorDBDataContext db) => ActiveSemester(DateTime.Now, db);
 
-        private static ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-
-        public static Semester CurrentSemester
+        public static Semester NextSemester(ProStudentCreatorDBDataContext db)
         {
-            get
-            {
-                return ActiveSemester(DateTime.Now);
-            }
+            var safeSemesterActiveUntil = Semester.CurrentSemester(db).SemesterActiveUntil ?? default(DateTime);
+            var safeDate = safeSemesterActiveUntil.AddDays(7);
+            return ActiveSemester(safeDate, db);
         }
 
-        public static Semester NextSemester
+        public static Semester AfterNextSemester(ProStudentCreatorDBDataContext db)
         {
-            get
-            {
-                Semester CurrentSemester = ActiveSemester(DateTime.Now);
-                DateTime SafeSemesterActiveUntil = CurrentSemester.SemesterActiveUntil ?? default(DateTime);
-                DateTime SafeDate = SafeSemesterActiveUntil.AddDays(7);
-                return ActiveSemester(SafeDate);
-            }
+
+            var nextSemester = Semester.NextSemester(db);
+            var safeSemesterActiveUntil = nextSemester.SemesterActiveUntil ?? default(DateTime);
+            var safeDate = safeSemesterActiveUntil.AddDays(7);
+            return ActiveSemester(safeDate,db);
+
         }
 
-        public static Semester AfterNextSemester
+        public static Semester LastSemester(ProStudentCreatorDBDataContext db)
         {
-            get
-            {
-                Semester NextSemester = Semester.NextSemester;
-                DateTime SafeSemesterActiveUntil = NextSemester.SemesterActiveUntil ?? default(DateTime);
-                DateTime SafeDate = SafeSemesterActiveUntil.AddDays(7);
-                return ActiveSemester(SafeDate);
-            }
+
+            var currentSemester = ActiveSemester(DateTime.Now,db);
+            var safeDate = currentSemester.StartDate.AddDays(-7);
+            return ActiveSemester(safeDate,db);
+
         }
 
-        public static Semester LastSemester
-        {
-            get
-            {
-                Semester CurrentSemester = ActiveSemester(DateTime.Now);
-                DateTime SafeDate = CurrentSemester.StartDate.AddDays(-7);
-                return ActiveSemester(SafeDate);
-            }
-        }
-
-        public static Semester BevorLastSemester
-        {
-            get
-            {
-                DateTime SafeDate = LastSemester.StartDate.AddDays(-7);
-                return ActiveSemester(SafeDate);
-            }
-        }
-
-        public static explicit operator Semester(DateTime _dt)
-        {
-            return ActiveSemester(_dt);
-        }
-
-        private static Semester ActiveSemester(DateTime date)
-        {
-            IQueryable<Semester> semesters = AllSemesters();
-            foreach (Semester semester in semesters)
-            {
-                if (semester.StartDate < date && semester.SemesterActiveUntil > date)
-                {
-                    return semester;
-                }
-            }
-            throw new Exception("No active Semester!");
-        }
-
-        private static IQueryable<Semester> AllSemesters() => db.Semester.Select(i => i);
-
+        public static Semester ActiveSemester(DateTime date, ProStudentCreatorDBDataContext db) => db.Semester.Single(s => s.StartDate < date && s.SemesterActiveUntil > date);
+        
         public override string ToString() => Name;
 
     }

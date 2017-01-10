@@ -48,7 +48,6 @@ namespace ProStudCreator
             }
 
             // Project entries
-            ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
             var projects = _projects.ToArray();
 
             for (var i=0; i < projects.Length; i++)
@@ -66,7 +65,8 @@ namespace ProStudCreator
 
         private static void projectToExcelRow(Project p, IRow row)
         {
-            p.Semester = p.Semester == null ? Semester.NextSemester: p.Semester=p.Semester;            
+            ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+            p.Semester = p.Semester == null ? Semester.NextSemester(db): p.Semester=p.Semester;            
 
             string abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString()+"_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
             string dispName = abbreviation + "_" + p.Name;

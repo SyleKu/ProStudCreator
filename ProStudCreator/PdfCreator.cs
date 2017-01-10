@@ -385,7 +385,7 @@ namespace ProStudCreator
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik/" + CurrentProject.Department.DepartmentName + "/Studierendenprojekte " + CurrentProject.GetSemester().ToString(), new Font(Font.FontFamily.HELVETICA, 8)));
+                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik/" + CurrentProject.Department.DepartmentName + "/Studierendenprojekte " + CurrentProject.Semester.ToString(), new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;

@@ -54,11 +54,12 @@ namespace ProStudCreator
         /// <param name="_p"></param>
         public static void GenerateProjectNr(this Project _p)
         {
-            DateTime semesterStart = ((Semester)_p.PublishedDate).StartDate;
-            DateTime semesterEnd = ((Semester)_p.PublishedDate).EndDate;
 
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
             {
+                DateTime semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
+                DateTime semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
+
                 // Get project numbers from this semester & same department
                 int[] nrs = (
                     from p in dbx.Projects
@@ -109,22 +110,6 @@ namespace ProStudCreator
         #endregion
 
         #region Getters
-
-        public static Semester GetSemester(this Project _p)
-        {
-            switch (_p.State)
-            {
-                case ProjectState.Published:
-                    return (Semester)_p.PublishedDate;
-                case ProjectState.Deleted:
-                case ProjectState.InProgress:
-                case ProjectState.Rejected:
-                case ProjectState.Submitted:
-                    return (Semester)_p.ModificationDate;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
 
         public static int GetProjectTeamSize(this Project _p)
         {

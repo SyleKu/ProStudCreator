@@ -41,7 +41,7 @@ namespace ProStudCreator
             }
 
             if (Page.IsPostBack) return;
-            project.Semester = project.Semester ?? Semester.NextSemester;
+            project.Semester = project.Semester ?? Semester.NextSemester(db);
 
             ProjectTitle.Text = project.Name;
 
@@ -64,10 +64,23 @@ namespace ProStudCreator
                   Server.HtmlEncode(project.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
-            ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
-                ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
-                  Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                : "Wird noch organisiert";
+
+            if (project?.LogProjectTypeID == 1)
+            {
+                ExpertName.Text = "Bei IP5 Projekte gibt es keine Experten.";
+            }
+            else if (project?.LogProjectTypeID == 2)
+            {
+                ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
+                    ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
+                      Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
+                    : "Wird noch organisiert";
+            }
+            else
+            {
+                ExpertName.Text = "Noch nicht entschieden.";
+            }
+
 
 
             if (project.LogProjectTypeID == null)
@@ -136,7 +149,7 @@ namespace ProStudCreator
                 ProjectEndPresentation.Text = "Selber mit den Studierenden beschprechen.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester.EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 Berufsbegleitend
             {
@@ -145,7 +158,7 @@ namespace ProStudCreator
                 ProjectEndPresentation.Text = "Selber mit den Studierenden beschprechen.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester.EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 Variante 1 Semester
             {
@@ -153,7 +166,7 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester.EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 Variante 2 Semester
             {
@@ -161,14 +174,14 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Verteidigung:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester.EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
             }
             else
             {
                 ProjectDelivery.Text = "?";
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
                 ProjectEndPresentation.Text = "?";
-                return Semester.NextSemester.EndDate;
+                return Semester.NextSemester(db).EndDate;
             }
         }
 

@@ -90,7 +90,7 @@ namespace ProStudCreator
         private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects, string filter)
         {
 
-            IQueryable<Project> projects = allProjects;
+            var projects = allProjects;
             switch (filter)
             {
                 case "OwnProjects":
@@ -104,11 +104,12 @@ namespace ProStudCreator
                     }
                     else
                     {
+                        var nextSemesterSelected = int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester(db).Id;
                         projects =
                             from p in projects
                             where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
                                 && (p.State != ProjectState.Deleted)
-                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State == ProjectState.Published) || (int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester.Id)))
+                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State == ProjectState.Published) || nextSemesterSelected && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && nextSemesterSelected))
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
