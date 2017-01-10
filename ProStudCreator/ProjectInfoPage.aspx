@@ -7,8 +7,8 @@
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group" style="text-align: left">
                 <asp:Label runat="server" Text="Projektname:" CssClass="control-label col-sm-3"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control" OnTextChanged="ProjectTitle_OnTextChanged" AutoPostBack="true"></asp:TextBox>
+                <div class="col-sm-6">
+                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control maxWidth"></asp:TextBox>
                 </div>
             </div>
             <hr />
@@ -55,13 +55,13 @@
             <div class="form-group">
                 <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="SemesterDropdown" AutoPostBack="true" CssClass="form-control" OnSelectedIndexChanged="SemesterDropdown_OnSelectedIndexChanged"></asp:DropDownList>
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="SemesterDropdown" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
                 </div>
             </div>
         </div>
         <div style="text-align: right;">
-            <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default greenButton" Visible="False" Text="Speichern"></asp:Button>
-            <asp:Button runat="server" ID="BtnCancel" OnClick="BtnCancel_OnClick" CssClass="btn btn-default redButton" Visible="False" Text="Abbrechen"></asp:Button>
+            <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern"></asp:Button>
+            <asp:Button runat="server" ID="BtnCancel" OnClick="BtnCancel_OnClick" CssClass="btn btn-default" Text="Abbrechen"></asp:Button>
         </div>
     </div>
 </asp:Content>

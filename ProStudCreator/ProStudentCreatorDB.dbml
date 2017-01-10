@@ -77,7 +77,7 @@
       <Column Name="P2TypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="P2TeamSizeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="InitialPosition" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" IsDelayLoaded="true" />
       <Column Name="Objective" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />

@@ -67,7 +67,7 @@ namespace ProStudCreator
             ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
                 ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
                   Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                : "?";
+                : "Wird noch organisiert";
 
 
             if (project.LogProjectTypeID == null)
@@ -201,14 +201,16 @@ namespace ProStudCreator
                 }
                 else
                 {
-                    if (SemesterDropdown.SelectedIndex != 0)
-                    {
-                        project.BillingStatusID = int.Parse(SemesterDropdown.SelectedValue);
-                    }
-                    else
-                    {
-                        project.BillingStatusID = null;
-                    }
+                    //if (SemesterDropdown.SelectedIndex != 0)
+                    //{
+                    //    project.BillingStatusID = int.Parse(SemesterDropdown.SelectedValue);
+                    //}
+                    //else
+                    //{
+                    //    project.BillingStatusID = null;
+                    //}
+
+                    project.BillingStatusID = (SemesterDropdown.SelectedIndex == 0) ? (int?)null : int.Parse(SemesterDropdown.SelectedValue);
                     project.Name = ProjectTitle.Text.FixupParagraph();
                     project.ModificationDate = DateTime.Now;
                     project.LastEditedBy = ShibUser.GetEmail();
@@ -224,17 +226,7 @@ namespace ProStudCreator
 
         protected void BtnCancel_OnClick(object sender, EventArgs e)
         {
-            Response.Redirect("ProjectInfoPage?id=" + project.Id);
-        }
-
-        protected void SemesterDropdown_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            BtnSaveChanges.Visible = BtnCancel.Visible = true;
-        }
-
-        protected void ProjectTitle_OnTextChanged(object sender, EventArgs e)
-        {
-            BtnSaveChanges.Visible = BtnCancel.Visible = true;
+            Response.Redirect("Projectlist");
         }
     }
 }

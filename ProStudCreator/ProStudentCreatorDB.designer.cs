@@ -1200,7 +1200,7 @@ namespace ProStudCreator
 		
 		private string _InitialPosition;
 		
-		private System.Data.Linq.Binary _Picture;
+		private System.Data.Linq.Link<System.Data.Linq.Binary> _Picture;
 		
 		private string _Objective;
 		
@@ -1891,15 +1891,15 @@ namespace ProStudCreator
 		{
 			get
 			{
-				return this._Picture;
+				return this._Picture.Value;
 			}
 			set
 			{
-				if ((this._Picture != value))
+				if ((this._Picture.Value != value))
 				{
 					this.OnPictureChanging(value);
 					this.SendPropertyChanging();
-					this._Picture = value;
+					this._Picture.Value = value;
 					this.SendPropertyChanged("Picture");
 					this.OnPictureChanged();
 				}

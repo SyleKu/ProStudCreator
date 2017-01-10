@@ -347,3 +347,7 @@ small {
 .redButton {
     background-color: #F78181;
 }
+
+.maxWidth {
+    max-width: 100% !important;
+}
