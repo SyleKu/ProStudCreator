@@ -14,7 +14,7 @@
                 <ul>
                     <li>Wiedergabe der Ausgangslage und Aufgabenstellung in eigenen Worten</li>
                     <li>Vorgehen mit grobem Zeitplan und Meilensteinen</li>
-                    <li>Projektrisiken, falls nötig</li>
+                    <li>Umgang mit Projektrisiken, falls nötig</li>
                 </ul>
             </li>
             <li>Die Studierenden arbeiten am Projekt. Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).
@@ -34,7 +34,9 @@
             <li>Schlusspräsentation mit 20-40 Minuten Präsentation, und 20-40 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
             <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
                 <i>individuelle</i> Note festgelegt werden.</li>
-            <li>Die Note den Studierenden und der Administration kommunizieren, per Mail. Im Idealfall machst Du noch eine Schlusssitzung.
+            <li>Die Note den Studierenden und der Administration kommunizieren, per Mail.
+                <strong>NEU: Bitte im Mail erwähnen, falls die Arbeit auf Englisch durchgeführt wurde.</strong></li>
+            <li>Im Idealfall machst Du noch eine Schlusssitzung.
                 Der Bewertungsbogen wird den Studierenden <b>NICHT</b> abgegeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
         </ol>
         <p>
