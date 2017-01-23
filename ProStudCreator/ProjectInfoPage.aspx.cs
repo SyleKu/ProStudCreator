@@ -68,14 +68,14 @@ namespace ProStudCreator
             {
                 if (project.LogProjectType.P5 && !project.LogProjectType.P6)
                 {
-                    ExpertName.Text = "Bei IP5 Projekte gibt es keine Experten.";
+                    ExpertName.Text = "Bei IP5 Projekten gibt es keinen Experten.";
                 }
                 else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
                 {
                     ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
                         ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
                           Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                        : "Wird noch organisiert";
+                        : "Wird noch organisiert.";
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace ProStudCreator
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5FullPartTime;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text = "Selber mit den Studierenden beschprechen.";
+                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
@@ -162,7 +162,7 @@ namespace ProStudCreator
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5Accompanying;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text = "Selber mit den Studierenden beschprechen.";
+                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
