@@ -24,7 +24,7 @@
                 <br />
                 <br />
                 <asp:Label runat="server" Text="Experte:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" ID="ExpertName" CssClass="col-sm-3 alignbottom"></asp:Label>
+                <asp:Label runat="server" ID="ExpertName" CssClass="col-sm-9 alignbottom"></asp:Label>
                 <br />
                 <br />
             </div>
@@ -44,7 +44,7 @@
                 <br />
                 <br />
                 <asp:Label runat="server" Text="Schlusspräsentation:" CssClass="control-label col-sm-3" ID="lblProjectEndPresentation"></asp:Label>
-                <asp:Label runat="server" ID="ProjectEndPresentation" CssClass="col-sm-6 alignbottom"></asp:Label>
+                <asp:Label runat="server" ID="ProjectEndPresentation" CssClass="col-sm-9 alignbottom"></asp:Label>
                 <br />
                 <br />
                 <asp:Label runat="server" Text="Ausstellung Bachelorthese:" CssClass="control-label col-sm-3"></asp:Label>
