@@ -409,12 +409,12 @@ namespace ProStudCreator
                 return "projectTypMathAlg.png";
             else if (proj.TypeAppWeb)
                 return "projectTypAppWeb.png";
+            else if (proj.TypeDBBigData)
+                return "projectTypDBBigData.png";
             else if (proj.TypeSysSec)
                 return "projectTypSysSec.png";
-            else if (proj.TypeSE)
-                return "projectTypSE.png";
             else
-                return "projectTypDBBigData.png";
+                return "projectTypSE.png";
         }
 
         private string GetCurrentProjectTypeTwo(Project proj)
