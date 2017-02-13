@@ -351,3 +351,7 @@ small {
 .maxWidth {
     max-width: 100% !important;
 }
+
+.display-inline {
+    display: inline;
+}

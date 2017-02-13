@@ -1306,6 +1306,12 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _SemersterId;
 		
+		private System.Nullable<float> _LogGrade;
+		
+		private System.Nullable<bool> _LogLanguageEnglish;
+		
+		private System.Nullable<bool> _LogLanguageGerman;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntityRef<BillingStatus> _BillingStatus;
@@ -1456,6 +1462,12 @@ namespace ProStudCreator
     partial void OnLogDefenceRoomChanged();
     partial void OnSemesterIdChanging(System.Nullable<int> value);
     partial void OnSemesterIdChanged();
+    partial void OnLogGradeChanging(System.Nullable<float> value);
+    partial void OnLogGradeChanged();
+    partial void OnLogLanguageEnglishChanging(System.Nullable<bool> value);
+    partial void OnLogLanguageEnglishChanged();
+    partial void OnLogLanguageGermanChanging(System.Nullable<bool> value);
+    partial void OnLogLanguageGermanChanged();
     #endregion
 		
 		public Project()
@@ -2750,6 +2762,66 @@ namespace ProStudCreator
 					this._SemersterId = value;
 					this.SendPropertyChanged("SemesterId");
 					this.OnSemesterIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogGrade", DbType="float")]
+		public System.Nullable<float> LogGrade
+		{
+			get
+			{
+				return this._LogGrade;
+			}
+			set
+			{
+				if ((this._LogGrade != value))
+				{
+					this.OnLogGradeChanging(value);
+					this.SendPropertyChanging();
+					this._LogGrade = value;
+					this.SendPropertyChanged("LogGrade");
+					this.OnLogGradeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogLanguageEnglish", DbType="bit")]
+		public System.Nullable<bool> LogLanguageEnglish
+		{
+			get
+			{
+				return this._LogLanguageEnglish;
+			}
+			set
+			{
+				if ((this._LogLanguageEnglish != value))
+				{
+					this.OnLogLanguageEnglishChanging(value);
+					this.SendPropertyChanging();
+					this._LogLanguageEnglish = value;
+					this.SendPropertyChanged("LogLanguageEnglish");
+					this.OnLogLanguageEnglishChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogLanguageGerman", DbType="bit")]
+		public System.Nullable<bool> LogLanguageGerman
+		{
+			get
+			{
+				return this._LogLanguageGerman;
+			}
+			set
+			{
+				if ((this._LogLanguageGerman != value))
+				{
+					this.OnLogLanguageGermanChanging(value);
+					this.SendPropertyChanging();
+					this._LogLanguageGerman = value;
+					this.SendPropertyChanged("LogLanguageGerman");
+					this.OnLogLanguageGermanChanged();
 				}
 			}
 		}

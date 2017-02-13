@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Data.Linq;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -11,6 +14,7 @@ using System.Web.Services.Description;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NPOI.OpenXml4Net.Exceptions;
+using NPOI.SS.Formula.Functions;
 
 namespace ProStudCreator
 {
@@ -22,17 +26,23 @@ namespace ProStudCreator
         private ProjectType projectPriority = new ProjectType();
         private DateTime today = DateTime.Now;
         private DateTime deliveryDate;
-        private enum ProjectTypes { IP5, IP6, NotDefined }
+
+        private enum ProjectTypes
+        {
+            IP5,
+            IP6,
+            NotDefined
+        }
+
         private ProjectTypes type = ProjectTypes.NotDefined;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single((Project p) => (int?)p.Id == id);
+                project = db.Projects.Single((Project p) => (int?) p.Id == id);
             }
             else
             {
@@ -86,8 +96,6 @@ namespace ProStudCreator
             {
                 ExpertName.Text = "Noch nicht entschieden.";
             }
-
-
 
 
             if (project.LogProjectTypeID == null)
@@ -144,6 +152,12 @@ namespace ProStudCreator
             SemesterDropdown.SelectedIndex = project.BillingStatusID ?? 0;
 
             SemesterDropdown.Enabled = project.UserCanEdit();
+
+            if (project.LogProjectType.P5)
+            {
+                lblAussstellungBachelorthese.Visible = false;
+                ProjectExhibition.Visible = false;
+            }
         }
 
         private DateTime SetDates()
@@ -153,19 +167,25 @@ namespace ProStudCreator
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5FullPartTime;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
+                ProjectEndPresentation.Text =
+                    "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate
+                    : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 Berufsbegleitend
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5Accompanying;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
+                ProjectEndPresentation.Text =
+                    "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate
+                    : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 Variante 1 Semester
             {
@@ -173,7 +193,9 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate
+                    : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 Variante 2 Semester
             {
@@ -181,7 +203,9 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Verteidigung:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate) ? dbDate : Semester.NextSemester(db).EndDate;
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate
+                    : Semester.NextSemester(db).EndDate;
             }
             else
             {
@@ -221,16 +245,12 @@ namespace ProStudCreator
                 }
                 else
                 {
-                    //if (SemesterDropdown.SelectedIndex != 0)
-                    //{
-                    //    project.BillingStatusID = int.Parse(SemesterDropdown.SelectedValue);
-                    //}
-                    //else
-                    //{
-                    //    project.BillingStatusID = null;
-                    //}
+                    //methods for the fileuploads
+                    StreamAllFilesToDb();
 
-                    project.BillingStatusID = (SemesterDropdown.SelectedIndex == 0) ? (int?)null : int.Parse(SemesterDropdown.SelectedValue);
+                    project.BillingStatusID = (SemesterDropdown.SelectedIndex == 0)
+                        ? (int?) null
+                        : int.Parse(SemesterDropdown.SelectedValue);
                     project.Name = ProjectTitle.Text.FixupParagraph();
                     project.ModificationDate = DateTime.Now;
                     project.LastEditedBy = ShibUser.GetEmail();
@@ -247,6 +267,114 @@ namespace ProStudCreator
         protected void BtnCancel_OnClick(object sender, EventArgs e)
         {
             Response.Redirect("Projectlist");
+        }
+
+        protected void btnDeleteDoc_OnClick(object sender, EventArgs e)
+        {
+            DeleteFile("ProjectDocument");
+            Response.Redirect("ProjectInfoPage?id=" + project.Id);
+        }
+
+        protected void btnDeletePresentation_OnClick(object sender, EventArgs e)
+        {
+            DeleteFile("ProjectPresentation");
+            Response.Redirect("ProjectInfoPage?id=" + project.Id);
+        }
+
+        protected void btnDeleteCode_OnClick(object sender, EventArgs e)
+        {
+            DeleteFile("ProjectCode");
+            Response.Redirect("ProjectInfoPage?id=" + project.Id);
+        }
+
+        private void StreamAllFilesToDb()
+        {
+            if (fuAddCode.HasFile)
+            {
+                using (var input = fuAddCode.PostedFile.InputStream)
+                {
+                    StreamFiletoDb(input, "ProjectCode");
+                }
+            }
+
+            if (fuAddDoc.HasFile)
+            {
+                using (var input = fuAddDoc.PostedFile.InputStream)
+                {
+                    StreamFiletoDb(input, "ProjectDocumentation");
+                }
+            }
+
+            if (fuAddPresentation.HasFile)
+            {
+                using (var input = fuAddPresentation.PostedFile.InputStream)
+                {
+                    StreamFiletoDb(input, "ProjectPresentation");
+                }
+            }
+        }
+
+        private void StreamFiletoDb(Stream input, string columnname)
+        {
+            using (var connection = new SqlConnection())
+            {
+                var cmd =
+                    new SqlCommand(
+                        $"INSERT INTO Projects(ROWGUID, {columnname}) VALUES(newsequentialid(),CAST('' AS varbinary(max))) WHERE Id = {project.Id};")
+                    {
+                        CommandType = CommandType.Text,
+                        Connection = connection
+                    };
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+
+            using (var connection = new SqlConnection())
+            {
+                connection.Open();
+
+                var command =
+                    new SqlCommand(
+                        $"SELECT TOP(1) {columnname}.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM BothTable WHERE Id = {project.Id}",
+                        connection);
+
+                var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                command.Transaction = tran;
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Get the pointer for file
+                        var path = reader.GetString(0);
+                        var transactionContext = reader.GetSqlBytes(1).Buffer;
+
+                        using (
+                            Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Write,
+                                FileOptions.SequentialScan, allocationSize: 0))
+                        {
+                            input.CopyTo(fileStream, 65536);
+                        }
+                    }
+                }
+                tran.Commit();
+            }
+        }
+
+        private void DeleteFile(string columnname)
+        {
+            using (var connection = new SqlConnection())
+            {
+                connection.Open();
+
+                var command =
+                    new SqlCommand($"INSERT INTO Prostud.dbo.Projects({columnname}) VALUES(NULL) WHERE Id = {project.Id}", connection);
+
+                var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                command.Transaction = tran;
+                tran.Commit();
+            }
         }
     }
 }
