@@ -747,6 +747,11 @@ namespace ProStudCreator
                 project.GenerateProjectNr();
             }
 
+            if (project.Semester == null)
+            {
+                project.Semester = Semester.NextSemester(db);
+            }
+
             //picture description
             project.ImgDescription = imgdescription.Text.FixupParagraph();
 
