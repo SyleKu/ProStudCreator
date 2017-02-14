@@ -33,7 +33,7 @@ Alter Table Projects ADD ROWGUID uniqueidentifier Null
 
 GO
 
-Insert INto Projects (ROWGUID)
+Insert Into Projects (ROWGUID)
 VALUES (NEWSEQUENTIALID())
 
 GO

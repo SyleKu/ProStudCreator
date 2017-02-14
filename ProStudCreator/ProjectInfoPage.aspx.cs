@@ -38,11 +38,16 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            var canPostEdit = SemesterDropdown.Enabled =
+            (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+             ShibUser.GetEmail() == project.Advisor2Mail);
+
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single((Project p) => (int?) p.Id == id);
+                project = db.Projects.Single((Project p) => (int?)p.Id == id);
             }
             else
             {
@@ -146,14 +151,37 @@ namespace ProStudCreator
                  ShibUser.GetEmail() == project.Advisor2Mail)
                 && deliveryDate.AddDays(-28) > today;
 
+            //Disable the dropdowns for unauthorized users
+            drpLogLanguage.Enabled = canPostEdit;
+            if (project.LogLanguageEnglish != null && project.LogLanguageGerman != null)
+            {
+                if (project.LogLanguageEnglish.Value && !project.LogLanguageGerman.Value)
+                {
+                    drpLogLanguage.SelectedValue = "1";
+                }
+                else
+                {
+                    drpLogLanguage.SelectedValue = "2";
+                }
+            }
+            else
+            {
+                drpLogLanguage.SelectedValue = "0";
+            }
+
+
+            nbrGrade.Enabled = canPostEdit;
+            nbrGrade.Text = string.Concat(project?.LogGrade);
+
+
+            SemesterDropdown.Enabled = canPostEdit;
             SemesterDropdown.DataSource = db.BillingStatus;
             SemesterDropdown.DataBind();
             SemesterDropdown.Items.Insert(0, new ListItem("Unbekannt"));
             SemesterDropdown.SelectedIndex = project.BillingStatusID ?? 0;
 
-            SemesterDropdown.Enabled = project.UserCanEdit();
 
-            if (project.LogProjectType.P5)
+            if (project.LogProjectType != null && project.LogProjectType.P5)
             {
                 lblAussstellungBachelorthese.Visible = false;
                 ProjectExhibition.Visible = false;
@@ -248,8 +276,26 @@ namespace ProStudCreator
                     //methods for the fileuploads
                     StreamAllFilesToDb();
 
+                    project.LogGrade = float.Parse(nbrGrade.Text);
+
+                    switch (drpLogLanguage.SelectedValue)
+                    {
+                        case "1":
+                            project.LogLanguageEnglish = true;
+                            project.LogLanguageGerman = false;
+                            break;
+                        case "2":
+                            project.LogLanguageEnglish = false;
+                            project.LogLanguageGerman = true;
+                            break;
+                        default:
+                            project.LogLanguageGerman = null;
+                            project.LogLanguageEnglish = null;
+                            break;
+                    }
+
                     project.BillingStatusID = (SemesterDropdown.SelectedIndex == 0)
-                        ? (int?) null
+                        ? (int?)null
                         : int.Parse(SemesterDropdown.SelectedValue);
                     project.Name = ProjectTitle.Text.FixupParagraph();
                     project.ModificationDate = DateTime.Now;

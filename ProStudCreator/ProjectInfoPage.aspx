@@ -69,7 +69,7 @@
             <div class="form-group">
                 <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" id="nbrGrade" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" id="nbrGrade" CssClass="form-control" Placeholder="Bitte auf Zentel genau eintragen."></asp:TextBox>
                 </div>
             </div>
             <hr />
@@ -100,6 +100,9 @@
                     <asp:LinkButton runat="server" ID="btnDeletePresentation" OnClick="btnDeletePresentation_OnClick" OnClientClick="return confirm('Wollen Sie die Präsentation wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
                 </div>
             </div>
+            <hr/>
+            <iframe id="uploadFrame" height="25" width="200" scrolling="no" src="UploadEngine.aspx"></iframe>
+            <input id="Upload" type="button" value="Upload"/>
 
         </div>
         <div style="text-align: right;">
