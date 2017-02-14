@@ -26,6 +26,7 @@ namespace ProStudCreator
         private ProjectType projectPriority = new ProjectType();
         private DateTime today = DateTime.Now;
         private DateTime deliveryDate;
+        private bool canPostEdit = false;
 
         private enum ProjectTypes
         {
@@ -39,7 +40,7 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            var canPostEdit = SemesterDropdown.Enabled =
+            canPostEdit = SemesterDropdown.Enabled =
             (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
              ShibUser.GetEmail() == project.Advisor2Mail);
 
@@ -259,7 +260,7 @@ namespace ProStudCreator
         protected void BtnSaveChanges_OnClick(object sender, EventArgs e)
         {
             var oldTitle = project.Name;
-            if (project.UserCanEdit())
+            if (canPostEdit)
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
                 db.SubmitChanges();
@@ -276,7 +277,10 @@ namespace ProStudCreator
                     //methods for the fileuploads
                     StreamAllFilesToDb();
 
-                    project.LogGrade = float.Parse(nbrGrade.Text);
+                    if (nbrGrade.Text != "")
+                    {
+                        project.LogGrade = float.Parse(nbrGrade.Text);
+                    }
 
                     switch (drpLogLanguage.SelectedValue)
                     {
@@ -335,29 +339,29 @@ namespace ProStudCreator
 
         private void StreamAllFilesToDb()
         {
-            if (fuAddCode.HasFile)
-            {
-                using (var input = fuAddCode.PostedFile.InputStream)
-                {
-                    StreamFiletoDb(input, "ProjectCode");
-                }
-            }
+            //if (fuAddCode.HasFile)
+            //{
+            //    using (var input = fuAddCode.PostedFile.InputStream)
+            //    {
+            //        StreamFiletoDb(input, "ProjectCode");
+            //    }
+            //}
 
-            if (fuAddDoc.HasFile)
-            {
-                using (var input = fuAddDoc.PostedFile.InputStream)
-                {
-                    StreamFiletoDb(input, "ProjectDocumentation");
-                }
-            }
+            //if (fuAddDoc.HasFile)
+            //{
+            //    using (var input = fuAddDoc.PostedFile.InputStream)
+            //    {
+            //        StreamFiletoDb(input, "ProjectDocumentation");
+            //    }
+            //}
 
-            if (fuAddPresentation.HasFile)
-            {
-                using (var input = fuAddPresentation.PostedFile.InputStream)
-                {
-                    StreamFiletoDb(input, "ProjectPresentation");
-                }
-            }
+            //if (fuAddPresentation.HasFile)
+            //{
+            //    using (var input = fuAddPresentation.PostedFile.InputStream)
+            //    {
+            //        StreamFiletoDb(input, "ProjectPresentation");
+            //    }
+            //}
         }
 
         private void StreamFiletoDb(Stream input, string columnname)

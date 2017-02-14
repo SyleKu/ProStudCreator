@@ -3,7 +3,7 @@
 
 <asp:Content ID="AdminPageContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well newProjectSettings non-selectable">
-        <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Offene Tasks"></asp:Label>
+        <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Diese Seite ist noch in der Entwicklung!" ForeColor="red"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <asp:GridView ID="GVTasks" ItemType="ProStudCreator.ProjectSingleTask" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" Width="100%">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
@@ -80,7 +80,7 @@
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Zusätzliche Informationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group">
-                <asp:Label runat="server" Text="ProDist:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" Text="Projektzuteilungssoftware:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProDist" target="_blank">Git-Repository</a></asp:Label>
             </div>
             <hr />

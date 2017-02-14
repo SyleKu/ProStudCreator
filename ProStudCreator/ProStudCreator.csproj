@@ -210,7 +210,6 @@
     <Content Include="Content\Webauftritt_IP5_2016HS.pdf" />
     <Content Include="Content\Webauftritt_IP6_2016HS.pdf" />
     <Content Include="Content\P5_P6_Guide_20160906.pdf" />
-    <Content Include="UploadEngine.aspx" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>
@@ -360,13 +359,6 @@
     </Compile>
     <Compile Include="Termine.aspx.designer.cs">
       <DependentUpon>Termine.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UploadEngine.aspx.cs">
-      <DependentUpon>UploadEngine.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UploadEngine.aspx.designer.cs">
-      <DependentUpon>UploadEngine.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

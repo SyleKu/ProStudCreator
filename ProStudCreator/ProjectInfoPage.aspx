@@ -62,48 +62,20 @@
             <div class="form-group">
                 <asp:Label runat="server" Text="Durchführungssprache:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="drpLogLanguage" AutoPostBack="false" CssClass="form-control"><asp:ListItem text="(Bitte Auswählen)" value="0"/><asp:ListItem text="Englisch" value="1"/><asp:Listitem text="Deutsch" value="2"/></asp:DropDownList>
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="drpLogLanguage" AutoPostBack="false" CssClass="form-control">
+                        <asp:ListItem Text="(Bitte Auswählen)" Value="0" />
+                        <asp:ListItem Text="Englisch" Value="1" />
+                        <asp:ListItem Text="Deutsch" Value="2" />
+                    </asp:DropDownList>
                 </div>
             </div>
             <br />
             <div class="form-group">
                 <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" id="nbrGrade" CssClass="form-control" Placeholder="Bitte auf Zentel genau eintragen."></asp:TextBox>
+                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGrade" CssClass="form-control"></asp:TextBox>
                 </div>
             </div>
-            <hr />
-            <div class="form-group">
-                <asp:Label runat="server" ID="lblAddCode" CssClass="control-label col-sm-3" Text="Code hinzufügen:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="fuAddCode" CssClass="control-label" />
-                </div>
-                <div class="col-sm-1">
-                    <asp:LinkButton runat="server" ID="btnDeleteCode" OnClick="btnDeleteCode_OnClick" OnClientClick="return confirm('Wollen Sie den Code wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" ID="lblAddDoc" CssClass="control-label col-sm-3" Text="Dokumentation hinzufügen:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="fuAddDoc" accept=".pdf" CssClass="control-label" />
-                </div>
-                <div class="col-sm-1">
-                    <asp:LinkButton runat="server" ID="btnDeleteDoc" OnClick="btnDeleteDoc_OnClick" OnClientClick="return confirm('Wollen Sie die Dokumentation wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" ID="lblAddPresentation" CssClass="control-label col-sm-3" Text="Präsentation hinzufügen:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="fuAddPresentation" accept=".pptx" CssClass="control-label" />
-                </div>
-                <div class="col-sm-1">
-                    <asp:LinkButton runat="server" ID="btnDeletePresentation" OnClick="btnDeletePresentation_OnClick" OnClientClick="return confirm('Wollen Sie die Präsentation wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
-                </div>
-            </div>
-            <hr/>
-            <iframe id="uploadFrame" height="25" width="200" scrolling="no" src="UploadEngine.aspx"></iframe>
-            <input id="Upload" type="button" value="Upload"/>
-
         </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern"></asp:Button>
