@@ -50,18 +50,6 @@ namespace ProStudCreator
         {
             projects = db.Projects.Select(i => i);
 
-            // Display project approval list if user is admin
-            if (ShibUser.IsAdmin())
-            {
-                AdminView.Visible = true;
-                CheckProjects.DataSource =
-                    from item in projects
-                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
-                    select item into i
-                    select getProjectSingleElement(i);
-            }
-
-
             if (!base.IsPostBack && Session["listFilter"] != null)
             {
                 whichOwner.SelectedValue = (string)Session["listFilter"];
@@ -77,7 +65,6 @@ namespace ProStudCreator
                 from i in filterRelevantProjects(projects, (string)Session["listFilter"])
                 select getProjectSingleElement(i);
             AllProjects.DataBind();
-            CheckProjects.DataBind();
 
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
             Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");

@@ -47,7 +47,7 @@
                 <asp:Label runat="server" ID="ProjectEndPresentation" CssClass="col-sm-9 alignbottom"></asp:Label>
                 <br />
                 <br />
-                <asp:Label runat="server" Text="Ausstellung Bachelorthese:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" Text="Ausstellung Bachelorthese:" ID="lblAussstellungBachelorthese" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" ID="ProjectExhibition" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <br />
             </div>
@@ -55,7 +55,25 @@
             <div class="form-group">
                 <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="SemesterDropdown" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="SemesterDropdown" AutoPostBack="false" CssClass="form-control"></asp:DropDownList>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <asp:Label runat="server" Text="Durchführungssprache:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="drpLogLanguage" AutoPostBack="false" CssClass="form-control">
+                        <asp:ListItem Text="(Bitte Auswählen)" Value="0" />
+                        <asp:ListItem Text="Englisch" Value="1" />
+                        <asp:ListItem Text="Deutsch" Value="2" />
+                    </asp:DropDownList>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGrade" CssClass="form-control"></asp:TextBox>
                 </div>
             </div>
         </div>
@@ -65,3 +83,6 @@
         </div>
     </div>
 </asp:Content>
+
+
+

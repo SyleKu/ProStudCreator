@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
@@ -73,6 +74,19 @@ namespace ProStudCreator
                 Response.Redirect("error/AccessDenied.aspx");
                 Response.End();
                 return;
+            }
+
+            if (!ShibUser.IsAdmin())
+            {
+                NavAdmin.Visible = false;
+            }
+
+            var adminpage = new AdminPage();
+            var checktasks = adminpage.AllTasks();
+
+            if (checktasks.ToArray().Length != 0)
+            {
+                tasksToDo.Visible = true;
             }
         }
 

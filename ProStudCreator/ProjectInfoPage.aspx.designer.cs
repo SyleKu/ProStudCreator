@@ -121,6 +121,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label ProjectEndPresentation;
         
         /// <summary>
+        /// lblAussstellungBachelorthese control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAussstellungBachelorthese;
+        
+        /// <summary>
         /// ProjectExhibition control.
         /// </summary>
         /// <remarks>
@@ -137,6 +146,24 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList SemesterDropdown;
+        
+        /// <summary>
+        /// drpLogLanguage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpLogLanguage;
+        
+        /// <summary>
+        /// nbrGrade control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox nbrGrade;
         
         /// <summary>
         /// BtnSaveChanges control.

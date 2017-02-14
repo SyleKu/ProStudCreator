@@ -57,6 +57,14 @@
                         <a href="FAQ" style="margin-left: 5%;">
                             <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">FAQ</h2>
                         </a>
+                        <div runat="server" id="NavAdmin" class="display-inline">
+                            <a href="AdminPage.aspx" style="margin-left: 5%;">
+                                <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Admin</h2>
+                            </a>
+                            <div runat="server" id="tasksToDo" class="display-inline" Visible="False">
+                                <img src="pictures/danger.png" height="32px" width="32px"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <%-- <div class="navbar-collapse collapse">
@@ -77,7 +85,8 @@
                 </div>
                 <div class="pull-right">
                     Angemeldet als <%: ProStudCreator.ShibUser.GetEmail() + " (" + ProStudCreator.ShibUser.GetDepartmentName() + ")"  %> <%: ProStudCreator.ShibUser.IsAdmin() ? " (Admin)" : "" %>
-                    <% if (inDebugMode) { %>
+                    <% if (inDebugMode)
+                        { %>
                     <strong style="color: red">(DEBUG MODE)</strong>
                     <% } %>
                 </div>
