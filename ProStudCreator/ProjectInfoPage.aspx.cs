@@ -143,7 +143,9 @@ namespace ProStudCreator
             SemesterDropdown.Items.Insert(0, new ListItem("Unbekannt"));
             SemesterDropdown.SelectedIndex = project.BillingStatusID ?? 0;
 
-            SemesterDropdown.Enabled = project.UserCanEdit();
+            SemesterDropdown.Enabled =
+            (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+             ShibUser.GetEmail() == project.Advisor2Mail);
         }
 
         private DateTime SetDates()
