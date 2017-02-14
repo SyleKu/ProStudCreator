@@ -40,7 +40,7 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            canPostEdit = SemesterDropdown.Enabled =
+            canPostEdit =
             (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
              ShibUser.GetEmail() == project.Advisor2Mail);
 
@@ -154,6 +154,7 @@ namespace ProStudCreator
 
             //Disable the dropdowns for unauthorized users
             drpLogLanguage.Enabled = canPostEdit;
+
             if (project.LogLanguageEnglish != null && project.LogLanguageGerman != null)
             {
                 if (project.LogLanguageEnglish.Value && !project.LogLanguageGerman.Value)
