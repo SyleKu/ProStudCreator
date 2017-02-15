@@ -1072,6 +1072,8 @@ namespace ProStudCreator
 		
 		private string _DisplayName;
 		
+		private bool _ShowAddressOnInfoPage;
+		
 		private EntitySet<Project> _Projects;
 		
     #region Extensibility Method Definitions
@@ -1082,6 +1084,8 @@ namespace ProStudCreator
     partial void OnidChanged();
     partial void OnDisplayNameChanging(string value);
     partial void OnDisplayNameChanged();
+    partial void OnShowAddressOnInfoPageChanging(bool value);
+    partial void OnShowAddressOnInfoPageChanged();
     #endregion
 		
 		public BillingStatus()
@@ -1126,6 +1130,26 @@ namespace ProStudCreator
 					this._DisplayName = value;
 					this.SendPropertyChanged("DisplayName");
 					this.OnDisplayNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowAddressOnInfoPage", DbType="bit")]
+		public bool ShowAddressOnInfoPage
+		{
+			get
+			{
+				return this._ShowAddressOnInfoPage;
+			}
+			set
+			{
+				if ((this._ShowAddressOnInfoPage != value))
+				{
+					this.OnShowAddressOnInfoPageChanging(value);
+					this.SendPropertyChanging();
+					this._ShowAddressOnInfoPage = value;
+					this.SendPropertyChanged("ShowAddressOnInfoPage");
+					this.OnShowAddressOnInfoPageChanged();
 				}
 			}
 		}
@@ -1312,6 +1336,12 @@ namespace ProStudCreator
 		
 		private System.Nullable<bool> _LogLanguageGerman;
 		
+		private string _ClientAddressTitle;
+		
+		private string _ClientAddressDepartment;
+		
+		private string _ClientReferenceNumber;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntityRef<BillingStatus> _BillingStatus;
@@ -1468,6 +1498,12 @@ namespace ProStudCreator
     partial void OnLogLanguageEnglishChanged();
     partial void OnLogLanguageGermanChanging(System.Nullable<bool> value);
     partial void OnLogLanguageGermanChanged();
+    partial void OnClientAddressTitleChanging(string value);
+    partial void OnClientAddressTitleChanged();
+    partial void OnClientAddressDepartmentChanging(string value);
+    partial void OnClientAddressDepartmentChanged();
+    partial void OnClientReferenceNumberChanging(string value);
+    partial void OnClientReferenceNumberChanged();
     #endregion
 		
 		public Project()
@@ -2822,6 +2858,66 @@ namespace ProStudCreator
 					this._LogLanguageGerman = value;
 					this.SendPropertyChanged("LogLanguageGerman");
 					this.OnLogLanguageGermanChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientAddressTitle", DbType="varchar(30)")]
+		public string ClientAddressTitle
+		{
+			get
+			{
+				return this._ClientAddressTitle;
+			}
+			set
+			{
+				if ((this._ClientAddressTitle != value))
+				{
+					this.OnClientAddressTitleChanging(value);
+					this.SendPropertyChanging();
+					this._ClientAddressTitle = value;
+					this.SendPropertyChanged("ClientAddressTitle");
+					this.OnClientAddressTitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientAddressDepartment", DbType="varchar(50)")]
+		public string ClientAddressDepartment
+		{
+			get
+			{
+				return this._ClientAddressDepartment;
+			}
+			set
+			{
+				if ((this._ClientAddressDepartment != value))
+				{
+					this.OnClientAddressDepartmentChanging(value);
+					this.SendPropertyChanging();
+					this._ClientAddressDepartment = value;
+					this.SendPropertyChanged("ClientAddressDepartment");
+					this.OnClientAddressDepartmentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientReferenceNumber", DbType="varchar(50)")]
+		public string ClientReferenceNumber
+		{
+			get
+			{
+				return this._ClientReferenceNumber;
+			}
+			set
+			{
+				if ((this._ClientReferenceNumber != value))
+				{
+					this.OnClientReferenceNumberChanging(value);
+					this.SendPropertyChanging();
+					this._ClientReferenceNumber = value;
+					this.SendPropertyChanged("ClientReferenceNumber");
+					this.OnClientReferenceNumberChanged();
 				}
 			}
 		}

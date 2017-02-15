@@ -176,17 +176,34 @@ namespace ProStudCreator
             nbrGrade.Text = string.Concat(project?.LogGrade);
 
 
-            SemesterDropdown.Enabled = canPostEdit;
-            SemesterDropdown.DataSource = db.BillingStatus;
-            SemesterDropdown.DataBind();
-            SemesterDropdown.Items.Insert(0, new ListItem("Unbekannt"));
-            SemesterDropdown.SelectedIndex = project.BillingStatusID ?? 0;
+            drpBillingstatus.Enabled = canPostEdit;
+            drpBillingstatus.DataSource = db.BillingStatus;
+            drpBillingstatus.DataBind();
+            drpBillingstatus.Items.Insert(0, new ListItem("Unbekannt", "ValueWithNeverWillBeGivenByTheDB"));
+            drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
 
 
             if (project.LogProjectType != null && project.LogProjectType.P5)
             {
-                lblAussstellungBachelorthese.Visible = false;
-                ProjectExhibition.Visible = false;
+                divBachelor.Visible = false;
+            }
+
+            if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
+            {
+                BillAddressPlaceholder.Visible = canPostEdit;
+
+                txtClientCompany.Text = project?.ClientCompany;
+                drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
+                txtClientName.Text = project?.ClientPerson;
+                txtClientDepartment.Text = project?.ClientAddressDepartment;
+                txtClientStreet.Text = project?.ClientAddressStreet;
+                txtClientPLZ.Text = project?.ClientAddressPostcode;
+                txtClientCity.Text = project?.ClientAddressCity;
+                txtClientReference.Text = project?.ClientReferenceNumber;
+            }
+            else
+            {
+                BillAddressPlaceholder.Visible = false;
             }
         }
 
@@ -246,7 +263,7 @@ namespace ProStudCreator
             }
         }
 
-        private void ReturnAlert(String message)
+        private void ReturnAlert(string message)
         {
             var sb = new StringBuilder();
             sb.Append("<script type = 'text/javascript'>");
@@ -260,59 +277,7 @@ namespace ProStudCreator
 
         protected void BtnSaveChanges_OnClick(object sender, EventArgs e)
         {
-            var oldTitle = project.Name;
-            if (canPostEdit)
-            {
-                project.Name = ProjectTitle.Text.FixupParagraph();
-                db.SubmitChanges();
-                project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
-                if (project.OverOnePage)
-                {
-                    project.Name = oldTitle;
-                    db.SubmitChanges();
-                    ReturnAlert("Die Änderung des Titels ist nicht möglich, weil das PDF zu lang werden würde.");
-                    Response.Redirect("ProjectInfoPage?id=" + project.Id);
-                }
-                else
-                {
-                    //methods for the fileuploads
-                    StreamAllFilesToDb();
-
-                    if (nbrGrade.Text != "")
-                    {
-                        project.LogGrade = float.Parse(nbrGrade.Text);
-                    }
-
-                    switch (drpLogLanguage.SelectedValue)
-                    {
-                        case "1":
-                            project.LogLanguageEnglish = true;
-                            project.LogLanguageGerman = false;
-                            break;
-                        case "2":
-                            project.LogLanguageEnglish = false;
-                            project.LogLanguageGerman = true;
-                            break;
-                        default:
-                            project.LogLanguageGerman = null;
-                            project.LogLanguageEnglish = null;
-                            break;
-                    }
-
-                    project.BillingStatusID = (SemesterDropdown.SelectedIndex == 0)
-                        ? (int?)null
-                        : int.Parse(SemesterDropdown.SelectedValue);
-                    project.Name = ProjectTitle.Text.FixupParagraph();
-                    project.ModificationDate = DateTime.Now;
-                    project.LastEditedBy = ShibUser.GetEmail();
-                    db.SubmitChanges();
-                    Response.Redirect("ProjectInfoPage?id=" + project.Id);
-                }
-            }
-            else
-            {
-                throw new UnauthorizedAccessException();
-            }
+            SaveChanges("Projectlist");
         }
 
         protected void BtnCancel_OnClick(object sender, EventArgs e)
@@ -427,5 +392,125 @@ namespace ProStudCreator
                 tran.Commit();
             }
         }
+
+        protected void DrpBillingstatusChanged(object sender, EventArgs e)
+        {
+            if (drpBillingstatus.SelectedValue == "9")
+            {
+                BillAddressPlaceholder.Visible = canPostEdit;
+                txtClientCompany.Text = project?.ClientCompany;
+                drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
+                txtClientName.Text = project?.ClientPerson;
+                txtClientDepartment.Text = project?.ClientAddressDepartment;
+                txtClientStreet.Text = project?.ClientAddressStreet;
+                txtClientPLZ.Text = project?.ClientAddressPostcode;
+                txtClientCity.Text = project?.ClientAddressCity;
+                txtClientReference.Text = project?.ClientReferenceNumber;
+            }
+            else
+            {
+                BillAddressPlaceholder.Visible = false;
+            }
+            BillAddressForm.Update();
+        }
+
+        protected void BtnSaveBetween_OnClick(object sender, EventArgs e)
+        {
+            SaveChanges("ProjectInfoPage?id=" + project.Id);
+        }
+
+        private void SaveChanges(string redirectTo)
+        {
+            var oldTitle = project.Name;
+            string ValidationMessage = null;
+            if (canPostEdit)
+            {
+                project.Name = ProjectTitle.Text.FixupParagraph();
+                db.SubmitChanges();
+                project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
+                if (project.OverOnePage)
+                {
+                    project.Name = oldTitle;
+                    db.SubmitChanges();
+                    ReturnAlert("Die Änderung des Titels ist nicht möglich, weil das PDF zu lang werden würde.");
+                    Response.Redirect("ProjectInfoPage?id=" + project.Id);
+                }
+                else
+                {
+                    //methods for the fileuploads
+                    StreamAllFilesToDb();
+
+                    if (nbrGrade.Text != "")
+                    {
+                        project.LogGrade = float.Parse(nbrGrade.Text);
+                    }
+
+                    switch (drpLogLanguage.SelectedValue)
+                    {
+                        case "1":
+                            project.LogLanguageEnglish = true;
+                            project.LogLanguageGerman = false;
+                            break;
+                        case "2":
+                            project.LogLanguageEnglish = false;
+                            project.LogLanguageGerman = true;
+                            break;
+                        default:
+                            project.LogLanguageGerman = null;
+                            project.LogLanguageEnglish = null;
+                            break;
+                    }
+
+                    project.BillingStatusID = (drpBillingstatus.SelectedIndex == 0)
+                        ? (int?)null
+                        : int.Parse(drpBillingstatus.SelectedValue);
+
+                    //this sould always be under the project.BillingstatusId statement
+                    if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
+                    {
+                        if (txtClientCompany.Text == "" || txtClientName.Text == "" || txtClientStreet.Text == "" ||
+                            txtClientPLZ.Text == "" || txtClientCity.Text == "")
+                        {
+                            ValidationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+                        }
+                        else
+                        {
+                            project.ClientCompany = txtClientCompany.Text;
+                            project.ClientAddressTitle = (drpClientTitle.SelectedValue == "1") ? "Herr" : "Frau";
+                            project.ClientPerson = txtClientName.Text;
+                            project.ClientAddressDepartment = (txtClientDepartment.Text == "")
+                                ? null
+                                : txtClientDepartment.Text;
+                            project.ClientAddressStreet = (txtClientStreet.Text == "") ? null : txtClientStreet.Text;
+                            project.ClientAddressPostcode = (txtClientPLZ.Text == "") ? null : txtClientPLZ.Text;
+                            project.ClientAddressCity = (txtClientCity.Text == "") ? null : txtClientCity.Text;
+                            project.ClientReferenceNumber = (txtClientReference.Text == "")
+                                ? null
+                                : txtClientReference.Text;
+                        }
+
+                    }
+
+                    if (ValidationMessage == null)
+                    {
+                        project.Name = ProjectTitle.Text.FixupParagraph();
+                        project.ModificationDate = DateTime.Now;
+                        project.LastEditedBy = ShibUser.GetEmail();
+                        db.SubmitChanges();
+                        Response.Redirect(redirectTo);
+                    }
+                    else
+                    {
+                        ReturnAlert(ValidationMessage);
+                    }
+
+                }
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
     }
 }

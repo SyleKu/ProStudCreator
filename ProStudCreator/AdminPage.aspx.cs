@@ -140,7 +140,7 @@ namespace ProStudCreator
                 task.taskOrganiseRoom = "pictures/projectTypTransparent.png";
             }
 
-            if (_project?.LogProjectTypeID == 2 && _project?.LogExpertPaid != true &&
+            if (_project?.LogProjectType?.P6 == true && _project?.LogExpertPaid != true &&
                 (_project?.LogDefenceDate > DateTime.Now) && _project.State == 3)
             {
                 empty = false;
