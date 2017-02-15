@@ -174,21 +174,30 @@ namespace ProStudCreator
             nbrGradeStudent1.Enabled = canPostEdit;
             nbrGradeStudent1.Text = string.Concat(project?.LogGradeStudent1);
 
-            divGradeStudent2.Visible = !string.IsNullOrEmpty(project.LogStudent2Mail);
-            if (!string.IsNullOrEmpty(project.LogStudent2Mail))
+            if (!string.IsNullOrEmpty(project.LogStudent1Name))
             {
-                nbrGradeStudent2.Enabled = canPostEdit;
-                nbrGradeStudent2.Text = string.Concat(project?.LogGradeStudent2);
+                divGradeBoth.Visible = true;
+                divGradeStudent2.Visible = !string.IsNullOrEmpty(project.LogStudent2Mail);
+                if (!string.IsNullOrEmpty(project.LogStudent2Mail))
+                {
+                    nbrGradeStudent2.Enabled = canPostEdit;
+                    nbrGradeStudent2.Text = string.Concat(project?.LogGradeStudent2);
+                }
+
+                lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
+                lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student2"}:";
+            }
+            else
+            {
+                divGradeBoth.Visible = false;
             }
 
-            lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
-            lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student2"}:";
 
 
             drpBillingstatus.Enabled = canPostEdit;
             drpBillingstatus.DataSource = db.BillingStatus;
             drpBillingstatus.DataBind();
-            drpBillingstatus.Items.Insert(0, new ListItem("(Bitte Auswählen)", "ValueWithNeverWillBeGivenByTheDB"));
+            drpBillingstatus.Items.Insert(0, new ListItem((canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWithNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
 
 
@@ -196,6 +205,8 @@ namespace ProStudCreator
             {
                 divBachelor.Visible = false;
             }
+
+            drpLogLanguage.Items[0].Text = (canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
             {

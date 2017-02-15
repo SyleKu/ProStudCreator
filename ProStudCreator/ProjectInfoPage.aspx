@@ -65,19 +65,21 @@
                 </div>
             </div>
             <br />
-            <div class="form-group">
-                <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3" id="lblGradeStudent1"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent1" CssClass="form-control"></asp:TextBox>
+            <div runat="server" visible="False" id="divGradeBoth">
+                <div class="form-group">
+                    <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3" ID="lblGradeStudent1"></asp:Label>
+                    <div class="col-sm-3">
+                        <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent1" CssClass="form-control"></asp:TextBox>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="divGradeStudent2" runat="server" visible="False">
-                <asp:Label runat="server" Text="Note:" id="lblGradeStudent2" CssClass="control-label col-sm-3"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent2" CssClass="form-control"></asp:TextBox>
+                <div class="form-group" id="divGradeStudent2" runat="server" visible="False">
+                    <asp:Label runat="server" Text="Note:" ID="lblGradeStudent2" CssClass="control-label col-sm-3"></asp:Label>
+                    <div class="col-sm-3">
+                        <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent2" CssClass="form-control"></asp:TextBox>
+                    </div>
                 </div>
+                <br />
             </div>
-            <br />
             <div class="form-group">
                 <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
