@@ -120,12 +120,13 @@
       <Column Name="LogDefenceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="LogDefenceRoom" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
       <Column Name="SemesterId" Storage="_SemersterId" Type="System.Int32" DbType="int" CanBeNull="true" />
-      <Column Name="LogGrade" Type="System.Single" DbType="float" CanBeNull="true" />
+      <Column Name="LogGradeStudent1" Storage="_LogGrade" Type="System.Single" DbType="float" CanBeNull="true" />
       <Column Name="LogLanguageEnglish" Type="System.Boolean" DbType="bit" CanBeNull="true" />
       <Column Name="LogLanguageGerman" Type="System.Boolean" DbType="bit" CanBeNull="true" />
       <Column Name="ClientAddressTitle" Type="System.String" DbType="varchar(30)" CanBeNull="true" />
       <Column Name="ClientAddressDepartment" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
       <Column Name="ClientReferenceNumber" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
+      <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="BillingStatus_Project" Member="BillingStatus" ThisKey="BillingStatusID" OtherKey="id" Type="BillingStatus" IsForeignKey="true" />
       <Association Name="Expert_Project" Member="Expert" ThisKey="LogExpertID" OtherKey="id" Type="Expert" IsForeignKey="true" />

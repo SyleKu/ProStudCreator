@@ -171,14 +171,24 @@ namespace ProStudCreator
             }
 
 
-            nbrGrade.Enabled = canPostEdit;
-            nbrGrade.Text = string.Concat(project?.LogGrade);
+            nbrGradeStudent1.Enabled = canPostEdit;
+            nbrGradeStudent1.Text = string.Concat(project?.LogGradeStudent1);
+
+            divGradeStudent2.Visible = !string.IsNullOrEmpty(project.LogStudent2Mail);
+            if (!string.IsNullOrEmpty(project.LogStudent2Mail))
+            {
+                nbrGradeStudent2.Enabled = canPostEdit;
+                nbrGradeStudent2.Text = string.Concat(project?.LogGradeStudent2);
+            }
+
+            lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
+            lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student2"}:";
 
 
             drpBillingstatus.Enabled = canPostEdit;
             drpBillingstatus.DataSource = db.BillingStatus;
             drpBillingstatus.DataBind();
-            drpBillingstatus.Items.Insert(0, new ListItem("Unbekannt", "ValueWithNeverWillBeGivenByTheDB"));
+            drpBillingstatus.Items.Insert(0, new ListItem("(Bitte Auswählen)", "ValueWithNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
 
 
@@ -439,9 +449,14 @@ namespace ProStudCreator
                     //methods for the fileuploads
                     StreamAllFilesToDb();
 
-                    if (nbrGrade.Text != "")
+                    if (nbrGradeStudent1.Text != "")
                     {
-                        project.LogGrade = float.Parse(nbrGrade.Text);
+                        project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text);
+                    }
+
+                    if (nbrGradeStudent2.Text != "")
+                    {
+                        project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text);
                     }
 
                     switch (drpLogLanguage.SelectedValue)

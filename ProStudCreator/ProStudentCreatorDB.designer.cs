@@ -1342,6 +1342,8 @@ namespace ProStudCreator
 		
 		private string _ClientReferenceNumber;
 		
+		private System.Nullable<float> _LogGradeStudent2;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntityRef<BillingStatus> _BillingStatus;
@@ -1492,8 +1494,8 @@ namespace ProStudCreator
     partial void OnLogDefenceRoomChanged();
     partial void OnSemesterIdChanging(System.Nullable<int> value);
     partial void OnSemesterIdChanged();
-    partial void OnLogGradeChanging(System.Nullable<float> value);
-    partial void OnLogGradeChanged();
+    partial void OnLogGradeStudent1Changing(System.Nullable<float> value);
+    partial void OnLogGradeStudent1Changed();
     partial void OnLogLanguageEnglishChanging(System.Nullable<bool> value);
     partial void OnLogLanguageEnglishChanged();
     partial void OnLogLanguageGermanChanging(System.Nullable<bool> value);
@@ -1504,6 +1506,8 @@ namespace ProStudCreator
     partial void OnClientAddressDepartmentChanged();
     partial void OnClientReferenceNumberChanging(string value);
     partial void OnClientReferenceNumberChanged();
+    partial void OnLogGradeStudent2Changing(System.Nullable<float> value);
+    partial void OnLogGradeStudent2Changed();
     #endregion
 		
 		public Project()
@@ -2803,7 +2807,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogGrade", DbType="float")]
-		public System.Nullable<float> LogGrade
+		public System.Nullable<float> LogGradeStudent1
 		{
 			get
 			{
@@ -2813,11 +2817,11 @@ namespace ProStudCreator
 			{
 				if ((this._LogGrade != value))
 				{
-					this.OnLogGradeChanging(value);
+					this.OnLogGradeStudent1Changing(value);
 					this.SendPropertyChanging();
 					this._LogGrade = value;
-					this.SendPropertyChanged("LogGrade");
-					this.OnLogGradeChanged();
+					this.SendPropertyChanged("LogGradeStudent1");
+					this.OnLogGradeStudent1Changed();
 				}
 			}
 		}
@@ -2918,6 +2922,26 @@ namespace ProStudCreator
 					this._ClientReferenceNumber = value;
 					this.SendPropertyChanged("ClientReferenceNumber");
 					this.OnClientReferenceNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogGradeStudent2", DbType="float")]
+		public System.Nullable<float> LogGradeStudent2
+		{
+			get
+			{
+				return this._LogGradeStudent2;
+			}
+			set
+			{
+				if ((this._LogGradeStudent2 != value))
+				{
+					this.OnLogGradeStudent2Changing(value);
+					this.SendPropertyChanging();
+					this._LogGradeStudent2 = value;
+					this.SendPropertyChanged("LogGradeStudent2");
+					this.OnLogGradeStudent2Changed();
 				}
 			}
 		}
