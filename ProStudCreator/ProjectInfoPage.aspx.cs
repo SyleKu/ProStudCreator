@@ -39,11 +39,6 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            canPostEdit =
-            (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
-             ShibUser.GetEmail() == project.Advisor2Mail);
-
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
@@ -55,6 +50,10 @@ namespace ProStudCreator
                 Response.Redirect("Projectlist.aspx");
                 Response.End();
             }
+
+            canPostEdit =
+            (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+             ShibUser.GetEmail() == project.Advisor2Mail);
 
             if (Page.IsPostBack) return;
             project.Semester = project.Semester ?? Semester.NextSemester(db);
