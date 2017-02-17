@@ -22,7 +22,7 @@ namespace ProStudCreator
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="aspnet-ProStudCreator_TEST-20140818043155")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="aspnet-ProStudCreator-20140818043155")]
 	public partial class ProStudentCreatorDBDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -54,10 +54,13 @@ namespace ProStudCreator
     partial void InsertSemester(Semester instance);
     partial void UpdateSemester(Semester instance);
     partial void DeleteSemester(Semester instance);
+    partial void InsertAttachements(Attachements instance);
+    partial void UpdateAttachements(Attachements instance);
+    partial void DeleteAttachements(Attachements instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["aspnet_ProStudCreator_20140818043155ConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -149,6 +152,14 @@ namespace ProStudCreator
 				return this.GetTable<Semester>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Attachements> Attachements
+		{
+			get
+			{
+				return this.GetTable<Attachements>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Departments")]
@@ -162,6 +173,8 @@ namespace ProStudCreator
 		private string _DepartmentName;
 		
 		private string _OUCode;
+		
+		private bool _ShowDefenseOnInfoPage;
 		
 		private EntitySet<UserDepartmentMap> _UserDepartmentMaps;
 		
@@ -177,6 +190,8 @@ namespace ProStudCreator
     partial void OnDepartmentNameChanged();
     partial void OnOUCodeChanging(string value);
     partial void OnOUCodeChanged();
+    partial void OnShowDefenseOnInfoPageChanging(bool value);
+    partial void OnShowDefenseOnInfoPageChanged();
     #endregion
 		
 		public Department()
@@ -242,6 +257,26 @@ namespace ProStudCreator
 					this._OUCode = value;
 					this.SendPropertyChanged("OUCode");
 					this.OnOUCodeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowDefenseOnInfoPage", DbType="bit")]
+		public bool ShowDefenseOnInfoPage
+		{
+			get
+			{
+				return this._ShowDefenseOnInfoPage;
+			}
+			set
+			{
+				if ((this._ShowDefenseOnInfoPage != value))
+				{
+					this.OnShowDefenseOnInfoPageChanging(value);
+					this.SendPropertyChanging();
+					this._ShowDefenseOnInfoPage = value;
+					this.SendPropertyChanged("ShowDefenseOnInfoPage");
+					this.OnShowDefenseOnInfoPageChanged();
 				}
 			}
 		}
@@ -1346,6 +1381,8 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects;
 		
+		private EntitySet<Attachements> _Attachements;
+		
 		private EntityRef<BillingStatus> _BillingStatus;
 		
 		private EntityRef<Expert> _Expert;
@@ -1513,6 +1550,7 @@ namespace ProStudCreator
 		public Project()
 		{
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			this._Attachements = new EntitySet<Attachements>(new Action<Attachements>(this.attach_Attachements), new Action<Attachements>(this.detach_Attachements));
 			this._BillingStatus = default(EntityRef<BillingStatus>);
 			this._Expert = default(EntityRef<Expert>);
 			this._Project1 = default(EntityRef<Project>);
@@ -2959,6 +2997,19 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Attachements", Storage="_Attachements", ThisKey="Id", OtherKey="ProjectId")]
+		public EntitySet<Attachements> Attachements
+		{
+			get
+			{
+				return this._Attachements;
+			}
+			set
+			{
+				this._Attachements.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_BillingStatus", ThisKey="BillingStatusID", OtherKey="id", IsForeignKey=true)]
 		public BillingStatus BillingStatus
 		{
@@ -3329,6 +3380,18 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.Project1 = null;
+		}
+		
+		private void attach_Attachements(Attachements entity)
+		{
+			this.SendPropertyChanging();
+			entity.Project = this;
+		}
+		
+		private void detach_Attachements(Attachements entity)
+		{
+			this.SendPropertyChanging();
+			entity.Project = null;
 		}
 	}
 	
@@ -3731,6 +3794,253 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.Semester = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Attachements")]
+	public partial class Attachements : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private System.Guid _ROWGUID;
+		
+		private System.Data.Linq.Binary _ProjectAttachement;
+		
+		private int _ProjectId;
+		
+		private string _UploadUser;
+		
+		private System.Nullable<System.DateTime> _UploadDate;
+		
+		private System.Nullable<decimal> _UploadSize;
+		
+		private EntityRef<Project> _Project;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnROWGUIDChanging(System.Guid value);
+    partial void OnROWGUIDChanged();
+    partial void OnProjectAttachementChanging(System.Data.Linq.Binary value);
+    partial void OnProjectAttachementChanged();
+    partial void OnProjectIdChanging(int value);
+    partial void OnProjectIdChanged();
+    partial void OnUploadUserChanging(string value);
+    partial void OnUploadUserChanged();
+    partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnUploadDateChanged();
+    partial void OnUploadSizeChanging(System.Nullable<decimal> value);
+    partial void OnUploadSizeChanged();
+    #endregion
+		
+		public Attachements()
+		{
+			this._Project = default(EntityRef<Project>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid ROWGUID
+		{
+			get
+			{
+				return this._ROWGUID;
+			}
+			set
+			{
+				if ((this._ROWGUID != value))
+				{
+					this.OnROWGUIDChanging(value);
+					this.SendPropertyChanging();
+					this._ROWGUID = value;
+					this.SendPropertyChanged("ROWGUID");
+					this.OnROWGUIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectAttachement", DbType="VarBinary(MAX)", UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary ProjectAttachement
+		{
+			get
+			{
+				return this._ProjectAttachement;
+			}
+			set
+			{
+				if ((this._ProjectAttachement != value))
+				{
+					this.OnProjectAttachementChanging(value);
+					this.SendPropertyChanging();
+					this._ProjectAttachement = value;
+					this.SendPropertyChanged("ProjectAttachement");
+					this.OnProjectAttachementChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="Int NOT NULL")]
+		public int ProjectId
+		{
+			get
+			{
+				return this._ProjectId;
+			}
+			set
+			{
+				if ((this._ProjectId != value))
+				{
+					if (this._Project.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProjectIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProjectId = value;
+					this.SendPropertyChanged("ProjectId");
+					this.OnProjectIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadUser", DbType="VarChar(50)")]
+		public string UploadUser
+		{
+			get
+			{
+				return this._UploadUser;
+			}
+			set
+			{
+				if ((this._UploadUser != value))
+				{
+					this.OnUploadUserChanging(value);
+					this.SendPropertyChanging();
+					this._UploadUser = value;
+					this.SendPropertyChanged("UploadUser");
+					this.OnUploadUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> UploadDate
+		{
+			get
+			{
+				return this._UploadDate;
+			}
+			set
+			{
+				if ((this._UploadDate != value))
+				{
+					this.OnUploadDateChanging(value);
+					this.SendPropertyChanging();
+					this._UploadDate = value;
+					this.SendPropertyChanged("UploadDate");
+					this.OnUploadDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadSize", DbType="Decimal(18,0)")]
+		public System.Nullable<decimal> UploadSize
+		{
+			get
+			{
+				return this._UploadSize;
+			}
+			set
+			{
+				if ((this._UploadSize != value))
+				{
+					this.OnUploadSizeChanging(value);
+					this.SendPropertyChanging();
+					this._UploadSize = value;
+					this.SendPropertyChanged("UploadSize");
+					this.OnUploadSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Attachements", Storage="_Project", ThisKey="ProjectId", OtherKey="Id", IsForeignKey=true)]
+		public Project Project
+		{
+			get
+			{
+				return this._Project.Entity;
+			}
+			set
+			{
+				Project previousValue = this._Project.Entity;
+				if (((previousValue != value) 
+							|| (this._Project.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Project.Entity = null;
+						previousValue.Attachements.Remove(this);
+					}
+					this._Project.Entity = value;
+					if ((value != null))
+					{
+						value.Attachements.Add(this);
+						this._ProjectId = value.Id;
+					}
+					else
+					{
+						this._ProjectId = default(int);
+					}
+					this.SendPropertyChanged("Project");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

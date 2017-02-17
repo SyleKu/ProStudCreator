@@ -14,7 +14,9 @@ using System.Web.Services.Description;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NPOI.OpenXml4Net.Exceptions;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 using NPOI.SS.Formula.Functions;
+using Telerik.Web.UI.AsyncUpload;
 
 namespace ProStudCreator
 {
@@ -146,8 +148,8 @@ namespace ProStudCreator
             ProjectExhibition.Text = project.Semester.ExhibitionBachelorThesis;
 
             //Disable the Textbox if Title can't be changed anymore
-            ProjectTitle.Enabled =
-                (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+            ProjectTitle.ReadOnly =
+                !(ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
                  ShibUser.GetEmail() == project.Advisor2Mail)
                 && deliveryDate.AddDays(-28) > today;
 
@@ -181,7 +183,7 @@ namespace ProStudCreator
                 if (!string.IsNullOrEmpty(project.LogStudent2Mail))
                 {
                     nbrGradeStudent2.Enabled = canPostEdit;
-                    nbrGradeStudent2.Text = string.Concat(project?.LogGradeStudent2);
+                    nbrGradeStudent2.Text = string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
                 }
 
                 lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
@@ -225,6 +227,9 @@ namespace ProStudCreator
             {
                 BillAddressPlaceholder.Visible = false;
             }
+
+            divExpert.Visible = project.Department.ShowDefenseOnInfoPage;
+            divPresentation.Visible = project.Department.ShowDefenseOnInfoPage;
         }
 
         private DateTime SetDates()
@@ -325,28 +330,8 @@ namespace ProStudCreator
 
         private void StreamAllFilesToDb()
         {
-            //if (fuAddCode.HasFile)
+            //for (var i = 0; AsyncUploadProject.UploadedFiles[i] != null; i++)
             //{
-            //    using (var input = fuAddCode.PostedFile.InputStream)
-            //    {
-            //        StreamFiletoDb(input, "ProjectCode");
-            //    }
-            //}
-
-            //if (fuAddDoc.HasFile)
-            //{
-            //    using (var input = fuAddDoc.PostedFile.InputStream)
-            //    {
-            //        StreamFiletoDb(input, "ProjectDocumentation");
-            //    }
-            //}
-
-            //if (fuAddPresentation.HasFile)
-            //{
-            //    using (var input = fuAddPresentation.PostedFile.InputStream)
-            //    {
-            //        StreamFiletoDb(input, "ProjectPresentation");
-            //    }
             //}
         }
 
@@ -415,7 +400,7 @@ namespace ProStudCreator
 
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
-            if (drpBillingstatus.SelectedValue == "9")
+            if (ShowAddressForm(int.Parse(drpBillingstatus.SelectedValue)))
             {
                 BillAddressPlaceholder.Visible = canPostEdit;
                 txtClientCompany.Text = project?.ClientCompany;
@@ -434,6 +419,18 @@ namespace ProStudCreator
             BillAddressForm.Update();
         }
 
+        private bool ShowAddressForm(int id)
+        {
+            var allBillingstatuswhichShowForm = db.BillingStatus.Where(s => s.ShowAddressOnInfoPage).ToArray();
+
+            foreach (var billingStatus in allBillingstatuswhichShowForm)
+            {
+                if (billingStatus.id == id)
+                    return true;
+            }
+            return false;
+        }
+
         protected void BtnSaveBetween_OnClick(object sender, EventArgs e)
         {
             SaveChanges("ProjectInfoPage?id=" + project.Id);
@@ -442,7 +439,7 @@ namespace ProStudCreator
         private void SaveChanges(string redirectTo)
         {
             var oldTitle = project.Name;
-            string ValidationMessage = null;
+            string validationMessage = null;
             if (canPostEdit)
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
@@ -457,9 +454,6 @@ namespace ProStudCreator
                 }
                 else
                 {
-                    //methods for the fileuploads
-                    StreamAllFilesToDb();
-
                     if (nbrGradeStudent1.Text != "")
                     {
                         project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text);
@@ -496,7 +490,7 @@ namespace ProStudCreator
                         if (txtClientCompany.Text == "" || txtClientName.Text == "" || txtClientStreet.Text == "" ||
                             txtClientPLZ.Text == "" || txtClientCity.Text == "")
                         {
-                            ValidationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+                            validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
                         }
                         else
                         {
@@ -515,8 +509,9 @@ namespace ProStudCreator
                         }
 
                     }
+                    StreamAllFilesToDb();
 
-                    if (ValidationMessage == null)
+                    if (validationMessage == null)
                     {
                         project.Name = ProjectTitle.Text.FixupParagraph();
                         project.ModificationDate = DateTime.Now;
@@ -526,7 +521,7 @@ namespace ProStudCreator
                     }
                     else
                     {
-                        ReturnAlert(ValidationMessage);
+                        ReturnAlert(validationMessage);
                     }
 
                 }

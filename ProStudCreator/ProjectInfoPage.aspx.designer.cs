@@ -67,6 +67,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label Advisor2Name;
         
         /// <summary>
+        /// divExpert control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divExpert;
+        
+        /// <summary>
         /// ExpertName control.
         /// </summary>
         /// <remarks>
@@ -101,6 +110,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ProjectDelivery;
+        
+        /// <summary>
+        /// divPresentation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPresentation;
         
         /// <summary>
         /// lblProjectEndPresentation control.

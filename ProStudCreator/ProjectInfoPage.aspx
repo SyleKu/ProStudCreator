@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" %>
 
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well newProjectSettings non-selectable">
@@ -21,11 +22,12 @@
                 <asp:Label runat="server" Text="Betreuung:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" ID="Advisor1Name" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <asp:Label runat="server" ID="Advisor2Name" CssClass="col-sm-3 alignbottom"></asp:Label>
-                <br />
-                <br />
-                <asp:Label runat="server" Text="Experte:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" ID="ExpertName" CssClass="col-sm-9 alignbottom"></asp:Label>
-                <br />
+                <div runat="server" id="divExpert">
+                    <br />
+                    <br />
+                    <asp:Label runat="server" Text="Experte:" CssClass="control-label col-sm-3"></asp:Label>
+                    <asp:Label runat="server" ID="ExpertName" CssClass="col-sm-9 alignbottom"></asp:Label>
+                </div>
                 <br />
             </div>
             <hr />
@@ -41,10 +43,12 @@
             <div class="form-group">
                 <asp:Label runat="server" Text="Abgabe:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" ID="ProjectDelivery" CssClass="col-sm-3 alignbottom"></asp:Label>
-                <br />
-                <br />
-                <asp:Label runat="server" Text="Schlusspräsentation:" CssClass="control-label col-sm-3" ID="lblProjectEndPresentation"></asp:Label>
-                <asp:Label runat="server" ID="ProjectEndPresentation" CssClass="col-sm-9 alignbottom"></asp:Label>
+                <div runat="server" id="divPresentation">
+                    <br />
+                    <br />
+                    <asp:Label runat="server" Text="Schlusspräsentation:" CssClass="control-label col-sm-3" ID="lblProjectEndPresentation"></asp:Label>
+                    <asp:Label runat="server" ID="ProjectEndPresentation" CssClass="col-sm-9 alignbottom"></asp:Label>
+                </div>
                 <div runat="server" id="divBachelor">
                     <br />
                     <br />
@@ -149,6 +153,14 @@
                     </asp:PlaceHolder>
                 </ContentTemplate>
             </asp:UpdatePanel>
+            <hr />
+            <%--<div class="demo-container form-group" style="text-align: left" runat="server" id="FileUplaodContainer">
+                <asp:Label runat="server" Text="Projektartefakte (Code, Doku, Präsentation):" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-9">
+                    <telerik:RadAsyncUpload RenderMode="Lightweight" runat="server" ID="AsyncUploadProject" ChunkSize="1048576" />
+                    <telerik:RadProgressArea RenderMode="Lightweight" runat="server" ID="RadProgressAreaProject" />
+                </div>
+            </div>--%>
         </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>

@@ -355,3 +355,25 @@ small {
 .display-inline {
     display: inline;
 }
+
+#example {
+    text-align: center;
+}
+ 
+#example .demo-container {
+    display: inline-block;
+    text-align: left;
+}
+ 
+.demo-container .RadUpload .ruUploadProgress {
+    width: 210px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+}
+ 
+html .demo-container .ruFakeInput {
+    width: 220px;
+}

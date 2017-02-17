@@ -19,7 +19,7 @@ namespace ProStudCreator
         public string advisorName { get; set; }
         public string projectName { get; set; }
         public string projectType1 { get; set; }
-        public string projectType2 { get; set; }
+        public string projectType2 { get; set;  }
         public bool p5 { get; set; }
         public bool p6 { get; set; }
     }
