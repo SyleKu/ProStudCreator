@@ -264,7 +264,6 @@
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
     <Content Include="Termine.aspx" />
-    <Content Include="test.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
