@@ -174,7 +174,7 @@ namespace ProStudCreator
 
 
             nbrGradeStudent1.Enabled = canPostEdit;
-            nbrGradeStudent1.Text = string.Concat(project?.LogGradeStudent1);
+            nbrGradeStudent1.Text = (project?.LogGradeStudent1 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent1, 1));
 
             if (!string.IsNullOrEmpty(project.LogStudent1Name))
             {
@@ -183,7 +183,7 @@ namespace ProStudCreator
                 if (!string.IsNullOrEmpty(project.LogStudent2Mail))
                 {
                     nbrGradeStudent2.Enabled = canPostEdit;
-                    nbrGradeStudent2.Text = string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
+                    nbrGradeStudent2.Text =(project?.LogGradeStudent2 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
                 }
 
                 lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
