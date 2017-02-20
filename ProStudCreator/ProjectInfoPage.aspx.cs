@@ -25,7 +25,6 @@ namespace ProStudCreator
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         private int? id;
         private Project project;
-        private ProjectType projectPriority = new ProjectType();
         private DateTime today = DateTime.Now;
         private DateTime deliveryDate;
         private bool canPostEdit = false;
@@ -53,16 +52,22 @@ namespace ProStudCreator
                 Response.End();
             }
 
+
+            //If the User can edit the Project after it has started
             canPostEdit =
             (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
              ShibUser.GetEmail() == project.Advisor2Mail);
 
             if (Page.IsPostBack) return;
+
+            //set the Semester if it isn't set already
             project.Semester = project.Semester ?? Semester.NextSemester(db);
 
+            //Project title
             ProjectTitle.Text = project.Name;
 
 
+            //Set the Students
             Student1Name.Text = (!string.IsNullOrEmpty(project.LogStudent1Name))
                 ? "<a href=\"mailto:" + project.LogStudent1Mail + "\">" +
                   Server.HtmlEncode(project.LogStudent1Name).Replace(" ", "&nbsp;") + "</a>"
@@ -72,6 +77,7 @@ namespace ProStudCreator
                   Server.HtmlEncode(project.LogStudent2Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
+            //Set the Advisor
             Advisor1Name.Text = (!string.IsNullOrEmpty(project.Advisor1Name))
                 ? "<a href=\"mailto:" + project.Advisor1Mail + "\">" +
                   Server.HtmlEncode(project.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
@@ -81,13 +87,11 @@ namespace ProStudCreator
                   Server.HtmlEncode(project.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
+
+            //Set the Expert
             if (project.LogProjectType != null)
             {
-                if (project.LogProjectType.P5 && !project.LogProjectType.P6)
-                {
-                    ExpertName.Text = "Bei IP5 Projekten gibt es keinen Experten.";
-                }
-                else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
+                if (!project.LogProjectType.P5 && project.LogProjectType.P6)
                 {
                     ExpertName.Text = (!string.IsNullOrEmpty(project.LogExpertID.ToString()))
                         ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
@@ -105,6 +109,7 @@ namespace ProStudCreator
             }
 
 
+            //Set the Projecttype
             if (project.LogProjectTypeID == null)
             {
                 lblProjectType.Text = "?";
@@ -126,7 +131,7 @@ namespace ProStudCreator
                 type = ProjectTypes.NotDefined;
             }
 
-
+            //set the Project duration
             if (project?.LogProjectDuration == 2)
             {
                 lblProjectDuration.Text = "2 Semester";
@@ -140,22 +145,17 @@ namespace ProStudCreator
                 lblProjectDuration.Text = "?";
             }
 
-            ProjectEndPresentation.Text = project.LogDefenceDate?.ToString() ?? "?";
-
-            //darf erst Hier aufgerufen werden.
+            //Sets the DeliveryDate / dont call further up!
             deliveryDate = SetDates();
 
+
+            //set the date of the EndPresentation
+            ProjectEndPresentation.Text = project.LogDefenceDate?.ToString() ?? "?";
+
+            //Set the Exhibition date? of the Bachelorthesis
             ProjectExhibition.Text = project.Semester.ExhibitionBachelorThesis;
 
-            //Disable the Textbox if Title can't be changed anymore
-            ProjectTitle.ReadOnly =
-                !(ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
-                 ShibUser.GetEmail() == project.Advisor2Mail)
-                && deliveryDate.AddDays(-28) > today;
-
-            //Disable the dropdowns for unauthorized users
-            drpLogLanguage.Enabled = canPostEdit;
-
+            //Set the LogLanguage
             if (project.LogLanguageEnglish != null && project.LogLanguageGerman != null)
             {
                 if (project.LogLanguageEnglish.Value && !project.LogLanguageGerman.Value)
@@ -171,65 +171,59 @@ namespace ProStudCreator
             {
                 drpLogLanguage.SelectedValue = "0";
             }
+            drpLogLanguage.Items[0].Text = (canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
-
-            nbrGradeStudent1.Enabled = canPostEdit;
+            //Set the Grades
             nbrGradeStudent1.Text = (project?.LogGradeStudent1 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent1, 1));
+            nbrGradeStudent2.Text = (project?.LogGradeStudent2 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
 
-            if (!string.IsNullOrEmpty(project.LogStudent1Name))
-            {
-                divGradeBoth.Visible = true;
-                divGradeStudent2.Visible = !string.IsNullOrEmpty(project.LogStudent2Mail);
-                if (!string.IsNullOrEmpty(project.LogStudent2Mail))
-                {
-                    nbrGradeStudent2.Enabled = canPostEdit;
-                    nbrGradeStudent2.Text =(project?.LogGradeStudent2 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
-                }
-
-                lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
-                lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student2"}:";
-            }
-            else
-            {
-                divGradeBoth.Visible = false;
-            }
+            //set the Labels to the Grades
+            lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
+            lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student/in 2"}:";
 
 
 
-            drpBillingstatus.Enabled = canPostEdit;
+            //fill the Billingstatus dropdown with Data
             drpBillingstatus.DataSource = db.BillingStatus;
             drpBillingstatus.DataBind();
             drpBillingstatus.Items.Insert(0, new ListItem((canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWithNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
 
+            //Set the data from the addressform
+            txtClientCompany.Text = project?.ClientCompany;
+            drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
+            txtClientName.Text = project?.ClientPerson;
+            txtClientDepartment.Text = project?.ClientAddressDepartment;
+            txtClientStreet.Text = project?.ClientAddressStreet;
+            txtClientPLZ.Text = project?.ClientAddressPostcode;
+            txtClientCity.Text = project?.ClientAddressCity;
+            txtClientReference.Text = project?.ClientReferenceNumber;
 
-            if (project.LogProjectType != null && project.LogProjectType.P5)
+            //disable for the unauthorized Users
+            ProjectTitle.ReadOnly = !(canPostEdit && deliveryDate.AddDays(-28) < today);
+            drpLogLanguage.Enabled =
+                nbrGradeStudent1.Enabled =
+                    nbrGradeStudent2.Enabled =
+                        drpBillingstatus.Enabled = canPostEdit;
+
+            //set the visibility
+            if (project.Department.ShowDefenseOnInfoPage) //i4ds
             {
-                divBachelor.Visible = false;
+                divExpert.Visible = project?.LogProjectType?.P6 ?? false;
+            }
+            else //imvs
+            {
+                divExpert.Visible = false;
             }
 
-            drpLogLanguage.Items[0].Text = (canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
+            divPresentation.Visible = project?.Department?.ShowDefenseOnInfoPage ?? false;
 
-            if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
-            {
-                BillAddressPlaceholder.Visible = canPostEdit;
+            divBachelor.Visible = project?.LogProjectType?.P6 ?? false;
 
-                txtClientCompany.Text = project?.ClientCompany;
-                drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
-                txtClientName.Text = project?.ClientPerson;
-                txtClientDepartment.Text = project?.ClientAddressDepartment;
-                txtClientStreet.Text = project?.ClientAddressStreet;
-                txtClientPLZ.Text = project?.ClientAddressPostcode;
-                txtClientCity.Text = project?.ClientAddressCity;
-                txtClientReference.Text = project?.ClientReferenceNumber;
-            }
-            else
-            {
-                BillAddressPlaceholder.Visible = false;
-            }
+            divGradeStudent1.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name);
+            divGradeStudent2.Visible = !string.IsNullOrEmpty(project?.LogStudent2Name);
 
-            divExpert.Visible = project.Department.ShowDefenseOnInfoPage;
-            divPresentation.Visible = project.Department.ShowDefenseOnInfoPage;
+            BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && canPostEdit);
         }
 
         private DateTime SetDates()
@@ -262,7 +256,7 @@ namespace ProStudCreator
             else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 Variante 1 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP6Normal;
-                lblProjectEndPresentation.Text = "Schlusspräsentation:";
+                lblProjectEndPresentation.Text = "Verteidigung:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
@@ -400,7 +394,7 @@ namespace ProStudCreator
 
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
-            if (ShowAddressForm(int.Parse(drpBillingstatus.SelectedValue)))
+            if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWithNeverWillBeGivenByTheDB" ? 0 : int.Parse(drpBillingstatus.SelectedValue)))
             {
                 BillAddressPlaceholder.Visible = canPostEdit;
                 txtClientCompany.Text = project?.ClientCompany;

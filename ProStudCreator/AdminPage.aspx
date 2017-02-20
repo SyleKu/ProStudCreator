@@ -101,6 +101,15 @@
                 <div class="col-sm-3"></div>
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="mailto:stephen.randles@fhnw.ch" target="_blank">Stephen Randles</a></asp:Label>
             </div>
+            <hr />
+            <div class="form-group">
+                <asp:Label runat="server" Text="Semesterdaten:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine/studientermine" target="_blank">Akademischer Kalender</a></asp:Label>
+                <br />
+                <br />
+                <div class="col-sm-3"></div>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine" target="_blank">Stunden und Semesterpläne</a></asp:Label>
+            </div>
         </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Marketing Export"></asp:Button>

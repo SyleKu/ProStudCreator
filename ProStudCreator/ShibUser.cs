@@ -12,7 +12,7 @@ namespace ProStudCreator
         public static bool IsAdmin()
         {
             #if DEBUG
-                return false;
+                return true;
             #else
                 if (HttpContext.Current.Items["IsAdmin"] == null)
                 {

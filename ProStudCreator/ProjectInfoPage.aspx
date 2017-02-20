@@ -68,22 +68,22 @@
                     </asp:DropDownList>
                 </div>
             </div>
-            <br />
-            <div runat="server" visible="False" id="divGradeBoth">
+            <div runat="server" visible="False" id="divGradeStudent1">
+                <br />
                 <div class="form-group">
                     <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3" ID="lblGradeStudent1"></asp:Label>
                     <div class="col-sm-3">
                         <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent1" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
-                <div class="form-group" id="divGradeStudent2" runat="server" visible="False">
-                    <asp:Label runat="server" Text="Note:" ID="lblGradeStudent2" CssClass="control-label col-sm-3"></asp:Label>
-                    <div class="col-sm-3">
-                        <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent2" CssClass="form-control"></asp:TextBox>
-                    </div>
-                </div>
-                <br />
             </div>
+            <div class="form-group" id="divGradeStudent2" runat="server" visible="False">
+                <asp:Label runat="server" Text="Note:" ID="lblGradeStudent2" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent2" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            <br />
             <div class="form-group">
                 <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
@@ -153,7 +153,6 @@
                     </asp:PlaceHolder>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <hr />
             <%--<div class="demo-container form-group" style="text-align: left" runat="server" id="FileUplaodContainer">
                 <asp:Label runat="server" Text="Projektartefakte (Code, Doku, Präsentation):" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-9">

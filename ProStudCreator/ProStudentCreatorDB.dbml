@@ -6,6 +6,8 @@
       <Column Name="DepartmentName" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="OUCode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="ShowDefenseOnInfoPage" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="IMVS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="i4DS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMaps" ThisKey="Id" OtherKey="departmentId" Type="UserDepartmentMap" />
       <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
     </Type>

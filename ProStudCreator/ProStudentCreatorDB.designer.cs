@@ -176,6 +176,10 @@ namespace ProStudCreator
 		
 		private bool _ShowDefenseOnInfoPage;
 		
+		private bool _IMVS;
+		
+		private bool _i4DS;
+		
 		private EntitySet<UserDepartmentMap> _UserDepartmentMaps;
 		
 		private EntitySet<Project> _Projects;
@@ -192,6 +196,10 @@ namespace ProStudCreator
     partial void OnOUCodeChanged();
     partial void OnShowDefenseOnInfoPageChanging(bool value);
     partial void OnShowDefenseOnInfoPageChanged();
+    partial void OnIMVSChanging(bool value);
+    partial void OnIMVSChanged();
+    partial void Oni4DSChanging(bool value);
+    partial void Oni4DSChanged();
     #endregion
 		
 		public Department()
@@ -277,6 +285,46 @@ namespace ProStudCreator
 					this._ShowDefenseOnInfoPage = value;
 					this.SendPropertyChanged("ShowDefenseOnInfoPage");
 					this.OnShowDefenseOnInfoPageChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IMVS", DbType="bit")]
+		public bool IMVS
+		{
+			get
+			{
+				return this._IMVS;
+			}
+			set
+			{
+				if ((this._IMVS != value))
+				{
+					this.OnIMVSChanging(value);
+					this.SendPropertyChanging();
+					this._IMVS = value;
+					this.SendPropertyChanged("IMVS");
+					this.OnIMVSChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_i4DS", DbType="bit")]
+		public bool i4DS
+		{
+			get
+			{
+				return this._i4DS;
+			}
+			set
+			{
+				if ((this._i4DS != value))
+				{
+					this.Oni4DSChanging(value);
+					this.SendPropertyChanging();
+					this._i4DS = value;
+					this.SendPropertyChanged("i4DS");
+					this.Oni4DSChanged();
 				}
 			}
 		}

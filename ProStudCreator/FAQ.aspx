@@ -76,9 +76,7 @@
             ist, geht das nicht.
         </p>
         <h4>Wer organisiert Experten für meine Projekte?</h4>
-        <p>
-            Wir organisieren die Experten für Dich, etwa zur Halbzeit des Projekts.
-			Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere uns doch.
+        <p runat="server" ID="pDefenseOrganisation">Der Experte und die Verteidigung wird organisiert. Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere doch <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a>.
         </p>
         <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
         <p>

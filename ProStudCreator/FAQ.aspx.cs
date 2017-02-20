@@ -11,7 +11,21 @@ namespace ProStudCreator
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            var db = new ProStudentCreatorDBDataContext();
+            var departmentId = ShibUser.GetDepartmentId();
+            var department = db.Departments.Single(i => i.Id == departmentId);
 
+            if (department.IMVS)
+            {
+                pDefenseOrganisation.InnerText = "Du bist für die Organisation des Experten und der Verteidigung verantwortlich.";
+            }
+            else if (department.i4DS)
+            {
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("Sie sind nicht mit einem der beiden Informatikinstitute angemeldet!");
+            }
         }
     }
 }
