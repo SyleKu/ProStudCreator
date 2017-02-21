@@ -174,8 +174,8 @@ namespace ProStudCreator
             drpLogLanguage.Items[0].Text = (canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             //Set the Grades
-            nbrGradeStudent1.Text = (project?.LogGradeStudent1 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent1, 1));
-            nbrGradeStudent2.Text = (project?.LogGradeStudent2 == null) ? "" : string.Concat(Math.Round((decimal)project?.LogGradeStudent2, 1));
+            nbrGradeStudent1.Text = (project?.LogGradeStudent1 == null) ? "" : project?.LogGradeStudent1.Value.ToString("N1", CultureInfo.InvariantCulture);
+            nbrGradeStudent2.Text = (project?.LogGradeStudent2 == null) ? "" : project?.LogGradeStudent2.Value.ToString("N1", CultureInfo.InvariantCulture);
 
             //set the Labels to the Grades
             lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
@@ -450,12 +450,12 @@ namespace ProStudCreator
                 {
                     if (nbrGradeStudent1.Text != "")
                     {
-                        project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text);
+                        project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",","."),System.Globalization.CultureInfo.InvariantCulture);
                     }
 
                     if (nbrGradeStudent2.Text != "")
                     {
-                        project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text);
+                        project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",","."), System.Globalization.CultureInfo.InvariantCulture);
                     }
 
                     switch (drpLogLanguage.SelectedValue)
