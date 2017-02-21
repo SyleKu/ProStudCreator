@@ -34,8 +34,8 @@
             <li>Schlusspräsentation mit 20-40 Minuten Präsentation, und 20-40 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
             <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
                 <i>individuelle</i> Note festgelegt werden.</li>
-            <li>Die Note den Studierenden und der Administration kommunizieren, per Mail.
-                <strong>NEU: Bitte im Mail erwähnen, falls die Arbeit auf Englisch durchgeführt wurde.</strong></li>
+            <li><strong>NEU: Auf dieser Plattform eintragen in welcher Sprache das Projekt durchgeführt wurde. (Infoseite)</strong></li>
+            <li><strong>NEU: Bitte die Noten auf dieser Plattform eintragen (Infoseite) und den Studierenden kommunizieren.</strong></li>
             <li>Im Idealfall machst Du noch eine Schlusssitzung.
                 Der Bewertungsbogen wird den Studierenden <b>NICHT</b> abgegeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
         </ol>

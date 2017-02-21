@@ -16,6 +16,7 @@ using System.Web.UI.WebControls;
 using NPOI.OpenXml4Net.Exceptions;
 using NPOI.OpenXmlFormats.Dml.Diagram;
 using NPOI.SS.Formula.Functions;
+using Telerik.Web.UI;
 using Telerik.Web.UI.AsyncUpload;
 
 namespace ProStudCreator
@@ -304,38 +305,13 @@ namespace ProStudCreator
             Response.Redirect("Projectlist");
         }
 
-        protected void btnDeleteDoc_OnClick(object sender, EventArgs e)
+        private void StreamFiletoDb(Stream input, Guid attachId)
         {
-            DeleteFile("ProjectDocument");
-            Response.Redirect("ProjectInfoPage?id=" + project.Id);
-        }
-
-        protected void btnDeletePresentation_OnClick(object sender, EventArgs e)
-        {
-            DeleteFile("ProjectPresentation");
-            Response.Redirect("ProjectInfoPage?id=" + project.Id);
-        }
-
-        protected void btnDeleteCode_OnClick(object sender, EventArgs e)
-        {
-            DeleteFile("ProjectCode");
-            Response.Redirect("ProjectInfoPage?id=" + project.Id);
-        }
-
-        private void StreamAllFilesToDb()
-        {
-            //for (var i = 0; AsyncUploadProject.UploadedFiles[i] != null; i++)
-            //{
-            //}
-        }
-
-        private void StreamFiletoDb(Stream input, string columnname)
-        {
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
             {
                 var cmd =
                     new SqlCommand(
-                        $"INSERT INTO Projects(ROWGUID, {columnname}) VALUES(newsequentialid(),CAST('' AS varbinary(max))) WHERE Id = {project.Id};")
+                        $"UPDATE Attachements SET ProjectAttachement = CAST('' AS varbinary(max)) WHERE ROWGUID = '{attachId}';")
                     {
                         CommandType = CommandType.Text,
                         Connection = connection
@@ -345,13 +321,13 @@ namespace ProStudCreator
             }
 
 
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
             {
                 connection.Open();
 
                 var command =
                     new SqlCommand(
-                        $"SELECT TOP(1) {columnname}.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM BothTable WHERE Id = {project.Id}",
+                        $"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = '{attachId}'",
                         connection);
 
                 var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
@@ -377,17 +353,45 @@ namespace ProStudCreator
             }
         }
 
-        private void DeleteFile(string columnname)
+        private void DeleteFile(Guid attachId)
         {
-            using (var connection = new SqlConnection())
+            var attach = db.Attachements.Single(i => i.ROWGUID == attachId);
+            attach.Deleted = true;
+            attach.DeletedDate = DateTime.Now;
+            db.SubmitChanges();
+        }
+        private void ReadFilestream(Guid attachId)
+        {
+
+            Response.Clear();
+            Response.ContentType = "application/force-download";
+            Response.AddHeader("content-disposition", $"attachment; filename={db.Attachements.Single(i => i.ROWGUID == attachId).FileName}");
+            Response.Buffer = false;
+
+            using (SqlConnection connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
             {
                 connection.Open();
+                SqlCommand command = new SqlCommand($"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = '{attachId}';", connection);
 
-                var command =
-                    new SqlCommand($"INSERT INTO Prostud.dbo.Projects({columnname}) VALUES(NULL) WHERE Id = {project.Id}", connection);
-
-                var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                SqlTransaction tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
                 command.Transaction = tran;
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Get the pointer for the file  
+                        string path = reader.GetString(0);
+                        byte[] transactionContext = reader.GetSqlBytes(1).Buffer;
+
+                        // Create the SqlFileStream  
+                        using (Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read, FileOptions.SequentialScan, allocationSize: 0))
+                        {
+                            fileStream.CopyTo(Response.OutputStream);
+                            Response.Flush();
+                        }
+                    }
+                }
                 tran.Commit();
             }
         }
@@ -430,7 +434,7 @@ namespace ProStudCreator
             SaveChanges("ProjectInfoPage?id=" + project.Id);
         }
 
-        private void SaveChanges(string redirectTo)
+        private void SaveChanges(string redirectTo) //TODO attributes are saved even if there is no address
         {
             var oldTitle = project.Name;
             string validationMessage = null;
@@ -503,7 +507,6 @@ namespace ProStudCreator
                         }
 
                     }
-                    StreamAllFilesToDb();
 
                     if (validationMessage == null)
                     {
@@ -526,5 +529,20 @@ namespace ProStudCreator
             }
         }
 
+        protected void AsyncUploadProject_OnFileUploaded(object sender, FileUploadedEventArgs e)
+        {
+            var attach = new Attachements
+            {
+                ProjectId = project.Id,
+                UploadDate = DateTime.Now,
+                UploadSize = e.File.ContentLength,
+                UploadUser = ShibUser.GetEmail(),
+                FileName = e.File.FileName
+            };
+            db.Attachements.InsertOnSubmit(attach);
+            db.SubmitChanges();
+
+            StreamFiletoDb(e.File.InputStream, attach.ROWGUID);
+        }
     }
 }

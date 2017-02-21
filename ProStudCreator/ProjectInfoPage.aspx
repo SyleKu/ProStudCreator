@@ -52,7 +52,7 @@
                 <div runat="server" id="divBachelor">
                     <br />
                     <br />
-                    <asp:Label runat="server" Text="Ausstellung Bachelorthese:" ID="lblAussstellungBachelorthese" CssClass="control-label col-sm-3"></asp:Label>
+                    <asp:Label runat="server" Text="Ausstellung Bachelorthesis:" ID="lblAussstellungBachelorthese" CssClass="control-label col-sm-3"></asp:Label>
                     <asp:Label runat="server" ID="ProjectExhibition" CssClass="col-sm-3 alignbottom"></asp:Label>
                 </div>
                 <br />
@@ -153,13 +153,28 @@
                     </asp:PlaceHolder>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <%--<div class="demo-container form-group" style="text-align: left" runat="server" id="FileUplaodContainer">
+            <hr />
+            <div class="demo-container form-group" style="text-align: left" runat="server" id="FileUplaodContainer">
                 <asp:Label runat="server" Text="Projektartefakte (Code, Doku, Präsentation):" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-9">
-                    <telerik:RadAsyncUpload RenderMode="Lightweight" runat="server" ID="AsyncUploadProject" ChunkSize="1048576" />
-                    <telerik:RadProgressArea RenderMode="Lightweight" runat="server" ID="RadProgressAreaProject" />
+                    <telerik:RadAsyncUpload RenderMode="Auto" runat="server" ID="AsyncUploadProject" ChunkSize="1048576" OnFileUploaded="AsyncUploadProject_OnFileUploaded"/>
+                    <telerik:RadProgressArea RenderMode="Auto" runat="server" ID="RadProgressAreaProject" />
                 </div>
-            </div>--%>
+            </div>
+            <telerik:RadAjaxManager runat="server" ID="RadAjaxManager" DefaultLoadingPanelID="RadAjaxLoadingPanel1">
+                <AjaxSettings>
+                    <telerik:AjaxSetting AjaxControlID="ConfiguratorPanel">
+                        <UpdatedControls>
+                            <telerik:AjaxUpdatedControl ControlID="ConfiguratorPanel" />
+                            <telerik:AjaxUpdatedControl ControlID="FileUplaodContainer" />
+                        </UpdatedControls>
+                    </telerik:AjaxSetting>
+                </AjaxSettings>
+            </telerik:RadAjaxManager>
+
+            <telerik:RadAjaxLoadingPanel runat="server" ID="RadAjaxLoadingPanel" />
+            <hr />
+            <asp:ListView runat="server" ID="listUploadedFiles"></asp:ListView>
         </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>
