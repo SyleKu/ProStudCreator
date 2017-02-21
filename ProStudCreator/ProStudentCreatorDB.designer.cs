@@ -3851,8 +3851,6 @@ namespace ProStudCreator
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _Id;
-		
 		private System.Guid _ROWGUID;
 		
 		private System.Data.Linq.Binary _ProjectAttachement;
@@ -3865,14 +3863,18 @@ namespace ProStudCreator
 		
 		private System.Nullable<decimal> _UploadSize;
 		
+		private bool _Deleted;
+		
+		private System.Nullable<System.DateTime> _DeletedDate;
+		
+		private string _FileName;
+		
 		private EntityRef<Project> _Project;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
     partial void OnROWGUIDChanging(System.Guid value);
     partial void OnROWGUIDChanged();
     partial void OnProjectAttachementChanging(System.Data.Linq.Binary value);
@@ -3885,6 +3887,12 @@ namespace ProStudCreator
     partial void OnUploadDateChanged();
     partial void OnUploadSizeChanging(System.Nullable<decimal> value);
     partial void OnUploadSizeChanged();
+    partial void OnDeletedChanging(bool value);
+    partial void OnDeletedChanged();
+    partial void OnDeletedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDeletedDateChanged();
+    partial void OnFileNameChanging(string value);
+    partial void OnFileNameChanged();
     #endregion
 		
 		public Attachements()
@@ -3893,27 +3901,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
 		public System.Guid ROWGUID
 		{
 			get
@@ -4033,6 +4021,66 @@ namespace ProStudCreator
 					this._UploadSize = value;
 					this.SendPropertyChanged("UploadSize");
 					this.OnUploadSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Deleted", DbType="Bit NOT NULL")]
+		public bool Deleted
+		{
+			get
+			{
+				return this._Deleted;
+			}
+			set
+			{
+				if ((this._Deleted != value))
+				{
+					this.OnDeletedChanging(value);
+					this.SendPropertyChanging();
+					this._Deleted = value;
+					this.SendPropertyChanged("Deleted");
+					this.OnDeletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeletedDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DeletedDate
+		{
+			get
+			{
+				return this._DeletedDate;
+			}
+			set
+			{
+				if ((this._DeletedDate != value))
+				{
+					this.OnDeletedDateChanging(value);
+					this.SendPropertyChanging();
+					this._DeletedDate = value;
+					this.SendPropertyChanged("DeletedDate");
+					this.OnDeletedDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileName", DbType="VarChar(100)")]
+		public string FileName
+		{
+			get
+			{
+				return this._FileName;
+			}
+			set
+			{
+				if ((this._FileName != value))
+				{
+					this.OnFileNameChanging(value);
+					this.SendPropertyChanging();
+					this._FileName = value;
+					this.SendPropertyChanged("FileName");
+					this.OnFileNameChanged();
 				}
 			}
 		}

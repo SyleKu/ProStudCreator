@@ -165,13 +165,15 @@
   </Table>
   <Table Name="dbo.Attachements" Member="Attachements">
     <Type Name="Attachements">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ROWGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="ROWGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ProjectAttachement" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="ProjectId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UploadUser" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="UploadDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UploadSize" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DeletedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FileName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Association Name="Project_Attachements" Member="Project" ThisKey="ProjectId" OtherKey="Id" Type="Project" IsForeignKey="true" />
     </Type>
   </Table>
