@@ -42,7 +42,7 @@ namespace ProStudCreator.Ext
                     {
                         semester.Name,
                         $"{semester.StartDate.ToShortDateString()} bis {semester.EndDate.ToShortDateString()}",
-                        semester.ProjectSubmissionUntil.AddMonths(-1).ToShortDateString(), //TODO: stimmt das?
+                        semester.ProjectSubmissionUntil.AddDays(-7*6).ToShortDateString(),
                         semester.ProjectAllocation,
                         semester.SubmissionIP5FullPartTime,
                         semester.SubmissionIP5Accompanying,

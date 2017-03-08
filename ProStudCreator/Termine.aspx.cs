@@ -43,8 +43,8 @@ namespace ProStudCreator
                 {
                     "Semester",
                     "",
-                    "Projekteinreichung (intern)",
                     "Projekteinreichung (extern)",
+                    "Projekteinreichung (intern)",
                     "Projektzuteilung",
                     "Abgabe IP5 (normal)",
                     "Abgabe IP5 (Variante 2 Sem.)",
@@ -61,8 +61,8 @@ namespace ProStudCreator
                     {
                         semester.Name,
                         $"{semester.StartDate.ToShortDateString()} bis {semester.EndDate.ToShortDateString()}",
+                        semester.ProjectSubmissionUntil.AddDays(-7*6).ToShortDateString(),
                         semester.ProjectSubmissionUntil.ToShortDateString(),
-                        semester.ProjectSubmissionUntil.AddMonths(-1).ToShortDateString(), //TODO: stimmt das?
                         semester.ProjectAllocation,
                         semester.SubmissionIP5FullPartTime,
                         semester.SubmissionIP5Accompanying,

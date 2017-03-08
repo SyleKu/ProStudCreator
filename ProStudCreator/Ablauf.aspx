@@ -27,17 +27,16 @@
                     <li>Optional: <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                 </ul>
             </li>
+            <li>Titeländerungen können bis 4 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
             <li>Nur für FS-Projekte: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
-            <li><strong>NEU: KEIN WEBSUMMARY MEHR!</strong> <s>Die Studierenden <a href="Content/Webauftritt_2015HS.pdf" class="pdf">erstellen das Websummary</a>.</s></li>
             <li>Fülle nach der Projektabgabe den Bewertungsbogen aus.</li>
-            <li>Schlusspräsentation mit 20-40 Minuten Präsentation, und 20-40 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
+            <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
             <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
                 <i>individuelle</i> Note festgelegt werden.</li>
-            <li><strong>NEU: Auf dieser Plattform eintragen in welcher Sprache das Projekt durchgeführt wurde. (Infoseite)</strong></li>
-            <li><strong>NEU: Bitte die Noten auf dieser Plattform eintragen (Infoseite) und den Studierenden kommunizieren.</strong></li>
+            <li><strong>NEU: Auf der jeweiligen Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
             <li>Im Idealfall machst Du noch eine Schlusssitzung.
-                Der Bewertungsbogen wird den Studierenden <b>NICHT</b> abgegeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
+                Der Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
         </ol>
         <p>
             <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei
@@ -47,15 +46,6 @@
     </div>
 
     <div class="well usernSettings non-selectable">
-        <h3>Einreichen eines externen Projekts</h3>
-        <img src="Content/Prozess.PNG" />
-        <ol>
-            <li>Ein externer Auftraggeber (nie ein Student selbst) schickt <a class="pdf" href="Content/Externe_Projekteingabe.pdf">dieses Formular</a> an Markus Oehninger.</li>
-            <li>Markus verteilt das Projekt ans i4Ds und IMVS.</li>
-            <li>Dominik Gruntz (IMVS) oder Simon Felix (i4Ds) verteilen das Projekt intern an passende Betreuer.</li>
-            <li>Die Betreuer erarbeiten einen Projektbeschrieb, zusammen mit dem externen Auftraggeber.</li>
-            <li>Der fertige Projektbeschrieb wird über diese Plattform eingereicht und dann geprüft.</li>
-        </ol>
         <h3>Einreichen eines eigenen Projekts</h3>
         <ol>
             <li>Du erarbeitest einen Projektbeschrieb.</li>
@@ -65,5 +55,14 @@
         <p>
             Für alle Projekte gelten dieselben Anforderungen (siehe <a href="FAQ.aspx">FAQ</a>).
         </p>
+        <h3>Einreichen eines externen Projekts</h3>
+        <img src="Content/Prozess.PNG" />
+        <ol>
+            <li>Ein externer Auftraggeber (nie ein Student selbst) schickt <a class="pdf" href="Content/Externe_Projekteingabe.pdf">dieses Formular</a> an Markus Oehninger.</li>
+            <li>Markus verteilt das Projekt ans i4Ds und IMVS.</li>
+            <li>Dominik Gruntz (IMVS) oder Simon Felix (i4Ds) verteilen das Projekt intern an passende Betreuer.</li>
+            <li>Die Betreuer erarbeiten einen Projektbeschrieb, zusammen mit dem externen Auftraggeber.</li>
+            <li>Der fertige Projektbeschrieb wird über diese Plattform eingereicht und dann geprüft.</li>
+        </ol>
     </div>
 </asp:Content>
