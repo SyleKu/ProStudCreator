@@ -31,7 +31,6 @@ namespace ProStudCreator
     {
 
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        protected GridView AllEvents;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -42,7 +41,7 @@ namespace ProStudCreator
             foreach (var header in new string[]
                 {
                     "Semester",
-                    "",
+                    " ",
                     "Projekteinreichung (extern)",
                     "Projekteinreichung (intern)",
                     "Projektzuteilung",

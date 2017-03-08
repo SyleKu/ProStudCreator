@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProStudCreator.Ext {
+namespace ProStudCreator {
     
     
     public partial class Termine {

@@ -24,7 +24,7 @@ namespace ProStudCreator.Ext
             foreach (var header in new string[]
                 {
                     "Semester",
-                    "",
+                    " ",
                     "Projekteinreichung",
                     "Projektzuteilung",
                     "Abgabe IP5 (normal)",

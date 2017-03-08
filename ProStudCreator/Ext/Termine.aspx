@@ -39,9 +39,9 @@
             <div class="container">
                 <div class="navbar-header" style="width: 100%">
                     <div class="navbar-brand" style="width: 100%">
-                        <img runat="server" src="pictures/Logo.png" />
+                        <img runat="server" src="~/pictures/Logo.png" />
                         <a href="Termine" style="margin-left: 5%;">
-                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Termine</h2>
+                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Informatik-Projekte 5/6</h2>
                         </a>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <%--<AlternatingRowStyle BackColor="White" />--%>
                     </asp:GridView>
                     <hr />
-                    <p>Titeländerungen von Informatikprojekte sind bis 4 Wochen vor Abgabe möglich!</p>
+                    <p>Titeländerungen von Informatikprojekten sind bis 4 Wochen vor Abgabe möglich!</p>
                 </div>
             </div>
             <hr />

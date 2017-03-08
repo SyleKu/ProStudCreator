@@ -172,7 +172,7 @@
             <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
             <div class="form-group">
                 <telerik:RadFileExplorer RenderMode="Auto" runat="server" CssClass="col-sm-3" ID="FileExplorer" Width="650px" Height="350px"
-                    AllowPaging="false" Skin="Silk" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
+                    AllowPaging="false" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
                 </telerik:RadFileExplorer>
             </div>
         </div>

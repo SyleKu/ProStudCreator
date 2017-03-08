@@ -25,7 +25,7 @@
                 <%--<AlternatingRowStyle BackColor="White" />--%>
             </asp:GridView>
             <hr />
-            <p>Titeländerungen von Informatikprojekte sind bis 4 Wochen vor Abgabe möglich!</p>
+            <p>Titeländerungen von Informatikprojekten sind bis 4 Wochen vor Abgabe möglich!</p>
         </div>
     </div>
 </asp:Content>
