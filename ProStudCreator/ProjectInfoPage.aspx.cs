@@ -227,16 +227,16 @@ namespace ProStudCreator
 
             BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && canPostEdit);
 
-            //FileExplorer settings
-            FileExplorer.Configuration.ContentProviderTypeName =
-                typeof(ExtendedFileProvider).AssemblyQualifiedName;
-            FileExplorer.Configuration.EnableAsyncUpload = true;
-            FileExplorer.AsyncUpload.MaxFileSize = 0;
-            FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
-            FileExplorer.Language = "de-DE";
-            FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
-            FileExplorer.Grid.Columns[0].HeaderText = "Datei";
-            FileExplorer.FindControl("chkOverwrite").Visible = false;
+            ////FileExplorer settings
+            //FileExplorer.Configuration.ContentProviderTypeName =
+            //    typeof(ExtendedFileProvider).AssemblyQualifiedName;
+            //FileExplorer.Configuration.EnableAsyncUpload = true;
+            //FileExplorer.AsyncUpload.MaxFileSize = 0;
+            //FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
+            //FileExplorer.Language = "de-DE";
+            //FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
+            //FileExplorer.Grid.Columns[0].HeaderText = "Datei";
+            //FileExplorer.FindControl("chkOverwrite").Visible = false;
         }
 
         private DateTime SetDates()
@@ -512,10 +512,9 @@ namespace ProStudCreator
             }
 
 
-            Attachements attach = null;
+            var attach = CreateNewAttach(file);
             try
             {
-                attach = CreateNewAttach(file);
                 SaveFileInDb(file, attach);
             }
             catch (Exception e)

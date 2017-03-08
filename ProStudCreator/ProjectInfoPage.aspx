@@ -169,10 +169,10 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
             <hr />
-            <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
-            <div class="form-group">
+            <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3" Visible="False"></asp:Label>
+            <div class="form-group" runat="server" visible="False">
                 <telerik:RadFileExplorer RenderMode="Auto" runat="server" CssClass="col-sm-3" ID="FileExplorer" Width="650px" Height="350px"
-                    AllowPaging="false" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
+                    AllowPaging="false" Skin="Default" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
                 </telerik:RadFileExplorer>
             </div>
         </div>
