@@ -169,6 +169,7 @@
     <Content Include="pictures\experte_zahlen_grau.png" />
     <Content Include="pictures\raum.png" />
     <Content Include="pictures\raum_grau.png" />
+    <Content Include="ProjectFilesDownload.aspx" />
     <Content Include="ProjectInfoPage.aspx" />
     <Content Include="AddNewProject.aspx" />
     <Content Include="App_Data\aspnet-ProStudCreator-20140818043155.mdf" />
@@ -290,6 +291,23 @@
     <Compile Include="AdminPage.aspx.designer.cs">
       <DependentUpon>AdminPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_GlobalResources\RadEditor.Dialogs.de-DE.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RadEditor.Dialogs.de-DE.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\RadFileExplorer.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RadFileExplorer.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectFilesDownload.aspx.cs">
+      <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProjectFilesDownload.aspx.designer.cs">
+      <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ProjectInfoPage.aspx.cs">
       <DependentUpon>ProjectInfoPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -373,7 +391,18 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_GlobalResources\RadEditor.Dialogs.de-DE.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>RadEditor.Dialogs.de-DE.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_GlobalResources\RadFileExplorer.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>RadFileExplorer.designer.cs</LastGenOutput>
+    </Content>
     <EmbeddedResource Include="Properties\licenses.licx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\ProjectFiles\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

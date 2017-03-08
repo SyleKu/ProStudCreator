@@ -328,58 +328,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox txtClientReference;
         
         /// <summary>
-        /// FileUplaodContainer control.
+        /// FileExplorer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl FileUplaodContainer;
-        
-        /// <summary>
-        /// AsyncUploadProject control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAsyncUpload AsyncUploadProject;
-        
-        /// <summary>
-        /// RadProgressAreaProject control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadProgressArea RadProgressAreaProject;
-        
-        /// <summary>
-        /// RadAjaxManager control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxManager RadAjaxManager;
-        
-        /// <summary>
-        /// RadAjaxLoadingPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxLoadingPanel RadAjaxLoadingPanel;
-        
-        /// <summary>
-        /// listUploadedFiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView listUploadedFiles;
+        protected global::Telerik.Web.UI.RadFileExplorer FileExplorer;
         
         /// <summary>
         /// BtnSaveChanges control.

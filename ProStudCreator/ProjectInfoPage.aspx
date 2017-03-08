@@ -1,8 +1,23 @@
 ﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" %>
 
-<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<asp:Content ID="ProjectInofpageContent" ContentPlaceHolderID="MainContent" runat="server">
+    <script language="javascript" type="text/javascript">
 
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+            function OnClientFileOpen(oExplorer, args) {
+                var item = args.get_item();
+
+
+                // File is a image document, do not open a new window
+                args.set_cancel(true);
+
+                // Tell browser to open file directly
+                $incomingUrl = "ProjectFilesDownload?fname=" + item._name + "&id=<%: int.Parse(Request.QueryString["id"]) %>";
+                document.location = encodeURI($incomingUrl);
+
+            }
+
+            global.OnClientFileOpen = OnClientFileOpen;
+    </script>
     <div class="well newProjectSettings non-selectable">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
@@ -154,27 +169,12 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
             <hr />
-            <div class="demo-container form-group" style="text-align: left" runat="server" id="FileUplaodContainer">
-                <asp:Label runat="server" Text="Projektartefakte (Code, Doku, Präsentation):" CssClass="control-label col-sm-3"></asp:Label>
-                <div class="col-sm-9">
-                    <telerik:RadAsyncUpload RenderMode="Auto" runat="server" ID="AsyncUploadProject" ChunkSize="1048576" OnFileUploaded="AsyncUploadProject_OnFileUploaded"/>
-                    <telerik:RadProgressArea RenderMode="Auto" runat="server" ID="RadProgressAreaProject" />
-                </div>
+            <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
+            <div class="form-group">
+                <telerik:RadFileExplorer RenderMode="Auto" runat="server" CssClass="col-sm-3" ID="FileExplorer" Width="650px" Height="350px"
+                    AllowPaging="false" Skin="Silk" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
+                </telerik:RadFileExplorer>
             </div>
-            <telerik:RadAjaxManager runat="server" ID="RadAjaxManager" DefaultLoadingPanelID="RadAjaxLoadingPanel1">
-                <AjaxSettings>
-                    <telerik:AjaxSetting AjaxControlID="ConfiguratorPanel">
-                        <UpdatedControls>
-                            <telerik:AjaxUpdatedControl ControlID="ConfiguratorPanel" />
-                            <telerik:AjaxUpdatedControl ControlID="FileUplaodContainer" />
-                        </UpdatedControls>
-                    </telerik:AjaxSetting>
-                </AjaxSettings>
-            </telerik:RadAjaxManager>
-
-            <telerik:RadAjaxLoadingPanel runat="server" ID="RadAjaxLoadingPanel" />
-            <hr />
-            <asp:ListView runat="server" ID="listUploadedFiles"></asp:ListView>
         </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>

@@ -35,15 +35,18 @@ namespace ProStudCreator
 
         private static readonly string[] MARKETING_HEADERS = new string[]
         {
-            "Student/in 1",
-            "Student/in 2",
             "Projekttitel",
-            "Hauptbetreuende/r",
-            "Nebenbetreuende/r",
-            "Auftraggeber",
-            "Ansprechpartner",
-            "Verrechenbar",
-            "Gründe"
+            "Studierende",
+            "Betreuende/r",
+            "Projekttyp",
+            "Unternehmen",
+            "Anrede",
+            "Name",
+            "Abteilung",
+            "Strasse und Nummer",
+            "PLZ",
+            "Ort",
+            "Referenznummer des Kunden"
         };
 
         // References
@@ -80,7 +83,7 @@ namespace ProStudCreator
         private static void projectToExcelRow(Project p, IRow row)
         {
             ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-            p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
+            //p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
 
             string abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
             string dispName = abbreviation + "_" + p.Name;
@@ -143,15 +146,18 @@ namespace ProStudCreator
             var db = new ProStudentCreatorDBDataContext();
             p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
 
-            row.CreateCell(0).SetCellValue(p.LogStudent1Name);
-            row.CreateCell(1).SetCellValue(p.LogStudent2Name ?? "");
-            row.CreateCell(2).SetCellValue(p.Name);
-            row.CreateCell(3).SetCellValue(p.Advisor1Name);
-            row.CreateCell(4).SetCellValue(p.Advisor2Name ?? "");
-            row.CreateCell(5).SetCellValue(p.ClientCompany);
-            row.CreateCell(6).SetCellValue(p.DepartmentId == 0 ? "Simon Felix" : "Dominik Gruntz");
-            row.CreateCell(7).SetCellValue("Ja"); //TODO set the right value
-            row.CreateCell(8).SetCellValue(""); //TODO set the right value -> Simon
+            row.CreateCell(0).SetCellValue(p.Name);
+            row.CreateCell(1).SetCellValue(p?.LogStudent1Mail ?? "" + ", " + p?.LogStudent2Mail ?? "");
+            row.CreateCell(2).SetCellValue(p.Advisor1Mail);
+            row.CreateCell(3).SetCellValue(p?.LogProjectType?.ExportValue ?? "-");
+            row.CreateCell(4).SetCellValue(p.ClientCompany ?? "");
+            row.CreateCell(5).SetCellValue(p.ClientAddressTitle ?? "");
+            row.CreateCell(6).SetCellValue(p.ClientPerson ?? "");
+            row.CreateCell(7).SetCellValue(p.ClientAddressDepartment ?? "");
+            row.CreateCell(8).SetCellValue(p.ClientAddressStreet ?? "");
+            row.CreateCell(9).SetCellValue(p.ClientAddressPostcode ?? "");
+            row.CreateCell(10).SetCellValue(p.ClientAddressCity ?? "");
+            row.CreateCell(11).SetCellValue(p.ClientReferenceNumber ?? "");
         }
     }
 }

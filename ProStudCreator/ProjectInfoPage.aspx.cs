@@ -4,20 +4,20 @@ using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
-using System.Threading;
-using System.Web.Services.Description;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NPOI.OpenXml4Net.Exceptions;
-using NPOI.OpenXmlFormats.Dml.Diagram;
-using NPOI.SS.Formula.Functions;
 using Telerik.Web.UI;
-using Telerik.Web.UI.AsyncUpload;
+using Telerik.Web.UI.Widgets;
+using System.Collections.Generic;
+using System.Web.Services;
+using ICSharpCode.SharpZipLib.Zip;
+using NPOI.SS.Formula.Functions;
 
 namespace ProStudCreator
 {
@@ -29,6 +29,7 @@ namespace ProStudCreator
         private DateTime today = DateTime.Now;
         private DateTime deliveryDate;
         private bool canPostEdit = false;
+        public static bool OverRide = false;
 
         private enum ProjectTypes
         {
@@ -225,6 +226,17 @@ namespace ProStudCreator
             divGradeStudent2.Visible = !string.IsNullOrEmpty(project?.LogStudent2Name);
 
             BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && canPostEdit);
+
+            //FileExplorer settings
+            FileExplorer.Configuration.ContentProviderTypeName =
+                typeof(ExtendedFileProvider).AssemblyQualifiedName;
+            FileExplorer.Configuration.EnableAsyncUpload = true;
+            FileExplorer.AsyncUpload.MaxFileSize = 0;
+            FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
+            FileExplorer.Language = "de-DE";
+            FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
+            FileExplorer.Grid.Columns[0].HeaderText = "Datei";
+            FileExplorer.FindControl("chkOverwrite").Visible = false;
         }
 
         private DateTime SetDates()
@@ -305,99 +317,14 @@ namespace ProStudCreator
             Response.Redirect("Projectlist");
         }
 
-        private void StreamFiletoDb(Stream input, Guid attachId)
+        protected void FileExplorer_OnItemCommand(object sender, EventArgs e)
         {
-            using (var connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
-            {
-                var cmd =
-                    new SqlCommand(
-                        $"UPDATE Attachements SET ProjectAttachement = CAST('' AS varbinary(max)) WHERE ROWGUID = '{attachId}';")
-                    {
-                        CommandType = CommandType.Text,
-                        Connection = connection
-                    };
-                connection.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-
-            using (var connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
-            {
-                connection.Open();
-
-                var command =
-                    new SqlCommand(
-                        $"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = '{attachId}'",
-                        connection);
-
-                var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-                command.Transaction = tran;
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        // Get the pointer for file
-                        var path = reader.GetString(0);
-                        var transactionContext = reader.GetSqlBytes(1).Buffer;
-
-                        using (
-                            Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Write,
-                                FileOptions.SequentialScan, allocationSize: 0))
-                        {
-                            input.CopyTo(fileStream, 65536);
-                        }
-                    }
-                }
-                tran.Commit();
-            }
-        }
-
-        private void DeleteFile(Guid attachId)
-        {
-            var attach = db.Attachements.Single(i => i.ROWGUID == attachId);
-            attach.Deleted = true;
-            attach.DeletedDate = DateTime.Now;
-            db.SubmitChanges();
-        }
-        private void ReadFilestream(Guid attachId)
-        {
-
-            Response.Clear();
-            Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", $"attachment; filename={db.Attachements.Single(i => i.ROWGUID == attachId).FileName}");
-            Response.Buffer = false;
-
-            using (SqlConnection connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand($"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = '{attachId}';", connection);
-
-                SqlTransaction tran = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-                command.Transaction = tran;
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        // Get the pointer for the file  
-                        string path = reader.GetString(0);
-                        byte[] transactionContext = reader.GetSqlBytes(1).Buffer;
-
-                        // Create the SqlFileStream  
-                        using (Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read, FileOptions.SequentialScan, allocationSize: 0))
-                        {
-                            fileStream.CopyTo(Response.OutputStream);
-                            Response.Flush();
-                        }
-                    }
-                }
-                tran.Commit();
-            }
+            OverRide = FileExplorer.OverwriteExistingFiles;
         }
 
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
+
             if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWithNeverWillBeGivenByTheDB" ? 0 : int.Parse(drpBillingstatus.SelectedValue)))
             {
                 BillAddressPlaceholder.Visible = canPostEdit;
@@ -434,94 +361,82 @@ namespace ProStudCreator
             SaveChanges("ProjectInfoPage?id=" + project.Id);
         }
 
-        private void SaveChanges(string redirectTo) //TODO attributes are saved even if there is no address
+        private void SaveChanges(string redirectTo)
         {
-            var oldTitle = project.Name;
             string validationMessage = null;
             if (canPostEdit)
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
-                db.SubmitChanges();
-                project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
-                if (project.OverOnePage)
+
+                if (nbrGradeStudent1.Text != "")
                 {
-                    project.Name = oldTitle;
-                    db.SubmitChanges();
-                    ReturnAlert("Die Änderung des Titels ist nicht möglich, weil das PDF zu lang werden würde.");
-                    Response.Redirect("ProjectInfoPage?id=" + project.Id);
+                    project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
                 }
-                else
+
+                if (nbrGradeStudent2.Text != "")
                 {
-                    if (nbrGradeStudent1.Text != "")
+                    project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+                switch (drpLogLanguage.SelectedValue)
+                {
+                    case "1":
+                        project.LogLanguageEnglish = true;
+                        project.LogLanguageGerman = false;
+                        break;
+                    case "2":
+                        project.LogLanguageEnglish = false;
+                        project.LogLanguageGerman = true;
+                        break;
+                    default:
+                        project.LogLanguageGerman = null;
+                        project.LogLanguageEnglish = null;
+                        break;
+                }
+
+                project.BillingStatusID = (drpBillingstatus.SelectedIndex == 0)
+                    ? (int?)null
+                    : int.Parse(drpBillingstatus.SelectedValue);
+
+                //this sould always be under the project.BillingstatusId statement
+                if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
+                {
+                    if (txtClientCompany.Text == "" || txtClientName.Text == "" || txtClientStreet.Text == "" ||
+                        txtClientPLZ.Text == "" || txtClientCity.Text == "")
                     {
-                        project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",","."),System.Globalization.CultureInfo.InvariantCulture);
-                    }
-
-                    if (nbrGradeStudent2.Text != "")
-                    {
-                        project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",","."), System.Globalization.CultureInfo.InvariantCulture);
-                    }
-
-                    switch (drpLogLanguage.SelectedValue)
-                    {
-                        case "1":
-                            project.LogLanguageEnglish = true;
-                            project.LogLanguageGerman = false;
-                            break;
-                        case "2":
-                            project.LogLanguageEnglish = false;
-                            project.LogLanguageGerman = true;
-                            break;
-                        default:
-                            project.LogLanguageGerman = null;
-                            project.LogLanguageEnglish = null;
-                            break;
-                    }
-
-                    project.BillingStatusID = (drpBillingstatus.SelectedIndex == 0)
-                        ? (int?)null
-                        : int.Parse(drpBillingstatus.SelectedValue);
-
-                    //this sould always be under the project.BillingstatusId statement
-                    if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
-                    {
-                        if (txtClientCompany.Text == "" || txtClientName.Text == "" || txtClientStreet.Text == "" ||
-                            txtClientPLZ.Text == "" || txtClientCity.Text == "")
-                        {
-                            validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
-                        }
-                        else
-                        {
-                            project.ClientCompany = txtClientCompany.Text;
-                            project.ClientAddressTitle = (drpClientTitle.SelectedValue == "1") ? "Herr" : "Frau";
-                            project.ClientPerson = txtClientName.Text;
-                            project.ClientAddressDepartment = (txtClientDepartment.Text == "")
-                                ? null
-                                : txtClientDepartment.Text;
-                            project.ClientAddressStreet = (txtClientStreet.Text == "") ? null : txtClientStreet.Text;
-                            project.ClientAddressPostcode = (txtClientPLZ.Text == "") ? null : txtClientPLZ.Text;
-                            project.ClientAddressCity = (txtClientCity.Text == "") ? null : txtClientCity.Text;
-                            project.ClientReferenceNumber = (txtClientReference.Text == "")
-                                ? null
-                                : txtClientReference.Text;
-                        }
-
-                    }
-
-                    if (validationMessage == null)
-                    {
-                        project.Name = ProjectTitle.Text.FixupParagraph();
-                        project.ModificationDate = DateTime.Now;
-                        project.LastEditedBy = ShibUser.GetEmail();
-                        db.SubmitChanges();
-                        Response.Redirect(redirectTo);
+                        validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
                     }
                     else
                     {
-                        ReturnAlert(validationMessage);
+                        project.ClientCompany = txtClientCompany.Text;
+                        project.ClientAddressTitle = (drpClientTitle.SelectedValue == "1") ? "Herr" : "Frau";
+                        project.ClientPerson = txtClientName.Text;
+                        project.ClientAddressDepartment = (txtClientDepartment.Text == "")
+                            ? null
+                            : txtClientDepartment.Text;
+                        project.ClientAddressStreet = (txtClientStreet.Text == "") ? null : txtClientStreet.Text;
+                        project.ClientAddressPostcode = (txtClientPLZ.Text == "") ? null : txtClientPLZ.Text;
+                        project.ClientAddressCity = (txtClientCity.Text == "") ? null : txtClientCity.Text;
+                        project.ClientReferenceNumber = (txtClientReference.Text == "")
+                            ? null
+                            : txtClientReference.Text;
                     }
 
                 }
+
+                if (validationMessage == null)
+                {
+                    project.Name = ProjectTitle.Text.FixupParagraph();
+                    project.ModificationDate = DateTime.Now;
+                    project.LastEditedBy = ShibUser.GetEmail();
+                    db.SubmitChanges();
+                    Response.Redirect(redirectTo);
+                }
+                else
+                {
+                    ReturnAlert(validationMessage);
+                }
+
             }
             else
             {
@@ -529,20 +444,261 @@ namespace ProStudCreator
             }
         }
 
-        protected void AsyncUploadProject_OnFileUploaded(object sender, FileUploadedEventArgs e)
+    }
+
+
+
+
+    public class ExtendedFileProvider : FileBrowserContentProvider
+    {
+        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private readonly int _id;
+        private Project project;
+
+        public ExtendedFileProvider(HttpContext context, string[] searchPatterns, string[] viewPaths, string[] uploadPaths, string[] deletePaths, string selectedUrl, string selectedItemTag)
+: base(context, searchPatterns, viewPaths, uploadPaths, deletePaths, selectedUrl, selectedItemTag)
+        {
+            _id = int.Parse(HttpContext.Current.Request.QueryString["id"]);
+            project = db.Projects.Single(i => i.Id == _id);
+        }
+
+        public override bool CanCreateDirectory => false;
+
+        public override string DeleteFile(string path)
+        {
+            var fileName = GetFileName(path);
+            var attach = db.Attachements.Single(i => i.ProjectId == _id && i.FileName == fileName);
+            attach.Deleted = true;
+            attach.DeletedDate = DateTime.Now;
+            attach.DeletedUser = ShibUser.GetEmail();
+            db.SubmitChanges();
+            return "Die Datei wurde gelöscht!";
+        }
+
+        public override bool CheckDeletePermissions(string folderPath)
+        {
+            return (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+                    ShibUser.GetEmail() == project.Advisor2Mail);
+        }
+
+        public override bool CheckReadPermissions(string folderPath) => true;
+
+        public override bool CheckWritePermissions(string folderPath)
+        {
+            return CheckDeletePermissions(folderPath);
+        }
+
+        public override string StoreFile(UploadedFile file, string path, string name, params string[] arguments)
+        {
+
+            var justifiedFileName = JusitfyFileName(file.FileName);
+
+            var isDublication = false;
+
+            //get All File to one Project out of the db
+            var allFiles = db.Attachements.Where(i => i.ProjectId == _id);
+            foreach (var attachement in allFiles)
+            {
+                if (attachement.FileName.Equals(justifiedFileName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    isDublication = true;
+                }
+            }
+
+            if (isDublication)
+            {
+                SaveFileInDb(file, db.Attachements.Single(i => i.FileName == justifiedFileName && i.ProjectId == _id && !i.Deleted));
+                return string.Empty;
+            }
+
+
+            var attach = CreateNewAttach(file);
+            SaveFileInDb(file, attach);
+            return string.Empty;
+
+
+        }
+
+        private Attachements CreateNewAttach(UploadedFile file)
         {
             var attach = new Attachements
             {
-                ProjectId = project.Id,
-                UploadDate = DateTime.Now,
-                UploadSize = e.File.ContentLength,
+                ProjectId = _id,
                 UploadUser = ShibUser.GetEmail(),
-                FileName = e.File.FileName
+                UploadDate = DateTime.Now,
+                UploadSize = file.ContentLength,
+                ProjectAttachement = new Binary(new byte[0]),
+                FileName = file.FileName,
             };
             db.Attachements.InsertOnSubmit(attach);
             db.SubmitChanges();
 
-            StreamFiletoDb(e.File.InputStream, attach.ROWGUID);
+            return attach;
+        }
+
+        private void SaveFileInDb(UploadedFile file, Attachements attach)
+        {
+            using (var connection = new SqlConnection(db.Connection.ConnectionString))
+            {
+                connection.Open();
+
+                var command =
+                    new SqlCommand(
+                        "SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID",
+                        connection);
+                command.Parameters.AddWithValue("@ROWGUID", attach.ROWGUID.ToString());
+
+                using (var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    command.Transaction = tran;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Get the pointer for file
+                            var pathfile = reader.GetString(0);
+                            var transactionContext = reader.GetSqlBytes(1).Buffer;
+
+                            using (
+                                Stream fileStream = new SqlFileStream(pathfile, transactionContext, FileAccess.Write,
+                                    FileOptions.SequentialScan, allocationSize: 0))
+                            {
+                                file.InputStream.CopyTo(fileStream, 65536);
+                            }
+                        }
+                    }
+                    tran.Commit();
+                }
+            }
+        }
+
+        public override DirectoryItem ResolveRootDirectoryAsTree(string path)
+        {
+            return ResolveDirectory(path);
+        }
+
+        public override DirectoryItem ResolveDirectory(string path)
+        {
+            var attaches = db.Attachements.Where(i => i.ProjectId == _id && !i.Deleted);
+            var files = new List<FileItem>();
+
+            foreach (var attach in attaches)
+            {
+                files.Add(new FileItem(attach.FileName, "", (long)attach.UploadSize, $@"~\{_id}\{attach.FileName}", $@"\{_id}\{attach.FileName}", "", GetPermissions(path)));
+            }
+
+            var item = new DirectoryItem($"{_id}", @"\", @"\", "", GetPermissions(path), files.ToArray(), new DirectoryItem[0]);
+            return item;
+        }
+
+        public override string GetFileName(string url)
+        {
+            return Path.GetFileName(url);
+        }
+
+        public override string GetPath(string url)
+        {
+            return url;
+        }
+
+        public override Stream GetFile(string url)
+        {
+            Stream returnStream = null;
+            var fileName = GetFileName(url);
+            using (SqlConnection connection = new SqlConnection(db.Connection.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ProjectId = @id AND FileName = '@filename';", connection);
+                command.Parameters.AddWithValue("@id", _id);
+                command.Parameters.AddWithValue("@filename", fileName);
+
+                using (SqlTransaction tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    command.Transaction = tran;
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Get the pointer for the file  
+                            string path = reader.GetString(0);
+                            byte[] transactionContext = reader.GetSqlBytes(1).Buffer;
+
+                            // Create the SqlFileStream  
+                            using (
+                                Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read,
+                                    FileOptions.SequentialScan, allocationSize: 0))
+                            {
+                                fileStream.CopyTo(returnStream);
+                            }
+                        }
+                    }
+                    tran.Commit();
+                }
+            }
+
+            return returnStream;
+        }
+
+        public override string StoreBitmap(Bitmap bitmap, string url, ImageFormat format)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string DeleteDirectory(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string CreateDirectory(string path, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        private PathPermissions GetPermissions(string folderPath)
+        {
+            PathPermissions permissions = PathPermissions.Read;
+            if (CheckDeletePermissions(folderPath)) permissions = PathPermissions.Delete | permissions;
+            if (CheckWritePermissions(folderPath)) permissions = PathPermissions.Upload | permissions;
+
+            return permissions;
+        }
+
+        private string JusitfyFileName(string FileName)
+        {
+            var FixedFileName = FileName;
+
+            try
+            {
+                File.Create(Path.GetTempPath() + Path.PathSeparator + FileName);
+                File.Delete(Path.GetTempPath() + Path.PathSeparator + FileName);
+                return FixedFileName;
+            }
+            catch (IOException ioe)
+            {
+                var FileNameWithoutExtension = Path.GetFileNameWithoutExtension(FileName);
+                var Extension = Path.GetExtension(FileName);
+                var invalidChars = new char[] { '<', '>', ':', '\'', '/', '\\', '|', '?', '*' };
+
+                if (invalidChars.Any(i => FileNameWithoutExtension.Contains(i)))
+                {
+                    foreach (var invalidChar in invalidChars)
+                    {
+                        if (FileNameWithoutExtension.Contains(invalidChar))
+                        {
+                            FixedFileName = FileNameWithoutExtension.Replace(invalidChar, '_');
+                        }
+                    }
+                    return FixedFileName+Extension;
+                }
+                else
+                {
+                    FixedFileName = "_" + FileNameWithoutExtension;
+                    return FixedFileName+Extension;
+                }
+            }
+
         }
     }
 }

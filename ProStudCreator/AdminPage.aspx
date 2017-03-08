@@ -111,6 +111,16 @@
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine" target="_blank">Stunden und Semesterpläne</a></asp:Label>
             </div>
         </div>
+        <hr />
+        <div style="text-align: left;">
+            <div class="col-sm-3">
+                <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control"></asp:DropDownList>
+            </div>
+            <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Horizontal" AutoPostBack="false" CssClass="col-sm-5" TextAlign="Right">
+                <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
+                <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
+            </asp:RadioButtonList>
+        </div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Marketing Export"></asp:Button>
         </div>

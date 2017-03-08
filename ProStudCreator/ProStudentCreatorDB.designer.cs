@@ -3853,7 +3853,7 @@ namespace ProStudCreator
 		
 		private System.Guid _ROWGUID;
 		
-		private System.Data.Linq.Binary _ProjectAttachement;
+		private System.Data.Linq.Link<System.Data.Linq.Binary> _ProjectAttachement;
 		
 		private int _ProjectId;
 		
@@ -3868,6 +3868,8 @@ namespace ProStudCreator
 		private System.Nullable<System.DateTime> _DeletedDate;
 		
 		private string _FileName;
+		
+		private string _DeletedUser;
 		
 		private EntityRef<Project> _Project;
 		
@@ -3893,6 +3895,8 @@ namespace ProStudCreator
     partial void OnDeletedDateChanged();
     partial void OnFileNameChanging(string value);
     partial void OnFileNameChanged();
+    partial void OnDeletedUserChanging(string value);
+    partial void OnDeletedUserChanged();
     #endregion
 		
 		public Attachements()
@@ -3901,7 +3905,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid ROWGUID
 		{
 			get
@@ -3926,15 +3930,15 @@ namespace ProStudCreator
 		{
 			get
 			{
-				return this._ProjectAttachement;
+				return this._ProjectAttachement.Value;
 			}
 			set
 			{
-				if ((this._ProjectAttachement != value))
+				if ((this._ProjectAttachement.Value != value))
 				{
 					this.OnProjectAttachementChanging(value);
 					this.SendPropertyChanging();
-					this._ProjectAttachement = value;
+					this._ProjectAttachement.Value = value;
 					this.SendPropertyChanged("ProjectAttachement");
 					this.OnProjectAttachementChanged();
 				}
@@ -4081,6 +4085,26 @@ namespace ProStudCreator
 					this._FileName = value;
 					this.SendPropertyChanged("FileName");
 					this.OnFileNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeletedUser", DbType="VarChar(50)")]
+		public string DeletedUser
+		{
+			get
+			{
+				return this._DeletedUser;
+			}
+			set
+			{
+				if ((this._DeletedUser != value))
+				{
+					this.OnDeletedUserChanging(value);
+					this.SendPropertyChanging();
+					this._DeletedUser = value;
+					this.SendPropertyChanged("DeletedUser");
+					this.OnDeletedUserChanged();
 				}
 			}
 		}

@@ -29,6 +29,17 @@ namespace ProStudCreator
         IQueryable<Project> projects;
         //~SR test
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            SelectedSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
+            SelectedSemester.DataBind();
+            var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
+            SelectedSemester.SelectedValue = currentSemester.ToString();
+            SelectedSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
+            SelectedSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", ".", false));
+        }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!ShibUser.IsAdmin())
@@ -173,18 +184,37 @@ namespace ProStudCreator
 
         protected void btnMarketingExport_OnClick(object sender, EventArgs e)
         {
-            byte[] bytesInStream;
-            var sem = Semester.CurrentSemester(db);
-            using (var output = new MemoryStream())
+            IEnumerable<Project> projectstoExport = null;
+            if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
             {
-                ExcelCreator.GenerationMarketingList(output, db.Projects.Where(i => i.Semester == sem && i.State == ProjectState.Published && i.LogStudent1Name != null && i.LogStudent1Name != ""));
-                bytesInStream = output.ToArray();
+                if (SelectedSemester.SelectedValue == "")
+                {
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                }
+                else
+                {
+                    var semesterId = int.Parse(SelectedSemester.SelectedValue);
+                    projectstoExport = db.Projects.Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                }
+            }
+            else //Projects which end in this Sem.
+            {
+                if (SelectedSemester.SelectedValue == "")
+                {
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                }
+                else
+                {
+                    var semesterId = int.Parse(SelectedSemester.SelectedValue);
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "" && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == semesterId - 1)));
+                }
             }
 
+            //Response
             Response.Clear();
             Response.ContentType = "application/Excel";
             Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte.xlsx");
-            Response.BinaryWrite(bytesInStream);
+            ExcelCreator.GenerationMarketingList(Response.OutputStream, projectstoExport);
             Response.End();
         }
     }
