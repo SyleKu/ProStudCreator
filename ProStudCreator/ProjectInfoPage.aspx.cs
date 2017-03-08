@@ -512,8 +512,20 @@ namespace ProStudCreator
             }
 
 
-            var attach = CreateNewAttach(file);
-            SaveFileInDb(file, attach);
+            Attachements attach = null;
+            try
+            {
+                attach = CreateNewAttach(file);
+                SaveFileInDb(file, attach);
+            }
+            catch (Exception e)
+            {
+                attach.Deleted = true;
+                attach.DeletedDate = DateTime.Now;
+                attach.DeletedUser = null;
+                attach.ProjectAttachement = Encoding.UTF8.GetBytes(e.ToString().ToCharArray());
+                db.SubmitChanges();
+            }
             return string.Empty;
 
 
@@ -667,35 +679,29 @@ namespace ProStudCreator
 
         private string JusitfyFileName(string FileName)
         {
-            var FixedFileName = FileName;
-
             try
             {
                 File.Create(Path.GetTempPath() + Path.PathSeparator + FileName);
                 File.Delete(Path.GetTempPath() + Path.PathSeparator + FileName);
-                return FixedFileName;
+                return FileName;
             }
             catch (IOException ioe)
             {
-                var FileNameWithoutExtension = Path.GetFileNameWithoutExtension(FileName);
-                var Extension = Path.GetExtension(FileName);
-                var invalidChars = new char[] { '<', '>', ':', '\'', '/', '\\', '|', '?', '*' };
 
-                if (invalidChars.Any(i => FileNameWithoutExtension.Contains(i)))
+                if (Path.GetInvalidFileNameChars().Any(i => FileName.Contains(i)))
                 {
-                    foreach (var invalidChar in invalidChars)
+                    foreach (var invalidChar in Path.GetInvalidFileNameChars())
                     {
-                        if (FileNameWithoutExtension.Contains(invalidChar))
+                        if (FileName.Contains(invalidChar))
                         {
-                            FixedFileName = FileNameWithoutExtension.Replace(invalidChar, '_');
+                            FileName = FileName.Replace(invalidChar, '_');
                         }
                     }
-                    return FixedFileName+Extension;
+                    return FileName;
                 }
                 else
                 {
-                    FixedFileName = "_" + FileNameWithoutExtension;
-                    return FixedFileName+Extension;
+                    return "_" + FileName;
                 }
             }
 
