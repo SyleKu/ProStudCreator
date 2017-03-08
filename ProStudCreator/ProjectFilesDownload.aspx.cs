@@ -32,7 +32,7 @@ namespace ProStudCreator
             Response.Clear();
             Response.BufferOutput = false;
             Response.ContentType = "application/force-download";
-            Response.AddHeader("content-disposition", "attachment; filename=" + attach.FileName);
+            Response.AddHeader("content-disposition", "attachment; filename=\"" + attach.FileName + "\"");
 
             using (SqlConnection connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
             {
