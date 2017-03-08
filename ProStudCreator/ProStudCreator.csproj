@@ -264,6 +264,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="Ext\Termine.aspx" />
     <Content Include="Termine.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -375,6 +376,13 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Ext\Termine.aspx.cs">
+      <DependentUpon>Termine.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ext\Termine.aspx.designer.cs">
+      <DependentUpon>Termine.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Termine.aspx.cs">
       <DependentUpon>Termine.aspx</DependentUpon>
     </Compile>

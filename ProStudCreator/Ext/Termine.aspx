@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ProStudCreator.SiteMaster" %>
+﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" AutoEventWireup="True" CodeBehind="Termine.aspx.cs" Inherits="ProStudCreator.Ext.Termine" %>
 <!DOCTYPE html>
 <html lang="de">
 <head runat="server">
@@ -7,15 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title><%: Page.Title %></title>
-
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <%--<asp:ContentPlaceHolder ID="Stylesheets" runat="server">
-        <link rel="stylesheet" href="/Content/Site.css" type="text/css" />
-    </asp:ContentPlaceHolder>--%>
 </head>
 <body>
     <form runat="server">
@@ -44,50 +40,28 @@
                 <div class="navbar-header" style="width: 100%">
                     <div class="navbar-brand" style="width: 100%">
                         <img runat="server" src="pictures/Logo.png" />
-                        <a href="projectlist" style="margin-left: 5%;">
-                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">IP5/IP6 Projekte</h2>
-                        </a>
                         <a href="Termine" style="margin-left: 5%;">
                             <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Termine</h2>
                         </a>
-                        <a href="Ablauf" style="margin-left: 5%;">
-                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Ablauf</h2>
-                        </a>
-                        <a href="FAQ" style="margin-left: 5%;">
-                            <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">FAQ</h2>
-                        </a>
-                        <div runat="server" id="NavAdmin" class="display-inline">
-                            <a href="AdminPage.aspx" style="margin-left: 5%;">
-                                <h2 style="display: inline; text-decoration: none; color: #000; vertical-align: middle;">Admin</h2>
-                            </a>
-                            <div runat="server" id="tasksToDo" class="display-inline" Visible="False">
-                                <img src="pictures/danger.png" height="32px" width="32px"/>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <%-- <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav menuBar">
-                        <li>
-                        </li>
-                    </ul>
-                </div>--%>
             </div>
         </div>
         <div class="container body-content">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
+            <div class="well usernSettings">
+                <h3>Termine</h3>
+                <div class="well" style="background-color: #ffffff">
+                    <asp:GridView ID="AllEvents" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="True" AlternatingRowStyle-BackColor="#e7e7e7" Width="100%">
+                        <%--<AlternatingRowStyle BackColor="White" />--%>
+                    </asp:GridView>
+                    <hr />
+                    <p>Titeländerungen von Informatikprojekte sind bis 4 Wochen vor Abgabe möglich!</p>
+                </div>
+            </div>
             <hr />
             <footer>
                 <div class="pull-left">
                     &copy;<%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz
-                </div>
-                <div class="pull-right">
-                    Angemeldet als <%: ProStudCreator.ShibUser.GetEmail() + " (" + ProStudCreator.ShibUser.GetDepartmentName() + ")"  %> <%: ProStudCreator.ShibUser.IsAdmin() ? " (Admin)" : "" %>
-                    <% if (inDebugMode)
-                        { %>
-                    <strong style="color: red">(DEBUG MODE)</strong>
-                    <% } %>
                 </div>
             </footer>
         </div>

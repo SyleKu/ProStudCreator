@@ -8,34 +8,16 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace ProStudCreator
+namespace ProStudCreator.Ext
 {
-
-    public class SemesterSingleElement
-    {
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public string ProjectSubmissionUntil { get; set; }
-        public string ProjectAllocation { get; set; }
-        public string SubmissionIP5FullPartTime { get; set; }
-        public string SubmissionIP5Accompanying { get; set; }
-        public string SubmissionIP6Normal { get; set; }
-        public string SubmissionIP6Variant2 { get; set; }
-        public string DefenseIP6Start { get; set; }
-        public string DefenseIP6End { get; set; }
-        public string ExhibitionBachelorThesis { get; set; }
-        public string Name { get; set; }
-    }
-
     public partial class Termine : System.Web.UI.Page
     {
-
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        protected GridView AllEvents;
+        //protected GridView AllEvents;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var semestersToDisplay = new Semester[] { Semester.LastSemester(db), Semester.CurrentSemester(db), Semester.NextSemester(db), Semester.AfterNextSemester(db) };
+            var semestersToDisplay = new Semester[] {Semester.LastSemester(db), Semester.CurrentSemester(db), Semester.NextSemester(db), Semester.AfterNextSemester(db) };
 
 
             var dt = new DataTable();
@@ -43,8 +25,7 @@ namespace ProStudCreator
                 {
                     "Semester",
                     "",
-                    "Projekteinreichung (intern)",
-                    "Projekteinreichung (extern)",
+                    "Projekteinreichung",
                     "Projektzuteilung",
                     "Abgabe IP5 (normal)",
                     "Abgabe IP5 (Variante 2 Sem.)",
@@ -61,7 +42,6 @@ namespace ProStudCreator
                     {
                         semester.Name,
                         $"{semester.StartDate.ToShortDateString()} bis {semester.EndDate.ToShortDateString()}",
-                        semester.ProjectSubmissionUntil.ToShortDateString(),
                         semester.ProjectSubmissionUntil.AddMonths(-1).ToShortDateString(), //TODO: stimmt das?
                         semester.ProjectAllocation,
                         semester.SubmissionIP5FullPartTime,
@@ -93,6 +73,7 @@ namespace ProStudCreator
             //Get all the rows and change into columns
             for (int i = 0; i <= dt.Rows.Count; i++)
                 table.Columns.Add(semesters[i]);
+
 
             //get all the columns and make it as rows
             for (int j = 0; j < dt.Columns.Count; j++)
