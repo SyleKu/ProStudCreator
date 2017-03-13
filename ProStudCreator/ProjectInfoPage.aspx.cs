@@ -206,7 +206,9 @@ namespace ProStudCreator
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
                     nbrGradeStudent2.Enabled =
-                        drpBillingstatus.Enabled = canPostEdit;
+                        BtnSaveBetween.Enabled =
+                            BtnSaveChanges.Enabled =
+                                drpBillingstatus.Enabled = canPostEdit;
 
             //set the visibility
             if (project.Department.ShowDefenseOnInfoPage) //i4ds
@@ -227,16 +229,21 @@ namespace ProStudCreator
 
             BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && canPostEdit);
 
-            ////FileExplorer settings
-            //FileExplorer.Configuration.ContentProviderTypeName =
-            //    typeof(ExtendedFileProvider).AssemblyQualifiedName;
-            //FileExplorer.Configuration.EnableAsyncUpload = true;
-            //FileExplorer.AsyncUpload.MaxFileSize = 0;
-            //FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
-            //FileExplorer.Language = "de-DE";
-            //FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
-            //FileExplorer.Grid.Columns[0].HeaderText = "Datei";
-            //FileExplorer.FindControl("chkOverwrite").Visible = false;
+            //FileExplorer settings
+
+
+            FileExplorer.Configuration.ContentProviderTypeName =
+                    typeof(ExtendedFileProvider).AssemblyQualifiedName;
+            FileExplorer.Configuration.EnableAsyncUpload = true;
+            FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
+            FileExplorer.Language = "de-DE";
+            FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
+            FileExplorer.Grid.Columns[0].HeaderText = "Datei";
+            FileExplorer.FindControl("chkOverwrite").Visible = false;
+            if (ShibUser.GetEmail() != "flavio.mueller@fhnw.ch")
+            {
+                FileExplorer.Enabled = false;
+            }
         }
 
         private DateTime SetDates()
