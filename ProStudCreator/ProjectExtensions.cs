@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace ProStudCreator
@@ -122,6 +123,47 @@ namespace ProStudCreator
             else
             {
                 return 1;
+            }
+        }
+
+        public static DateTime GetSubmissionDate(this Project _p)
+        {
+            using (var db = new ProStudentCreatorDBDataContext())
+            {
+                DateTime dbDate;
+
+                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P5 ?? false))  //IP5 Projekt Voll/TeilZeit
+                {
+                    return DateTime.TryParseExact(_p.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                        ? dbDate
+                        : Semester.NextSemester(db).EndDate;
+                }
+                else if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
+                {
+                    return DateTime.TryParseExact(_p.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                        ? dbDate
+                        : Semester.NextSemester(db).EndDate;
+                }
+                else if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 1 Semester
+                {
+                    return DateTime.TryParseExact(_p.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                        ? dbDate
+                        : Semester.NextSemester(db).EndDate;
+                }
+                else if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 2 Semester
+                {
+                    return DateTime.TryParseExact(_p.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                        ? dbDate
+                        : Semester.NextSemester(db).EndDate;
+                }
+                else
+                {
+                    return Semester.NextSemester(db).EndDate;
+                }
             }
         }
 

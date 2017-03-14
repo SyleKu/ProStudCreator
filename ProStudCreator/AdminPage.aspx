@@ -111,18 +111,27 @@
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine" target="_blank">Stunden und Semesterpläne</a></asp:Label>
             </div>
         </div>
-        <hr />
-        <div style="text-align: left;">
-            <div class="col-sm-3">
-                <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control"></asp:DropDownList>
+    </div>
+    <div class="well newProjectSettings non-selectable">
+        <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export"></asp:Label>
+        <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
+            <div class="form-group">
+
+                <asp:Label runat="server" Text="Semester:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control col-sm-3 alignbottom "></asp:DropDownList>
+                </div>
+                <br/>
+                <hr />
+                <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
+                    <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
+                    <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
+                </asp:RadioButtonList>
             </div>
-            <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Horizontal" AutoPostBack="false" CssClass="col-sm-5" TextAlign="Right">
-                <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
-                <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
-            </asp:RadioButtonList>
         </div>
         <div style="text-align: right;">
-            <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Marketing Export"></asp:Button>
+            <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
         </div>
     </div>
 </asp:Content>
