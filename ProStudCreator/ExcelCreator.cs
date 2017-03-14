@@ -35,6 +35,8 @@ namespace ProStudCreator
 
         private static readonly string[] MARKETING_HEADERS = new string[]
         {
+            "Projektnummer",
+            "Insitut",
             "Projekttitel",
             "Studierende",
             "Betreuende/r",
@@ -83,7 +85,7 @@ namespace ProStudCreator
         private static void projectToExcelRow(Project p, IRow row)
         {
             ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-            //p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
+            p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
 
             string abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
             string dispName = abbreviation + "_" + p.Name;
@@ -144,20 +146,36 @@ namespace ProStudCreator
         private static void ProjectToExcelMarketingRow(Project p, IRow row)
         {
             var db = new ProStudentCreatorDBDataContext();
-            p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
 
-            row.CreateCell(0).SetCellValue(p.Name);
-            row.CreateCell(1).SetCellValue(p?.LogStudent1Mail ?? "" + ", " + p?.LogStudent2Mail ?? "");
-            row.CreateCell(2).SetCellValue(p.Advisor1Mail);
-            row.CreateCell(3).SetCellValue(p?.LogProjectType?.ExportValue ?? "-");
-            row.CreateCell(4).SetCellValue(p.ClientCompany ?? "");
-            row.CreateCell(5).SetCellValue(p.ClientAddressTitle ?? "");
-            row.CreateCell(6).SetCellValue(p.ClientPerson ?? "");
-            row.CreateCell(7).SetCellValue(p.ClientAddressDepartment ?? "");
-            row.CreateCell(8).SetCellValue(p.ClientAddressStreet ?? "");
-            row.CreateCell(9).SetCellValue(p.ClientAddressPostcode ?? "");
-            row.CreateCell(10).SetCellValue(p.ClientAddressCity ?? "");
-            row.CreateCell(11).SetCellValue(p.ClientReferenceNumber ?? "");
+            p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
+            var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
+
+            row.CreateCell(0).SetCellValue(abbreviation);
+            row.CreateCell(1).SetCellValue(p.Department.DepartmentName);
+            row.CreateCell(2).SetCellValue(p.Name);
+            row.CreateCell(3).SetCellValue(GetStudentEmails(p));
+            row.CreateCell(4).SetCellValue(p.Advisor1Mail);
+            row.CreateCell(5).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
+            row.CreateCell(6).SetCellValue(p.ClientCompany ?? "");
+            row.CreateCell(7).SetCellValue(p.ClientAddressTitle ?? "");
+            row.CreateCell(8).SetCellValue(p.ClientPerson ?? "");
+            row.CreateCell(9).SetCellValue(p.ClientAddressDepartment ?? "");
+            row.CreateCell(10).SetCellValue(p.ClientAddressStreet ?? "");
+            row.CreateCell(11).SetCellValue(p.ClientAddressPostcode ?? "");
+            row.CreateCell(12).SetCellValue(p.ClientAddressCity ?? "");
+            row.CreateCell(13).SetCellValue(p.ClientReferenceNumber ?? "");
+        }
+
+        private static string GetStudentEmails(Project p)
+        {
+            if (string.IsNullOrEmpty(p.LogStudent2Mail))
+            {
+                return p.LogStudent1Mail;
+            }
+            else
+            {
+                return p.LogStudent1Mail + ", " + p.LogStudent2Mail;
+            }
         }
     }
 }
