@@ -34,7 +34,7 @@ namespace ProStudCreator
             Response.ContentType = "application/force-download";
             Response.AddHeader("content-disposition", "attachment; filename=\"" + attach.FileName + "\"");
 
-            using (SqlConnection connection = new SqlConnection("Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True"))
+            using (SqlConnection connection = new SqlConnection(db.Connection.ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand($"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID;", connection);
