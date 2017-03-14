@@ -39,7 +39,7 @@ namespace ProStudCreator
         public static string GetEmail()
         {
             #if DEBUG
-                return "flavio.mueller@fhnw.ch";
+                return "stephen.randles@fhnw.ch";
             #else
                 string mail = HttpContext.Current.Request.Headers["mail"];
                 string result;

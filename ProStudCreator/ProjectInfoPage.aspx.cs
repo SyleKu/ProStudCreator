@@ -240,10 +240,6 @@ namespace ProStudCreator
             FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
             FileExplorer.Grid.Columns[0].HeaderText = "Datei";
             FileExplorer.FindControl("chkOverwrite").Visible = false;
-            if (ShibUser.GetEmail() != "flavio.mueller@fhnw.ch")
-            {
-                FileExplorer.Enabled = false;
-            }
         }
 
         private DateTime SetDates()
