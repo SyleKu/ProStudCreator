@@ -167,6 +167,18 @@ namespace ProStudCreator
             }
         }
 
+
+        public static Semester GetEndSemester(this Project _p, ProStudentCreatorDBDataContext db)
+        {
+
+            if (_p.LogProjectDuration == 2)
+            {
+                return Semester.NextSemester(_p.Semester, db);
+            }
+            return _p.Semester;
+
+        }
+
         #endregion
 
         #region Permissions

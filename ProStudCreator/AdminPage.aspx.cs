@@ -187,7 +187,7 @@ namespace ProStudCreator
             IEnumerable<Project> projectstoExport = null;
             if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
             {
-                if (SelectedSemester.SelectedValue == "")
+                if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
                 }
@@ -199,7 +199,7 @@ namespace ProStudCreator
             }
             else //Projects which end in this Sem.
             {
-                if (SelectedSemester.SelectedValue == "")
+                if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
                 }

@@ -20,21 +20,36 @@ namespace ProStudCreator
             var nextSemester = Semester.NextSemester(db);
             var safeSemesterActiveUntil = nextSemester.SemesterActiveUntil ?? default(DateTime);
             var safeDate = safeSemesterActiveUntil.AddDays(7);
-            return ActiveSemester(safeDate,db);
+            return ActiveSemester(safeDate, db);
 
         }
 
         public static Semester LastSemester(ProStudentCreatorDBDataContext db)
         {
 
-            var currentSemester = ActiveSemester(DateTime.Now,db);
+            var currentSemester = ActiveSemester(DateTime.Now, db);
             var safeDate = currentSemester.StartDate.AddDays(-7);
-            return ActiveSemester(safeDate,db);
+            return ActiveSemester(safeDate, db);
 
         }
 
+        public static Semester NextSemester(Semester semester, ProStudentCreatorDBDataContext db)
+        {
+            return ActiveSemester(semester.SemesterActiveUntil.Value.AddDays(7), db);
+        }
+
+        public static Semester AfterNextSemester(Semester semester, ProStudentCreatorDBDataContext db)
+        {
+            return NextSemester(NextSemester(semester, db), db);
+        }
+
+        public static Semester LastSemester(Semester semester, ProStudentCreatorDBDataContext db)
+        {
+            return ActiveSemester(semester.StartDate.AddDays(-7), db);
+        }
+
         public static Semester ActiveSemester(DateTime date, ProStudentCreatorDBDataContext db) => db.Semester.Single(s => s.StartDate < date && s.SemesterActiveUntil > date);
-        
+
         public override string ToString() => Name;
 
     }

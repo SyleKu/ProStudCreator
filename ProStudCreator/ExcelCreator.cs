@@ -97,7 +97,7 @@ namespace ProStudCreator
         }
 
 
-        public static void GenerationMarketingList(Stream outStream, IEnumerable<Project> _projects)
+        public static void GenerationMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db)
         {
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(MARKETING_SHEET_NAME);
@@ -115,7 +115,7 @@ namespace ProStudCreator
             for (var i = 0; i < projects.Length; i++)
             {
                 var row = worksheet.CreateRow(1 + i);
-                ProjectToExcelMarketingRow(projects[i], row);
+                ProjectToExcelMarketingRow(projects[i], row, db);
             }
 
             for (int i = 0; i < HEADERS.Length; i++)
@@ -126,51 +126,48 @@ namespace ProStudCreator
         }
 
 
-        private static void ProjectToExcelMarketingRow(Project p, IRow row)
+        private static void ProjectToExcelMarketingRow(Project p, IRow row, ProStudentCreatorDBDataContext db)
         {
-            using (var db = new ProStudentCreatorDBDataContext())
-            {
 
-                p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
-                var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" +
-                                                                             p.Department.DepartmentName +
-                                                                             p.ProjectNr.ToString("D2");
+            var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" +
+                                                                         p.Department.DepartmentName +
+                                                                         p.ProjectNr.ToString("D2");
 
-                row.CreateCell(0).SetCellValue(abbreviation);
-                row.CreateCell(1).SetCellValue(p.Department.DepartmentName);
-                row.CreateCell(2).SetCellValue(p.Name);
-                row.CreateCell(3).SetCellValue(p?.Semester?.StartDate.ToString(CultureInfo.InvariantCulture) ?? "");
-                row.CreateCell(4).SetCellValue(p.GetSubmissionDate());
-                row.CreateCell(5).SetCellValue(p.Semester?.ExhibitionBachelorThesis ?? "");
-                row.CreateCell(6).SetCellValue(p.LogStudent1Name ?? "");
-                row.CreateCell(7).SetCellValue(p.LogStudent1Mail ?? "");
-                row.CreateCell(8).SetCellValue(p.LogStudent2Name ?? "");
-                row.CreateCell(9).SetCellValue(p.LogStudent2Mail ?? "");
-                row.CreateCell(10).SetCellValue(string.IsNullOrEmpty(p.Reservation1Mail) ? "Nein" : "Ja");
-                row.CreateCell(11).SetCellValue(p.Advisor1Name ?? "");
-                row.CreateCell(12).SetCellValue(p.Advisor1Mail ?? "");
-                row.CreateCell(13).SetCellValue(p.Advisor2Name ?? "");
-                row.CreateCell(14).SetCellValue(p.Advisor2Mail ?? "");
-                row.CreateCell(15).SetCellValue(p.Project1?.Name ?? "");
-                row.CreateCell(16).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
-                row.CreateCell(17).SetCellValue(p?.LogProjectDuration?.ToString() ?? "");
-                row.CreateCell(18).SetCellValue(GetLanguage(p));
-                row.CreateCell(19).SetCellValue(p?.Expert?.Mail ?? "");
-                row.CreateCell(20).SetCellValue(p?.LogDefenceDate?.ToString() ?? "-");
-                row.CreateCell(21).SetCellValue(p?.LogDefenceRoom ?? "-");
-                row.CreateCell(22).SetCellValue(p.LogGradeStudent1?.ToString() ?? "");
-                row.CreateCell(23).SetCellValue(p.LogGradeStudent2?.ToString() ?? "");
-                row.CreateCell(24).SetCellValue(p.BillingStatus?.DisplayName ?? "");
-                row.CreateCell(25).SetCellValue(p.ClientCompany ?? "");
-                row.CreateCell(27).SetCellValue(p.ClientAddressTitle ?? "");
-                row.CreateCell(28).SetCellValue(p.ClientPerson ?? "");
-                row.CreateCell(29).SetCellValue(p.ClientMail ?? "");
-                row.CreateCell(30).SetCellValue(p.ClientAddressDepartment ?? "");
-                row.CreateCell(31).SetCellValue(p.ClientAddressStreet ?? "");
-                row.CreateCell(32).SetCellValue(p.ClientAddressPostcode ?? "");
-                row.CreateCell(33).SetCellValue(p.ClientAddressCity ?? "");
-                row.CreateCell(34).SetCellValue(p.ClientReferenceNumber ?? "");
-            }
+            var i = 0;
+            row.CreateCell(i++).SetCellValue(abbreviation);
+            row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
+            row.CreateCell(i++).SetCellValue(p.Name);
+            row.CreateCell(i++).SetCellValue(p.Semester?.StartDate.ToString(CultureInfo.InvariantCulture) ?? "");
+            row.CreateCell(i++).SetCellValue(p.GetSubmissionDate());
+            row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent2Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent2Mail ?? "");
+            row.CreateCell(i++).SetCellValue(string.IsNullOrEmpty(p.Reservation1Mail) ? "Nein" : "Ja");
+            row.CreateCell(i++).SetCellValue(p.Advisor1Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor1Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor2Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor2Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.Project1?.Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
+            row.CreateCell(i++).SetCellValue(p.LogProjectDuration?.ToString() ?? "");
+            row.CreateCell(i++).SetCellValue(GetLanguage(p));
+            row.CreateCell(i++).SetCellValue(p.Expert?.Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogDefenceDate?.ToString() ?? "-");
+            row.CreateCell(i++).SetCellValue(p.LogDefenceRoom ?? "-");
+            row.CreateCell(i++).SetCellValue(p.LogGradeStudent1?.ToString() ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogGradeStudent2?.ToString() ?? "");
+            row.CreateCell(i++).SetCellValue(p.BillingStatus?.DisplayName ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientCompany ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientAddressTitle ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientPerson ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientMail ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientAddressDepartment ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientAddressStreet ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientAddressPostcode ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientAddressCity ?? "");
+            row.CreateCell(i++).SetCellValue(p.ClientReferenceNumber ?? "");
         }
 
         private static readonly string[] MARKETING_HEADERS = new string[]
