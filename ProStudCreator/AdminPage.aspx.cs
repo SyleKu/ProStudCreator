@@ -33,8 +33,7 @@ namespace ProStudCreator
         {
             SelectedSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
             SelectedSemester.DataBind();
-            var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
-            SelectedSemester.SelectedValue = currentSemester.ToString();
+            SelectedSemester.SelectedValue = Semester.CurrentSemester(db).Id.ToString();
             SelectedSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
             SelectedSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", ".", false));
         }

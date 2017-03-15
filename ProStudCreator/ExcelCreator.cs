@@ -114,7 +114,7 @@ namespace ProStudCreator
 
 
             var DateStyle = workbook.CreateCellStyle();
-            DateStyle.DataFormat = workbook.CreateDataFormat().GetFormat("dd/MM/yyyy");
+            DateStyle.DataFormat = workbook.CreateDataFormat().GetFormat("dd.MM.yyyy");
 
             // Header
             worksheet.CreateRow(0);
@@ -163,10 +163,28 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
-            row.CreateCell(i++).SetCellValue(GetStudentGrade(p.LogGradeStudent1));//
+            var cell3 = row.CreateCell(i++);
+            if (GetStudentGrade(p.LogGradeStudent1) == -1)
+            {
+                cell3.SetCellType(CellType.String);
+                cell3.SetCellValue("");
+            }
+            else
+            {
+                cell3.SetCellValue(GetStudentGrade(p.LogGradeStudent1));
+            }
             row.CreateCell(i++).SetCellValue(p.LogStudent2Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent2Mail ?? "");
-            row.CreateCell(i++).SetCellValue(GetStudentGrade(p.LogGradeStudent2)); //
+            var cell4 = row.CreateCell(i++);
+            if (GetStudentGrade(p.LogGradeStudent2) == -1)
+            {
+                cell4.SetCellType(CellType.String);
+                cell4.SetCellValue("");
+            }
+            else
+            {
+                cell4.SetCellValue(GetStudentGrade(p.LogGradeStudent2));
+            }
             row.CreateCell(i++).SetCellValue(string.IsNullOrEmpty(p.Reservation1Mail) ? "Nein" : "Ja");
             row.CreateCell(i++).SetCellValue(p.Advisor1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.Advisor1Mail ?? "");
@@ -174,7 +192,7 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.Advisor2Mail ?? "");
             row.CreateCell(i++).SetCellValue(GetAbbreviationProject(p));
             row.CreateCell(i++).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
-            row.CreateCell(i++).SetCellValue(GetProjectDuration(p)); //
+            row.CreateCell(i++).SetCellValue(GetProjectDuration(p));
             row.CreateCell(i++).SetCellValue(GetLanguage(p));
             row.CreateCell(i++).SetCellValue(p.Expert?.Mail ?? "");
             row.CreateCell(i++).SetCellValue(p.LogDefenceDate?.ToString() ?? "-");
@@ -186,7 +204,7 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.ClientMail ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressDepartment ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressStreet ?? "");
-            row.CreateCell(i++).SetCellValue(p.ClientAddressPostcode ?? ""); //
+            row.CreateCell(i++).SetCellValue(p.ClientAddressPostcode ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressCity ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientReferenceNumber ?? "");
         }
@@ -194,7 +212,7 @@ namespace ProStudCreator
         private static readonly string[] MARKETING_HEADERS = new string[]
         {
             "Projektnummer",
-            "Insitut",
+            "Institut",
             "Projekttitel",
             "Projektstart",
             "Projektabgabe",
@@ -203,7 +221,7 @@ namespace ProStudCreator
             "Student/in 1 E-Mail",
             "Note Student/in 1",
             "Student/in 2",
-            "Studnet/in 2 E-Mail",
+            "Student/in 2 E-Mail",
             "Note Student/in 2",
             "Wurde reserviert",
             "Hauptbetreuende/r",
@@ -215,8 +233,8 @@ namespace ProStudCreator
             "Anzahl Semester",
             "Durchführungssprache",
             "Experte",
-            "Verteidigungsdatum",
-            "Verteidigungsraum",
+            "Verteidigung-Datum",
+            "Verteidigung-Raum",
             "Verrechungsstatus",
             "Kunden-Unternehmen",
             "Kunden-Anrede",
@@ -258,9 +276,9 @@ namespace ProStudCreator
         {
             if (grade == null)
             {
-                return 0;
+                return -1;
             }
-            return Math.Round((double) grade, 1);
+            return Math.Round((double)grade, 1);
         }
 
         private static string GetAbbreviationProject(Project p)
