@@ -33,6 +33,7 @@ namespace ProStudCreator
             Response.BufferOutput = false;
             Response.ContentType = "application/force-download";
             Response.AddHeader("content-disposition", "attachment; filename=\"" + attach.FileName + "\"");
+            Response.AddHeader("Content-Lenght", attach.UploadSize.ToString());
 
             using (SqlConnection connection = new SqlConnection(db.Connection.ConnectionString))
             {
