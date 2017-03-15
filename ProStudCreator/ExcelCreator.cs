@@ -1,9 +1,11 @@
-﻿using NPOI.XSSF.UserModel;
+﻿using System;
+using NPOI.XSSF.UserModel;
 using System.IO;
 using System.Linq;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
 using System.Globalization;
+using NPOI.HSSF.UserModel;
 
 namespace ProStudCreator
 {
@@ -102,11 +104,18 @@ namespace ProStudCreator
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(MARKETING_SHEET_NAME);
 
+
+            var HeaderStyle = workbook.CreateCellStyle();
+
+            HeaderStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
+            HeaderStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.White.Index;
+
             // Header
             worksheet.CreateRow(0);
             for (int i = 0; i < MARKETING_HEADERS.Length; i++)
             {
                 worksheet.GetRow(0).CreateCell(i).SetCellValue(MARKETING_HEADERS[i]);
+                worksheet.GetRow(0).RowStyle = HeaderStyle;
             }
 
             // Project entries
@@ -120,6 +129,7 @@ namespace ProStudCreator
 
             for (int i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
+
 
             // Save
             workbook.Write(outStream);
@@ -138,26 +148,27 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
             row.CreateCell(i++).SetCellValue(p.Name);
             row.CreateCell(i++).SetCellValue(p.Semester?.StartDate.ToString(CultureInfo.InvariantCulture) ?? "");
-            row.CreateCell(i++).SetCellValue(p.GetSubmissionDate());
+            row.CreateCell(i++).SetCellValue(DateTime.Now);
+            row.Cells[4].SetCellValue(p.GetSubmissionDate());
             row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
+            row.CreateCell(i++).SetCellValue(GetStudentGrade(p.LogGradeStudent1));
             row.CreateCell(i++).SetCellValue(p.LogStudent2Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent2Mail ?? "");
+            row.CreateCell(i++).SetCellValue(GetStudentGrade(p.LogGradeStudent2));
             row.CreateCell(i++).SetCellValue(string.IsNullOrEmpty(p.Reservation1Mail) ? "Nein" : "Ja");
             row.CreateCell(i++).SetCellValue(p.Advisor1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.Advisor1Mail ?? "");
             row.CreateCell(i++).SetCellValue(p.Advisor2Name ?? "");
             row.CreateCell(i++).SetCellValue(p.Advisor2Mail ?? "");
-            row.CreateCell(i++).SetCellValue(p.Project1?.Name ?? "");
+            row.CreateCell(i++).SetCellValue(GetAbbreviationProject(p));
             row.CreateCell(i++).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
-            row.CreateCell(i++).SetCellValue(p.LogProjectDuration?.ToString() ?? "");
+            row.CreateCell(i++).SetCellValue(GetProjectDuration(p));
             row.CreateCell(i++).SetCellValue(GetLanguage(p));
             row.CreateCell(i++).SetCellValue(p.Expert?.Mail ?? "");
             row.CreateCell(i++).SetCellValue(p.LogDefenceDate?.ToString() ?? "-");
             row.CreateCell(i++).SetCellValue(p.LogDefenceRoom ?? "-");
-            row.CreateCell(i++).SetCellValue(p.LogGradeStudent1?.ToString() ?? "");
-            row.CreateCell(i++).SetCellValue(p.LogGradeStudent2?.ToString() ?? "");
             row.CreateCell(i++).SetCellValue(p.BillingStatus?.DisplayName ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientCompany ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressTitle ?? "");
@@ -180,8 +191,10 @@ namespace ProStudCreator
             "Ausstellung Bachelorthesis",
             "Student/in 1",
             "Student/in 1 E-Mail",
+            "Note Student/in 1",
             "Student/in 2",
             "Studnet/in 2 E-Mail",
+            "Note Student/in 2",
             "Wurde reserviert",
             "Hauptbetreuende/r",
             "Hauptbetreuende/r E-Mail",
@@ -194,8 +207,6 @@ namespace ProStudCreator
             "Experte",
             "Verteidigungsdatum",
             "Verteidigungsraum",
-            "Note Student/in 1",
-            "Note Student/in 2",
             "Verrechungsstatus",
             "Kunden-Unternehmen",
             "Kunden-Anrede",
@@ -205,7 +216,7 @@ namespace ProStudCreator
             "Kunden-Strasse und Nummer",
             "Kunden-PLZ",
             "Kunden-Ort",
-            "Referenznummer des Kunden"
+            "Kunden-Referenznummer"
         };
 
         private static string GetLanguage(Project p)
@@ -222,6 +233,34 @@ namespace ProStudCreator
 
             return "";
 
+        }
+
+        private static byte GetProjectDuration(Project p)
+        {
+            if (p.LogProjectDuration == null)
+            {
+                return 0;
+            }
+            return p.LogProjectDuration.Value;
+        }
+
+        private static double GetStudentGrade(float? grade)
+        {
+            if (grade == null)
+            {
+                return 0;
+            }
+            return (double)grade;
+        }
+
+        private static string GetAbbreviationProject(Project p)
+        {
+            if (p.Project1 == null)
+            {
+                return "";
+            }
+            return p.Project1?.Semester + "_" + p.Project1?.Department.DepartmentName +
+                                       p.Project1?.ProjectNr.ToString("D2");
         }
     }
 

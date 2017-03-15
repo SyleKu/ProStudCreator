@@ -214,7 +214,7 @@ namespace ProStudCreator
             Response.Clear();
             Response.ContentType = "application/Excel";
             Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte.xlsx");
-            ExcelCreator.GenerationMarketingList(Response.OutputStream, projectstoExport);
+            ExcelCreator.GenerationMarketingList(Response.OutputStream, projectstoExport, db);
             Response.End();
         }
     }
