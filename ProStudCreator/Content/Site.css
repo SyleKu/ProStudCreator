@@ -159,10 +159,22 @@ img.imageHeight {
     padding-left: 1.2em;
 }
 
+#MainContent_FileExplorer .doc {
+    background: none;
+    background-size: unset;
+    padding-left: unset;
+}
+
 .ppt {
     background: url("ppt.png") 0.1em 50% no-repeat;
     background-size: 1em 1em;
     padding-left: 1.2em;
+}
+
+#MainContent_FileExplorer .ppt {
+    background: none;
+    background-size: unset;
+    padding-left: unset;
 }
 
 
@@ -173,10 +185,22 @@ img.imageHeight {
     padding-left: 1.2em;
 }
 
+#MainContent_FileExplorer .pdf {
+    background: none;
+    background-size: unset;
+    padding-left: unset;
+}
+
 .xls {
     background: url("xls.png") 0.1em 50% no-repeat;
     background-size: 1em 1em;
     padding-left: 1.2em;
+}
+
+#MainContent_FileExplorer .xls {
+    background: none;
+    background-size: unset;
+    padding-left: unset;
 }
 
 .glyph-pdf {

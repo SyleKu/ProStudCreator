@@ -189,24 +189,24 @@ namespace ProStudCreator
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
                 }
                 else
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    projectstoExport = db.Projects.Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                    projectstoExport = db.Projects.Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
                 }
             }
             else //Projects which end in this Sem.
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "");
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
                 }
                 else
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "" && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == semesterId - 1)));
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "" && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == semesterId - 1))).OrderBy(i => i.Semester).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
                 }
             }
 
