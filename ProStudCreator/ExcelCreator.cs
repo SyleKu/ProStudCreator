@@ -115,7 +115,7 @@ namespace ProStudCreator
             for (int i = 0; i < MARKETING_HEADERS.Length; i++)
             {
                 worksheet.GetRow(0).CreateCell(i).SetCellValue(MARKETING_HEADERS[i]);
-                worksheet.GetRow(0).RowStyle = HeaderStyle;
+                worksheet.GetRow(0).Cells[i].CellStyle = HeaderStyle;
             }
 
             // Project entries
@@ -147,9 +147,8 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(abbreviation);
             row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
             row.CreateCell(i++).SetCellValue(p.Name);
-            row.CreateCell(i++).SetCellValue(p.Semester?.StartDate.ToString(CultureInfo.InvariantCulture) ?? "");
-            row.CreateCell(i++).SetCellValue(DateTime.Now);
-            row.Cells[4].SetCellValue(p.GetSubmissionDate());
+            row.CreateCell(i++).SetCellValue(GetStartDate(p, db));
+            row.CreateCell(i++).SetCellValue(p.GetSubmissionDate());
             row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
@@ -250,7 +249,7 @@ namespace ProStudCreator
             {
                 return 0;
             }
-            return (double)grade;
+            return Math.Round((double) grade, 1);
         }
 
         private static string GetAbbreviationProject(Project p)
@@ -261,6 +260,15 @@ namespace ProStudCreator
             }
             return p.Project1?.Semester + "_" + p.Project1?.Department.DepartmentName +
                                        p.Project1?.ProjectNr.ToString("D2");
+        }
+
+        private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db)
+        {
+            if (p.Semester?.StartDate == null)
+            {
+                return Semester.NextSemester(db).StartDate.Date;
+            }
+            return p.Semester.StartDate.Date;
         }
     }
 
