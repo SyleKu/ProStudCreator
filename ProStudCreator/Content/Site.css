@@ -383,12 +383,12 @@ small {
 #example {
     text-align: center;
 }
- 
-#example .demo-container {
-    display: inline-block;
-    text-align: left;
-}
- 
+
+    #example .demo-container {
+        display: inline-block;
+        text-align: left;
+    }
+
 .demo-container .RadUpload .ruUploadProgress {
     width: 210px;
     display: inline-block;
@@ -397,7 +397,11 @@ small {
     /*white-space: nowrap;*/
     vertical-align: top;
 }
- 
+
 html .demo-container .ruFakeInput {
     width: 220px;
+}
+
+.hidden {
+    display: none;
 }

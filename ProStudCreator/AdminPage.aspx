@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="AdminPageContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well newProjectSettings non-selectable">
+    <div class="well newProjectSettings">
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Diese Seite ist noch in der Entwicklung!" ForeColor="red"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <asp:GridView ID="GVTasks" ItemType="ProStudCreator.ProjectSingleTask" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" Width="100%">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <asp:PlaceHolder ID="AdminView" runat="server">
-        <div class="well adminSettings non-selectable">
+        <div class="well adminSettings">
             <h3>Projekte zur Freigabe</h3>
             <div class="well" style="background-color: #ffffff">
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick">
@@ -76,7 +76,7 @@
             </div>
         </div>
     </asp:PlaceHolder>
-    <div class="well newProjectSettings non-selectable">
+    <div class="well newProjectSettings">
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Zusätzliche Informationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group">
@@ -112,7 +112,7 @@
             </div>
         </div>
     </div>
-    <div class="well newProjectSettings non-selectable">
+    <div class="well newProjectSettings">
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group">

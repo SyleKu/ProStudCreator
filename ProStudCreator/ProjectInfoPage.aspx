@@ -18,7 +18,7 @@
 
             global.OnClientFileOpen = OnClientFileOpen;
     </script>
-    <div class="well newProjectSettings non-selectable">
+    <div class="well newProjectSettings">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group" style="text-align: left">

@@ -1,15 +1,16 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Projectlist.aspx.cs" Inherits="ProStudCreator.Projectlist" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well usernSettings non-selectable">
+    <div class="well usernSettings">
         <div class="col-sm-3">
             <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="Semester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
         </div>
         <div class="col-sm-1"></div>
-        <div class="radioButtonSettings non-selectable marginProject">
-            <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-5" TextAlign="Right">
+        <div class="radioButtonSettings marginProject">
+            <asp:RadioButtonList ID="whichOwner" runat="server" RepeatDirection="Horizontal" AutoPostBack="true" CssClass="col-sm-7" TextAlign="Right">
                 <asp:ListItem Value="AllProjects">Veröffentlichte Projekte</asp:ListItem>
                 <asp:ListItem Value="OwnProjects" Selected="True">Nur eigene Projekte</asp:ListItem>
+                <asp:ListItem Value="NotOwnEdited">Alle in Bearbeitung</asp:ListItem>
             </asp:RadioButtonList>
         </div>
         <br />

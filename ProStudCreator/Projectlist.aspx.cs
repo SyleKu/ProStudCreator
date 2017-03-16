@@ -19,7 +19,7 @@ namespace ProStudCreator
         public string advisorName { get; set; }
         public string projectName { get; set; }
         public string projectType1 { get; set; }
-        public string projectType2 { get; set;  }
+        public string projectType2 { get; set; }
         public bool p5 { get; set; }
         public bool p6 { get; set; }
     }
@@ -68,6 +68,15 @@ namespace ProStudCreator
 
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
             Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
+
+            if (!ShibUser.IsAdmin())
+            {
+                var item = whichOwner.Items.FindByValue("NotOwnEdited");
+                if (item != null)
+                {
+                    whichOwner.Items.Remove(item);
+                }
+            }
         }
 
 
@@ -117,6 +126,28 @@ namespace ProStudCreator
                             where p.State == ProjectState.Published && p.Semester.Id == int.Parse(Semester.SelectedValue)
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
+                    }
+                    break;
+                case "NotOwnEdited":
+                    var lastSemStartDate = ProStudCreator.Semester.LastSemester(db).StartDate;
+                    if (Semester.SelectedValue == "")
+                    {
+                        projects =
+                            db.Projects.Where(
+                                p =>
+                                    p.DepartmentId == ShibUser.GetDepartmentId() &&
+                                    p.ModificationDate > lastSemStartDate && 
+                                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
+                    }
+                    else
+                    {
+                        projects =
+                            db.Projects.Where(
+                                p =>
+                                    p.DepartmentId == ShibUser.GetDepartmentId() &&
+                                    p.ModificationDate > lastSemStartDate &&
+                                    p.Semester.Id == int.Parse(Semester.SelectedValue) && 
+                                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
                     }
                     break;
             }
@@ -230,7 +261,7 @@ namespace ProStudCreator
                 {
                     var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output,
-                        ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
+                        ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                         .Select(p => db.Projects.Single(pr => pr.Id == p.id))
                         .OrderBy(p => p.Reservation1Name != "")
                         .ThenBy(p => p.Department.DepartmentName)
@@ -238,7 +269,7 @@ namespace ProStudCreator
                     );
                     document.Dispose();
                 }
-                catch (iTextSharp.text.DocumentException documentException) when(documentException.Message.Contains("0x800704CD"))
+                catch (iTextSharp.text.DocumentException documentException) when (documentException.Message.Contains("0x800704CD"))
                 {
                     try
                     {
