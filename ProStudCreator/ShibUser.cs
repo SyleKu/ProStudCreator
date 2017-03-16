@@ -11,64 +11,64 @@ namespace ProStudCreator
         }
         public static bool IsAdmin()
         {
-            #if DEBUG
-                return false;
-            #else
-                if (HttpContext.Current.Items["IsAdmin"] == null)
+#if DEBUG
+            return false;
+#else
+            if (HttpContext.Current.Items["IsAdmin"] == null)
+            {
+                HttpContext.Current.Items["IsAdmin"] = ConfigurationManager.AppSettings["admins"].Split(new char[]
                 {
-                    HttpContext.Current.Items["IsAdmin"] = ConfigurationManager.AppSettings["admins"].Split(new char[]
-                    {
                         ';'
-                    }).Contains(ShibUser.GetEmail());
-                }
-                return (bool)HttpContext.Current.Items["IsAdmin"];
-            #endif
+                }).Contains(ShibUser.GetEmail());
+            }
+            return (bool)HttpContext.Current.Items["IsAdmin"];
+#endif
         }
         public static bool IsStaff()
         {
-            #if DEBUG
-                return true;
-            #else
-                string aff = HttpContext.Current.Request.Headers["affiliation"];
-                return aff != null && aff.Split(new char[]
-                {
+#if DEBUG
+            return true;
+#else
+            string aff = HttpContext.Current.Request.Headers["affiliation"];
+            return aff != null && aff.Split(new char[]
+            {
                     ';'
-                }).Contains("staff");
-            #endif
+            }).Contains("staff");
+#endif
         }
         public static string GetEmail()
         {
-            #if DEBUG
-                return "flavio.mueller@fhnw.ch";
-            #else
-                string mail = HttpContext.Current.Request.Headers["mail"];
-                string result;
-                if (mail == null)
-                {
-                    result = null;
-                }
-                else
-                {
-                    result = mail.Trim().ToLowerInvariant();
-                }
-                return result;
-            #endif
+#if DEBUG
+            return "stephen.randles@fhnw.ch";
+#else
+            string mail = HttpContext.Current.Request.Headers["mail"];
+            string result;
+            if (mail == null)
+            {
+                result = null;
+            }
+            else
+            {
+                result = mail.Trim().ToLowerInvariant();
+            }
+            return result;
+#endif
         }
         public static string GetFirstName()
         {
-            #if DEBUG
-                return "Stephen";
-            #else
-                return HttpContext.Current.Request.Headers["givenName"];
-            #endif
+#if DEBUG
+            return "Stephen";
+#else
+            return HttpContext.Current.Request.Headers["givenName"];
+#endif
         }
         public static string GetLastName()
         {
-            #if DEBUG
-                return "Randles";
-            #else
-                return HttpContext.Current.Request.Headers["surname"];
-            #endif
+#if DEBUG
+            return "Randles";
+#else
+            return HttpContext.Current.Request.Headers["surname"];
+#endif
         }
         public static string GetPhoneNumber()
         {
@@ -76,34 +76,34 @@ namespace ProStudCreator
         }
         public static int? GetDepartmentId()
         {
-            #if DEBUG
+#if DEBUG
             return 0; // Department 0 = i4Ds
-            
-            #else
+
+#else
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
             Department dep = GetDepartment(orgUnitDn);
 
             if (dep == null) return null;
             else return dep.Id;
-            #endif
+#endif
         }
         public static string GetDepartmentName()
         {
-            #if DEBUG
+#if DEBUG
             return "i4Ds";
-            #else
+#else
 
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
             Department dep = GetDepartment(orgUnitDn);
 
             return (dep == null) ? null : dep.DepartmentName;
 
-            #endif
+#endif
         }
 
         public static string GetDebugInfo()
         {
-            return HttpContext.Current.Request.Headers["affiliation"] + ", "+ HttpContext.Current.Request.Headers["orgunit-dn"];
+            return HttpContext.Current.Request.Headers["affiliation"] + ", " + HttpContext.Current.Request.Headers["orgunit-dn"];
         }
 
         internal static string GetFullName()
@@ -132,6 +132,96 @@ namespace ProStudCreator
 
                 return dept;
             }
+        }
+
+        public static bool CanExportExcel()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanExportExcel"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanExportExcel"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canExportExcel ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanExportExcel"];
+#endif
+        }
+
+        public static bool CanPublishProject()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanPublishProject"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanPublishProject"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canPublishProject ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanPublishProject"];
+#endif
+        }
+
+        public static bool CanVisitAdminPage()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanVisitAdminPage"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanVisitAdminPage"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canVisitAdminPage ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanVisitAdminPage"];
+#endif
+        }
+
+        public static bool CanSeeAllProjectsInProgress()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanSeeAllProjectsInProgress"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanSeeAllProjectsInProgress"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeAllProjectsInProgress ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanSeeAllProjectsInProgress"];
+#endif
+        }
+
+        public static bool CanEditAllProjects()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanEditAllProjects"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanEditAllProjects"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeAllProjectsInProgress ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanEditAllProjects"];
+#endif
         }
 
     }

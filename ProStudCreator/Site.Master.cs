@@ -77,25 +77,23 @@ namespace ProStudCreator
             }
 
 
-            using (var db = new ProStudentCreatorDBDataContext())
-            {
-                NavAdmin.Visible = db.UserDepartmentMap.Any(u => u.email == ShibUser.GetEmail()) && db.UserDepartmentMap.Single(u => u.email == ShibUser.GetEmail()).canVisitAdminPage;
-            }
+            NavAdmin.Visible = ShibUser.CanVisitAdminPage();
 
-            var adminpage = new AdminPage();
-            var checktasks = adminpage.AllTasks();
 
-            if (checktasks.ToArray().Length != 0)
-            {
-                tasksToDo.Visible = true;
-            }
+            //var adminpage = new AdminPage();
+            //var checktasks = adminpage.AllTasks();
+
+            //if (checktasks.ToArray().Length != 0)
+            //{
+            //    tasksToDo.Visible = true;
+            //}
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            #if DEBUG
+#if DEBUG
             inDebugMode = true;
-            #endif
+#endif
         }
 
         private void Page_Error(object sender, EventArgs e)

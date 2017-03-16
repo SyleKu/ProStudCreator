@@ -57,7 +57,7 @@ namespace ProStudCreator
 
             //If the User can edit the Project after it has started
             canPostEdit =
-            (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+            (ShibUser.CanEditAllProjects() || ShibUser.GetEmail() == project.Advisor1Mail ||
              ShibUser.GetEmail() == project.Advisor2Mail);
 
             if (Page.IsPostBack) return;
@@ -480,7 +480,7 @@ namespace ProStudCreator
 
         public override bool CheckDeletePermissions(string folderPath)
         {
-            return (ShibUser.IsAdmin() || ShibUser.GetEmail() == project.Advisor1Mail ||
+            return (ShibUser.CanEditAllProjects() || ShibUser.GetEmail() == project.Advisor1Mail ||
                     ShibUser.GetEmail() == project.Advisor2Mail);
         }
 

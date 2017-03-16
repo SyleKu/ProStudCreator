@@ -185,7 +185,7 @@ namespace ProStudCreator
 
         public static bool UserCanEdit(this Project _p)
         {
-            return ShibUser.IsAdmin() || (_p.UserIsOwner() && (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected || _p.State == ProjectState.Submitted));
+            return ShibUser.CanEditAllProjects() || (_p.UserIsOwner() && (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected || _p.State == ProjectState.Submitted));
         }
 
         public static bool UserIsOwner(this Project _p)
@@ -195,18 +195,18 @@ namespace ProStudCreator
 
         public static bool UserCanPublish(this Project _p)
         {
-            return _p.State == ProjectState.Submitted && ShibUser.IsAdmin();
+            return _p.State == ProjectState.Submitted && ShibUser.CanPublishProject();
         }
 
         public static bool UserCanUnpublish(this Project _p)
         {
-            return _p.State == ProjectState.Published && ShibUser.IsAdmin();
+            return _p.State == ProjectState.Published && ShibUser.CanPublishProject();
         }
 
         public static bool UserCanReject(this Project _p)
         {
             return (_p.State == ProjectState.Submitted || _p.State == ProjectState.Published)
-                && ShibUser.IsAdmin();
+                && ShibUser.CanPublishProject();
         }
 
         public static bool UserCanSubmit(this Project _p)

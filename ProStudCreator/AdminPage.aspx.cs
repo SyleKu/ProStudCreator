@@ -41,11 +41,10 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (db.UserDepartmentMap.Any(u => u.email == ShibUser.GetEmail()))
+            if (ShibUser.CanVisitAdminPage())
             {
-                var user = db.UserDepartmentMap.Single(u => u.email == ShibUser.GetEmail());
-                DivProjectPublish.Visible = user.canPublishProject;
-                DivExcelExport.Visible = user.canExportExcel;
+                DivProjectPublish.Visible = ShibUser.CanPublishProject();
+                DivExcelExport.Visible = ShibUser.CanExportExcel();
 
                 projects = db.Projects.Select(i => i);
                 CheckProjects.DataSource =

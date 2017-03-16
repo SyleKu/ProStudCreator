@@ -4053,6 +4053,10 @@ namespace ProStudCreator
 		
 		private bool _canVisitAdminPage;
 		
+		private bool _canSeeAllProjectsInProgress;
+		
+		private bool _canEditAllProjects;
+		
 		private EntityRef<Department> _Department;
 		
     #region Extensibility Method Definitions
@@ -4069,6 +4073,10 @@ namespace ProStudCreator
     partial void OncanPublishProjectChanged();
     partial void OncanVisitAdminPageChanging(bool value);
     partial void OncanVisitAdminPageChanged();
+    partial void OncanSeeAllProjectsInProgressChanging(bool value);
+    partial void OncanSeeAllProjectsInProgressChanged();
+    partial void OncanEditAllProjectsChanging(bool value);
+    partial void OncanEditAllProjectsChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4177,6 +4185,46 @@ namespace ProStudCreator
 					this._canVisitAdminPage = value;
 					this.SendPropertyChanged("canVisitAdminPage");
 					this.OncanVisitAdminPageChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSeeAllProjectsInProgress", DbType="Bit NOT NULL")]
+		public bool canSeeAllProjectsInProgress
+		{
+			get
+			{
+				return this._canSeeAllProjectsInProgress;
+			}
+			set
+			{
+				if ((this._canSeeAllProjectsInProgress != value))
+				{
+					this.OncanSeeAllProjectsInProgressChanging(value);
+					this.SendPropertyChanging();
+					this._canSeeAllProjectsInProgress = value;
+					this.SendPropertyChanged("canSeeAllProjectsInProgress");
+					this.OncanSeeAllProjectsInProgressChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canEditAllProjects", DbType="Bit NOT NULL")]
+		public bool canEditAllProjects
+		{
+			get
+			{
+				return this._canEditAllProjects;
+			}
+			set
+			{
+				if ((this._canEditAllProjects != value))
+				{
+					this.OncanEditAllProjectsChanging(value);
+					this.SendPropertyChanging();
+					this._canEditAllProjects = value;
+					this.SendPropertyChanged("canEditAllProjects");
+					this.OncanEditAllProjectsChanged();
 				}
 			}
 		}

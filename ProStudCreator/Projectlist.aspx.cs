@@ -69,7 +69,7 @@ namespace ProStudCreator
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
             Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
 
-            if (!ShibUser.IsAdmin())
+            if (!ShibUser.CanSeeAllProjectsInProgress())
             {
                 var item = whichOwner.Items.FindByValue("NotOwnEdited");
                 if (item != null)
