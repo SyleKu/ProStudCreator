@@ -76,9 +76,10 @@ namespace ProStudCreator
                 return;
             }
 
-            if (!ShibUser.IsAdmin())
+
+            using (var db = new ProStudentCreatorDBDataContext())
             {
-                NavAdmin.Visible = false;
+                NavAdmin.Visible = db.UserDepartmentMap.Any(u => u.email == ShibUser.GetEmail()) && db.UserDepartmentMap.Single(u => u.email == ShibUser.GetEmail()).canVisitAdminPage;
             }
 
             var adminpage = new AdminPage();

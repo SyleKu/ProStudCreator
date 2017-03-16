@@ -8,8 +8,8 @@
       <Column Name="ShowDefenseOnInfoPage" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="IMVS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="i4DS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
-      <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMaps" ThisKey="Id" OtherKey="departmentId" Type="UserDepartmentMap" />
       <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
+      <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMap" ThisKey="Id" OtherKey="departmentId" Type="UserDepartmentMap" />
     </Type>
   </Table>
   <Table Name="dbo.ProjectTeamSize" Member="ProjectTeamSizes">
@@ -33,13 +33,6 @@
       <Association Name="ProjectType_Project" Member="Projects" ThisKey="Id" OtherKey="P1TypeId" Type="Project" />
       <Association Name="ProjectType_Project1" Member="Projects1" ThisKey="Id" OtherKey="P2TypeId" Type="Project" />
       <Association Name="ProjectType_Project2" Member="Project" ThisKey="Id" OtherKey="LogProjectTypeID" Type="Project" />
-    </Type>
-  </Table>
-  <Table Name="dbo.UserDepartmentMap" Member="UserDepartmentMaps">
-    <Type Name="UserDepartmentMap">
-      <Column Name="email" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="departmentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="departmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Experts" Member="Experts">
@@ -176,6 +169,16 @@
       <Column Name="FileName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="DeletedUser" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Association Name="Project_Attachements" Member="Project" ThisKey="ProjectId" OtherKey="Id" Type="Project" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserDepartmentMap" Member="UserDepartmentMap">
+    <Type Name="UserDepartmentMap">
+      <Column Name="email" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="departmentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="canExportExcel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="canPublishProject" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="canVisitAdminPage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="departmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

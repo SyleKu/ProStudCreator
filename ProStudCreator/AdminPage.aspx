@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="AdminPageContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="well newProjectSettings">
+    <div class="well newProjectSettings" runat="server" visible="False">
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Diese Seite ist noch in der Entwicklung!" ForeColor="red"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <asp:GridView ID="GVTasks" ItemType="ProStudCreator.ProjectSingleTask" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" Width="100%">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <asp:PlaceHolder ID="AdminView" runat="server">
-        <div class="well adminSettings">
+        <div class="well adminSettings" runat="server" id="DivProjectPublish">
             <h3>Projekte zur Freigabe</h3>
             <div class="well" style="background-color: #ffffff">
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick">
@@ -76,6 +76,28 @@
             </div>
         </div>
     </asp:PlaceHolder>
+    <div class="well newProjectSettings" runat="server" id="DivExcelExport">
+        <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export"></asp:Label>
+        <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
+            <div class="form-group">
+
+                <asp:Label runat="server" Text="Semester:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control col-sm-3 alignbottom "></asp:DropDownList>
+                </div>
+                <br />
+                <hr />
+                <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
+                    <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
+                    <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
+                </asp:RadioButtonList>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
+        </div>
+    </div>
     <div class="well newProjectSettings">
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Zusätzliche Informationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
@@ -110,28 +132,6 @@
                 <div class="col-sm-3"></div>
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine" target="_blank">Stunden und Semesterpläne</a></asp:Label>
             </div>
-        </div>
-    </div>
-    <div class="well newProjectSettings">
-        <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export"></asp:Label>
-        <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
-            <div class="form-group">
-
-                <asp:Label runat="server" Text="Semester:" CssClass="control-label col-sm-3"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control col-sm-3 alignbottom "></asp:DropDownList>
-                </div>
-                <br/>
-                <hr />
-                <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
-                    <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
-                    <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
-                </asp:RadioButtonList>
-            </div>
-        </div>
-        <div style="text-align: right;">
-            <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
         </div>
     </div>
 </asp:Content>

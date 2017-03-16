@@ -39,7 +39,7 @@ namespace ProStudCreator
         public static string GetEmail()
         {
             #if DEBUG
-                return "stephen.randles@fhnw.ch";
+                return "flavio.mueller@fhnw.ch";
             #else
                 string mail = HttpContext.Current.Request.Headers["mail"];
                 string result;
@@ -124,7 +124,7 @@ namespace ProStudCreator
                 {
                     // Check if user is specifically mapped to a department. If so, return that dept.
                     string userEmail = ShibUser.GetEmail();
-                    var userDeptMap = dbx.UserDepartmentMaps.SingleOrDefault(m => m.email == userEmail);
+                    var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.email == userEmail);
 
                     if (userDeptMap == null) return null;
                     else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.departmentId);

@@ -41,13 +41,12 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!ShibUser.IsAdmin())
+            if (db.UserDepartmentMap.Any(u => u.email == ShibUser.GetEmail()))
             {
-                Response.Redirect("error/AccessDenied.aspx");
-                Response.End();
-            }
-            else
-            {
+                var user = db.UserDepartmentMap.Single(u => u.email == ShibUser.GetEmail());
+                DivProjectPublish.Visible = user.canPublishProject;
+                DivExcelExport.Visible = user.canExportExcel;
+
                 projects = db.Projects.Select(i => i);
                 CheckProjects.DataSource =
                     from item in projects
@@ -58,6 +57,11 @@ namespace ProStudCreator
 
                 GVTasks.DataSource = AllTasks();
                 GVTasks.DataBind();
+            }
+            else
+            {
+                Response.Redirect("error/AccessDenied.aspx");
+                Response.End();
             }
         }
         private ProjectSingleElement getProjectSingleElement(Project i)
