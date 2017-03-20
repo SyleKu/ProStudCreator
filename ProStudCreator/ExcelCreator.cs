@@ -304,11 +304,13 @@ namespace ProStudCreator
         {
             var address = new StringBuilder();
             address.AppendLine(p.ClientCompany ?? "");
-            address.AppendLine("Abt:" + p.ClientAddressDepartment ?? "");
-            address.Append(p.ClientAddressTitle ?? "" + " ");
+            address.AppendLine(p.ClientAddressDepartment == null ? "": "Abt:" + p.ClientAddressDepartment);
+            address.Append(p.ClientAddressTitle ?? "");
+            address.Append(" ");
             address.AppendLine(p.ClientPerson ?? "");
             address.AppendLine(p.ClientAddressStreet ?? "");
-            address.Append(p.ClientAddressPostcode ?? "" + " ");
+            address.Append(p.ClientAddressPostcode ?? "");
+            address.Append(" ");
             address.AppendLine(p.ClientAddressCity ?? "");
 
             return address.ToString();
