@@ -45,28 +45,28 @@
             });
 
             // Textarea max. length checks
-            $("textarea[maxlength]").after(function () {
-                return '<span class="text-muted text-right"><span id="' + $(this).attr('id') + '_len">' + $(this).val().length + "</span> / " + $(this).attr('maxlength') + "</span>";
-            });
-            $("textarea[maxlength]").on("change paste keyup", function () {
+            //$("textarea[maxlength]").after(function () {
+            //    return '<span class="text-muted text-right"><span id="' + $(this).attr('id') + '_len">' + $(this).val().length + "</span> / " + $(this).attr('maxlength') + "</span>";
+            //});
+            //$("textarea[maxlength]").on("change paste keyup", function () {
 
-                var currLen = $(this).val().length;
-                var maxLen = $(this).attr('maxlength');
+            //    var currLen = $(this).val().length;
+            //    var maxLen = $(this).attr('maxlength');
 
-                var lengthDisp = $("#" + $(this).attr('id') + "_len");
-                if (currLen >= maxLen) {
-                    lengthDisp.parent().addClass("alert-warning");
-                } else {
-                    lengthDisp.parent().removeClass("alert-warning");
-                }
+            //    var lengthDisp = $("#" + $(this).attr('id') + "_len");
+            //    if (currLen >= maxLen) {
+            //        lengthDisp.parent().addClass("alert-warning");
+            //    } else {
+            //        lengthDisp.parent().removeClass("alert-warning");
+            //    }
 
-                lengthDisp.text(currLen);
+            //    lengthDisp.text(currLen);
 
-                // textarea maxlength is supported by all modern browsers. For archaic browsers, uncomment:
-                //if (currLen > maxLen) {
-                //    $(this).val( $(this).val().substring(0, maxLen) );
-                //}                
-            });
+            //    // textarea maxlength is supported by all modern browsers. For archaic browsers, uncomment:
+            //    //if (currLen > maxLen) {
+            //    //    $(this).val( $(this).val().substring(0, maxLen) );
+            //    //}                
+            //});
 
         });
         $(document).ready(function () {
@@ -219,7 +219,7 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">
@@ -247,26 +247,26 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
             <asp:UpdatePanel runat="server" UpdateMode="Conditional">
@@ -323,7 +323,6 @@
             <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
             <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
             <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-
             <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
         </div>
     </div>

@@ -124,10 +124,10 @@ namespace ProStudCreator
                 {
                     // Check if user is specifically mapped to a department. If so, return that dept.
                     string userEmail = ShibUser.GetEmail();
-                    var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.email == userEmail);
+                    var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
 
                     if (userDeptMap == null) return null;
-                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.departmentId);
+                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
                 }
 
                 return dept;
@@ -144,7 +144,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanExportExcel"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canExportExcel ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanExportExcel ==
                         true;
                 }
             }
@@ -162,7 +162,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanPublishProject"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canPublishProject ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanPublishProject ==
                         true;
                 }
             }
@@ -180,7 +180,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanVisitAdminPage"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canVisitAdminPage ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanVisitAdminPage ==
                         true;
                 }
             }
@@ -198,7 +198,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanSeeAllProjectsInProgress"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeAllProjectsInProgress ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanSeeAllProjectsInProgress ==
                         true;
                 }
             }
@@ -216,7 +216,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanEditAllProjects"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canEditAllProjects ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanEditAllProjects ==
                         true;
                 }
             }
@@ -234,7 +234,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanSubmitAllProjects"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSubmitAllProjects ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanSubmitAllProjects ==
                         true;
                 }
             }
@@ -252,7 +252,7 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanSeeCreationDetails"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeCreationDetails ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanSeeCreationDetails ==
                         true;
                 }
             }

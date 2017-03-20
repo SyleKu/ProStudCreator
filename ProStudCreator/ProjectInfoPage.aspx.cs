@@ -353,7 +353,7 @@ namespace ProStudCreator
 
             foreach (var billingStatus in allBillingstatuswhichShowForm)
             {
-                if (billingStatus.id == id)
+                if (billingStatus.Id == id)
                     return true;
             }
             return false;

@@ -342,7 +342,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_UserDepartmentMap", ThisKey="Id", OtherKey="departmentId")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_UserDepartmentMap", ThisKey="Id", OtherKey="DepartmentId")]
 		public EntitySet<UserDepartmentMap> UserDepartmentMap
 		{
 			get
@@ -1036,8 +1036,8 @@ namespace ProStudCreator
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
     partial void OnDisplayNameChanging(string value);
     partial void OnDisplayNameChanged();
     partial void OnShowAddressOnInfoPageChanging(bool value);
@@ -1051,7 +1051,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
+		public int Id
 		{
 			get
 			{
@@ -1061,11 +1061,11 @@ namespace ProStudCreator
 			{
 				if ((this._id != value))
 				{
-					this.OnidChanging(value);
+					this.OnIdChanging(value);
 					this.SendPropertyChanging();
 					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
 				}
 			}
 		}
@@ -1110,7 +1110,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_Projects", ThisKey="id", OtherKey="BillingStatusID")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_Projects", ThisKey="Id", OtherKey="BillingStatusID")]
 		public EntitySet<Project> Projects
 		{
 			get
@@ -2931,7 +2931,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_BillingStatus", ThisKey="BillingStatusID", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_BillingStatus", ThisKey="BillingStatusID", OtherKey="Id", IsForeignKey=true)]
 		public BillingStatus BillingStatus
 		{
 			get
@@ -2954,7 +2954,7 @@ namespace ProStudCreator
 					if ((value != null))
 					{
 						value.Projects.Add(this);
-						this._BillingStatusID = value.id;
+						this._BillingStatusID = value.Id;
 					}
 					else
 					{
@@ -3392,7 +3392,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="int", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -4043,23 +4043,23 @@ namespace ProStudCreator
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private string _email;
+		private string _Mail;
 		
-		private System.Nullable<int> _departmentId;
+		private System.Nullable<int> _DepartmentId;
 		
-		private bool _canExportExcel;
+		private bool _CanExportExcel;
 		
-		private bool _canPublishProject;
+		private bool _CanPublishProject;
 		
-		private bool _canVisitAdminPage;
+		private bool _CanVisitAdminPage;
 		
-		private bool _canSeeAllProjectsInProgress;
+		private bool _CanSeeAllProjectsInProgress;
 		
-		private bool _canEditAllProjects;
+		private bool _CanEditAllProjects;
 		
-		private bool _canSubmitAllProjects;
+		private bool _CanSubmitAllProjects;
 		
-		private bool _canSeeCreationDetails;
+		private bool _CanSeeCreationDetails;
 		
 		private EntityRef<Department> _Department;
 		
@@ -4067,24 +4067,24 @@ namespace ProStudCreator
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnemailChanging(string value);
-    partial void OnemailChanged();
-    partial void OndepartmentIdChanging(System.Nullable<int> value);
-    partial void OndepartmentIdChanged();
-    partial void OncanExportExcelChanging(bool value);
-    partial void OncanExportExcelChanged();
-    partial void OncanPublishProjectChanging(bool value);
-    partial void OncanPublishProjectChanged();
-    partial void OncanVisitAdminPageChanging(bool value);
-    partial void OncanVisitAdminPageChanged();
-    partial void OncanSeeAllProjectsInProgressChanging(bool value);
-    partial void OncanSeeAllProjectsInProgressChanged();
-    partial void OncanEditAllProjectsChanging(bool value);
-    partial void OncanEditAllProjectsChanged();
-    partial void OncanSubmitAllProjectsChanging(bool value);
-    partial void OncanSubmitAllProjectsChanged();
-    partial void OncanSeeCreationDetailsChanging(bool value);
-    partial void OncanSeeCreationDetailsChanged();
+    partial void OnMailChanging(string value);
+    partial void OnMailChanged();
+    partial void OnDepartmentIdChanging(System.Nullable<int> value);
+    partial void OnDepartmentIdChanged();
+    partial void OnCanExportExcelChanging(bool value);
+    partial void OnCanExportExcelChanged();
+    partial void OnCanPublishProjectChanging(bool value);
+    partial void OnCanPublishProjectChanged();
+    partial void OnCanVisitAdminPageChanging(bool value);
+    partial void OnCanVisitAdminPageChanged();
+    partial void OnCanSeeAllProjectsInProgressChanging(bool value);
+    partial void OnCanSeeAllProjectsInProgressChanged();
+    partial void OnCanEditAllProjectsChanging(bool value);
+    partial void OnCanEditAllProjectsChanged();
+    partial void OnCanSubmitAllProjectsChanging(bool value);
+    partial void OnCanSubmitAllProjectsChanged();
+    partial void OnCanSeeCreationDetailsChanging(bool value);
+    partial void OnCanSeeCreationDetailsChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4093,191 +4093,191 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string email
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mail", DbType="VarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Mail
 		{
 			get
 			{
-				return this._email;
+				return this._Mail;
 			}
 			set
 			{
-				if ((this._email != value))
+				if ((this._Mail != value))
 				{
-					this.OnemailChanging(value);
+					this.OnMailChanging(value);
 					this.SendPropertyChanging();
-					this._email = value;
-					this.SendPropertyChanged("email");
-					this.OnemailChanged();
+					this._Mail = value;
+					this.SendPropertyChanged("Mail");
+					this.OnMailChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_departmentId", DbType="Int")]
-		public System.Nullable<int> departmentId
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int")]
+		public System.Nullable<int> DepartmentId
 		{
 			get
 			{
-				return this._departmentId;
+				return this._DepartmentId;
 			}
 			set
 			{
-				if ((this._departmentId != value))
+				if ((this._DepartmentId != value))
 				{
 					if (this._Department.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.OndepartmentIdChanging(value);
+					this.OnDepartmentIdChanging(value);
 					this.SendPropertyChanging();
-					this._departmentId = value;
-					this.SendPropertyChanged("departmentId");
-					this.OndepartmentIdChanged();
+					this._DepartmentId = value;
+					this.SendPropertyChanged("DepartmentId");
+					this.OnDepartmentIdChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canExportExcel", DbType="Bit NOT NULL")]
-		public bool canExportExcel
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanExportExcel", DbType="Bit NOT NULL")]
+		public bool CanExportExcel
 		{
 			get
 			{
-				return this._canExportExcel;
+				return this._CanExportExcel;
 			}
 			set
 			{
-				if ((this._canExportExcel != value))
+				if ((this._CanExportExcel != value))
 				{
-					this.OncanExportExcelChanging(value);
+					this.OnCanExportExcelChanging(value);
 					this.SendPropertyChanging();
-					this._canExportExcel = value;
-					this.SendPropertyChanged("canExportExcel");
-					this.OncanExportExcelChanged();
+					this._CanExportExcel = value;
+					this.SendPropertyChanged("CanExportExcel");
+					this.OnCanExportExcelChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canPublishProject", DbType="Bit NOT NULL")]
-		public bool canPublishProject
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanPublishProject", DbType="Bit NOT NULL")]
+		public bool CanPublishProject
 		{
 			get
 			{
-				return this._canPublishProject;
+				return this._CanPublishProject;
 			}
 			set
 			{
-				if ((this._canPublishProject != value))
+				if ((this._CanPublishProject != value))
 				{
-					this.OncanPublishProjectChanging(value);
+					this.OnCanPublishProjectChanging(value);
 					this.SendPropertyChanging();
-					this._canPublishProject = value;
-					this.SendPropertyChanged("canPublishProject");
-					this.OncanPublishProjectChanged();
+					this._CanPublishProject = value;
+					this.SendPropertyChanged("CanPublishProject");
+					this.OnCanPublishProjectChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canVisitAdminPage", DbType="Bit NOT NULL")]
-		public bool canVisitAdminPage
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanVisitAdminPage", DbType="Bit NOT NULL")]
+		public bool CanVisitAdminPage
 		{
 			get
 			{
-				return this._canVisitAdminPage;
+				return this._CanVisitAdminPage;
 			}
 			set
 			{
-				if ((this._canVisitAdminPage != value))
+				if ((this._CanVisitAdminPage != value))
 				{
-					this.OncanVisitAdminPageChanging(value);
+					this.OnCanVisitAdminPageChanging(value);
 					this.SendPropertyChanging();
-					this._canVisitAdminPage = value;
-					this.SendPropertyChanged("canVisitAdminPage");
-					this.OncanVisitAdminPageChanged();
+					this._CanVisitAdminPage = value;
+					this.SendPropertyChanged("CanVisitAdminPage");
+					this.OnCanVisitAdminPageChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSeeAllProjectsInProgress", DbType="Bit NOT NULL")]
-		public bool canSeeAllProjectsInProgress
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanSeeAllProjectsInProgress", DbType="Bit NOT NULL")]
+		public bool CanSeeAllProjectsInProgress
 		{
 			get
 			{
-				return this._canSeeAllProjectsInProgress;
+				return this._CanSeeAllProjectsInProgress;
 			}
 			set
 			{
-				if ((this._canSeeAllProjectsInProgress != value))
+				if ((this._CanSeeAllProjectsInProgress != value))
 				{
-					this.OncanSeeAllProjectsInProgressChanging(value);
+					this.OnCanSeeAllProjectsInProgressChanging(value);
 					this.SendPropertyChanging();
-					this._canSeeAllProjectsInProgress = value;
-					this.SendPropertyChanged("canSeeAllProjectsInProgress");
-					this.OncanSeeAllProjectsInProgressChanged();
+					this._CanSeeAllProjectsInProgress = value;
+					this.SendPropertyChanged("CanSeeAllProjectsInProgress");
+					this.OnCanSeeAllProjectsInProgressChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canEditAllProjects", DbType="Bit NOT NULL")]
-		public bool canEditAllProjects
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanEditAllProjects", DbType="Bit NOT NULL")]
+		public bool CanEditAllProjects
 		{
 			get
 			{
-				return this._canEditAllProjects;
+				return this._CanEditAllProjects;
 			}
 			set
 			{
-				if ((this._canEditAllProjects != value))
+				if ((this._CanEditAllProjects != value))
 				{
-					this.OncanEditAllProjectsChanging(value);
+					this.OnCanEditAllProjectsChanging(value);
 					this.SendPropertyChanging();
-					this._canEditAllProjects = value;
-					this.SendPropertyChanged("canEditAllProjects");
-					this.OncanEditAllProjectsChanged();
+					this._CanEditAllProjects = value;
+					this.SendPropertyChanged("CanEditAllProjects");
+					this.OnCanEditAllProjectsChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSubmitAllProjects", DbType="Bit NOT NULL")]
-		public bool canSubmitAllProjects
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanSubmitAllProjects", DbType="Bit NOT NULL")]
+		public bool CanSubmitAllProjects
 		{
 			get
 			{
-				return this._canSubmitAllProjects;
+				return this._CanSubmitAllProjects;
 			}
 			set
 			{
-				if ((this._canSubmitAllProjects != value))
+				if ((this._CanSubmitAllProjects != value))
 				{
-					this.OncanSubmitAllProjectsChanging(value);
+					this.OnCanSubmitAllProjectsChanging(value);
 					this.SendPropertyChanging();
-					this._canSubmitAllProjects = value;
-					this.SendPropertyChanged("canSubmitAllProjects");
-					this.OncanSubmitAllProjectsChanged();
+					this._CanSubmitAllProjects = value;
+					this.SendPropertyChanged("CanSubmitAllProjects");
+					this.OnCanSubmitAllProjectsChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSeeCreationDetails", DbType="Bit NOT NULL")]
-		public bool canSeeCreationDetails
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanSeeCreationDetails", DbType="Bit NOT NULL")]
+		public bool CanSeeCreationDetails
 		{
 			get
 			{
-				return this._canSeeCreationDetails;
+				return this._CanSeeCreationDetails;
 			}
 			set
 			{
-				if ((this._canSeeCreationDetails != value))
+				if ((this._CanSeeCreationDetails != value))
 				{
-					this.OncanSeeCreationDetailsChanging(value);
+					this.OnCanSeeCreationDetailsChanging(value);
 					this.SendPropertyChanging();
-					this._canSeeCreationDetails = value;
-					this.SendPropertyChanged("canSeeCreationDetails");
-					this.OncanSeeCreationDetailsChanged();
+					this._CanSeeCreationDetails = value;
+					this.SendPropertyChanged("CanSeeCreationDetails");
+					this.OnCanSeeCreationDetailsChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_Department", ThisKey="departmentId", OtherKey="Id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_Department", ThisKey="DepartmentId", OtherKey="Id", IsForeignKey=true)]
 		public Department Department
 		{
 			get
@@ -4300,11 +4300,11 @@ namespace ProStudCreator
 					if ((value != null))
 					{
 						value.UserDepartmentMap.Add(this);
-						this._departmentId = value.Id;
+						this._DepartmentId = value.Id;
 					}
 					else
 					{
-						this._departmentId = default(Nullable<int>);
+						this._DepartmentId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Department");
 				}

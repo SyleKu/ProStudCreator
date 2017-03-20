@@ -60,11 +60,11 @@ namespace ProStudCreator
             {
                 // Fix for unsupported maxlength on multi-line in ASP.NET
                 // Note: Recursive search of all controls is possible but not worthwhile (yet)
-                InitialPositionContent.Attributes.Add("maxlength", InitialPositionContent.MaxLength.ToString());
-                ObjectivContent.Attributes.Add("maxlength", ObjectivContent.MaxLength.ToString());
-                ProblemStatementContent.Attributes.Add("maxlength", ProblemStatementContent.MaxLength.ToString());
-                ReferencesContent.Attributes.Add("maxlength", ReferencesContent.MaxLength.ToString());
-                RemarksContent.Attributes.Add("maxlength", RemarksContent.MaxLength.ToString());
+                //InitialPositionContent.Attributes.Add("maxlength", InitialPositionContent.MaxLength.ToString());
+                //ObjectivContent.Attributes.Add("maxlength", ObjectivContent.MaxLength.ToString());
+                //ProblemStatementContent.Attributes.Add("maxlength", ProblemStatementContent.MaxLength.ToString());
+                //ReferencesContent.Attributes.Add("maxlength", ReferencesContent.MaxLength.ToString());
+                //RemarksContent.Attributes.Add("maxlength", RemarksContent.MaxLength.ToString());
 
                 InitialPositionContent.Attributes.Add("placeholder", "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
                 ObjectivContent.Attributes.Add("placeholder", "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");

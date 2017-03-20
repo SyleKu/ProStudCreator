@@ -9,7 +9,7 @@
       <Column Name="IMVS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="i4DS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
-      <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMap" ThisKey="Id" OtherKey="departmentId" Type="UserDepartmentMap" />
+      <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMap" ThisKey="Id" OtherKey="DepartmentId" Type="UserDepartmentMap" />
     </Type>
   </Table>
   <Table Name="dbo.ProjectTeamSize" Member="ProjectTeamSizes">
@@ -46,10 +46,10 @@
   </Table>
   <Table Name="dbo.BillingStatus" Member="BillingStatus">
     <Type Name="BillingStatus">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="DisplayName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="ShowAddressOnInfoPage" Type="System.Boolean" DbType="bit" CanBeNull="false" />
-      <Association Name="BillingStatus_Project" Member="Projects" ThisKey="id" OtherKey="BillingStatusID" Type="Project" />
+      <Association Name="BillingStatus_Project" Member="Projects" ThisKey="Id" OtherKey="BillingStatusID" Type="Project" />
     </Type>
   </Table>
   <Table Name="dbo.Projects" Member="Projects">
@@ -125,7 +125,7 @@
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
-      <Association Name="BillingStatus_Project" Member="BillingStatus" ThisKey="BillingStatusID" OtherKey="id" Type="BillingStatus" IsForeignKey="true" />
+      <Association Name="BillingStatus_Project" Member="BillingStatus" ThisKey="BillingStatusID" OtherKey="Id" Type="BillingStatus" IsForeignKey="true" />
       <Association Name="Expert_Project" Member="Expert" ThisKey="LogExpertID" OtherKey="id" Type="Expert" IsForeignKey="true" />
       <Association Name="Project_Project" Member="Project1" ThisKey="PreviousProjectID" OtherKey="Id" Type="Project" IsForeignKey="true" />
       <Association Name="Department_Project" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
@@ -139,7 +139,7 @@
   </Table>
   <Table Name="" Member="Semester">
     <Type Name="Semester">
-      <Column Name="Id" AutoSync="OnInsert" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="StartDate" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
       <Column Name="EndDate" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
       <Column Name="ProjectSubmissionUntil" Storage="_ProjectSubmit" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
@@ -173,16 +173,16 @@
   </Table>
   <Table Name="dbo.UserDepartmentMap" Member="UserDepartmentMap">
     <Type Name="UserDepartmentMap">
-      <Column Name="email" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="departmentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="canExportExcel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canPublishProject" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canVisitAdminPage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canSeeAllProjectsInProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canEditAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="canSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="departmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
+      <Column Name="Mail" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DepartmentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CanExportExcel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanPublishProject" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanVisitAdminPage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanSeeAllProjectsInProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanEditAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
