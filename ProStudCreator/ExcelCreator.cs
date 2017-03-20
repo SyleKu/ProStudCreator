@@ -149,11 +149,18 @@ namespace ProStudCreator
             var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" +
                                                                          p.Department.DepartmentName +
                                                                          p.ProjectNr.ToString("D2");
+            var clientDepartment = string.IsNullOrEmpty(p.ClientAddressDepartment) || string.IsNullOrEmpty(p.ClientCompany)
+                ? ""
+                : p.ClientCompany + " Abt:" + p.ClientAddressDepartment;
+
+            var projectTitle = string.IsNullOrEmpty(p.ClientReferenceNumber)
+                ? p.Name
+                : p.Name + "\n Ihre Referenznr:" + p.ClientReferenceNumber;
 
             var i = 0;
             row.CreateCell(i++).SetCellValue(abbreviation);
             row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
-            row.CreateCell(i++).SetCellValue(p.Name);
+            row.CreateCell(i++).SetCellValue(projectTitle);
             var cell1 = row.CreateCell(i++);
             cell1.CellStyle = DateStyle;
             cell1.SetCellValue(GetStartDate(p, db));
@@ -202,7 +209,7 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.ClientAddressTitle ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientPerson ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientMail ?? "");
-            row.CreateCell(i++).SetCellValue(p.ClientAddressDepartment ?? "");
+            row.CreateCell(i++).SetCellValue(clientDepartment);
             row.CreateCell(i++).SetCellValue(p.ClientAddressStreet ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressPostcode ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressCity ?? "");
