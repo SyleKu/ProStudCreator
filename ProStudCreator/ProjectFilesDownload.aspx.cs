@@ -22,7 +22,7 @@ namespace ProStudCreator
 
             var attach = db.Attachements.Single(i => i.ProjectId == id && i.FileName == fileName && !i.Deleted);
 
-            if (!ShibUser.IsAuthenticated())
+            if (!ShibUser.IsAuthenticated(db))
             {
                 //throw new HttpException(403, "Nicht berechtigt");
                 Response.Redirect("error/AccessDenied.aspx");

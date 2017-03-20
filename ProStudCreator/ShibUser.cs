@@ -5,9 +5,9 @@ namespace ProStudCreator
 {
     public static class ShibUser
     {
-        public static bool IsAuthenticated()
+        public static bool IsAuthenticated(ProStudentCreatorDBDataContext db)
         {
-            return ShibUser.IsStaff() && ShibUser.GetDepartmentId().HasValue;
+            return ShibUser.IsStaff() && ShibUser.GetDepartmentId(db).HasValue;
         }
         public static bool IsAdmin()
         {
@@ -74,19 +74,33 @@ namespace ProStudCreator
         {
             return HttpContext.Current.Request.Headers["telephoneNumber"];
         }
-        public static int? GetDepartmentId()
+        public static int? GetDepartmentId(ProStudentCreatorDBDataContext db)
         {
 #if DEBUG
             return 0; // Department 0 = i4Ds
 
 #else
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
-            Department dep = GetDepartment(orgUnitDn);
+            Department dep = GetDepartment(orgUnitDn, db);
 
             if (dep == null) return null;
             else return dep.Id;
 #endif
         }
+        public static string GetDepartmentName(ProStudentCreatorDBDataContext db)
+        {
+#if DEBUG
+            return "i4Ds";
+#else
+
+            string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
+            Department dep = GetDepartment(orgUnitDn, db);
+
+            return (dep == null) ? null : dep.DepartmentName;
+
+#endif
+        }
+
         public static string GetDepartmentName()
         {
 #if DEBUG
@@ -111,26 +125,50 @@ namespace ProStudCreator
             return ShibUser.GetFirstName() + " " + ShibUser.GetLastName();
         }
 
-        //private static Department GetDepartment(string orgUnitDn, ProStudentCreatorDBDataContext dbx) 
-        //{
-        //    if (orgUnitDn == null) orgUnitDn = "";
+        private static Department GetDepartment(string orgUnitDn, ProStudentCreatorDBDataContext dbx)
+        {
+            if (orgUnitDn == null) orgUnitDn = "";
 
-        //    Department dept;
-        //    dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+            Department dept;
+            dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
 
-        //    if (dept == null)
-        //    {
-        //        // Check if user is specifically mapped to a department. If so, return that dept.
-        //        string userEmail = ShibUser.GetEmail();
-        //        var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
+            if (dept == null)
+            {
+                // Check if user is specifically mapped to a department. If so, return that dept.
+                string userEmail = ShibUser.GetEmail();
+                var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
 
-        //        if (userDeptMap == null) return null;
-        //        else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
-        //    }
+                if (userDeptMap == null) return null;
+                else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
+            }
 
-        //    return dept;
+            return dept;
 
-        //}
+        }
+
+        private static Department GetDepartment(string orgUnitDn)
+        {
+            if (orgUnitDn == null) orgUnitDn = "";
+
+            Department dept;
+            using (var dbx = new ProStudentCreatorDBDataContext())
+            {
+                dept =
+                    dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+
+                if (dept == null)
+                {
+                    // Check if user is specifically mapped to a department. If so, return that dept.
+                    string userEmail = ShibUser.GetEmail();
+                    var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
+
+                    if (userDeptMap == null) return null;
+                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
+                }
+
+                return dept;
+            }
+        }
 
         public static bool CanExportExcel()
         {

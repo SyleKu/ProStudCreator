@@ -86,7 +86,7 @@ namespace ProStudCreator
                 }, 1).Concat(db.ProjectTeamSizes);
 
                 Department.DataSource = db.Departments;
-                int? dep = ShibUser.GetDepartmentId();
+                int? dep = ShibUser.GetDepartmentId(db);
                 if (dep.HasValue)
                 {
                     Department.SelectedValue = dep.Value.ToString();

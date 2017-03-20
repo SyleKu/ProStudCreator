@@ -1,4 +1,6 @@
 ﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+<%@ Import Namespace="System.Activities.Expressions" %>
+<%@ Import Namespace="ProStudCreator" %>
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

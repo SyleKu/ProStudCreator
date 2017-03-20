@@ -135,7 +135,7 @@ namespace ProStudCreator
                         projects =
                             db.Projects.Where(
                                 p =>
-                                    p.DepartmentId == ShibUser.GetDepartmentId() &&
+                                    p.DepartmentId == ShibUser.GetDepartmentId(db) &&
                                     p.ModificationDate > lastSemStartDate && 
                                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
                     }
@@ -144,7 +144,7 @@ namespace ProStudCreator
                         projects =
                             db.Projects.Where(
                                 p =>
-                                    p.DepartmentId == ShibUser.GetDepartmentId() &&
+                                    p.DepartmentId == ShibUser.GetDepartmentId(db) &&
                                     p.ModificationDate > lastSemStartDate &&
                                     p.Semester.Id == int.Parse(Semester.SelectedValue) && 
                                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));

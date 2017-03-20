@@ -19,7 +19,7 @@ namespace ProStudCreator
 
             var idPDF = db.Projects.Single((Project i) => i.Id == id);
 
-            if (!(ShibUser.IsAuthenticated() || idPDF.State == ProjectState.Published))
+            if (!(ShibUser.IsAuthenticated(db) || idPDF.State == ProjectState.Published))
             {
                 //throw new HttpException(403, "Nicht berechtigt");
                 Response.Redirect("error/AccessDenied.aspx");

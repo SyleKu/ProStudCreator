@@ -12,7 +12,7 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             var db = new ProStudentCreatorDBDataContext();
-            var departmentId = ShibUser.GetDepartmentId();
+            var departmentId = ShibUser.GetDepartmentId(db);
             var department = db.Departments.Single(i => i.Id == departmentId);
 
             if (department.IMVS)

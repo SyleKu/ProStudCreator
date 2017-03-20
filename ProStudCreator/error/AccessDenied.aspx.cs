@@ -14,7 +14,7 @@ namespace ProStudCreator.error
         protected void Page_Load(object sender, EventArgs e)
         {
             errorMsg += "Login:\t" + (ShibUser.GetEmail() ?? "(Nicht verfübar)") + "\n";
-            errorMsg += "Abteilung: " + (ShibUser.GetDepartmentName() ?? "(Nicht verfübar)") + "\n";
+            errorMsg += "Abteilung: " + (ShibUser.GetDepartmentName(new ProStudentCreatorDBDataContext()) ?? "(Nicht verfübar)") + "\n";
         }
     }
 }

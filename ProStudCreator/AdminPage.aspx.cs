@@ -49,7 +49,7 @@ namespace ProStudCreator
                 projects = db.Projects.Select(i => i);
                 CheckProjects.DataSource =
                     from item in projects
-                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == ShibUser.GetDepartmentId()
+                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == ShibUser.GetDepartmentId(db)
                     select item into i
                     select getProjectSingleElement(i);
                 CheckProjects.DataBind();
