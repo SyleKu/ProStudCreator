@@ -6,6 +6,7 @@ using NPOI.SS.UserModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Text;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 
@@ -153,14 +154,10 @@ namespace ProStudCreator
                 ? ""
                 : p.ClientCompany + " Abt:" + p.ClientAddressDepartment;
 
-            var projectTitle = string.IsNullOrEmpty(p.ClientReferenceNumber)
-                ? p.Name
-                : p.Name + "\n Ihre Referenznr:" + p.ClientReferenceNumber;
-
             var i = 0;
             row.CreateCell(i++).SetCellValue(abbreviation);
             row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
-            row.CreateCell(i++).SetCellValue(projectTitle);
+            row.CreateCell(i++).SetCellValue(p.Name);
             var cell1 = row.CreateCell(i++);
             cell1.CellStyle = DateStyle;
             cell1.SetCellValue(GetStartDate(p, db));
@@ -214,6 +211,7 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.ClientAddressPostcode ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientAddressCity ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientReferenceNumber ?? "");
+            row.CreateCell(i++).SetCellValue(GetClientAddress(p));
         }
 
         private static readonly string[] MARKETING_HEADERS = new string[]
@@ -251,7 +249,8 @@ namespace ProStudCreator
             "Kunden-Strasse und Nummer",
             "Kunden-PLZ",
             "Kunden-Ort",
-            "Kunden-Referenznummer"
+            "Kunden-Referenznummer",
+            "Kunden-Adresse"
         };
 
         private static string GetLanguage(Project p)
@@ -298,13 +297,21 @@ namespace ProStudCreator
                                        p.Project1?.ProjectNr.ToString("D2");
         }
 
-        private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db)
+        private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db) => p.Semester?.StartDate ?? Semester.NextSemester(db).StartDate.Date;
+
+
+        private static string GetClientAddress(Project p)
         {
-            if (p.Semester?.StartDate == null)
-            {
-                return Semester.NextSemester(db).StartDate.Date;
-            }
-            return p.Semester.StartDate.Date;
+            var address = new StringBuilder();
+            address.AppendLine(p.ClientCompany ?? "");
+            address.AppendLine("Abt:" + p.ClientAddressDepartment ?? "");
+            address.Append(p.ClientAddressTitle ?? "" + " ");
+            address.AppendLine(p.ClientPerson ?? "");
+            address.AppendLine(p.ClientAddressStreet ?? "");
+            address.Append(p.ClientAddressPostcode ?? "" + " ");
+            address.AppendLine(p.ClientAddressCity ?? "");
+
+            return address.ToString();
         }
     }
 
