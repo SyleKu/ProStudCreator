@@ -111,28 +111,26 @@ namespace ProStudCreator
             return ShibUser.GetFirstName() + " " + ShibUser.GetLastName();
         }
 
-        private static Department GetDepartment(string orgUnitDn)
-        {
-            if (orgUnitDn == null) orgUnitDn = "";
+        //private static Department GetDepartment(string orgUnitDn, ProStudentCreatorDBDataContext dbx) 
+        //{
+        //    if (orgUnitDn == null) orgUnitDn = "";
 
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-            {
-                Department dept;
-                dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+        //    Department dept;
+        //    dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
 
-                if (dept == null)
-                {
-                    // Check if user is specifically mapped to a department. If so, return that dept.
-                    string userEmail = ShibUser.GetEmail();
-                    var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
+        //    if (dept == null)
+        //    {
+        //        // Check if user is specifically mapped to a department. If so, return that dept.
+        //        string userEmail = ShibUser.GetEmail();
+        //        var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
 
-                    if (userDeptMap == null) return null;
-                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
-                }
+        //        if (userDeptMap == null) return null;
+        //        else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
+        //    }
 
-                return dept;
-            }
-        }
+        //    return dept;
+
+        //}
 
         public static bool CanExportExcel()
         {
