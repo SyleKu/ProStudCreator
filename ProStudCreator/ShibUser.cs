@@ -216,11 +216,47 @@ namespace ProStudCreator
                 using (var db = new ProStudentCreatorDBDataContext())
                 {
                     HttpContext.Current.Items["CanEditAllProjects"] =
-                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeAllProjectsInProgress ==
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canEditAllProjects ==
                         true;
                 }
             }
             return (bool)HttpContext.Current.Items["CanEditAllProjects"];
+#endif
+        }
+
+        public static bool CanSubmitAllProjects()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanSubmitAllProjects"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanSubmitAllProjects"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSubmitAllProjects ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanSubmitAllProjects"];
+#endif
+        }
+
+        public static bool CanSeeCreationDetails()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanSeeCreationDetails"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanSeeCreationDetails"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.email == ShibUser.GetEmail())?.canSeeCreationDetails ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanSeeCreationDetails"];
 #endif
         }
 

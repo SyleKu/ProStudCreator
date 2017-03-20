@@ -112,7 +112,7 @@
                 <ContentTemplate>
                     <asp:PlaceHolder runat="server" ID="BillAddressPlaceholder">
                         <hr />
-                        <h3>KundenInformationen</h3>
+                        <h3>Kunden-Informationen</h3>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Unternehmen*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">

@@ -4057,6 +4057,10 @@ namespace ProStudCreator
 		
 		private bool _canEditAllProjects;
 		
+		private bool _canSubmitAllProjects;
+		
+		private bool _canSeeCreationDetails;
+		
 		private EntityRef<Department> _Department;
 		
     #region Extensibility Method Definitions
@@ -4077,6 +4081,10 @@ namespace ProStudCreator
     partial void OncanSeeAllProjectsInProgressChanged();
     partial void OncanEditAllProjectsChanging(bool value);
     partial void OncanEditAllProjectsChanged();
+    partial void OncanSubmitAllProjectsChanging(bool value);
+    partial void OncanSubmitAllProjectsChanged();
+    partial void OncanSeeCreationDetailsChanging(bool value);
+    partial void OncanSeeCreationDetailsChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4225,6 +4233,46 @@ namespace ProStudCreator
 					this._canEditAllProjects = value;
 					this.SendPropertyChanged("canEditAllProjects");
 					this.OncanEditAllProjectsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSubmitAllProjects", DbType="Bit NOT NULL")]
+		public bool canSubmitAllProjects
+		{
+			get
+			{
+				return this._canSubmitAllProjects;
+			}
+			set
+			{
+				if ((this._canSubmitAllProjects != value))
+				{
+					this.OncanSubmitAllProjectsChanging(value);
+					this.SendPropertyChanging();
+					this._canSubmitAllProjects = value;
+					this.SendPropertyChanged("canSubmitAllProjects");
+					this.OncanSubmitAllProjectsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_canSeeCreationDetails", DbType="Bit NOT NULL")]
+		public bool canSeeCreationDetails
+		{
+			get
+			{
+				return this._canSeeCreationDetails;
+			}
+			set
+			{
+				if ((this._canSeeCreationDetails != value))
+				{
+					this.OncanSeeCreationDetailsChanging(value);
+					this.SendPropertyChanging();
+					this._canSeeCreationDetails = value;
+					this.SendPropertyChanged("canSeeCreationDetails");
+					this.OncanSeeCreationDetailsChanged();
 				}
 			}
 		}

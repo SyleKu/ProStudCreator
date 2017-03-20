@@ -23,7 +23,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            AdminView.Visible = ShibUser.IsAdmin();
+            AdminView.Visible = ShibUser.CanSeeCreationDetails();
 
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
@@ -473,7 +473,7 @@ namespace ProStudCreator
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
-            if (!ShibUser.IsAdmin() && ShibUser.GetEmail() != project.Advisor1Mail)
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1Mail)
                 return "Nur Hauptbetreuer können Projekte einreichen.";
 
             if (project.Reservation1Mail != "" && project.Reservation1Name == "")

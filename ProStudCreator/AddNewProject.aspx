@@ -108,7 +108,7 @@
     </div>
     <div class="well newProjectSettings ">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
-        <asp:PlaceHolder ID="AdminView" runat="server" Visible="false">
+        <asp:PlaceHolder ID="AdminView" runat="server" Visible="True">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
         </asp:PlaceHolder>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
@@ -167,7 +167,7 @@
                         <% if (ProStudCreator.ShibUser.IsAdmin() || ProStudCreator.ShibUser.GetDepartmentName() == "IMVS")
                             { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="SE"     Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>
                     </div>
                     <asp:Timer runat="server" Interval="60000" />
@@ -176,7 +176,11 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control"><asp:ListItem Text="Deutsch oder Englisch" /><asp:ListItem Text="Nur Deutsch"/><asp:ListItem Text="Nur Englisch" /></asp:DropDownList>
+                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control">
+                        <asp:ListItem Text="Deutsch oder Englisch" />
+                        <asp:ListItem Text="Nur Deutsch" />
+                        <asp:ListItem Text="Nur Englisch" />
+                    </asp:DropDownList>
                 </div>
             </div>
             <div class="form-group">
@@ -221,7 +225,7 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label"/><small>(max. 1MB)</small>
+                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
@@ -233,12 +237,12 @@
                     <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
                 </div>
             </div>
-                <div class="form-group">
-                    <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
-                    <div class="col-md-9">
-                        <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="100"></asp:TextBox>
-                    </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
+                <div class="col-md-9">
+                    <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="100"></asp:TextBox>
                 </div>
+            </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>

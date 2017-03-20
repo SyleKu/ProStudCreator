@@ -180,7 +180,7 @@ namespace ProStudCreator
 
                 if (project.State == ProjectState.Published)
                 {
-                    if (!ShibUser.IsAdmin())
+                    if (!ShibUser.CanEditAllProjects())
                     {
                         e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
                         e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete

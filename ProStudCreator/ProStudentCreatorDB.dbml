@@ -180,6 +180,8 @@
       <Column Name="canVisitAdminPage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="canSeeAllProjectsInProgress" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="canEditAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="canSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="canSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="departmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
