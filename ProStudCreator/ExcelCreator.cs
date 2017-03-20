@@ -304,7 +304,10 @@ namespace ProStudCreator
         {
             var address = new StringBuilder();
             address.AppendLine(p.ClientCompany ?? "");
-            address.AppendLine(p.ClientAddressDepartment == null ? "": "Abt:" + p.ClientAddressDepartment);
+            if (!string.IsNullOrEmpty(p.ClientAddressDepartment))
+            {
+                address.AppendLine("Abt:" + p.ClientAddressDepartment);
+            }
             address.Append(p.ClientAddressTitle ?? "");
             address.Append(" ");
             address.AppendLine(p.ClientPerson ?? "");
