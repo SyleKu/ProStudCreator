@@ -124,14 +124,14 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Kunde (optional):"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="Employer" CssClass="form-control" placeholder="Unternehmen"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="Employer" CssClass="form-control" placeholder="Unternehmen" MaxLength="255"></asp:TextBox>
                 </div>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EmployerPerson" CssClass="form-control" placeholder="Vorname Nachname der Kontaktperson"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="EmployerPerson" CssClass="form-control" placeholder="Vorname Nachname der Kontaktperson" MaxLength="100"></asp:TextBox>
                     <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
                 </div>
                 <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EmployerMail" CssClass="form-control" placeholder="E-Mail des Kunden" TextMode="Email"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="EmployerMail" CssClass="form-control" placeholder="E-Mail des Kunden" TextMode="Email" MaxLength="100"></asp:TextBox>
                     <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
                 </div>
             </div>

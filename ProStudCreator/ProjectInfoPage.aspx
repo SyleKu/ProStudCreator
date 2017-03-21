@@ -24,7 +24,7 @@
             <div class="form-group" style="text-align: left">
                 <asp:Label runat="server" Text="Projektname:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-6">
-                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control maxWidth"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                 </div>
             </div>
             <hr />
@@ -116,7 +116,7 @@
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Unternehmen*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
@@ -131,37 +131,37 @@
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Vor- und Nachname*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientName" CssClass="form-control maxWidth"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientName" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Abteilung:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientDepartment" CssClass="form-control maxWidth" Placeholder="Falls vorhanden"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientDepartment" CssClass="form-control maxWidth" Placeholder="Falls vorhanden" MaxLength="50"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Strasse und Nummer*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientStreet" CssClass="form-control maxWidth"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientStreet" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="PLZ*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientPLZ" CssClass="form-control maxWidth"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientPLZ" CssClass="form-control maxWidth" MaxLength="10"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Ort*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientCity" CssClass="form-control maxWidth"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientCity" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Referenz des Kunden:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientReference" CssClass="form-control maxWidth" Placeholder="Falls vorhanden." ToolTip="z.B. Bestellnummer des Auftraggebers."></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtClientReference" CssClass="form-control maxWidth" Placeholder="Falls vorhanden." ToolTip="z.B. Bestellnummer des Auftraggebers." MaxLength="50"></asp:TextBox>
                             </div>
                         </div>
                         <h6>Mit * markierte Felder sind Pflichtfelder.</h6>
