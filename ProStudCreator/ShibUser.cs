@@ -7,12 +7,16 @@ namespace ProStudCreator
     {
         public static bool IsAuthenticated(ProStudentCreatorDBDataContext db)
         {
+#if DEBUG
+            return true;
+#else
             return ShibUser.IsStaff() && ShibUser.GetDepartmentId(db).HasValue;
+#endif
         }
         public static bool IsAdmin()
         {
 #if DEBUG
-            return false;
+            return true;
 #else
             if (HttpContext.Current.Items["IsAdmin"] == null)
             {

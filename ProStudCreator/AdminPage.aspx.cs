@@ -46,10 +46,12 @@ namespace ProStudCreator
                 DivProjectPublish.Visible = ShibUser.CanPublishProject();
                 DivExcelExport.Visible = ShibUser.CanExportExcel();
 
+                var depid = ShibUser.GetDepartmentId(db);
+
                 projects = db.Projects.Select(i => i);
                 CheckProjects.DataSource =
                     from item in projects
-                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == ShibUser.GetDepartmentId(db)
+                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == depid
                     select item into i
                     select getProjectSingleElement(i);
                 CheckProjects.DataBind();

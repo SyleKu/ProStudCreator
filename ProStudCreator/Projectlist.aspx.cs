@@ -129,13 +129,14 @@ namespace ProStudCreator
                     }
                     break;
                 case "NotOwnEdited":
+                    var depId = ShibUser.GetDepartmentId(db);
                     var lastSemStartDate = ProStudCreator.Semester.LastSemester(db).StartDate;
                     if (Semester.SelectedValue == "")
                     {
                         projects =
                             db.Projects.Where(
                                 p =>
-                                    p.DepartmentId == ShibUser.GetDepartmentId(db) &&
+                                    p.DepartmentId == depId &&
                                     p.ModificationDate > lastSemStartDate && 
                                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
                     }
@@ -144,7 +145,7 @@ namespace ProStudCreator
                         projects =
                             db.Projects.Where(
                                 p =>
-                                    p.DepartmentId == ShibUser.GetDepartmentId(db) &&
+                                    p.DepartmentId == depId &&
                                     p.ModificationDate > lastSemStartDate &&
                                     p.Semester.Id == int.Parse(Semester.SelectedValue) && 
                                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));

@@ -328,7 +328,8 @@ namespace ProStudCreator
 
             var linkStyle = new Font(_font);
             linkStyle.Color = BaseColor.BLUE;
-            linkStyle.SetStyle("underline");
+            linkStyle.SetStyle(Font.UNDERLINE);
+            linkStyle.Size = 8.1f;
 
             List currentList = null;
             var lines = _paragraph.Split('\n');
@@ -398,13 +399,14 @@ namespace ProStudCreator
 
                 foreach (var chk in currentLine.RecognizeURLs())
                 {
-                    var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);
+                    var c = new Chunk(chk.Text, chk.URL == null ? _font : linkStyle);               
                     if (_hyph != null)
                         c.SetHyphenation(_hyph);
 
                     if (chk.URL == null)
                         para.Add(c);
                     else
+                        //c.setLineHeight(-200);
                         para.Add(new Anchor(c) { Reference = chk.URL });
                 }
 
