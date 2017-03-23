@@ -681,14 +681,23 @@ namespace ProStudCreator
 
         private string JusitfyFileName(string FileName)
         {
+
+            var dir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(dir);
+
             try
             {
-                File.Create(Path.GetTempPath() + Path.PathSeparator + FileName);
-                File.Delete(Path.GetTempPath() + Path.PathSeparator + FileName);
-                return FileName;
+                var stream = File.Create(Path.Combine(dir, FileName));
+                stream.Dispose();
+
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
+                try
+                {
+                    File.Delete(Path.Combine(dir, FileName));
+                }
+                catch { }
 
                 if (Path.GetInvalidFileNameChars().Any(i => FileName.Contains(i)))
                 {
@@ -699,14 +708,24 @@ namespace ProStudCreator
                             FileName = FileName.Replace(invalidChar, '_');
                         }
                     }
-                    return FileName;
+                    return JusitfyFileName(FileName);
                 }
                 else
                 {
-                    return "_" + FileName;
+                    return JusitfyFileName("_" + FileName);
                 }
             }
+            finally
+            {
+                try
+                {
+                    File.Delete(Path.Combine(dir, FileName));
+                }
+                catch { }
+                Directory.Delete(dir, true);
+            }
 
+            return FileName;
         }
     }
 }
