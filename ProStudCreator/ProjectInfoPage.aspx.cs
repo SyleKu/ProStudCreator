@@ -499,7 +499,7 @@ namespace ProStudCreator
             var isDublication = false;
 
             //get All File to one Project out of the db
-            var allFiles = db.Attachements.Where(i => i.ProjectId == _id);
+            var allFiles = db.Attachements.Where(i => i.ProjectId == _id && !i.Deleted);
             foreach (var attachement in allFiles)
             {
                 if (attachement.FileName.Equals(justifiedFileName, StringComparison.InvariantCultureIgnoreCase))
@@ -515,7 +515,7 @@ namespace ProStudCreator
             }
 
 
-            var attach = CreateNewAttach(file);
+            var attach = CreateNewAttach(file, justifiedFileName);
             try
             {
                 SaveFileInDb(file, attach);
@@ -533,7 +533,7 @@ namespace ProStudCreator
 
         }
 
-        private Attachements CreateNewAttach(UploadedFile file)
+        private Attachements CreateNewAttach(UploadedFile file, string justifiedFileName)
         {
             var attach = new Attachements
             {
@@ -542,7 +542,7 @@ namespace ProStudCreator
                 UploadDate = DateTime.Now,
                 UploadSize = file.ContentLength,
                 ProjectAttachement = new Binary(new byte[0]),
-                FileName = file.FileName,
+                FileName = justifiedFileName,
             };
             db.Attachements.InsertOnSubmit(attach);
             db.SubmitChanges();
