@@ -88,6 +88,6 @@
             Der Auftraggeber. Die Studierenden müssen/sollen das direkt mit dem Auftraggeber abrechnen.
         </p>
         <h4>Was mache ich mit allen Unterlagen nach dem Ende der Arbeit?</h4>
-        <p><b>Neu:</b> Die Unterlagen kannst du auf dieser Plattform (Projektinfoseite) hochladen.<%--Bitte Aufbewahren, bis die Rekursfrist abgelaufen ist (30 Tage nach Notenbekanntgabe).--%></p>
+        <p><b>Neu: Die Unterlagen kannst du auf dieser Plattform (Projektinfoseite) hochladen.<%--Bitte Aufbewahren, bis die Rekursfrist abgelaufen ist (30 Tage nach Notenbekanntgabe).--%></b></p>
     </div>
 </asp:Content>

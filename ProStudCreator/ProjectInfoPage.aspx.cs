@@ -689,7 +689,6 @@ namespace ProStudCreator
             {
                 var stream = File.Create(Path.Combine(dir, FileName));
                 stream.Dispose();
-
             }
             catch (IOException)
             {
