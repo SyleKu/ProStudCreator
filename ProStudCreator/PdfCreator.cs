@@ -281,6 +281,7 @@ namespace ProStudCreator
             //
             var strComments = "";
             var strRemarks = "";
+            var strOneSem = "";
             if (proj.Remarks != "")
             {
                 strRemarks += proj.Remarks + "\n\n";
@@ -295,10 +296,10 @@ namespace ProStudCreator
 
             if (proj.DurationOneSemester && (proj.POneType.P6 || proj.PTwoType?.P6 == true))
             {
-                strComments += "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
+                strOneSem = "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
 
-            if (strComments.Length > 0 || strRemarks.Length > 0)
+            if (strComments.Length > 0 || strRemarks.Length > 0 || strOneSem.Length > 0)
             {
                 document.Add(new Paragraph("Bemerkungen", fontHeading)
                 {
@@ -312,6 +313,13 @@ namespace ProStudCreator
                     remarks.SpacingAfter = 1f;
                     remarks.SetLeading(0.0f, LINE_HEIGHT);
                     document.Add(remarks);
+                }
+                if (strOneSem.Length > 0)
+                {
+                    var oneSem = new Paragraph(strOneSem.ToString(), fontRegular);
+                    oneSem.SpacingAfter = 1f;
+                    oneSem.SetLeading(0.0f, LINE_HEIGHT);
+                    document.Add(oneSem);
                 }
                 if (strComments.Length > 0)
                 {
