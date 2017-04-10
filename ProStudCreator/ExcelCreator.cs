@@ -15,7 +15,7 @@ namespace ProStudCreator
     public class ExcelCreator
     {
         private static string SHEET_NAME = "Projects";
-        private static string MARKETING_SHEET_NAME = "Projekte";
+        private static string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
         private static readonly string[] HEADERS = new string[] {
                 "Abbreviation",
                 "Name",
@@ -102,10 +102,10 @@ namespace ProStudCreator
         }
 
 
-        public static void GenerationMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db)
+        public static void GenerationMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db, string semesterName)
         {
             var workbook = new XSSFWorkbook();
-            var worksheet = workbook.CreateSheet(MARKETING_SHEET_NAME);
+            var worksheet = workbook.CreateSheet(semesterName + MARKETING_SHEET_NAME);
 
 
             var HeaderStyle = workbook.CreateCellStyle();
