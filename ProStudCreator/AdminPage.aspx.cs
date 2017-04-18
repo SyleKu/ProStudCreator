@@ -210,7 +210,11 @@ namespace ProStudCreator
                 else
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "" && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == semesterId - 1))).OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
+                    var lastSemesterId = Semester.LastSemester(db).Id;
+                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published
+                    && i.LogStudent1Mail != null 
+                    && i.LogStudent1Mail != "" 
+                    && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == lastSemesterId))).OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
                 }
             }
 

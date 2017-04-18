@@ -212,6 +212,7 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.ClientAddressCity ?? "");
             row.CreateCell(i++).SetCellValue(p.ClientReferenceNumber ?? "");
             row.CreateCell(i++).SetCellValue(GetClientAddress(p));
+            row.CreateCell(i++).SetCellValue(p.Id);
         }
 
         private static readonly string[] MARKETING_HEADERS = new string[]
@@ -250,7 +251,8 @@ namespace ProStudCreator
             "Kunden-PLZ",
             "Kunden-Ort",
             "Kunden-Referenznummer",
-            "Kunden-Adresse"
+            "Kunden-Adresse",
+            "Interne DB-ID"
         };
 
         private static string GetLanguage(Project p)
