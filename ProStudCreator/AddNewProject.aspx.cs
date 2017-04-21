@@ -501,7 +501,6 @@ namespace ProStudCreator
         {
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
-            project.SemesterId = db.Semester.First(x => x.StartDate > DateTime.Now).Id;
             fillproject(project);
 
             db.SubmitChanges();

@@ -37,6 +37,8 @@ namespace ProStudCreator
             _p.PublishedDate = DateTime.Now;
             _p.ModificationDate = DateTime.Now;
             _p.State = ProjectState.Published;
+            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+                _p.SemesterId = dbx.Semester.OrderBy(x => x.StartDate).First(x => x.StartDate > DateTime.Now).Id;
         }
 
         /// <summary>
@@ -55,7 +57,6 @@ namespace ProStudCreator
         /// <param name="_p"></param>
         public static void GenerateProjectNr(this Project _p)
         {
-
             using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
             {
                 DateTime semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;

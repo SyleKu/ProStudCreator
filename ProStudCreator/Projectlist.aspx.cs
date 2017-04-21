@@ -61,6 +61,17 @@ namespace ProStudCreator
                 Session["whichSemester"] = Semester.SelectedValue;
             }
 
+            if(whichOwner.SelectedValue == "NotOwnEdited")
+            {
+                Semester.Enabled = false;
+                Semester.SelectedValue = "";
+            }
+            else
+            {
+                Semester.Enabled = true;
+            }
+
+
             AllProjects.DataSource =
                 from i in filterRelevantProjects(projects, (string)Session["listFilter"])
                 select getProjectSingleElement(i);
@@ -131,25 +142,10 @@ namespace ProStudCreator
                 case "NotOwnEdited":
                     var depId = ShibUser.GetDepartmentId(db);
                     var lastSemStartDate = ProStudCreator.Semester.LastSemester(db).StartDate;
-                    if (Semester.SelectedValue == "")
-                    {
-                        projects =
-                            db.Projects.Where(
-                                p =>
-                                    p.DepartmentId == depId &&
-                                    p.ModificationDate > lastSemStartDate && 
-                                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
-                    }
-                    else
-                    {
-                        projects =
-                            db.Projects.Where(
-                                p =>
-                                    p.DepartmentId == depId &&
-                                    p.ModificationDate > lastSemStartDate &&
-                                    p.Semester.Id == int.Parse(Semester.SelectedValue) && 
-                                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected));
-                    }
+                    projects = db.Projects.Where(p =>
+                                p.DepartmentId == depId &&
+                                p.ModificationDate > lastSemStartDate && 
+                                (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State==ProjectState.Submitted));
                     break;
             }
             return projects;
