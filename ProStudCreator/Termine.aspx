@@ -23,7 +23,7 @@
                 <%--<AlternatingRowStyle BackColor="White" />--%>
             </asp:GridView>
             <hr />
-            <p><b>Titeländerungen von Informatikprojekten sind bis 9 Wochen vor Abgabe möglich!</b></p>
+            <p><b>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</b></p>
             <br />
             <br />
             <a href="http://www.fhnw.ch/technik/medien-und-oeffentlichkeit/events/ausstellung-der-bachelor-abschlussarbeiten/Ausstellungsbroschre2016.pdf">Download Ausstellungsbroschüre</a>

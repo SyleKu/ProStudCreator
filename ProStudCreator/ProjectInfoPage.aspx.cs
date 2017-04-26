@@ -26,7 +26,6 @@ namespace ProStudCreator
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         private int? id;
         private Project project;
-        private DateTime today = DateTime.Now;
         private DateTime deliveryDate;
         private bool canPostEdit = false;
         public static bool OverRide = false;
@@ -202,7 +201,7 @@ namespace ProStudCreator
             txtClientReference.Text = project?.ClientReferenceNumber;
 
             //disable for the unauthorized Users
-            ProjectTitle.ReadOnly = !(canPostEdit && deliveryDate.AddDays(-63) < today);
+            ProjectTitle.ReadOnly = !(canPostEdit && DateTime.Now < deliveryDate.AddDays(-77));
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
                     nbrGradeStudent2.Enabled =
@@ -242,6 +241,7 @@ namespace ProStudCreator
             FileExplorer.FindControl("chkOverwrite").Visible = false;
         }
 
+        //TODO: refactor. A "Set*" method shouldn't return anything
         private DateTime SetDates()
         {
             DateTime dbDate;
@@ -253,7 +253,7 @@ namespace ProStudCreator
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
                     ? dbDate
                     : Semester.NextSemester(db).EndDate;
             }
@@ -265,7 +265,7 @@ namespace ProStudCreator
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
                     ? dbDate
                     : Semester.NextSemester(db).EndDate;
             }
@@ -275,7 +275,7 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Verteidigung:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
                     ? dbDate
                     : Semester.NextSemester(db).EndDate;
             }
@@ -285,7 +285,7 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Verteidigung:";
 
                 return DateTime.TryParseExact(project.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
                     ? dbDate
                     : Semester.NextSemester(db).EndDate;
             }
