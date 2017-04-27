@@ -201,7 +201,7 @@ namespace ProStudCreator
             txtClientReference.Text = project?.ClientReferenceNumber;
 
             //disable for the unauthorized Users
-            ProjectTitle.ReadOnly = !(canPostEdit && DateTime.Now < deliveryDate.AddDays(-77));
+            ProjectTitle.Enabled = canPostEdit && DateTime.Now < deliveryDate.AddDays(-77);
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
                     nbrGradeStudent2.Enabled =
