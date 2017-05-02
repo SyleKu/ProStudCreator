@@ -126,7 +126,7 @@ namespace ProStudCreator
             }
         }
 
-        public static DateTime GetSubmissionDate(this Project _p)
+        public static DateTime GetDeliveryDate(this Project _p)
         {
             using (var db = new ProStudentCreatorDBDataContext())
             {
@@ -168,6 +168,12 @@ namespace ProStudCreator
         }
 
 
+        public static bool CanEditTitle(this Project _p)
+        {
+           return DateTime.Now < _p.GetDeliveryDate().AddDays(-77);
+        }
+
+
         public static Semester GetEndSemester(this Project _p, ProStudentCreatorDBDataContext db)
         {
 
@@ -191,6 +197,11 @@ namespace ProStudCreator
         public static bool UserIsOwner(this Project _p)
         {
             return (_p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail());
+        }
+
+        public static bool UserCanEditAfterStart(this Project _p)
+        {
+            return (ShibUser.CanEditAllProjects() || _p.UserIsOwner());
         }
 
         public static bool UserCanPublish(this Project _p)

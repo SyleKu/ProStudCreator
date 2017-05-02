@@ -26,8 +26,7 @@ namespace ProStudCreator
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         private int? id;
         private Project project;
-        private DateTime deliveryDate;
-        private bool canPostEdit = false;
+        private bool userCanEditAfterStart = false;
         public static bool OverRide = false;
 
         private enum ProjectTypes
@@ -52,12 +51,7 @@ namespace ProStudCreator
                 Response.Redirect("Projectlist.aspx");
                 Response.End();
             }
-
-
-            //If the User can edit the Project after it has started
-            canPostEdit =
-            (ShibUser.CanEditAllProjects() || ShibUser.GetEmail() == project.Advisor1Mail ||
-             ShibUser.GetEmail() == project.Advisor2Mail);
+            
 
             if (Page.IsPostBack) return;
 
@@ -146,8 +140,8 @@ namespace ProStudCreator
                 lblProjectDuration.Text = "?";
             }
 
-            //Sets the DeliveryDate / dont call further up!
-            deliveryDate = SetDates();
+            //Sets the DeliveryInfos
+            SetProjectDeliveryLabels();
 
 
             //set the date of the EndPresentation
@@ -172,7 +166,7 @@ namespace ProStudCreator
             {
                 drpLogLanguage.SelectedValue = "0";
             }
-            drpLogLanguage.Items[0].Text = (canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
+            drpLogLanguage.Items[0].Text = (userCanEditAfterStart) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             //Set the Grades
             nbrGradeStudent1.Text = (project?.LogGradeStudent1 == null) ? "" : project?.LogGradeStudent1.Value.ToString("N1", CultureInfo.InvariantCulture);
@@ -187,7 +181,7 @@ namespace ProStudCreator
             //fill the Billingstatus dropdown with Data
             drpBillingstatus.DataSource = db.BillingStatus;
             drpBillingstatus.DataBind();
-            drpBillingstatus.Items.Insert(0, new ListItem((canPostEdit) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWithNeverWillBeGivenByTheDB"));
+            drpBillingstatus.Items.Insert(0, new ListItem((userCanEditAfterStart) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWithNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
 
             //Set the data from the addressform
@@ -201,13 +195,16 @@ namespace ProStudCreator
             txtClientReference.Text = project?.ClientReferenceNumber;
 
             //disable for the unauthorized Users
-            ProjectTitle.Enabled = canPostEdit && DateTime.Now < deliveryDate.AddDays(-77);
+            ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
+
+            var a = project.CanEditTitle();
+
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
                     nbrGradeStudent2.Enabled =
                         BtnSaveBetween.Enabled =
                             BtnSaveChanges.Enabled =
-                                drpBillingstatus.Enabled = canPostEdit;
+                                drpBillingstatus.Enabled = userCanEditAfterStart;
 
             //set the visibility
             if (project.Department.ShowDefenseOnInfoPage) //i4ds
@@ -226,7 +223,7 @@ namespace ProStudCreator
             divGradeStudent1.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name);
             divGradeStudent2.Visible = !string.IsNullOrEmpty(project?.LogStudent2Name);
 
-            BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && canPostEdit);
+            BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && userCanEditAfterStart);
 
             //FileExplorer settings
 
@@ -241,10 +238,8 @@ namespace ProStudCreator
             FileExplorer.FindControl("chkOverwrite").Visible = false;
         }
 
-        //TODO: refactor. A "Set*" method shouldn't return anything
-        private DateTime SetDates()
+        private void SetProjectDeliveryLabels()
         {
-            DateTime dbDate;
             if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP5) //IP5 Projekt Voll/TeilZeit
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5FullPartTime;
@@ -252,10 +247,6 @@ namespace ProStudCreator
                 ProjectEndPresentation.Text =
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
 
-                return DateTime.TryParseExact(project.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
-                    ? dbDate
-                    : Semester.NextSemester(db).EndDate;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 Berufsbegleitend
             {
@@ -263,38 +254,24 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
                 ProjectEndPresentation.Text =
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
-
-                return DateTime.TryParseExact(project.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
-                    ? dbDate
-                    : Semester.NextSemester(db).EndDate;
+                                
             }
             else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 Variante 1 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP6Normal;
                 lblProjectEndPresentation.Text = "Verteidigung:";
-
-                return DateTime.TryParseExact(project.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
-                    ? dbDate
-                    : Semester.NextSemester(db).EndDate;
+                
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 Variante 2 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP6Variant2;
                 lblProjectEndPresentation.Text = "Verteidigung:";
-
-                return DateTime.TryParseExact(project.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out dbDate)
-                    ? dbDate
-                    : Semester.NextSemester(db).EndDate;
             }
             else
             {
                 ProjectDelivery.Text = "?";
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
                 ProjectEndPresentation.Text = "?";
-                return Semester.NextSemester(db).EndDate;
             }
         }
 
@@ -330,7 +307,7 @@ namespace ProStudCreator
 
             if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWithNeverWillBeGivenByTheDB" ? 0 : int.Parse(drpBillingstatus.SelectedValue)))
             {
-                BillAddressPlaceholder.Visible = canPostEdit;
+                BillAddressPlaceholder.Visible = userCanEditAfterStart;
                 txtClientCompany.Text = project?.ClientCompany;
                 drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
                 txtClientName.Text = project?.ClientPerson;
@@ -367,7 +344,7 @@ namespace ProStudCreator
         private void SaveChanges(string redirectTo)
         {
             string validationMessage = null;
-            if (canPostEdit)
+            if (userCanEditAfterStart)
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
 
@@ -480,8 +457,7 @@ namespace ProStudCreator
 
         public override bool CheckDeletePermissions(string folderPath)
         {
-            return (ShibUser.CanEditAllProjects() || ShibUser.GetEmail() == project.Advisor1Mail ||
-                    ShibUser.GetEmail() == project.Advisor2Mail);
+            return (project.UserCanEditAfterStart());
         }
 
         public override bool CheckReadPermissions(string folderPath) => true;
