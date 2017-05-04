@@ -19,7 +19,7 @@
             <i>Hinweis: Plane bei der Einreichung genügend Zeit für Iterationen ein!</i>
         </p>--%>
         <div class="well" style="background-color: #ffffff">
-            <asp:GridView ID="AllEvents" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="True" AlternatingRowStyle-BackColor="#e7e7e7" Width="100%">
+            <asp:GridView ID="AllEvents" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="True" AlternatingRowStyle-BackColor="#e7e7e7" Width="100%" OnDataBound="AllEvents_DataBinding">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
             </asp:GridView>
             <hr />

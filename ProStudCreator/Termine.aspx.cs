@@ -104,5 +104,33 @@ namespace ProStudCreator
             }
             return table;
         }
+
+        protected void AllEvents_DataBinding(object sender, EventArgs e)
+        {
+            for (int i = 0; i < AllEvents.Rows.Count; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                    {
+                        if (j == 2)
+                        {
+                            AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(198, 244, 203);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                    {
+                        if (j == 2)
+                        {
+                            AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(218, 236, 220);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }
