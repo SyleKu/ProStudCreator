@@ -27,7 +27,7 @@
                     <li>Optional: <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                 </ul>
             </li>
-            <li>Titeländerungen können bis 4 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
+            <li>Titeländerungen können bis 11 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
             <li>Nur für FS-Projekte: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
             <li>Fülle nach der Projektabgabe den Bewertungsbogen aus.</li>

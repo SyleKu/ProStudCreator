@@ -197,8 +197,6 @@ namespace ProStudCreator
             //disable for the unauthorized Users
             ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
 
-            var a = project.CanEditTitle();
-
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
                     nbrGradeStudent2.Enabled =
