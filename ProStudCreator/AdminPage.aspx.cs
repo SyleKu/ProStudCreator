@@ -193,31 +193,47 @@ namespace ProStudCreator
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
+                    projectstoExport = db.Projects
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .OrderBy(i => i.Semester.Name)
+                        .ThenBy(i => i.Department.DepartmentName)
+                        .ThenBy(i => i.ProjectNr);
                 }
                 else
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    projectstoExport = db.Projects.Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
+                    projectstoExport = db.Projects
+                        .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .OrderBy(i => i.Semester.Name)
+                        .ThenBy(i => i.Department.DepartmentName)
+                        .ThenBy(i => i.ProjectNr);
                 }
             }
-            else //Projects which end in this Sem.
+            else if (radioProjectStart.SelectedValue == "EndingProjects") //Projects which end in this Sem.
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "").OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
+                    projectstoExport = db.Projects
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .OrderBy(i => i.Semester.Name)
+                        .ThenBy(i => i.Department.DepartmentName)
+                        .ThenBy(i => i.ProjectNr);
                 }
                 else
                 {
-                    var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    var lastSemesterId = Semester.LastSemester(db).Id;
-                    projectstoExport = db.Projects.Where(i => i.State == ProjectState.Published
-                    && i.LogStudent1Mail != null 
-                    && i.LogStudent1Mail != "" 
-                    && ((i.LogProjectDuration == 1 && i.SemesterId == semesterId) || (i.LogProjectDuration == 2 && i.SemesterId == lastSemesterId))).OrderBy(i => i.Semester.Name).ThenBy(i => i.Department.DepartmentName).ThenBy(i => i.ProjectNr);
+                    var selectedSemester = db.Semester.Single(s => s.Id == int.Parse(SelectedSemester.SelectedValue));
+                    var previousSemester = db.Semester.OrderByDescending(s => s.StartDate).FirstOrDefault(s => s.StartDate<selectedSemester.StartDate);
+                    projectstoExport = db.Projects
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != ""
+                                && ((i.LogProjectDuration == 1 && i.Semester == selectedSemester) || (i.LogProjectDuration == 2 && i.Semester == previousSemester)))
+                        .OrderBy(i => i.Semester.Name)
+                        .ThenBy(i => i.Department.DepartmentName)
+                        .ThenBy(i => i.ProjectNr);
                 }
             }
-
+            else
+                throw new Exception($"Unexpected selection: {radioProjectStart.SelectedIndex}");
+            
             //Response
             Response.Clear();
             Response.ContentType = "application/Excel";
