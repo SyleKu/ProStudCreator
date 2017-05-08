@@ -10,7 +10,7 @@
                 Projektvereinbarung mit den Studierenden besprochen und fixiert sein.
             </li>
             <li>Die Studierenden verfassen in den ersten Wochen eine Projektvereinbarung. Eine Vorlage dafür
-                existiert nicht. Die Projektvereinbarung umfasst etwa 1-2 Seiten und enthält folgende Punkte:
+                existiert nicht. Die Projektvereinbarung umfasst 1-2 Seiten und enthält folgende Punkte:
                 <ul>
                     <li>Wiedergabe der Ausgangslage und Aufgabenstellung in eigenen Worten</li>
                     <li>Vorgehen mit grobem Zeitplan und Meilensteinen</li>
@@ -28,19 +28,20 @@
                 </ul>
             </li>
             <li>Titeländerungen können bis 11 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
-            <li>Nur für FS-Projekte: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
+            <li>Nur für Projekte, die im Herbst abschliessen: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
-            <li>Fülle nach der Projektabgabe den Bewertungsbogen aus.</li>
-            <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten und interessierten Gästen. Beim IP5 ist die Schlusspräsentation nicht zwingend, wird aber empfohlen.</li>
-            <li>Notenbesprechung mit den Experten, ggf. Anpassung der Bewertung. Pro Student/-in soll eine
-                <i>individuelle</i> Note festgelegt werden.</li>
-            <li><strong>NEU: Auf der jeweiligen Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
-            <li>Im Idealfall machst Du noch eine Schlusssitzung.
-                Der Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
+            <li>IP5: Lasse die Studierenden ein Schlusspräsentation organisieren (Raum, Termin). Die Präsentation im IP5 wird verlangt, da sie der Vorbereitung auf die Schlusspräsentation und Verteidigung der Bachelorarbeit dient.<br />
+                IP6: Die Schlusspräsentation (Raum, Termin, Experte/-in) wird von uns organisiert. Details sind auf der Projekt-Infoseite ersichtlich.<br />
+            </li>
+            <li>Fülle nach der Projektabgabe den Bewertungsbogen (aus Schritt #1) aus.</li>
+            <li>Lade Kollegen und andere interessierte Gasthörer zur Schlusspräsentation ein.</li>
+            <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten (IP6) und interessierten Gästen.</li>
+            <li>Notenbesprechung mit den Experten (IP6), ggf. Anpassung der Bewertung. Pro Student/-in soll eine <i>individuelle</i> Note festgelegt werden.</li>
+            <li><strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
+            <li>Im Idealfall machst Du noch eine Schlusssitzung mit den Studierenden. Der Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
         </ol>
         <p>
-            <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei
-                uns. Je früher, desto besser.
+            <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei uns. Je früher, desto besser.
             </i>
         </p>
     </div>

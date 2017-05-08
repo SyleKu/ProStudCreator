@@ -17,10 +17,13 @@ namespace ProStudCreator
 
             if (department.IMVS)
             {
-                pDefenseOrganisation.InnerText = "Du bist für die Organisation des Experten und der Verteidigung verantwortlich.";
+                imvs1.Visible = true;
+                imvs2.Visible = true;
             }
             else if (department.i4DS)
             {
+                i4ds1.Visible = true;
+                i4ds2.Visible = true;
             }
             else
             {
