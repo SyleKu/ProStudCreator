@@ -55,6 +55,9 @@ namespace ProStudCreator
 
             if (Page.IsPostBack) return;
 
+            //All Admins or Owners
+            userCanEditAfterStart = project.UserCanEditAfterStart();
+
             //set the Semester if it isn't set already
             project.Semester = project.Semester ?? Semester.NextSemester(db);
 
