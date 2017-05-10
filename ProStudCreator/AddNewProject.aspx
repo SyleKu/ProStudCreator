@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+
 <%@ Import Namespace="System.Activities.Expressions" %>
 <%@ Import Namespace="ProStudCreator" %>
 
@@ -121,20 +122,28 @@
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Kunde (optional):"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="Employer" CssClass="form-control" placeholder="Unternehmen" MaxLength="255"></asp:TextBox>
-                </div>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EmployerPerson" CssClass="form-control" placeholder="Vorname Nachname der Kontaktperson" MaxLength="100"></asp:TextBox>
-                    <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
-                </div>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EmployerMail" CssClass="form-control" placeholder="E-Mail des Kunden" TextMode="Email" MaxLength="100"></asp:TextBox>
-                    <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
-                </div>
-            </div>
+            <asp:UpdatePanel UpdateMode="Conditional" runat="server" ID="updateClient">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
+                </Triggers>
+                <ContentTemplate>
+                    <div class="form-group">
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Kunde (optional):"></asp:Label>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="Employer" CssClass="form-control" placeholder="Unternehmen" MaxLength="255"></asp:TextBox>
+                        </div>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="EmployerPerson" CssClass="form-control" placeholder="Vorname Nachname der Kontaktperson" MaxLength="100"></asp:TextBox>
+                            <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
+                        </div>
+                        <div class="col-sm-3">
+                            <asp:TextBox runat="server" ID="EmployerMail" CssClass="form-control" placeholder="E-Mail des Kunden" TextMode="Email" MaxLength="100"></asp:TextBox>
+                            <small>Für interne, administrtative Zwecke (wird nicht Veröffentlicht)</small>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Betreuung:"></asp:Label>
                 <div class="col-sm-3">
@@ -186,9 +195,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Fortführung:"></asp:Label>
-                <div class="col-sm-6">
-                    <asp:CheckBox ID="continuation" CssClass="checkbox" Text="Dieses Projekt ist eine Fortführung eines früheren Projektes." runat="server" CausesValidation="true" />
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
                 </div>
             </div>
 
@@ -271,10 +280,11 @@
                     <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
-            <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updateReservation">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
                     <asp:AsyncPostBackTrigger ControlID="PTwoTeamSize" EventName="SelectedIndexChanged" />
+                    <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
                     <div class="form-group">

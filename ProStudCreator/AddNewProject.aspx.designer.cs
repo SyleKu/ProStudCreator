@@ -103,6 +103,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ProjectNameValidator;
         
         /// <summary>
+        /// updateClient control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updateClient;
+        
+        /// <summary>
         /// Employer control.
         /// </summary>
         /// <remarks>
@@ -247,13 +256,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList Language;
         
         /// <summary>
-        /// continuation control.
+        /// dropPreviousProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox continuation;
+        protected global::System.Web.UI.WebControls.DropDownList dropPreviousProject;
         
         /// <summary>
         /// DurationOneSemester control.
@@ -398,6 +407,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox RemarksContent;
+        
+        /// <summary>
+        /// updateReservation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updateReservation;
         
         /// <summary>
         /// Reservation1Name control.

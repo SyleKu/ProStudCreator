@@ -38,12 +38,12 @@ namespace ProStudCreator
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            Semester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
-            Semester.DataBind();
+            dropSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
+            dropSemester.DataBind();
             var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
-            Semester.SelectedValue = currentSemester.ToString();
-            Semester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
-            Semester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
+            dropSemester.SelectedValue = currentSemester.ToString();
+            dropSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
+            dropSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -53,22 +53,22 @@ namespace ProStudCreator
             if (!base.IsPostBack && Session["listFilter"] != null)
             {
                 whichOwner.SelectedValue = (string)Session["listFilter"];
-                Semester.SelectedValue = (string)Session["whichSemester"];
+                dropSemester.SelectedValue = (string)Session["whichSemester"];
             }
             else
             {
                 Session["listFilter"] = whichOwner.SelectedValue;
-                Session["whichSemester"] = Semester.SelectedValue;
+                Session["whichSemester"] = dropSemester.SelectedValue;
             }
 
             if(whichOwner.SelectedValue == "NotOwnEdited")
             {
-                Semester.Enabled = false;
-                Semester.SelectedValue = "";
+                dropSemester.Enabled = false;
+                dropSemester.SelectedValue = "";
             }
             else
             {
-                Semester.Enabled = true;
+                dropSemester.Enabled = true;
             }
 
 
@@ -78,7 +78,7 @@ namespace ProStudCreator
             AllProjects.DataBind();
 
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
-            Semester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
+            dropSemester.Items.FindByValue(".").Attributes.Add("disabled", "disabled");
 
             if (!ShibUser.CanSeeAllProjectsInProgress())
             {
@@ -101,7 +101,7 @@ namespace ProStudCreator
             switch (filter)
             {
                 case "OwnProjects":
-                    if (Semester.SelectedValue == "")
+                    if (dropSemester.SelectedValue == "")
                     {
                         projects =
                             from p in projects
@@ -111,18 +111,18 @@ namespace ProStudCreator
                     }
                     else
                     {
-                        var nextSemesterSelected = int.Parse(Semester.SelectedValue) == ProStudCreator.Semester.NextSemester(db).Id;
+                        var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) == ProStudCreator.Semester.NextSemester(db).Id;
                         projects =
                             from p in projects
                             where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
                                 && (p.State != ProjectState.Deleted)
-                                && (((p.Semester.Id == int.Parse(Semester.SelectedValue) && p.State == ProjectState.Published) || nextSemesterSelected && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && nextSemesterSelected))
+                                && (((p.Semester.Id == int.Parse(dropSemester.SelectedValue) && p.State == ProjectState.Published) || nextSemesterSelected && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && nextSemesterSelected))
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
                     break;
                 case "AllProjects":
-                    if (Semester.SelectedValue == "")
+                    if (dropSemester.SelectedValue == "")
                     {
                         projects =
                             from p in projects
@@ -134,7 +134,7 @@ namespace ProStudCreator
                     {
                         projects =
                             from p in projects
-                            where p.State == ProjectState.Published && p.Semester.Id == int.Parse(Semester.SelectedValue)
+                            where p.State == ProjectState.Published && p.Semester.Id == int.Parse(dropSemester.SelectedValue)
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
