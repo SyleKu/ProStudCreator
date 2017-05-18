@@ -506,9 +506,7 @@ namespace ProStudCreator
             db.SubmitChanges();
 
             project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
-            db.SubmitChanges();
-
-            project.Publish();
+            project.Publish(db);
             db.SubmitChanges();
 
 #if !DEBUG

@@ -32,13 +32,12 @@ namespace ProStudCreator
         /// Publishes a project after submission. Admin only.
         /// </summary>
         /// <param name="_p"></param>
-        public static void Publish(this Project _p)
+        public static void Publish(this Project _p, ProStudentCreatorDBDataContext _dbx)
         {
             _p.PublishedDate = DateTime.Now;
             _p.ModificationDate = DateTime.Now;
             _p.State = ProjectState.Published;
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
-                _p.SemesterId = dbx.Semester.OrderBy(x => x.StartDate).First(x => x.StartDate > DateTime.Now).Id;
+            _p.Semester = _dbx.Semester.OrderBy(x => x.StartDate).First(x => x.StartDate > DateTime.Now);
         }
 
         /// <summary>
