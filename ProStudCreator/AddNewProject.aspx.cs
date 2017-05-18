@@ -113,10 +113,27 @@ namespace ProStudCreator
                 {
                     Page.Title = "Neues Projekt";
                     SiteTitle.Text = "Neues Projekt anlegen";
+
+                    fillDropPreviousProject();
+                    dropPreviousProject.SelectedIndex = 0;
+
                 }
 
                 toggleReservationTwoVisible();
             }
+
+        }
+
+        private void fillDropPreviousProject()
+        {
+            var currSemId = Semester.CurrentSemester(db).Id;
+            var lastSemId = Semester.LastSemester(db).Id;
+            dropPreviousProject.DataSource = db.Projects.Where(p =>
+                                        (p.LogProjectType.P5 && !p.LogProjectType.P6)
+                                        && p.State == ProjectState.Published
+                                        && (p.SemesterId == currSemId || (p.SemesterId == lastSemId && p.LogProjectDuration == 2)));
+            dropPreviousProject.DataBind();
+            dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
         }
 
         private void RetrieveProjectToEdit()
@@ -195,8 +212,6 @@ namespace ProStudCreator
             //LanguageGerman.Checked = project.LanguageGerman;
             //LanguageEnglish.Checked = project.LanguageEnglish;
 
-            continuation.Checked = project.IsContinuation;
-
             DurationOneSemester.Checked = project.DurationOneSemester;
 
             InitialPositionContent.Text = project.InitialPosition;
@@ -231,6 +246,25 @@ namespace ProStudCreator
             publishProject.Visible = project.UserCanPublish();
             refuseProject.Visible = project.UserCanReject();
             rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
+
+            fillDropPreviousProject();
+            dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ?? "dropPreviousProjectImpossibleValue";
+
+
+            if (project.PreviousProjectID != null)
+            {
+                Reservation1Mail.Enabled = false;
+                Reservation1Name.Enabled = false;
+                Reservation2Mail.Enabled = false;
+                Reservation2Name.Enabled = false;
+            }
+            else
+            {
+                Reservation1Mail.Enabled = true;
+                Reservation1Name.Enabled = true;
+                Reservation2Mail.Enabled = true;
+                Reservation2Name.Enabled = true;
+            }
         }
 
 
@@ -606,6 +640,33 @@ namespace ProStudCreator
             toggleReservationTwoVisible();
         }
 
+        protected void dropPreviousProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (dropPreviousProject.SelectedValue == "dropPreviousProjectImpossibleValue")
+            {
+                enableReservation(true);
+                Reservation1Mail.Text = "";
+                Reservation2Mail.Text = "";
+                Reservation1Name.Text = "";
+                Reservation2Name.Text = "";
+            }
+            else
+            {
+                enableReservation(false);
+                var previousProject = db.Projects.Single(p => p.Id == int.Parse(dropPreviousProject.SelectedValue));
+                Employer.Text = (string.IsNullOrEmpty(Employer.Text)) ? previousProject.ClientCompany: Employer.Text;
+                EmployerMail.Text = (string.IsNullOrEmpty(EmployerMail.Text))? previousProject.ClientMail : EmployerMail.Text;
+                EmployerPerson.Text = (string.IsNullOrEmpty(EmployerPerson.Text)) ? previousProject.ClientPerson : EmployerPerson.Text;
+                Reservation1Mail.Text = previousProject.LogStudent1Mail;
+                Reservation2Mail.Text = previousProject.LogStudent2Mail;
+                Reservation1Name.Text = previousProject.LogStudent1Name;
+                Reservation2Name.Text = previousProject.LogStudent2Name;
+
+            }
+            updateReservation.Update();
+            updateClient.Update();
+        }
+
         #endregion
 
         #region Timer tick
@@ -631,8 +692,8 @@ namespace ProStudCreator
         }
         #endregion
 
-        #region fillproject
-        public void fillproject(Project project)
+        #region private methods
+        private void fillproject(Project project)
         {
             project.Name = ProjectName.Text.FixupParagraph();
             project.ClientCompany = Employer.Text.FixupParagraph();
@@ -678,9 +739,6 @@ namespace ProStudCreator
 
             //project.LanguageGerman = LanguageGerman.Checked;
             //project.LanguageEnglish = LanguageEnglish.Checked;
-
-            // continuation
-            project.IsContinuation = continuation.Checked;
 
             // Duration
             project.DurationOneSemester = DurationOneSemester.Checked;
@@ -769,6 +827,39 @@ namespace ProStudCreator
                     project.Picture = new Binary(data);
                 }
             }
+
+
+            //Previous Project
+
+            if (dropPreviousProject.SelectedValue == "dropPreviousProjectImpossibleValue")
+            {
+                project.PreviousProjectID = null;
+            }
+            else
+            {
+                var previousProjectId = int.Parse(dropPreviousProject.SelectedValue);
+                project.Project1 = db.Projects.Single(p => p.Id == previousProjectId);
+
+                project.ClientMail = (string.IsNullOrEmpty(project.ClientMail)) ? project.Project1.ClientMail : project.ClientMail;
+                project.ClientPerson = (string.IsNullOrEmpty(project.ClientPerson)) ? project.Project1.ClientPerson : project.ClientPerson;
+                project.ClientAddressTitle = (string.IsNullOrEmpty(project.ClientAddressTitle)) ? project.Project1.ClientAddressTitle : project.ClientAddressTitle;
+                project.ClientCompany = (string.IsNullOrEmpty(project.ClientCompany)) ? project.Project1.ClientCompany : project.ClientCompany;
+                project.ClientReferenceNumber = (string.IsNullOrEmpty(project.ClientReferenceNumber)) ? project.Project1.ClientReferenceNumber : project.ClientReferenceNumber;
+                project.ClientAddressCity = (string.IsNullOrEmpty(project.ClientAddressCity)) ? project.Project1.ClientAddressCity : project.ClientAddressCity;
+                project.ClientAddressDepartment = (string.IsNullOrEmpty(project.ClientAddressDepartment)) ? project.Project1.ClientAddressDepartment : project.ClientAddressDepartment;
+                project.ClientAddressPostcode = (string.IsNullOrEmpty(project.ClientAddressPostcode)) ? project.Project1.ClientAddressPostcode : project.ClientAddressPostcode;
+                project.ClientAddressStreet = (string.IsNullOrEmpty(project.ClientAddressStreet)) ? project.Project1.ClientAddressStreet : project.ClientAddressStreet;
+
+            }
+
+        }
+
+        private void enableReservation(bool enable)
+        {
+            Reservation1Name.Enabled =
+                Reservation1Mail.Enabled = 
+                    Reservation2Mail.Enabled = 
+                        Reservation2Name.Enabled = enable;
         }
     }
 }

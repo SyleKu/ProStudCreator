@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well usernSettings">
         <div class="col-sm-3">
-            <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="Semester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
+            <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="dropSemester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
         </div>
         <div class="col-sm-1"></div>
         <div class="radioButtonSettings marginProject">

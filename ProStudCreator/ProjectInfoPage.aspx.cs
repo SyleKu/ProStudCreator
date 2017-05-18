@@ -55,6 +55,9 @@ namespace ProStudCreator
 
             if (Page.IsPostBack) return;
 
+            //All Admins or Owners
+            userCanEditAfterStart = project.UserCanEditAfterStart();
+
             //set the Semester if it isn't set already
             project.Semester = project.Semester ?? Semester.NextSemester(db);
 
@@ -181,8 +184,8 @@ namespace ProStudCreator
             //fill the Billingstatus dropdown with Data
             drpBillingstatus.DataSource = db.BillingStatus;
             drpBillingstatus.DataBind();
-            drpBillingstatus.Items.Insert(0, new ListItem((userCanEditAfterStart) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWithNeverWillBeGivenByTheDB"));
-            drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWithNeverWillBeGivenByTheDB";
+            drpBillingstatus.Items.Insert(0, new ListItem((userCanEditAfterStart) ? "(Bitte Auswählen)" : "Noch nicht eingetragen", "ValueWhichNeverWillBeGivenByTheDB"));
+            drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWhichNeverWillBeGivenByTheDB";
 
             //Set the data from the addressform
             txtClientCompany.Text = project?.ClientCompany;
@@ -303,7 +306,9 @@ namespace ProStudCreator
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
 
-            if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWithNeverWillBeGivenByTheDB" ? 0 : int.Parse(drpBillingstatus.SelectedValue)))
+            userCanEditAfterStart = project.UserCanEditAfterStart();
+
+            if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWhichNeverWillBeGivenByTheDB" ? 0 : int.Parse(drpBillingstatus.SelectedValue)))
             {
                 BillAddressPlaceholder.Visible = userCanEditAfterStart;
                 txtClientCompany.Text = project?.ClientCompany;
@@ -341,6 +346,8 @@ namespace ProStudCreator
 
         private void SaveChanges(string redirectTo)
         {
+            userCanEditAfterStart = project.UserCanEditAfterStart();
+
             string validationMessage = null;
             if (userCanEditAfterStart)
             {
