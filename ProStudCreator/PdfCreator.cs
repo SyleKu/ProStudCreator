@@ -294,7 +294,7 @@ namespace ProStudCreator
                 strComments += " reserviert.\n";
             }
 
-            if (proj.DurationOneSemester && (proj.POneType.P6 || proj.PTwoType?.P6 == true))
+            if (proj.DurationOneSemester)
             {
                 strOneSem = "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
