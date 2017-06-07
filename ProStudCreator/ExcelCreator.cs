@@ -102,7 +102,7 @@ namespace ProStudCreator
         }
 
 
-        public static void GenerationMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db, string semesterName)
+        public static void GenerateMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db, string semesterName)
         {
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(semesterName + MARKETING_SHEET_NAME);

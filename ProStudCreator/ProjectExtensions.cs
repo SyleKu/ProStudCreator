@@ -171,7 +171,7 @@ namespace ProStudCreator
         {
            return DateTime.Now < _p.GetDeliveryDate().AddDays(
                -11*7 /* 11 weeks before delivery date */
-               +3 /* give some leeway */);
+               +2 /* give some leeway */);
         }
 
 

@@ -188,12 +188,12 @@ namespace ProStudCreator
 
         protected void btnMarketingExport_OnClick(object sender, EventArgs e)
         {
-            IEnumerable<Project> projectstoExport = null;
+            IEnumerable<Project> projectsToExport = null;
             if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects
+                    projectsToExport = db.Projects
                         .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -202,7 +202,7 @@ namespace ProStudCreator
                 else
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
-                    projectstoExport = db.Projects
+                    projectsToExport = db.Projects
                         .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -213,7 +213,7 @@ namespace ProStudCreator
             {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
-                    projectstoExport = db.Projects
+                    projectsToExport = db.Projects
                         .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -223,7 +223,7 @@ namespace ProStudCreator
                 {
                     var selectedSemester = db.Semester.Single(s => s.Id == int.Parse(SelectedSemester.SelectedValue));
                     var previousSemester = db.Semester.OrderByDescending(s => s.StartDate).FirstOrDefault(s => s.StartDate<selectedSemester.StartDate);
-                    projectstoExport = db.Projects
+                    projectsToExport = db.Projects
                         .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != ""
                                 && ((i.LogProjectDuration == 1 && i.Semester == selectedSemester) || (i.LogProjectDuration == 2 && i.Semester == previousSemester)))
                         .OrderBy(i => i.Semester.Name)
@@ -238,7 +238,7 @@ namespace ProStudCreator
             Response.Clear();
             Response.ContentType = "application/Excel";
             Response.AddHeader("content-disposition", $"attachment; filename={SelectedSemester.SelectedItem.Text}_IP56_Informatikprojekte.xlsx");
-            ExcelCreator.GenerationMarketingList(Response.OutputStream, projectstoExport, db, SelectedSemester.SelectedItem.Text);
+            ExcelCreator.GenerateMarketingList(Response.OutputStream, projectsToExport, db, SelectedSemester.SelectedItem.Text);
             Response.End();
         }
     }

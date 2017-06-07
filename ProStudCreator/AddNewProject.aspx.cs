@@ -594,6 +594,7 @@ namespace ProStudCreator
             if (project.Advisor2Mail!=null && project.Advisor2Mail.IsValidEmail() && project.Creator!=project.Advisor2Mail)
                 mailMessage.To.Add(project.Advisor2Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
+            mailMessage.CC.Add(ShibUser.GetEmail());
             mailMessage.Subject = $"Projekt '{project.Name}' abgelehnt";
             mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
