@@ -13,15 +13,6 @@ namespace ProStudCreator {
     public partial class FAQ {
         
         /// <summary>
-        /// i4ds2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl i4ds2;
-        
-        /// <summary>
         /// imvs2 control.
         /// </summary>
         /// <remarks>
@@ -29,6 +20,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl imvs2;
+        
+        /// <summary>
+        /// i4ds2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl i4ds2;
         
         /// <summary>
         /// i4ds1 control.

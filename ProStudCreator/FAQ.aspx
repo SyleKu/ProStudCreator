@@ -34,9 +34,9 @@
             </li>
         </ul>
         <h4>Wer ist meine Ansprechperson bei Fragen?</h4>
-        <p id="i4ds2" visible="false" runat="server"><a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
+        <p id="imvs2" visible="false" runat="server"><a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
         </p>
-        <p id="imvs2" visible="false" runat="server"><a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
+        <p id="i4ds2" visible="false" runat="server"><a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
         </p>
         <h4>Wie können externe Auftraggeber Projekte einreichen?</h4>
         <p>
