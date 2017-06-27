@@ -27,11 +27,10 @@ namespace ProStudCreator.Ext
                     " ",
                     "Projekteinreichung",
                     "Projektzuteilung",
-                    "Abgabe IP5 (normal)",
-                    "Abgabe IP5 (Variante 2 Sem.)",
-                    "Abgabe IP6 (normal)",
-                    "Abgabe IP6 (Variante 2 Sem.)",
-                    "Verteidigung IP6",
+                    "Abgabe IP5 (1 Sem.)",
+                    "Abgabe IP5 (2 Sem.)",
+                    "Abgabe IP6 (1 Sem.)<br/>Verteidigung",
+                    "Abgabe IP6 (2 Sem.)<br/>Verteidigung",
                     "Ausstellung Bachelorthesen"
                 })
                 dt.Columns.Add(header);
@@ -46,9 +45,8 @@ namespace ProStudCreator.Ext
                         semester.ProjectAllocation,
                         semester.SubmissionIP5FullPartTime,
                         semester.SubmissionIP5Accompanying,
-                        semester.SubmissionIP6Normal,
-                        semester.SubmissionIP6Variant2,
-                        $"{semester.DefenseIP6Start} bis {semester.DefenseIP6End}",
+                        semester.SubmissionIP6Normal+"<br/>"+(semester.DefenseIP6Start==null ? "": $"{semester.DefenseIP6Start} bis {semester.DefenseIP6End}"),
+                        semester.SubmissionIP6Variant2+"<br/>"+(semester.DefenseIP6BStart==null ? "": $"{semester.DefenseIP6BStart} bis {semester.DefenseIP6BEnd}"),
                         semester.ExhibitionBachelorThesis
                     });
             }
@@ -85,6 +83,30 @@ namespace ProStudCreator.Ext
                 table.Rows.Add(dr);
             }
             return table;
+        }
+
+        protected void AllEvents_DataBinding(object sender, EventArgs e)
+        {
+            for (int i = 0; i < AllEvents.Rows.Count; i++)
+            {
+                for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                    AllEvents.Rows[i].Cells[j].Text = HttpUtility.HtmlDecode(AllEvents.Rows[i].Cells[j].Text);
+
+
+                if (i % 2 == 0)
+                {
+                    for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                        if (j == 2)
+                            AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(198, 244, 203);
+                }
+                else
+                {
+                    for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                        if (j == 2)
+                            AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(218, 236, 220);
+                }
+
+            }
         }
     }
 }

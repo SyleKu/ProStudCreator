@@ -89,8 +89,8 @@
                 <hr />
                 <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
-                    <asp:ListItem Value="StartingProjects">Startende Projekte</asp:ListItem>
-                    <asp:ListItem Value="EndingProjects" Selected="True">Endende Projekte</asp:ListItem>
+                    <asp:ListItem Value="StartingProjects">&nbsp;Startende Projekte</asp:ListItem>
+                    <asp:ListItem Value="EndingProjects" Selected="True">&nbsp;Endende Projekte</asp:ListItem>
                 </asp:RadioButtonList>
             </div>
         </div>
@@ -102,8 +102,12 @@
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Zusätzliche Informationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group">
-                <asp:Label runat="server" Text="Projektzuteilungssoftware:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProDist" target="_blank">Git-Repository</a></asp:Label>
+                <asp:Label runat="server" Text="GitHub-Projekte:" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProStudCreator" target="_blank">ProStud (Diese Seite)</a></asp:Label>
+                <br />
+                <br />
+                <div class="col-sm-3"></div>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProDist" target="_blank">ProDist (Projekt-Zuteilung)</a></asp:Label>
             </div>
             <hr />
             <div class="form-group">

@@ -131,24 +131,14 @@ namespace ProStudCreator
 
             //set the Project duration
             if (project?.LogProjectDuration == 2)
-            {
                 lblProjectDuration.Text = "2 Semester";
-            }
             else if (project?.LogProjectDuration == 1)
-            {
                 lblProjectDuration.Text = "1 Semester";
-            }
             else
-            {
                 lblProjectDuration.Text = "?";
-            }
 
             //Sets the DeliveryInfos
             SetProjectDeliveryLabels();
-
-
-            //set the date of the EndPresentation
-            ProjectEndPresentation.Text = project.LogDefenceDate?.ToString() ?? "?";
 
             //Set the Exhibition date? of the Bachelorthesis
             ProjectExhibition.Text = project.Semester.ExhibitionBachelorThesis;
@@ -157,18 +147,13 @@ namespace ProStudCreator
             if (project.LogLanguageEnglish != null && project.LogLanguageGerman != null)
             {
                 if (project.LogLanguageEnglish.Value && !project.LogLanguageGerman.Value)
-                {
                     drpLogLanguage.SelectedValue = "1";
-                }
                 else
-                {
                     drpLogLanguage.SelectedValue = "2";
-                }
             }
             else
-            {
                 drpLogLanguage.SelectedValue = "0";
-            }
+
             drpLogLanguage.Items[0].Text = (userCanEditAfterStart) ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             //Set the Grades
@@ -197,7 +182,7 @@ namespace ProStudCreator
             txtClientCity.Text = project?.ClientAddressCity;
             txtClientReference.Text = project?.ClientReferenceNumber;
 
-            //disable for the unauthorized Users
+            //disable for unauthorized Users
             ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
 
             drpLogLanguage.Enabled =
@@ -209,13 +194,9 @@ namespace ProStudCreator
 
             //set the visibility
             if (project.Department.ShowDefenseOnInfoPage) //i4ds
-            {
                 divExpert.Visible = project?.LogProjectType?.P6 ?? false;
-            }
             else //imvs
-            {
                 divExpert.Visible = false;
-            }
 
             divPresentation.Visible = project?.Department?.ShowDefenseOnInfoPage ?? false;
 
@@ -227,8 +208,6 @@ namespace ProStudCreator
             BillAddressPlaceholder.Visible = (project?.BillingStatus?.ShowAddressOnInfoPage == true && userCanEditAfterStart);
 
             //FileExplorer settings
-
-
             FileExplorer.Configuration.ContentProviderTypeName =
                     typeof(ExtendedFileProvider).AssemblyQualifiedName;
             FileExplorer.Configuration.EnableAsyncUpload = true;
@@ -241,39 +220,40 @@ namespace ProStudCreator
 
         private void SetProjectDeliveryLabels()
         {
-            if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP5) //IP5 Projekt Voll/TeilZeit
+            ProjectEndPresentation.Text = "?";
+
+            if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP5) //IP5 1 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5FullPartTime;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text =
-                    "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
-
+                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
             }
-            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 Berufsbegleitend
+            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 2 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP5Accompanying;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text =
-                    "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
-                                
+                ProjectEndPresentation.Text = "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
             }
-            else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 Variante 1 Semester
+            else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 1 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP6Normal;
                 lblProjectEndPresentation.Text = "Verteidigung:";
-                
+                ProjectEndPresentation.Text = project.Semester.DefenseIP6Start + " - " + project.Semester.DefenseIP6End;
             }
-            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 Variante 2 Semester
+            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 2 Semester
             {
                 ProjectDelivery.Text = project.Semester.SubmissionIP6Variant2;
                 lblProjectEndPresentation.Text = "Verteidigung:";
+                ProjectEndPresentation.Text = project.Semester.DefenseIP6BStart + " - " + project.Semester.DefenseIP6BEnd;
             }
             else
             {
                 ProjectDelivery.Text = "?";
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text = "?";
             }
+
+            if(project.LogDefenceDate!=null)
+                ProjectEndPresentation.Text = project.LogDefenceDate.ToString();
         }
 
         private void ReturnAlert(string message)

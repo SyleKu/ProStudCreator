@@ -3350,6 +3350,10 @@ namespace ProStudCreator
 		
 		private System.Nullable<System.DateTime> _SemesterActiveUntil;
 		
+		private string _DefenseIP6BStart;
+		
+		private string _DefenseIP6BEnd;
+		
 		private EntitySet<Project> _Project;
 		
     #region Extensibility Method Definitions
@@ -3384,6 +3388,10 @@ namespace ProStudCreator
     partial void OnNameChanged();
     partial void OnSemesterActiveUntilChanging(System.Nullable<System.DateTime> value);
     partial void OnSemesterActiveUntilChanged();
+    partial void OnDefenseIP6BStartChanging(string value);
+    partial void OnDefenseIP6BStartChanged();
+    partial void OnDefenseIP6BEndChanging(string value);
+    partial void OnDefenseIP6BEndChanged();
     #endregion
 		
 		public Semester()
@@ -3592,7 +3600,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefenseIP6Alternative", DbType="NVarChar(50)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefenseIP6Alternative", DbType="NVarChar(50)", CanBeNull=false)]
 		public string DefenseIP6End
 		{
 			get
@@ -3668,6 +3676,46 @@ namespace ProStudCreator
 					this._SemesterActiveUntil = value;
 					this.SendPropertyChanged("SemesterActiveUntil");
 					this.OnSemesterActiveUntilChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefenseIP6BStart", DbType="NVarChar(50)")]
+		public string DefenseIP6BStart
+		{
+			get
+			{
+				return this._DefenseIP6BStart;
+			}
+			set
+			{
+				if ((this._DefenseIP6BStart != value))
+				{
+					this.OnDefenseIP6BStartChanging(value);
+					this.SendPropertyChanging();
+					this._DefenseIP6BStart = value;
+					this.SendPropertyChanged("DefenseIP6BStart");
+					this.OnDefenseIP6BStartChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefenseIP6BEnd", DbType="NVarChar(50)")]
+		public string DefenseIP6BEnd
+		{
+			get
+			{
+				return this._DefenseIP6BEnd;
+			}
+			set
+			{
+				if ((this._DefenseIP6BEnd != value))
+				{
+					this.OnDefenseIP6BEndChanging(value);
+					this.SendPropertyChanging();
+					this._DefenseIP6BEnd = value;
+					this.SendPropertyChanged("DefenseIP6BEnd");
+					this.OnDefenseIP6BEndChanged();
 				}
 			}
 		}

@@ -120,7 +120,7 @@ namespace ProStudCreator
             if (!DateTime.TryParseExact(Semester.CurrentSemester(db).DefenseIP6Start, "dd.MM.yyyy",
                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out defensestart))
                 throw new Exception(
-                    "Die Daten in der Datenbank entsprechen nicht dem richtigen Format. Bitte Melden Sie diesen Fehler einer Ansprechperson!");
+                    "Die Daten in der Datenbank entsprechen nicht dem richtigen Format. Bitte melden Sie diesen Fehler einer Ansprechperson!");
 
             if (_project?.LogProjectTypeID == 2 && _project?.LogExpertID == null &&
                 defensestart > DateTime.Now.AddMonths(-6) && _project.State == 3)

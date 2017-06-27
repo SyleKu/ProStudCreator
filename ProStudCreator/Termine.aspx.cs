@@ -10,26 +10,8 @@ using System.Web.UI.WebControls;
 
 namespace ProStudCreator
 {
-
-    public class SemesterSingleElement
-    {
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public string ProjectSubmissionUntil { get; set; }
-        public string ProjectAllocation { get; set; }
-        public string SubmissionIP5FullPartTime { get; set; }
-        public string SubmissionIP5Accompanying { get; set; }
-        public string SubmissionIP6Normal { get; set; }
-        public string SubmissionIP6Variant2 { get; set; }
-        public string DefenseIP6Start { get; set; }
-        public string DefenseIP6End { get; set; }
-        public string ExhibitionBachelorThesis { get; set; }
-        public string Name { get; set; }
-    }
-
     public partial class Termine : System.Web.UI.Page
     {
-
         private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
@@ -45,11 +27,10 @@ namespace ProStudCreator
                     "Projekteinreichung (extern)",
                     "Projekteinreichung (intern)",
                     "Projektzuteilung",
-                    "Abgabe IP5 (normal)",
-                    "Abgabe IP5 (Variante 2 Sem.)",
-                    "Abgabe IP6 (normal)",
-                    "Abgabe IP6 (Variante 2 Sem.)",
-                    "Verteidigung IP6",
+                    "Abgabe IP5 (1 Sem.)",
+                    "Abgabe IP5 (2 Sem.)",
+                    "Abgabe IP6 (1 Sem.)<br/>Verteidigung",
+                    "Abgabe IP6 (2 Sem.)<br/>Verteidigung",
                     "Ausstellung Bachelorthesen"
                 })
                 dt.Columns.Add(header);
@@ -65,9 +46,8 @@ namespace ProStudCreator
                         semester.ProjectAllocation,
                         semester.SubmissionIP5FullPartTime,
                         semester.SubmissionIP5Accompanying,
-                        semester.SubmissionIP6Normal,
-                        semester.SubmissionIP6Variant2,
-                        $"{semester.DefenseIP6Start} bis {semester.DefenseIP6End}",
+                        semester.SubmissionIP6Normal+"<br/>"+(semester.DefenseIP6Start==null ? "": $"{semester.DefenseIP6Start} bis {semester.DefenseIP6End}"),
+                        semester.SubmissionIP6Variant2+"<br/>"+(semester.DefenseIP6BStart==null ? "": $"{semester.DefenseIP6BStart} bis {semester.DefenseIP6BEnd}"),
                         semester.ExhibitionBachelorThesis
                     });
             }
@@ -82,6 +62,7 @@ namespace ProStudCreator
 
             var newTable = FlipDataTable(dt, flipHeaders);
             newTable.Rows[0].Delete();
+
             AllEvents.DataSource = newTable;
             AllEvents.DataBind();
         }
@@ -109,25 +90,21 @@ namespace ProStudCreator
         {
             for (int i = 0; i < AllEvents.Rows.Count; i++)
             {
+                for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
+                    AllEvents.Rows[i].Cells[j].Text = HttpUtility.HtmlDecode(AllEvents.Rows[i].Cells[j].Text);
+
+
                 if (i % 2 == 0)
                 {
                     for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
-                    {
                         if (j == 2)
-                        {
                             AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(198, 244, 203);
-                        }
-                    }
                 }
                 else
                 {
                     for (int j = 0; j < AllEvents.Rows[i].Cells.Count; j++)
-                    {
                         if (j == 2)
-                        {
                             AllEvents.Rows[i].Cells[j].BackColor = Color.FromArgb(218, 236, 220);
-                        }
-                    }
                 }
 
             }
