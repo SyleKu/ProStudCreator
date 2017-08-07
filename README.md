@@ -28,6 +28,31 @@ FILESTREAM_ON [fsfg_ProStudCreator]
 
 
 
+
+Local-Setup
+======
+
+1. Visual Studio, SQL Server Management Studio und SQL Server 2012 oder neuer (keine Express Editionen) herunterladen.
+2. Projekt in VS clonen.
+3. [FileStream einschalten](https://docs.microsoft.com/en-us/sql/relational-databases/blob/enable-and-configure-filestream)
+4. Datenbank an SQL Server anschliessen (attach)
+
+```
+USE [master]
+GO
+CREATE DATABASE [FileStreamDB] ON 
+( FILENAME = N'C:\FileStreamDB\FileStreamDB.mdf' ),
+( FILENAME = N'C:\FileStreamDB\FileStreamDB_log.ldf' ),
+FILEGROUP [FileStreamGroup] CONTAINS FILESTREAM DEFAULT 
+( NAME = N'FileStreamDB_FSData', FILENAME = N'C:\FileStreamDB\FileStreamData' )
+FOR ATTACH
+GO
+```
+
+5. Telerik-Setup durchführen
+
+
+
 Telerik-Setup
 ======
 
