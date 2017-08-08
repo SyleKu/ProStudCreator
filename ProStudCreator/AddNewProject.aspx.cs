@@ -563,7 +563,7 @@ namespace ProStudCreator
             smtpClient.Send(mailMessage);
 #endif
 
-            Response.Redirect("projectlist");
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         protected void refuseProject_Click(object sender, EventArgs e)
@@ -600,7 +600,7 @@ namespace ProStudCreator
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
 #endif
-            Response.Redirect("projectlist");
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         protected void cancelRefusion_Click(object sender, EventArgs e)
@@ -622,7 +622,7 @@ namespace ProStudCreator
                 project.Unsubmit();
             }
             db.SubmitChanges();
-            Response.Redirect("projectlist");
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         #endregion

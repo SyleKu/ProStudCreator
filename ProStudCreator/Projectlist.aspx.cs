@@ -88,6 +88,9 @@ namespace ProStudCreator
                     whichOwner.Items.Remove(item);
                 }
             }
+
+
+            Session["LastPage"] = "projectlist";
         }
 
 

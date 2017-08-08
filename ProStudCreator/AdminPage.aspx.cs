@@ -64,6 +64,8 @@ namespace ProStudCreator
                 Response.Redirect("error/AccessDenied.aspx");
                 Response.End();
             }
+
+            Session["LastPage"] = "adminpage";
         }
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
