@@ -145,7 +145,7 @@ namespace ProStudCreator
             title.SetLeading(0.0f, LINE_HEIGHT);
             document.Add(title);
 
-            var projectTable = new PdfPTable(5) {SpacingAfter = 6f};
+            var projectTable = new PdfPTable(5) { SpacingAfter = 6f };
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
@@ -279,7 +279,7 @@ namespace ProStudCreator
             //
             // Footer
             //
-            var strComments = "";
+            var strReservations = "";
             var strRemarks = "";
             var strOneSem = "";
             if (proj.Remarks != "")
@@ -289,9 +289,9 @@ namespace ProStudCreator
 
             if (proj.Reservation1Name != "")
             {
-                strComments += "Dieses Projekt ist für " + proj.Reservation1Name;
-                if (proj.Reservation2Name != "") strComments += " und " + proj.Reservation2Name;
-                strComments += " reserviert.\n";
+                strReservations += "Dieses Projekt ist für " + proj.Reservation1Name;
+                if (proj.Reservation2Name != "") strReservations += " und " + proj.Reservation2Name;
+                strReservations += " reserviert.\n";
             }
 
             if (proj.DurationOneSemester)
@@ -299,7 +299,7 @@ namespace ProStudCreator
                 strOneSem = "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
             }
 
-            if (strComments.Length > 0 || strRemarks.Length > 0 || strOneSem.Length > 0)
+            if (strReservations.Length > 0 || strRemarks.Length > 0 || strOneSem.Length > 0)
             {
                 document.Add(new Paragraph("Bemerkungen", fontHeading)
                 {
@@ -309,10 +309,13 @@ namespace ProStudCreator
 
                 if (strRemarks.Length > 0)
                 {
-                    var remarks = new Paragraph(strRemarks.ToString(), fontRegular);
-                    remarks.SpacingAfter = 1f;
-                    remarks.SetLeading(0.0f, LINE_HEIGHT);
-                    document.Add(remarks);
+
+                    foreach (var text in strRemarks.ToLinkedParagraph(fontRegular, hyph))
+                    {
+                        text.SpacingAfter = 0f;
+                        text.SetLeading(0.0f, LINE_HEIGHT);
+                        document.Add(text);
+                    }
                 }
                 if (strOneSem.Length > 0)
                 {
@@ -321,12 +324,12 @@ namespace ProStudCreator
                     oneSem.SetLeading(0.0f, LINE_HEIGHT);
                     document.Add(oneSem);
                 }
-                if (strComments.Length > 0)
+                if (strReservations.Length > 0)
                 {
                     var fontRegularRed = new Font(fontRegular);
                     fontRegularRed.Color = BaseColor.RED;
 
-                    var text = new Paragraph(strComments.ToString(), fontRegularRed);
+                    var text = new Paragraph(strReservations.ToString(), fontRegularRed);
                     text.SpacingAfter = 1f;
                     text.SetLeading(0.0f, LINE_HEIGHT);
                     document.Add(text);
