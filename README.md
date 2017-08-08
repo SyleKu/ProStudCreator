@@ -40,11 +40,11 @@ Local-Setup
 ```
 USE [master]
 GO
-CREATE DATABASE [FileStreamDB] ON 
-( FILENAME = N'C:\FileStreamDB\FileStreamDB.mdf' ),
-( FILENAME = N'C:\FileStreamDB\FileStreamDB_log.ldf' ),
-FILEGROUP [FileStreamGroup] CONTAINS FILESTREAM DEFAULT 
-( NAME = N'FileStreamDB_FSData', FILENAME = N'C:\FileStreamDB\FileStreamData' )
+CREATE DATABASE [aspnet-ProStudCreator-20140818043155] ON 
+( FILENAME = N'<Path to mdf>' ),
+( FILENAME = N'<Path to ldf' ),
+FILEGROUP fsfg_ProStudCreator CONTAINS FILESTREAM DEFAULT 
+( NAME = N'fs_ProStudCreator', FILENAME = N'<Path to repo>\ProStudCreator\fs_ProstudCreator' )
 FOR ATTACH
 GO
 ```
