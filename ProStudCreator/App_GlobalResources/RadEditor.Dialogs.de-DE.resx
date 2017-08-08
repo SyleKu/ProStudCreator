@@ -175,7 +175,9 @@
     <value>Schließen</value>
   </data>
   <data name="Common_ConfirmDelete" xml:space="preserve">
-    <value>Datei wirklich löschen?</value>
+    <value>Sind Sie sicher, dass Sie die ausgewählte Datei löschen wollen?
+Falls die ausgewählte Datei verwendet wird, werden einige Seiten nach dem Löschen inkorrekt dargestellt.
+Wählen Sie "OK" um die Löschung zu bestätigen.</value>
   </data>
   <data name="Common_ConstrainProportions" xml:space="preserve">
     <value>Proportionen beibehalten?</value>
@@ -301,7 +303,7 @@
     <value>Orange</value>
   </data>
   <data name="Common_OverwriteExisting" xml:space="preserve">
-    <value>Dateien mit dem gleichen Namen werden überschrieben!</value>
+    <value>Existierende Datei überschreiben?</value>
   </data>
   <data name="Common_Paste" xml:space="preserve">
     <value>Einfügen</value>
@@ -1382,7 +1384,7 @@
     <value>Wählen</value>
   </data>
   <data name="Common_Open" xml:space="preserve">
-    <value>Herunterladen</value>
+    <value>Öffnen</value>
   </data>
   <data name="SilverlightManager_AutoUpgrade" xml:space="preserve">
     <value>Auto Upgrade</value>
