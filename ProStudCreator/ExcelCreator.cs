@@ -165,7 +165,8 @@ namespace ProStudCreator
             cell2.CellStyle = DateStyle;
             cell2.SetCellValue(p.GetDeliveryDate());
             row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
-            row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent1Name?.Split(' ')[0] ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent1Name?.Split(' ')[1] ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
             var cell3 = row.CreateCell(i++);
             if (GetStudentGrade(p.LogGradeStudent1) == -1)
@@ -177,7 +178,8 @@ namespace ProStudCreator
             {
                 cell3.SetCellValue(GetStudentGrade(p.LogGradeStudent1));
             }
-            row.CreateCell(i++).SetCellValue(p.LogStudent2Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent2Name?.Split(' ')[0] ?? "");
+            row.CreateCell(i++).SetCellValue(p.LogStudent2Name?.Split(' ')[1] ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent2Mail ?? "");
             var cell4 = row.CreateCell(i++);
             if (GetStudentGrade(p.LogGradeStudent2) == -1)
@@ -223,11 +225,13 @@ namespace ProStudCreator
             "Projektstart",
             "Projektabgabe",
             "Ausstellung Bachelorthesis",
-            "Student/in 1",
-            "Student/in 1 E-Mail",
+            "Vorname Student/in 1",
+            "Nachname Student/in 1",
+            "E-Mail Student/in 1",
             "Note Student/in 1",
-            "Student/in 2",
-            "Student/in 2 E-Mail",
+            "Vorname Student/in 2",
+            "Nachname Student/in 2",
+            "E-Mail Student/in 2",
             "Note Student/in 2",
             "Wurde reserviert",
             "Hauptbetreuende/r",
@@ -319,6 +323,11 @@ namespace ProStudCreator
             address.AppendLine(p.ClientAddressCity ?? "");
 
             return address.ToString();
+        }
+
+        private string getFirstName(string studentName)
+        {
+            return studentName.Split(' ')[0];
         }
     }
 
