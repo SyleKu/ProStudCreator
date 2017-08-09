@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" AutoEventWireup="True" CodeBehind="Termine.aspx.cs" Inherits="ProStudCreator.Ext.Termine" %>
+
 <!DOCTYPE html>
 <html lang="de">
 <head runat="server">
@@ -56,6 +57,13 @@
                     </asp:GridView>
                     <hr />
                     <p>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</p>
+                    <br />
+                    <a href="https://www.fhnw.ch/de/die-fhnw/hochschulen/ht/news-und-events/ausstellung-der-bachelor-abschlussarbeiten-2017/media/ausstellungsbroschuere-2017.pdf">Download Ausstellungsbroschüre</a>
+                    <br />
+                    <br />
+                    <p>
+                        <a href="../Content/Externe_Projekteingabe.pdf" class="pdf">Formular für Projekte von externen Auftraggebern.</a>
+                    </p>
                 </div>
             </div>
             <hr />
