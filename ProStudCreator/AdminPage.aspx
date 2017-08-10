@@ -130,11 +130,7 @@
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" Text="Semesterdaten:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine/studientermine" target="_blank">Akademischer Kalender</a></asp:Label>
-                <br />
-                <br />
-                <div class="col-sm-3"></div>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="http://www.fhnw.ch/technik/bachelor/informationen/termine" target="_blank">Stunden und Semesterpläne</a></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://www.fhnw.ch/de/studium/technik/termine" target="_blank">Termine & Stundenpläne</a></asp:Label>
             </div>
         </div>
     </div>
