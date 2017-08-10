@@ -122,6 +122,41 @@
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Betreuung:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="form-control" placeholder="Vorname Nachname des offiziellen Betreuers"></asp:TextBox>
+                </div>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" ID="EMail1" CssClass="form-control" placeholder="E-Mail des offiziellen Betreuers" TextMode="Email"></asp:TextBox>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" ID="NameBetreuer2" CssClass="form-control" placeholder="Vorname Nachname des Zweitbetreuers"></asp:TextBox>
+                </div>
+                <div class="col-sm-3">
+                    <asp:TextBox runat="server" ID="EMail2" CssClass="form-control" placeholder="E-Mail des Zweitbetreuers" TextMode="Email"></asp:TextBox>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Institut:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control"></asp:DropDownList>
+                </div>
+            </div>
+            <hr />
+
             <asp:UpdatePanel UpdateMode="Conditional" runat="server" ID="updateClient">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
@@ -143,143 +178,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Betreuung:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="NameBetreuer1" CssClass="form-control" placeholder="Vorname Nachname des offiziellen Betreuers"></asp:TextBox>
-                </div>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EMail1" CssClass="form-control" placeholder="E-Mail des offiziellen Betreuers" TextMode="Email"></asp:TextBox>
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="NameBetreuer2" CssClass="form-control" placeholder="Vorname Nachname des Zweitbetreuers"></asp:TextBox>
-                </div>
-                <div class="col-sm-3">
-                    <asp:TextBox runat="server" ID="EMail2" CssClass="form-control" placeholder="E-Mail des Zweitbetreuers" TextMode="Email"></asp:TextBox>
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
             <hr />
-            <asp:UpdatePanel runat="server" class="form-group" UpdateMode="Conditional">
-                <ContentTemplate>
-                    <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Themengebiet:"></asp:Label>
-                    <div id="projectTypes" class="col-sm-9">
-                        <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ToolTip="Design, Usability, User Interfaces, ..." ImageUrl="pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ToolTip="Hardwarenah, IoT, Embedded, Low-level, ..." ImageUrl="pictures/projectTypHWUnchecked.png" OnClick="HW_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="CGIP" Height="60px" runat="server" ToolTip="Computergrafik, 3D, Bildverarbeitung, ..." ImageUrl="pictures/projectTypCGIPUnchecked.png" OnClick="CGIP_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="MathAlg" Height="60px" runat="server" ToolTip="Mathematik, Algorithmen, Machine Learning, Data Mining, ..." ImageUrl="pictures/projectTypMathAlgUnchecked.png" OnClick="MathAlg_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ToolTip="Mobile Apps, Webentwicklung, ..." ImageUrl="pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ToolTip="Datenbanken, Big Data, Data Spaces, ..." ImageUrl="pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" CausesValidation="false" />
-                        <% if (ProStudCreator.ShibUser.IsAdmin() || ProStudCreator.ShibUser.GetDepartmentName() == "IMVS")
-                            { %>
-                        <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
-                        <% } %>
-                    </div>
-                    <asp:Timer runat="server" Interval="60000" />
-                </ContentTemplate>
-            </asp:UpdatePanel>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control">
-                        <asp:ListItem Text="Deutsch oder Englisch" />
-                        <asp:ListItem Text="Nur Deutsch" />
-                        <asp:ListItem Text="Nur Englisch" />
-                    </asp:DropDownList>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
-                <div class="col-sm-6">
-                    <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." Checked="true" runat="server" />
-                    <%--<p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>--%>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
-                </div>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
-                </div>
-                <div class="col-sm-3"></div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
-                </div>
-                <div class="col-sm-3">
-                    <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
-                <div class="col-sm-3">
-                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
-                </div>
-                <div class="col-sm-1">
-                    <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
-                <div class="col-sm-9">
-                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
-                <div class="col-md-9">
-                    <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="255"></asp:TextBox>
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
-                </div>
-            </div>
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine"></asp:TextBox>
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
-                <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
-                </div>
-            </div>
             <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updateReservation">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
@@ -308,10 +207,113 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
+            <hr />
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Institut:"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
                 <div class="col-sm-3">
-                    <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control"></asp:DropDownList>
+                    <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control">
+                        <asp:ListItem Text="Deutsch oder Englisch" />
+                        <asp:ListItem Text="Nur Deutsch" />
+                        <asp:ListItem Text="Nur Englisch" />
+                    </asp:DropDownList>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." Checked="true" runat="server" />
+                    <%--<p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>--%>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
+                </div>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
+                </div>
+                <div class="col-sm-3">
+                    <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
+                </div>
+            </div>
+            <hr />
+            <asp:UpdatePanel runat="server" class="form-group" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Themengebiet:"></asp:Label>
+                    <div id="projectTypes" class="col-sm-9">
+                        <asp:ImageButton CssClass="img-rounded" ID="DesignUX" Height="60px" runat="server" ToolTip="Design, Usability, User Interfaces, ..." ImageUrl="pictures/projectTypDesignUXUnchecked.png" OnClick="DesignUX_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="HW" Height="60px" runat="server" ToolTip="Hardwarenah, IoT, Embedded, Low-level, ..." ImageUrl="pictures/projectTypHWUnchecked.png" OnClick="HW_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="CGIP" Height="60px" runat="server" ToolTip="Computergrafik, 3D, Bildverarbeitung, ..." ImageUrl="pictures/projectTypCGIPUnchecked.png" OnClick="CGIP_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="MathAlg" Height="60px" runat="server" ToolTip="Mathematik, Algorithmen, Machine Learning, Data Mining, ..." ImageUrl="pictures/projectTypMathAlgUnchecked.png" OnClick="MathAlg_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ToolTip="Mobile Apps, Webentwicklung, ..." ImageUrl="pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ToolTip="Datenbanken, Big Data, Data Spaces, ..." ImageUrl="pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" CausesValidation="false" />
+                        <% if (ProStudCreator.ShibUser.IsAdmin() || ProStudCreator.ShibUser.GetDepartmentName() == "IMVS")
+                            { %>
+                        <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
+                        <% } %>
+                    </div>
+                    <asp:Timer runat="server" Interval="60000" />
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <div class="form-group">
+                <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
+                </div>
+                <div class="col-sm-1">
+                    <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
+                <div class="col-sm-9">
+                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
+                <div class="col-md-9">
+                    <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="255"></asp:TextBox>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine"></asp:TextBox>
+                </div>
+            </div>
+            <div class="form-group">
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
+                <div class="col-sm-9">
+                    <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
                 </div>
             </div>
 

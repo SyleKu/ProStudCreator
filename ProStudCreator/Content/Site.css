@@ -405,3 +405,7 @@ html .demo-container .ruFakeInput {
 .hidden {
     display: none;
 }
+
+.dropPreviousProject {
+    max-width: 280px;
+}
