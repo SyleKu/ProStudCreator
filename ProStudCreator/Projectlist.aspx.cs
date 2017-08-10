@@ -40,40 +40,57 @@ namespace ProStudCreator
         {
             dropSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
             dropSemester.DataBind();
-            var currentSemester = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id;
-            dropSemester.SelectedValue = currentSemester.ToString();
-            dropSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
+            dropSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", "allSemester"));
             dropSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
+            dropSemester.SelectedValue = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id.ToString();
+
+
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             projects = db.Projects.Select(i => i);
 
-            if (!base.IsPostBack && Session["listFilter"] != null)
+            if (IsPostBack)
             {
-                whichOwner.SelectedValue = (string)Session["listFilter"];
-                dropSemester.SelectedValue = (string)Session["whichSemester"];
-            }
-            else
-            {
-                Session["listFilter"] = whichOwner.SelectedValue;
-                Session["whichSemester"] = dropSemester.SelectedValue;
-            }
+                if (whichOwner.SelectedValue == "NotOwnEdited") //Set Semester to allSemester
+                {
+                    Session["ComesFromNotOwn"] = true;
+                    Session["SelectedSemesterBeforeNotOwn"] = dropSemester.SelectedValue; //Save last semester if user changes Owner in filter
+                    dropSemester.Enabled = false;
+                    Session["SelectedSemester"] = dropSemester.SelectedValue = "allSemester"; //Save the current State if user switches tab after this
+                    Session["SelectedOwner"] = whichOwner.SelectedValue;
 
-            if(whichOwner.SelectedValue == "NotOwnEdited")
-            {
-                dropSemester.Enabled = false;
-                dropSemester.SelectedValue = "";
+                }
+                else
+                {
+                    if (Session["ComesFromNotOwn"] == null ? false : (bool)Session["ComesFromNotOwn"]) //if user comes from NotOwn
+                    {
+                        dropSemester.SelectedValue = (string)Session["SelectedSemesterBeforeNotOwn"];
+                        Session["ComesFromNotOwn"] = false;
+                    }
+                    Session["SelectedSemester"] = dropSemester.SelectedValue;
+                    Session["SelectedOwner"] = whichOwner.SelectedValue;
+                    dropSemester.Enabled = true;
+                }
             }
-            else
+            else if (Session["SelectedOwner"] != null) //User comes from another tab or realoaded the page
             {
-                dropSemester.Enabled = true;
+                if ((string)Session["SelectedOwner"] == "NotOwnEdited") //If last filter was set to NotOwn
+                    dropSemester.Enabled = false;
+
+                whichOwner.SelectedValue = (string)Session["SelectedOwner"]; //Set Filter from the Sessionvars
+                dropSemester.SelectedValue = (string)Session["SelectedSemester"];
+            }
+            else //Sessionvars don't exist yet
+            {
+                Session["SelectedOwner"] = whichOwner.SelectedValue;
+                Session["SelectedSemester"] = dropSemester.SelectedValue;
             }
 
 
             AllProjects.DataSource =
-                from i in filterRelevantProjects(projects, (string)Session["listFilter"])
+                from i in filterRelevantProjects(projects, (string)Session["SelectedOwner"])
                 select getProjectSingleElement(i);
             AllProjects.DataBind();
 
@@ -104,7 +121,7 @@ namespace ProStudCreator
             switch (filter)
             {
                 case "OwnProjects":
-                    if (dropSemester.SelectedValue == "")
+                    if (dropSemester.SelectedValue == "allSemester")
                     {
                         projects =
                             from p in projects
@@ -125,7 +142,7 @@ namespace ProStudCreator
                     }
                     break;
                 case "AllProjects":
-                    if (dropSemester.SelectedValue == "")
+                    if (dropSemester.SelectedValue == "allSemester")
                     {
                         projects =
                             from p in projects
@@ -147,8 +164,8 @@ namespace ProStudCreator
                     var lastSemStartDate = ProStudCreator.Semester.LastSemester(db).StartDate;
                     projects = db.Projects.Where(p =>
                                 p.DepartmentId == depId &&
-                                p.ModificationDate > lastSemStartDate && 
-                                (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State==ProjectState.Submitted));
+                                p.ModificationDate > lastSemStartDate &&
+                                (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State == ProjectState.Submitted));
                     break;
             }
             return projects;
@@ -330,6 +347,5 @@ namespace ProStudCreator
             //    select getProjectSingleElement(i);
             //AllProjects.DataBind();
         }
-
     }
 }
