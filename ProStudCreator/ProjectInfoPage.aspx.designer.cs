@@ -256,6 +256,33 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.PlaceHolder BillAddressPlaceholder;
         
         /// <summary>
+        /// radioClientType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList radioClientType;
+        
+        /// <summary>
+        /// updateClientCompany control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updateClientCompany;
+        
+        /// <summary>
+        /// divClientCompany control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientCompany;
+        
+        /// <summary>
         /// txtClientCompany control.
         /// </summary>
         /// <remarks>
@@ -281,6 +308,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtClientName;
+        
+        /// <summary>
+        /// txtClientEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtClientEmail;
         
         /// <summary>
         /// txtClientDepartment control.

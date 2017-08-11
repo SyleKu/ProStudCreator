@@ -51,7 +51,7 @@ namespace ProStudCreator
                 Response.Redirect("Projectlist.aspx");
                 Response.End();
             }
-            
+
 
             if (Page.IsPostBack) return;
 
@@ -173,6 +173,16 @@ namespace ProStudCreator
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ?? "ValueWhichNeverWillBeGivenByTheDB";
 
             //Set the data from the addressform
+            if (string.IsNullOrEmpty(project.ClientCompany))
+            {
+                radioClientType.SelectedValue = "PrivatePerson";
+                divClientCompany.Visible = false;
+            }
+            else
+            {
+                radioClientType.SelectedValue = "Company";
+                divClientCompany.Visible = true;
+            }
             txtClientCompany.Text = project?.ClientCompany;
             drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
             txtClientName.Text = project?.ClientPerson;
@@ -181,6 +191,7 @@ namespace ProStudCreator
             txtClientPLZ.Text = project?.ClientAddressPostcode;
             txtClientCity.Text = project?.ClientAddressCity;
             txtClientReference.Text = project?.ClientReferenceNumber;
+            txtClientEmail.Text = project?.ClientMail;
 
             //disable for unauthorized Users
             ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
@@ -252,7 +263,7 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
             }
 
-            if(project.LogDefenceDate!=null)
+            if (project.LogDefenceDate != null)
                 ProjectEndPresentation.Text = project.LogDefenceDate.ToString();
         }
 
@@ -366,7 +377,7 @@ namespace ProStudCreator
                 //this sould always be under the project.BillingstatusId statement
                 if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
                 {
-                    if (txtClientCompany.Text == "" || txtClientName.Text == "" || txtClientStreet.Text == "" ||
+                    if ((radioClientType.SelectedValue == "Company" && txtClientCompany.Text == "") || txtClientName.Text == "" || txtClientStreet.Text == "" ||
                         txtClientPLZ.Text == "" || txtClientCity.Text == "")
                     {
                         validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
@@ -376,6 +387,7 @@ namespace ProStudCreator
                         project.ClientCompany = txtClientCompany.Text;
                         project.ClientAddressTitle = (drpClientTitle.SelectedValue == "1") ? "Herr" : "Frau";
                         project.ClientPerson = txtClientName.Text;
+                        project.ClientMail = (txtClientEmail.Text == "") ? null : txtClientEmail.Text;
                         project.ClientAddressDepartment = (txtClientDepartment.Text == "")
                             ? null
                             : txtClientDepartment.Text;
@@ -409,6 +421,17 @@ namespace ProStudCreator
             }
         }
 
+        protected void radioClientType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (radioClientType.SelectedValue == "Company")
+            {
+                divClientCompany.Visible = true;
+            }
+            else
+            {
+                divClientCompany.Visible = false;
+            }
+        }
     }
 
 

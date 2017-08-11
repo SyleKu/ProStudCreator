@@ -3,20 +3,20 @@
 <asp:Content ID="ProjectInofpageContent" ContentPlaceHolderID="MainContent" runat="server">
     <script language="javascript" type="text/javascript">
 
-            function OnClientFileOpen(oExplorer, args) {
-                var item = args.get_item();
+        function OnClientFileOpen(oExplorer, args) {
+            var item = args.get_item();
 
 
-                // File is a image document, do not open a new window
-                args.set_cancel(true);
+            // File is a image document, do not open a new window
+            args.set_cancel(true);
 
-                // Tell browser to open file directly
-                $incomingUrl = "ProjectFilesDownload?fname=" + item._name + "&id=<%: int.Parse(Request.QueryString["id"]) %>";
-                document.location = encodeURI($incomingUrl);
+            // Tell browser to open file directly
+            $incomingUrl = "ProjectFilesDownload?fname=" + item._name + "&id=<%: int.Parse(Request.QueryString["id"]) %>";
+            document.location = encodeURI($incomingUrl);
 
-            }
+        }
 
-            global.OnClientFileOpen = OnClientFileOpen;
+        global.OnClientFileOpen = OnClientFileOpen;
     </script>
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
@@ -114,11 +114,30 @@
                         <hr />
                         <h3>Kundeninformationen</h3>
                         <div class="form-group" style="text-align: left">
-                            <asp:Label runat="server" Text="Unternehmen*:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
+                            <asp:Label runat="server" Text="Kundentyp:" CssClass="control-label col-sm-3"></asp:Label>
+                            <div class="col-sm-7 radioButtonSettings">
+                                <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="radioClientType_SelectedIndexChanged">
+                                    <asp:ListItem Text=" Unternehmen" Value="Company" />
+                                    <asp:ListItem Text=" Privatperson" Value="PrivatePerson" />
+                                </asp:RadioButtonList>
                             </div>
                         </div>
+                        <div class="col-sm-1"></div>
+                        <hr class="col-sm-10" />
+                        <div style="clear: both"></div>
+                        <asp:UpdatePanel runat="server" ID="updateClientCompany" UpdateMode="Conditional">
+                            <Triggers>
+                                <asp:AsyncPostBackTrigger ControlID="radioClientType" EventName="SelectedIndexChanged" />
+                            </Triggers>
+                            <ContentTemplate>
+                                <div class="form-group" style="text-align: left" runat="server" id="divClientCompany">
+                                    <asp:Label runat="server" Text="Unternehmen*:" CssClass="control-label col-sm-3"></asp:Label>
+                                    <div class="col-sm-6">
+                                        <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Anrede*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-3">
@@ -132,6 +151,12 @@
                             <asp:Label runat="server" Text="Vor- und Nachname*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientName" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group" style="text-align: left">
+                            <asp:Label runat="server" Text="E-Mail Adresse" CssClass="control-label col-sm-3"></asp:Label>
+                            <div class="col-sm-6">
+                                <asp:TextBox runat="server" ID="txtClientEmail" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
@@ -170,7 +195,7 @@
             </asp:UpdatePanel>
             <hr />
             <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
-            <div class="form-group" >
+            <div class="form-group">
                 <telerik:RadFileExplorer RenderMode="Auto" runat="server" CssClass="col-sm-3" ID="FileExplorer" Width="650px" Height="350px"
                     AllowPaging="false" Skin="Default" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
                 </telerik:RadFileExplorer>
