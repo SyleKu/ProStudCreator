@@ -166,24 +166,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.UpdatePanel updateClient;
         
         /// <summary>
-        /// checkExtClient control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox checkExtClient;
-        
-        /// <summary>
-        /// divClientForm control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientForm;
-        
-        /// <summary>
         /// radioClientType control.
         /// </summary>
         /// <remarks>
@@ -193,13 +175,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.RadioButtonList radioClientType;
         
         /// <summary>
-        /// updateClientCompany control.
+        /// divClientForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updateClientCompany;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientForm;
         
         /// <summary>
         /// divClientCompany control.

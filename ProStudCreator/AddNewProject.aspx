@@ -159,39 +159,26 @@
             <asp:UpdatePanel UpdateMode="Conditional" runat="server" ID="updateClient">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
-                    <asp:AsyncPostBackTrigger ControlID="checkExtClient" EventName="CheckedChanged" />
+                    <asp:AsyncPostBackTrigger ControlID="radioClientType" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
-                    <div class="form-group">
-                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Interner/Externer Kunde:"></asp:Label>
-                        <div class="col-sm-6">
-                            <asp:CheckBox ID="checkExtClient" CssClass="checkbox" Text="Externer Kunde" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="checkExtClient_CheckedChanged" />
-                            <%--<p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>--%>
+                    <div class="form-group" style="text-align: left">
+                        <asp:Label runat="server" Text="Kundentyp:" CssClass="control-label col-sm-3"></asp:Label>
+                        <div class="col-sm-7 radioButtonSettings">
+                            <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="radioClientType_SelectedIndexChanged">
+                                <asp:ListItem Text="FHNW intern" Selected="True" Value="Intern" />
+                                <asp:ListItem Text="Unternehmen" Value="Company" />
+                                <asp:ListItem Text="Privatperson" Value="PrivatePerson" />
+                            </asp:RadioButtonList>
                         </div>
                     </div>
                     <div class="form-group" runat="server" id="divClientForm" visible="false">
-                        <div class="form-group" style="text-align: left">
-                            <asp:Label runat="server" Text="Kundentyp:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-7 radioButtonSettings">
-                                <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="radioClientType_SelectedIndexChanged">
-                                    <asp:ListItem Text="Unternehmen" Selected="True" Value="Company" />
-                                    <asp:ListItem Text="Privatperson" Value="PrivatePerson" />
-                                </asp:RadioButtonList>
+                        <div class="form-group" style="text-align: left" runat="server" id="divClientCompany">
+                            <asp:Label runat="server" Text="Unternehmen:" CssClass="control-label col-sm-3"></asp:Label>
+                            <div class="col-sm-6">
+                                <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
                             </div>
                         </div>
-                        <asp:UpdatePanel runat="server" ID="updateClientCompany" UpdateMode="Conditional">
-                            <Triggers>
-                                <asp:AsyncPostBackTrigger ControlID="radioClientType" EventName="SelectedIndexChanged" />
-                            </Triggers>
-                            <ContentTemplate>
-                                <div class="form-group" style="text-align: left" runat="server" id="divClientCompany">
-                                    <asp:Label runat="server" Text="Unternehmen:" CssClass="control-label col-sm-3"></asp:Label>
-                                    <div class="col-sm-6">
-                                        <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
-                                    </div>
-                                </div>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Anrede:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-3">
@@ -226,14 +213,11 @@
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
-                            <asp:Label runat="server" Text="PLZ:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientPLZ" CssClass="form-control maxWidth" MaxLength="10"></asp:TextBox>
+                            <asp:Label runat="server" Text="PLZ und Ort:" CssClass="control-label col-sm-3"></asp:Label>
+                            <div class="col-sm-2">
+                                <asp:TextBox runat="server" ID="txtClientPLZ" CssClass="form-control maxWidth" TextMode="Number" MaxLength="10"></asp:TextBox>
                             </div>
-                        </div>
-                        <div class="form-group" style="text-align: left">
-                            <asp:Label runat="server" Text="Ort:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <asp:TextBox runat="server" ID="txtClientCity" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
                         </div>

@@ -108,52 +108,35 @@ namespace ProStudCreator
                     SiteTitle.Text = "Projekt bearbeiten";
 
                     RetrieveProjectToEdit();
+                    prepareClientForm(project);
+
                 }
                 else
                 {
                     Page.Title = "Neues Projekt";
                     SiteTitle.Text = "Neues Projekt anlegen";
 
-                    fillDropPreviousProject();
+                    fillDropPreviousProject(Semester.CurrentSemester(db));
                     dropPreviousProject.SelectedIndex = 0;
-
+                    radioClientType.SelectedValue = "Intern";
+                    divClientForm.Visible = false;
                 }
-
-                toggleReservationTwoVisible();
+                ToggleReservationTwoVisible();
 
             }
 
         }
 
-        private void fillDropPreviousProject()
+        private void fillDropPreviousProject(Semester projectSemester)
         {
-            var currSemId = Semester.CurrentSemester(db).Id;
-            var lastSemId = Semester.LastSemester(db).Id;
+            var lastSem = Semester.LastSemester(projectSemester, db);
+            var beforeLastSem = Semester.LastSemester(lastSem, db);
             dropPreviousProject.DataSource = db.Projects.Where(p =>
                                         (p.LogProjectType.P5 && !p.LogProjectType.P6)
                                         && p.State == ProjectState.Published
-                                        && (p.SemesterId == currSemId || (p.SemesterId == lastSemId && p.LogProjectDuration == 2)));
+                                        && (p.SemesterId == lastSem.Id || (p.SemesterId == beforeLastSem.Id && p.LogProjectDuration == 2)));
             dropPreviousProject.DataBind();
             dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
-        }
-
-        private bool projectHasExtClient(Project project)
-        {
-            if (project != null)
-            {
-                string[] clientInformationStrings = { project.ClientAddressPostcode, project.ClientAddressCity, project.ClientAddressDepartment, project.ClientAddressStreet, project.ClientAddressTitle, project.ClientCompany, project.ClientMail, project.ClientPerson, project.ClientReferenceNumber };
-
-                foreach (var clientInformationstirng in clientInformationStrings)
-                {
-                    if (!string.IsNullOrEmpty(clientInformationstirng))
-                        return true;
-                }
-                return false;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         private void RetrieveProjectToEdit()
@@ -264,19 +247,29 @@ namespace ProStudCreator
             refuseProject.Visible = project.UserCanReject();
             rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
 
-            fillDropPreviousProject();
-            dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ?? "dropPreviousProjectImpossibleValue";
+            POneType.SelectedValue = project?.POneType.Id.ToString();
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+
+            Reservation1Mail.Text = project.Reservation1Mail;
+            Reservation1Name.Text = project.Reservation1Name;
+            Reservation2Mail.Text = project.Reservation2Mail;
+            Reservation2Name.Text = project.Reservation2Name;
+
+            DisplayClient(project);
 
 
-            displayClient(project?.Project1 ?? null);
-            displayPriority(project?.Project1 ?? null);
-            displayReservations(project?.Project1 ?? null);
+            fillDropPreviousProject(project.Semester);
 
-            checkExtClient.Checked = divClientForm.Visible = projectHasExtClient(project); //Checks if project has extern Client
-
-            updateClient.Update();
-            updateClientCompany.Update();
-
+            if (project.PreviousProjectID == null)
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID.ToString();
+                prepareForm(false);
+            }
+            else
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ?? "dropPreviousProjectImpossibleValue";
+                prepareForm(true);
+            }
         }
 
 
@@ -299,14 +292,14 @@ namespace ProStudCreator
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
 
-            fillproject(project);
+            Fillproject(project);
 
             db.SubmitChanges();
             project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
             db.SubmitChanges();
         }
 
-        private void toggleReservationTwoVisible()
+        private void ToggleReservationTwoVisible()
         {
             bool showResTwo = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
             Reservation2Name.Visible = showResTwo;
@@ -547,7 +540,7 @@ namespace ProStudCreator
         {
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
-            fillproject(project);
+            Fillproject(project);
 
             db.SubmitChanges();
 
@@ -650,50 +643,48 @@ namespace ProStudCreator
 
         protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            toggleReservationTwoVisible();
+            ToggleReservationTwoVisible();
         }
 
         protected void dropPreviousProject_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dropPreviousProject.SelectedValue == "dropPreviousProjectImpossibleValue")
             {
-                displayReservations(null);
-                displayClient(null);
-                displayPriority(null);
-                checkExtClient.Checked = false;
+                DisplayClient(null);
+                DisplayPriority(null);
+                DisplayReservations(null);
             }
             else
             {
                 var previousProject = db.Projects.Single(p => p.Id == int.Parse(dropPreviousProject.SelectedValue));
-                displayReservations(previousProject);
-                displayClient(projectHasExtClient(previousProject) ? previousProject : null);
-                displayPriority(previousProject);
-                checkExtClient.Checked = projectHasExtClient(previousProject);
+                DisplayClient(previousProject);
+                DisplayReservations(previousProject);
+                DisplayPriority(previousProject);
             }
             updateReservation.Update();
             updateClient.Update();
         }
 
-        protected void checkExtClient_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkExtClient.Checked)
-            {
-                divClientForm.Visible = true;
-            }
-            else
-            {
-                divClientForm.Visible = false;
-            }
-        }
-
         protected void radioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            Console.WriteLine(radioClientType.SelectedIndex);
+
+
             if (radioClientType.SelectedValue == "Company")
             {
+                divClientForm.Visible = true;
                 divClientCompany.Visible = true;
+
+            }
+            else if (radioClientType.SelectedValue == "Intern")
+            {
+                divClientForm.Visible = false;
+                divClientCompany.Visible = false;
             }
             else
             {
+                divClientForm.Visible = true;
                 divClientCompany.Visible = false;
             }
         }
@@ -707,7 +698,7 @@ namespace ProStudCreator
             {
                 PdfCreator pdfc = new PdfCreator();
 
-                fillproject(project);
+                Fillproject(project);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -724,7 +715,7 @@ namespace ProStudCreator
         #endregion
 
         #region private methods
-        private void fillproject(Project project)
+        private void Fillproject(Project project)
         {
             project.Name = ProjectName.Text.FixupParagraph();
             project.Advisor1Name = NameBetreuer1.Text.FixupParagraph();
@@ -732,7 +723,7 @@ namespace ProStudCreator
             project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
             project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
 
-            if (checkExtClient.Checked)
+            if (radioClientType.SelectedValue != "Intern")
             {
                 if (radioClientType.SelectedValue == "Company")
                     project.ClientCompany = txtClientCompany.Text.FixupParagraph();
@@ -898,7 +889,7 @@ namespace ProStudCreator
 
         }
 
-        private void displayReservations(Project previousProject)
+        private void DisplayReservations(Project previousProject)
         {
             if (previousProject == null)
             {
@@ -917,47 +908,43 @@ namespace ProStudCreator
 
         }
 
-        private void displayClient(Project previousProject)
+        private void DisplayClient(Project project)
         {
-            if (previousProject == null)
+            if (project == null)
             {
+                drpClientTitle.SelectedValue = "1"; //Default
+
+                txtClientCompany.Text =
+                txtClientName.Text =
+                txtClientDepartment.Text =
+                txtClientStreet.Text =
+                txtClientPLZ.Text =
+                txtClientCity.Text =
+                txtClientReference.Text =
+                txtClientEmail.Text = "";
+
                 divClientForm.Visible = false;
-                radioClientType.Enabled = true;
-                txtClientCompany.Text = txtClientName.Text = txtClientDepartment.Text = txtClientStreet.Text = txtClientPLZ.Text = txtClientCity.Text = txtClientReference.Text = txtClientEmail.Text = "";
-                txtClientCompany.Enabled = txtClientName.Enabled = txtClientDepartment.Enabled = txtClientStreet.Enabled = txtClientPLZ.Enabled = txtClientCity.Enabled = txtClientReference.Enabled = txtClientEmail.Enabled = drpClientTitle.Enabled = true;
+                radioClientType.SelectedValue = "Intern";
             }
             else
             {
-                txtClientCompany.Enabled = txtClientName.Enabled = txtClientDepartment.Enabled = txtClientStreet.Enabled = txtClientPLZ.Enabled = txtClientCity.Enabled = txtClientReference.Enabled = txtClientEmail.Enabled = drpClientTitle.Enabled = false;
-                divClientForm.Visible = true;
-                radioClientType.Enabled = false;
-                if (string.IsNullOrEmpty(previousProject.ClientCompany))
-                {
-                    radioClientType.SelectedValue = "PrivatePerson";
-                    divClientCompany.Visible = false;
-                }
-                else
-                {
-                    radioClientType.SelectedValue = "Company";
-                    divClientCompany.Visible = true;
-                }
-                txtClientCompany.Text = previousProject?.ClientCompany;
-                drpClientTitle.SelectedValue = (previousProject?.ClientAddressTitle == "Herr") ? "1" : "2";
-                txtClientName.Text = previousProject?.ClientPerson;
-                txtClientDepartment.Text = previousProject?.ClientAddressDepartment;
-                txtClientStreet.Text = previousProject?.ClientAddressStreet;
-                txtClientPLZ.Text = previousProject?.ClientAddressPostcode;
-                txtClientCity.Text = previousProject?.ClientAddressCity;
-                txtClientReference.Text = previousProject?.ClientReferenceNumber;
-                txtClientEmail.Text = previousProject?.ClientMail;
+                txtClientCompany.Text = project?.ClientCompany;
+                drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
+                txtClientName.Text = project?.ClientPerson;
+                txtClientDepartment.Text = project?.ClientAddressDepartment;
+                txtClientStreet.Text = project?.ClientAddressStreet;
+                txtClientPLZ.Text = project?.ClientAddressPostcode;
+                txtClientCity.Text = project?.ClientAddressCity;
+                txtClientReference.Text = project?.ClientReferenceNumber;
+                txtClientEmail.Text = project?.ClientMail;
+
+                prepareClientForm(project);
             }
-
-
         }
 
-        private void displayPriority(Project previousProject)
+        private void DisplayPriority(Project project)
         {
-            if (previousProject == null)
+            if (project == null)
             {
                 POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = true;
                 POneType.SelectedValue = db.ProjectTypes.Single(p => p.P5 && p.P6).Id.ToString();
@@ -969,7 +956,7 @@ namespace ProStudCreator
                 divPriorityTwo.Visible = false;
                 POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = false;
                 POneType.SelectedValue = db.ProjectTypes.Single(p => !p.P5 && p.P6).Id.ToString();
-                if (string.IsNullOrEmpty(previousProject.LogStudent2Mail))
+                if (string.IsNullOrEmpty(project.LogStudent2Mail))
                 {
                     POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => p.Size1 && !p.Size2).Id.ToString();
                 }
@@ -978,6 +965,53 @@ namespace ProStudCreator
                     POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => !p.Size1 && p.Size2).Id.ToString();
                 }
             }
+        }
+
+
+        private void prepareForm(bool hasPreviousProj)
+        {
+            //Priority
+            divPriorityTwo.Visible = POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
+            //Reservations
+            Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
+
+        }
+
+        private void prepareClientForm(Project project)
+        {
+
+            var hasClient = false;
+
+            string[] clientInformationStrings = { project.ClientAddressPostcode, project.ClientAddressCity, project.ClientAddressDepartment, project.ClientAddressStreet, project.ClientAddressTitle, project.ClientCompany, project.ClientMail, project.ClientPerson, project.ClientReferenceNumber };
+
+            foreach (var clientInformationstirng in clientInformationStrings)
+            {
+                if (!string.IsNullOrEmpty(clientInformationstirng))
+                {
+                    hasClient = true;
+                }
+            }
+
+            if (hasClient)
+            {
+                if (!string.IsNullOrEmpty(project?.ClientCompany))
+                {
+                    divClientCompany.Visible = divClientForm.Visible = true;
+                    radioClientType.SelectedValue = "Company";
+                }
+                else
+                {
+                    divClientCompany.Visible = false;
+                    divClientForm.Visible = true;
+                    radioClientType.SelectedValue = "PrivatePerson";
+                }
+            }
+            else
+            {
+                divClientCompany.Visible = divClientForm.Visible = false;
+                radioClientType.SelectedValue = "Intern";
+            }
+
         }
     }
 }

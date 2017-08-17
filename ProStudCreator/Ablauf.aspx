@@ -38,7 +38,7 @@
             <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten (IP6) und interessierten Gästen.</li>
             <li>Notenbesprechung mit den Experten (IP6), ggf. Anpassung der Bewertung. Pro Student/-in soll eine <i>individuelle</i> Note festgelegt werden.</li>
             <li><strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
-            <li>Im Idealfall machst Du noch eine Schlusssitzung mit den Studierenden. Der Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
+            <li>Im Idealfall machst Du noch eine Schlusssitzung mit den Studierenden. Den Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
         </ol>
         <p>
             <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei uns. Je früher, desto besser.
