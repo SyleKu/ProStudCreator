@@ -13,6 +13,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using AjaxControlToolkit;
 
 namespace ProStudCreator
 {
@@ -32,7 +33,7 @@ namespace ProStudCreator
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single(p => (int?) p.Id == id);
+                project = db.Projects.Single(p => (int?)p.Id == id);
             }
             else
             {
@@ -356,7 +357,7 @@ namespace ProStudCreator
                 }
 
                 project.BillingStatusID = drpBillingstatus.SelectedIndex == 0
-                    ? (int?) null
+                    ? (int?)null
                     : int.Parse(drpBillingstatus.SelectedValue);
 
                 //this sould always be under the project.BillingstatusId statement
@@ -405,117 +406,38 @@ namespace ProStudCreator
 
         protected void radioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (radioClientType.SelectedValue == "Company")
-                divClientCompany.Visible = true;
-            else
-                divClientCompany.Visible = false;
+            divClientCompany.Visible = radioClientType.SelectedValue == "Company";
         }
 
-        private enum ProjectTypes
+        protected void OnUploadComplete(object sender, AjaxFileUploadEventArgs e)
         {
-            IP5,
-            IP6,
-            NotDefined
-        }
-    }
-
-
-    /*public class ExtendedFileProvider : FileBrowserContentProvider
-    {
-        private readonly int _id;
-        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        private readonly Project project;
-
-        public ExtendedFileProvider(HttpContext context, string[] searchPatterns, string[] viewPaths,
-            string[] uploadPaths, string[] deletePaths, string selectedUrl, string selectedItemTag)
-            : base(context, searchPatterns, viewPaths, uploadPaths, deletePaths, selectedUrl, selectedItemTag)
-        {
-            _id = int.Parse(HttpContext.Current.Request.QueryString["id"]);
-            project = db.Projects.Single(i => i.Id == _id);
+            var attachement = CreateNewAttach(e.FileSize, e.FileName);
+            SaveFileInDb(attachement, e.GetStreamContents());
+            if(File.Exists(Path.GetTempPath()+Path.PathSeparator+e.FileName))
+                File.Delete(Path.GetTempPath()+Path.PathSeparator+e.FileName);
         }
 
-        public override bool CanCreateDirectory => false;
-
-        public override string DeleteFile(string path)
+        private Attachements CreateNewAttach(long fileSize, string fileName)
         {
-            var fileName = GetFileName(path);
-            var attach = db.Attachements.Single(i => i.ProjectId == _id && i.FileName == fileName);
-            attach.Deleted = true;
-            attach.DeletedDate = DateTime.Now;
-            attach.DeletedUser = ShibUser.GetEmail();
-            db.SubmitChanges();
-            return "Die Datei wurde gelöscht!";
-        }
 
-        public override bool CheckDeletePermissions(string folderPath)
-        {
-            return project.UserCanEditAfterStart();
-        }
-
-        public override bool CheckReadPermissions(string folderPath)
-        {
-            return true;
-        }
-
-        public override bool CheckWritePermissions(string folderPath)
-        {
-            return CheckDeletePermissions(folderPath);
-        }
-
-        public override string StoreFile(UploadedFile file, string path, string name, params string[] arguments)
-        {
-            var justifiedFileName = JusitfyFileName(file.FileName);
-
-            var isDublication = false;
-
-            //get All File to one Project out of the db
-            var allFiles = db.Attachements.Where(i => i.ProjectId == _id && !i.Deleted);
-            foreach (var attachement in allFiles)
-                if (attachement.FileName.Equals(justifiedFileName, StringComparison.InvariantCultureIgnoreCase))
-                    isDublication = true;
-
-            if (isDublication)
-            {
-                SaveFileInDb(file,
-                    db.Attachements.Single(i => i.FileName == justifiedFileName && i.ProjectId == _id && !i.Deleted));
-                return string.Empty;
-            }
-
-
-            var attach = CreateNewAttach(file, justifiedFileName);
-            try
-            {
-                SaveFileInDb(file, attach);
-            }
-            catch (Exception e)
-            {
-                attach.Deleted = true;
-                attach.DeletedDate = DateTime.Now;
-                attach.DeletedUser = null;
-                attach.ProjectAttachement = Encoding.UTF8.GetBytes(e.ToString().ToCharArray());
-                db.SubmitChanges();
-            }
-            return string.Empty;
-        }
-
-        private Attachements CreateNewAttach(UploadedFile file, string justifiedFileName)
-        {
             var attach = new Attachements
             {
-                ProjectId = _id,
+                ProjectId = int.Parse(Request.QueryString["id"]),
                 UploadUser = ShibUser.GetEmail(),
                 UploadDate = DateTime.Now,
-                UploadSize = file.ContentLength,
+                UploadSize = fileSize,
                 ProjectAttachement = new Binary(new byte[0]),
-                FileName = justifiedFileName
+                FileName = fileName
             };
             db.Attachements.InsertOnSubmit(attach);
             db.SubmitChanges();
 
             return attach;
+
         }
 
-        private void SaveFileInDb(UploadedFile file, Attachements attach)
+
+        private void SaveFileInDb(Attachements attach, Stream file)
         {
             using (var connection = new SqlConnection(db.Connection.ConnectionString))
             {
@@ -543,7 +465,7 @@ namespace ProStudCreator
                                 Stream fileStream = new SqlFileStream(pathfile, transactionContext, FileAccess.Write,
                                     FileOptions.SequentialScan, 0))
                             {
-                                file.InputStream.CopyTo(fileStream, 65536);
+                                file.CopyTo(fileStream, 65536);
                             }
                         }
                     }
@@ -552,146 +474,11 @@ namespace ProStudCreator
             }
         }
 
-        public override DirectoryItem ResolveRootDirectoryAsTree(string path)
+        private enum ProjectTypes
         {
-            return ResolveDirectory(path);
+            IP5,
+            IP6,
+            NotDefined
         }
-
-        public override DirectoryItem ResolveDirectory(string path)
-        {
-            var attaches = db.Attachements.Where(i => i.ProjectId == _id && !i.Deleted);
-            var files = new List<FileItem>();
-
-            foreach (var attach in attaches)
-                files.Add(new FileItem(attach.FileName, "", (long) attach.UploadSize, $@"~\{_id}\{attach.FileName}",
-                    $@"\{_id}\{attach.FileName}", "", GetPermissions(path)));
-
-            var item = new DirectoryItem($"{_id}", @"\", @"\", "", GetPermissions(path), files.ToArray(),
-                new DirectoryItem[0]);
-            return item;
-        }
-
-        public override string GetFileName(string url)
-        {
-            return Path.GetFileName(url);
-        }
-
-        public override string GetPath(string url)
-        {
-            return url;
-        }
-
-        public override Stream GetFile(string url)
-        {
-            Stream returnStream = null;
-            var fileName = GetFileName(url);
-            using (var connection = new SqlConnection(db.Connection.ConnectionString))
-            {
-                connection.Open();
-                var command =
-                    new SqlCommand(
-                        "SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ProjectId = @id AND FileName = '@filename';",
-                        connection);
-                command.Parameters.AddWithValue("@id", _id);
-                command.Parameters.AddWithValue("@filename", fileName);
-
-                using (var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
-                {
-                    command.Transaction = tran;
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            // Get the pointer for the file  
-                            var path = reader.GetString(0);
-                            var transactionContext = reader.GetSqlBytes(1).Buffer;
-
-                            // Create the SqlFileStream  
-                            using (
-                                Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read,
-                                    FileOptions.SequentialScan, 0))
-                            {
-                                fileStream.CopyTo(returnStream);
-                            }
-                        }
-                    }
-                    tran.Commit();
-                }
-            }
-
-            return returnStream;
-        }
-
-        public override string StoreBitmap(Bitmap bitmap, string url, ImageFormat format)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string DeleteDirectory(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string CreateDirectory(string path, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        private PathPermissions GetPermissions(string folderPath)
-        {
-            var permissions = PathPermissions.Read;
-            if (CheckDeletePermissions(folderPath)) permissions = PathPermissions.Delete | permissions;
-            if (CheckWritePermissions(folderPath)) permissions = PathPermissions.Upload | permissions;
-
-            return permissions;
-        }
-
-        private string JusitfyFileName(string FileName)
-        {
-            var dir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(dir);
-
-            try
-            {
-                var stream = File.Create(Path.Combine(dir, FileName));
-                stream.Dispose();
-            }
-            catch (IOException)
-            {
-                try
-                {
-                    File.Delete(Path.Combine(dir, FileName));
-                }
-                catch
-                {
-                }
-
-                if (Path.GetInvalidFileNameChars().Any(i => FileName.Contains(i)))
-                {
-                    foreach (var invalidChar in Path.GetInvalidFileNameChars())
-                        if (FileName.Contains(invalidChar))
-                            FileName = FileName.Replace(invalidChar, '_');
-                    return JusitfyFileName(FileName);
-                }
-                else
-                {
-                    return JusitfyFileName("_" + FileName);
-                }
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(Path.Combine(dir, FileName));
-                }
-                catch
-                {
-                }
-                Directory.Delete(dir, true);
-            }
-
-            return FileName;
-        }
-    }*/
+    }
 }

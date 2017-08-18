@@ -198,9 +198,10 @@
         <hr/>
         <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
         <div class="form-group">
-            <ajax:AjaxFileUpload runat="server" MaxFileSize="2147483"/>
+            <ajax:AjaxFileUpload runat="server" ServerPollingSupport="True" MaxFileSize="2147483" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True"/>
         </div>
     </div>
+    <div style="clear: both"></div>
     <div style="text-align: right;">
         <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>
         <asp:Button runat="server" ID="BtnSaveBetween" OnClick="BtnSaveBetween_OnClick" CssClass="btn btn-default" Text="Zwischenspeichern"/>
