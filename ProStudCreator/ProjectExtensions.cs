@@ -17,7 +17,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Submits user's project for approval by an admin.
+        ///     Submits user's project for approval by an admin.
         /// </summary>
         /// <param name="_p"></param>
         public static void Submit(this Project _p)
@@ -29,7 +29,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Publishes a project after submission. Admin only.
+        ///     Publishes a project after submission. Admin only.
         /// </summary>
         /// <param name="_p"></param>
         public static void Publish(this Project _p, ProStudentCreatorDBDataContext _dbx)
@@ -41,7 +41,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Rejects a project after submission. Admin only.
+        ///     Rejects a project after submission. Admin only.
         /// </summary>
         /// <param name="_p"></param>
         public static void Reject(this Project _p)
@@ -50,38 +50,36 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Generates a new project number that is unique per semester and institute.
-        /// Applies to projects after submission.
+        ///     Generates a new project number that is unique per semester and institute.
+        ///     Applies to projects after submission.
         /// </summary>
         /// <param name="_p"></param>
         public static void GenerateProjectNr(this Project _p)
         {
-            using (ProStudentCreatorDBDataContext dbx = new ProStudentCreatorDBDataContext())
+            using (var dbx = new ProStudentCreatorDBDataContext())
             {
-                DateTime semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
-                DateTime semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
+                var semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
+                var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
 
                 // Get project numbers from this semester & same department
-                int[] nrs = (
+                var nrs = (
                     from p in dbx.Projects
                     where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
-                        && p.Id != _p.Id
-                        && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
-                        && p.Department == _p.Department
-                    select p.ProjectNr).ToArray<int>();
+                          && p.Id != _p.Id
+                          && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
+                          && p.Department == _p.Department
+                    select p.ProjectNr).ToArray();
                 if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
                 {
                     _p.ProjectNr = 1;
                     while (nrs.Contains(_p.ProjectNr))
-                    {
                         _p.ProjectNr++;
-                    }
                 }
             }
         }
 
         /// <summary>
-        /// Sets project state to deleted so it's no longer listed. Admin only.
+        ///     Sets project state to deleted so it's no longer listed. Admin only.
         /// </summary>
         /// <param name="_p"></param>
         public static void Delete(this Project _p)
@@ -91,7 +89,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Rolls back project into editable state.
+        ///     Rolls back project into editable state.
         /// </summary>
         /// <param name="_p"></param>
         public static void Unsubmit(this Project _p)
@@ -100,7 +98,7 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Revokes project state from 'published' to 'submitted'. Admin only.
+        ///     Revokes project state from 'published' to 'submitted'. Admin only.
         /// </summary>
         /// <param name="_p"></param>
         public static void Unpublish(this Project _p)
@@ -115,14 +113,9 @@ namespace ProStudCreator
         public static int GetProjectTeamSize(this Project _p)
         {
             if (_p.POneTeamSize.Size2 ||
-               (_p.PTwoTeamSize != null && _p.PTwoTeamSize.Size2))
-            {
+                _p.PTwoTeamSize != null && _p.PTwoTeamSize.Size2)
                 return 2;
-            }
-            else
-            {
-                return 1;
-            }
+            return 1;
         }
 
         public static DateTime GetDeliveryDate(this Project _p)
@@ -131,59 +124,44 @@ namespace ProStudCreator
             {
                 DateTime dbDate;
 
-                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P5 ?? false))  //IP5 Projekt Voll/TeilZeit
-                {
+                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Projekt Voll/TeilZeit
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
                         ? dbDate
                         : Semester.NextSemester(db).EndDate;
-                }
-                else if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
-                {
+                if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
                         ? dbDate
                         : Semester.NextSemester(db).EndDate;
-                }
-                else if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 1 Semester
-                {
+                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 1 Semester
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
                         ? dbDate
                         : Semester.NextSemester(db).EndDate;
-                }
-                else if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 2 Semester
-                {
+                if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 2 Semester
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
                         ? dbDate
                         : Semester.NextSemester(db).EndDate;
-                }
-                else
-                {
-                    return Semester.NextSemester(db).EndDate;
-                }
+                return Semester.NextSemester(db).EndDate;
             }
         }
 
 
         public static bool CanEditTitle(this Project _p)
         {
-           return DateTime.Now < _p.GetDeliveryDate().AddDays(
-               -11*7 /* 11 weeks before delivery date */
-               +2 /* give some leeway */);
+            return DateTime.Now < _p.GetDeliveryDate().AddDays(
+                       -11 * 7 /* 11 weeks before delivery date */
+                       + 2 /* give some leeway */);
         }
 
 
         public static Semester GetEndSemester(this Project _p, ProStudentCreatorDBDataContext db)
         {
-
             if (_p.LogProjectDuration == 2)
-            {
                 return Semester.NextSemester(_p.Semester, db);
-            }
             return _p.Semester;
-
         }
 
         #endregion
@@ -192,17 +170,20 @@ namespace ProStudCreator
 
         public static bool UserCanEdit(this Project _p)
         {
-            return ShibUser.CanEditAllProjects() || (_p.UserIsOwner() && (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected || _p.State == ProjectState.Submitted));
+            return ShibUser.CanEditAllProjects() || _p.UserIsOwner() &&
+                   (_p.State == ProjectState.InProgress || _p.State == ProjectState.Rejected ||
+                    _p.State == ProjectState.Submitted);
         }
 
         public static bool UserIsOwner(this Project _p)
         {
-            return (_p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() || _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail());
+            return _p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() ||
+                   _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail();
         }
 
         public static bool UserCanEditAfterStart(this Project _p)
         {
-            return (ShibUser.CanEditAllProjects() || _p.UserIsOwner());
+            return ShibUser.CanEditAllProjects() || _p.UserIsOwner();
         }
 
         public static bool UserCanPublish(this Project _p)
@@ -218,7 +199,7 @@ namespace ProStudCreator
         public static bool UserCanReject(this Project _p)
         {
             return (_p.State == ProjectState.Submitted || _p.State == ProjectState.Published)
-                && ShibUser.CanPublishProject();
+                   && ShibUser.CanPublishProject();
         }
 
         public static bool UserCanSubmit(this Project _p)
@@ -238,17 +219,17 @@ namespace ProStudCreator
         public static string Export(this ProjectType pt)
         {
             if (pt.P5 && !pt.P6) return "P5";
-            else if (!pt.P5 && pt.P6) return "P6";
-            else return "both";
+            if (!pt.P5 && pt.P6) return "P6";
+            return "both";
         }
 
         public static string Export(this ProjectTeamSize pts)
         {
             if (pts.Size1 && !pts.Size2) return "1";
-            else if (!pts.Size1 && pts.Size2) return "2";
-            else return "1;2";
+            if (!pts.Size1 && pts.Size2) return "2";
+            return "1;2";
         }
-        #endregion
 
+        #endregion
     }
 }

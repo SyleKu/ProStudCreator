@@ -364,15 +364,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox txtClientReference;
         
         /// <summary>
-        /// FileExplorer control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadFileExplorer FileExplorer;
-        
-        /// <summary>
         /// BtnSaveChanges control.
         /// </summary>
         /// <remarks>

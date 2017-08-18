@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.IO;
+using System.Linq;
+using System.Web.UI;
 
 namespace ProStudCreator
 {
-    public partial class ProjectFilesDownload : System.Web.UI.Page
+    public partial class ProjectFilesDownload : Page
     {
-        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -35,27 +32,30 @@ namespace ProStudCreator
             Response.AddHeader("content-disposition", "attachment; filename=\"" + attach.FileName + "\"");
             Response.AddHeader("Content-Lenght", attach.UploadSize.ToString());
 
-            using (SqlConnection connection = new SqlConnection(db.Connection.ConnectionString))
+            using (var connection = new SqlConnection(db.Connection.ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand($"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID;", connection);
+                var command =
+                    new SqlCommand(
+                        $"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID;",
+                        connection);
                 command.Parameters.AddWithValue("@ROWGUID", attach.ROWGUID.ToString());
-                using (SqlTransaction tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
+                using (var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
                     command.Transaction = tran;
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             // Get the pointer for the file  
-                            string path = reader.GetString(0);
-                            byte[] transactionContext = reader.GetSqlBytes(1).Buffer;
+                            var path = reader.GetString(0);
+                            var transactionContext = reader.GetSqlBytes(1).Buffer;
 
                             // Create the SqlFileStream  
                             using (
                                 Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read,
-                                    FileOptions.SequentialScan, allocationSize: 0))
+                                    FileOptions.SequentialScan, 0))
                             {
                                 fileStream.CopyTo(Response.OutputStream);
                                 Response.Flush();

@@ -3,21 +3,45 @@ using System.Data.Linq;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+
 namespace ProStudCreator
 {
     public partial class AddNewProject : Page
     {
-        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        private bool[] projectType = new bool[8];
+        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         private int? id;
         private Project project;
         private ProjectType projectPriority = new ProjectType();
+        private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
+
+        #region Timer tick
+
+        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
+        {
+            if (project != null)
+            {
+                var pdfc = new PdfCreator();
+
+                Fillproject(project);
+
+                if (pdfc.CalcNumberOfPages(project) > 1)
+                {
+                    Pdfupdatelabel.Text = "Länge: Das PDF ist länger als eine Seite!";
+                    Pdfupdatelabel.ForeColor = Color.Red;
+                }
+                else
+                {
+                    Pdfupdatelabel.Text = "Länge: OK (1 Seite)";
+                    Pdfupdatelabel.ForeColor = Color.Green;
+                }
+            }
+        }
+
+        #endregion
 
         #region Application logic
 
@@ -29,7 +53,7 @@ namespace ProStudCreator
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single((Project p) => (int?)p.Id == id);
+                project = db.Projects.Single(p => (int?) p.Id == id);
                 if (!project.UserCanEdit())
                 {
                     Response.Redirect("error/AccessDenied.aspx");
@@ -52,9 +76,9 @@ namespace ProStudCreator
                 Image1.Visible = false;
             }
 
-            if (base.IsPostBack)
+            if (IsPostBack)
             {
-                projectType = (bool[])ViewState["Types"];
+                projectType = (bool[]) ViewState["Types"];
             }
             else
             {
@@ -66,31 +90,34 @@ namespace ProStudCreator
                 //ReferencesContent.Attributes.Add("maxlength", ReferencesContent.MaxLength.ToString());
                 //RemarksContent.Attributes.Add("maxlength", RemarksContent.MaxLength.ToString());
 
-                InitialPositionContent.Attributes.Add("placeholder", "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
-                ObjectivContent.Attributes.Add("placeholder", "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");
-                ProblemStatementContent.Attributes.Add("placeholder", "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
-                ReferencesContent.Attributes.Add("placeholder", "Beispiel:\n- JavaScript\n- Komplexe Datenstrukturen\n- Three.js/WebGL");
-                RemarksContent.Attributes.Add("placeholder", "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
+                InitialPositionContent.Attributes.Add("placeholder",
+                    "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
+                ObjectivContent.Attributes.Add("placeholder",
+                    "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");
+                ProblemStatementContent.Attributes.Add("placeholder",
+                    "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
+                ReferencesContent.Attributes.Add("placeholder",
+                    "Beispiel:\n- JavaScript\n- Komplexe Datenstrukturen\n- Three.js/WebGL");
+                RemarksContent.Attributes.Add("placeholder",
+                    "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
 
                 POneType.DataSource = db.ProjectTypes;
                 POneTeamSize.DataSource = db.ProjectTeamSizes;
-                PTwoType.DataSource = Enumerable.Repeat<ProjectType>(new ProjectType
+                PTwoType.DataSource = Enumerable.Repeat(new ProjectType
                 {
                     Description = "-",
                     Id = -1
                 }, 1).Concat(db.ProjectTypes);
-                PTwoTeamSize.DataSource = Enumerable.Repeat<ProjectTeamSize>(new ProjectTeamSize
+                PTwoTeamSize.DataSource = Enumerable.Repeat(new ProjectTeamSize
                 {
                     Description = "-",
                     Id = -1
                 }, 1).Concat(db.ProjectTeamSizes);
 
                 Department.DataSource = db.Departments;
-                int? dep = ShibUser.GetDepartmentId(db);
+                var dep = ShibUser.GetDepartmentId(db);
                 if (dep.HasValue)
-                {
                     Department.SelectedValue = dep.Value.ToString();
-                }
 
                 NameBetreuer2.Text = ShibUser.GetFullName();
                 EMail2.Text = ShibUser.GetEmail();
@@ -109,7 +136,6 @@ namespace ProStudCreator
 
                     RetrieveProjectToEdit();
                     prepareClientForm(project);
-
                 }
                 else
                 {
@@ -122,9 +148,7 @@ namespace ProStudCreator
                     divClientForm.Visible = false;
                 }
                 ToggleReservationTwoVisible();
-
             }
-
         }
 
         private void fillDropPreviousProject(Semester projectSemester)
@@ -132,9 +156,9 @@ namespace ProStudCreator
             var lastSem = Semester.LastSemester(projectSemester, db);
             var beforeLastSem = Semester.LastSemester(lastSem, db);
             dropPreviousProject.DataSource = db.Projects.Where(p =>
-                                        (p.LogProjectType.P5 && !p.LogProjectType.P6)
-                                        && p.State == ProjectState.Published
-                                        && (p.SemesterId == lastSem.Id || (p.SemesterId == beforeLastSem.Id && p.LogProjectDuration == 2)));
+                p.LogProjectType.P5 && !p.LogProjectType.P6
+                && p.State == ProjectState.Published
+                && (p.SemesterId == lastSem.Id || p.SemesterId == beforeLastSem.Id && p.LogProjectDuration == 2));
             dropPreviousProject.DataBind();
             dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
         }
@@ -192,22 +216,16 @@ namespace ProStudCreator
             }
 
             POneType.SelectedValue = project.POneType.Id.ToString();
-            PTwoType.SelectedValue = ((project.PTwoType == null) ? null : project.PTwoType.Id.ToString());
+            PTwoType.SelectedValue = project.PTwoType == null ? null : project.PTwoType.Id.ToString();
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
-            PTwoTeamSize.SelectedValue = ((project.PTwoTeamSize == null) ? null : project.PTwoTeamSize.Id.ToString());
+            PTwoTeamSize.SelectedValue = project.PTwoTeamSize == null ? null : project.PTwoTeamSize.Id.ToString();
 
             if (project.LanguageEnglish && !project.LanguageGerman)
-            {
                 Language.SelectedIndex = 2;
-            }
             else if (!project.LanguageEnglish && project.LanguageGerman)
-            {
                 Language.SelectedIndex = 1;
-            }
             else
-            {
                 Language.SelectedIndex = 0;
-            }
 
             //LanguageGerman.Checked = project.LanguageGerman;
             //LanguageEnglish.Checked = project.LanguageEnglish;
@@ -267,18 +285,19 @@ namespace ProStudCreator
             }
             else
             {
-                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ?? "dropPreviousProjectImpossibleValue";
+                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ??
+                                                    "dropPreviousProjectImpossibleValue";
                 prepareForm(true);
             }
         }
 
 
         /// <summary>
-        /// Saves changes to the project in the database.
+        ///     Saves changes to the project in the database.
         /// </summary>
         private void SaveProject()
         {
-            if (project == null)    // New project
+            if (project == null) // New project
             {
                 project = new Project();
                 project.InitNew();
@@ -295,13 +314,14 @@ namespace ProStudCreator
             Fillproject(project);
 
             db.SubmitChanges();
-            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             db.SubmitChanges();
         }
 
         private void ToggleReservationTwoVisible()
         {
-            bool showResTwo = (POneTeamSize.SelectedIndex != 0 || (PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1));
+            var showResTwo = POneTeamSize.SelectedIndex != 0 ||
+                             PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1;
             Reservation2Name.Visible = showResTwo;
             Reservation2Mail.Visible = showResTwo;
         }
@@ -309,6 +329,7 @@ namespace ProStudCreator
         #endregion
 
         #region Click handlers: Project categories
+
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
         {
             if (DesignUX.ImageUrl == "pictures/projectTypDesignUXUnchecked.png")
@@ -323,6 +344,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void HW_Click(object sender, ImageClickEventArgs e)
         {
             if (HW.ImageUrl == "pictures/projectTypHWUnchecked.png")
@@ -337,6 +359,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void CGIP_Click(object sender, ImageClickEventArgs e)
         {
             if (CGIP.ImageUrl == "pictures/projectTypCGIPUnchecked.png")
@@ -351,6 +374,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void MathAlg_Click(object sender, ImageClickEventArgs e)
         {
             if (MathAlg.ImageUrl == "pictures/projectTypMathAlgUnchecked.png")
@@ -365,6 +389,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void AppWeb_Click(object sender, ImageClickEventArgs e)
         {
             if (AppWeb.ImageUrl == "pictures/projectTypAppWebUnchecked.png")
@@ -379,6 +404,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void DBBigData_Click(object sender, ImageClickEventArgs e)
         {
             if (DBBigData.ImageUrl == "pictures/projectTypDBBigDataUnchecked.png")
@@ -393,6 +419,7 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         protected void SysSec_Click(object sender, ImageClickEventArgs e)
         {
             if (SysSec.ImageUrl == "pictures/projectTypSysSecUnchecked.png")
@@ -422,20 +449,22 @@ namespace ProStudCreator
             }
             ViewState["Types"] = projectType;
         }
+
         #endregion
 
         #region Click handlers: Buttons (user)
 
         /// <summary>
-        /// Saves the current state of the form and continue editing.
+        ///     Saves the current state of the form and continue editing.
         /// </summary>
         protected void saveProjectButton(object sender, EventArgs e)
         {
             SaveProject();
             Response.Redirect("AddNewProject?id=" + project.Id);
         }
+
         /// <summary>
-        /// Save the current state of the form and return to project list.
+        ///     Save the current state of the form and return to project list.
         /// </summary>
         protected void saveCloseProjectButton(object sender, EventArgs e)
         {
@@ -453,7 +482,7 @@ namespace ProStudCreator
         {
             SaveProject();
 
-            string validationMessage = generateValidationMessage();
+            var validationMessage = generateValidationMessage();
 
             // Generate JavaScript alert with error message
             if (validationMessage != null)
@@ -465,7 +494,7 @@ namespace ProStudCreator
                 sb.Append(validationMessage);
                 sb.Append("')};");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
+                ClientScript.RegisterClientScriptBlock(GetType(), "alert", sb.ToString());
             }
             else
             {
@@ -476,29 +505,29 @@ namespace ProStudCreator
         }
 
         /// <summary>
-        /// Validates the user's input and generates an error message for invalid input.
-        /// One message is returned at a time, processed top to bottom.
+        ///     Validates the user's input and generates an error message for invalid input.
+        ///     One message is returned at a time, processed top to bottom.
         /// </summary>
         /// <returns>First applicable error message from the validation.</returns>
         private string generateValidationMessage()
         {
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
-            else if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+            if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
-            else if (!project.Advisor1Name.IsValidName())
+            if (!project.Advisor1Name.IsValidName())
                 return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            else if (!project.Advisor1Mail.IsValidEmail())
+            if (!project.Advisor1Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            else if (project.Advisor2Name != "" && !project.Advisor2Name.IsValidName())
+            if (project.Advisor2Name != "" && !project.Advisor2Name.IsValidName())
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            else if (project.Advisor2Name != "" && !project.Advisor2Mail.IsValidEmail())
+            if (project.Advisor2Name != "" && !project.Advisor2Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            else if (project.Advisor2Name == "" && project.Advisor2Mail != "")
+            if (project.Advisor2Name == "" && project.Advisor2Mail != "")
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
 
-            int numAssignedTypes = projectType.Count(a => a);
+            var numAssignedTypes = projectType.Count(a => a);
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
@@ -516,15 +545,17 @@ namespace ProStudCreator
                 return "Nur Hauptbetreuer können Projekte einreichen.";
 
             if (project.Reservation1Mail != "" && project.Reservation1Name == "")
-                return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+                return
+                    "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
-            else if (project.Reservation2Mail != "" && project.Reservation2Name == "")
-                return "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+            if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+                return
+                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
-            else if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+            if (project.Reservation1Name != "" && project.Reservation1Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
 
-            else if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+            if (project.Reservation2Name != "" && project.Reservation2Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
 
             /*if (project.Picture != null && project.ImgDescription == "")
@@ -532,6 +563,7 @@ namespace ProStudCreator
                 */
             return null;
         }
+
         #endregion
 
         #region Click handlers: Buttons (admin only)
@@ -544,12 +576,11 @@ namespace ProStudCreator
 
             db.SubmitChanges();
 
-            project.OverOnePage = (new PdfCreator().CalcNumberOfPages(project) > 1);
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             project.Publish(db);
             db.SubmitChanges();
 
-#if !DEBUG
-            // Notification e-mail
+#if !DEBUG // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
             if(project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
@@ -568,7 +599,7 @@ namespace ProStudCreator
             smtpClient.Send(mailMessage);
 #endif
 
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
         }
 
         protected void refuseProject_Click(object sender, EventArgs e)
@@ -577,15 +608,16 @@ namespace ProStudCreator
             refuseProject.Visible = false;
             publishProject.Visible = false;
             saveProject.Visible = false;
-            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von { ShibUser.GetFirstName() } abgelehnt.\n"
-                + "\n"
-                + "Dies sind die Gründe dafür:\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "Freundliche Grüsse\n"
-                + ShibUser.GetFirstName();
+            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
+                                     + "\n"
+                                     + "Dies sind die Gründe dafür:\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "Freundliche Grüsse\n"
+                                     + ShibUser.GetFirstName();
         }
+
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
             project.Reject();
@@ -601,11 +633,12 @@ namespace ProStudCreator
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
             mailMessage.CC.Add(ShibUser.GetEmail());
             mailMessage.Subject = $"Projekt '{project.Name}' abgelehnt";
-            mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
+            mailMessage.Body =
+refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
 #endif
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
         }
 
         protected void cancelRefusion_Click(object sender, EventArgs e)
@@ -619,15 +652,11 @@ namespace ProStudCreator
         protected void rollbackProject_Click(object sender, EventArgs e)
         {
             if (project.UserCanUnpublish())
-            {
                 project.Unpublish();
-            }
             else if (project.UserCanUnsubmit())
-            {
                 project.Unsubmit();
-            }
             db.SubmitChanges();
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
         }
 
         #endregion
@@ -667,7 +696,6 @@ namespace ProStudCreator
 
         protected void radioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             Console.WriteLine(radioClientType.SelectedIndex);
 
 
@@ -675,7 +703,6 @@ namespace ProStudCreator
             {
                 divClientForm.Visible = true;
                 divClientCompany.Visible = true;
-
             }
             else if (radioClientType.SelectedValue == "Intern")
             {
@@ -691,30 +718,8 @@ namespace ProStudCreator
 
         #endregion
 
-        #region Timer tick
-        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
-        {
-            if (project != null)
-            {
-                PdfCreator pdfc = new PdfCreator();
-
-                Fillproject(project);
-
-                if (pdfc.CalcNumberOfPages(project) > 1)
-                {
-                    Pdfupdatelabel.Text = "Länge: Das PDF ist länger als eine Seite!";
-                    Pdfupdatelabel.ForeColor = Color.Red;
-                }
-                else
-                {
-                    Pdfupdatelabel.Text = "Länge: OK (1 Seite)";
-                    Pdfupdatelabel.ForeColor = Color.Green;
-                }
-            }
-        }
-        #endregion
-
         #region private methods
+
         private void Fillproject(Project project)
         {
             project.Name = ProjectName.Text.FixupParagraph();
@@ -765,13 +770,11 @@ namespace ProStudCreator
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = true;
-
             }
             else if (Language.SelectedIndex == 1)
             {
                 project.LanguageGerman = true;
                 project.LanguageEnglish = false;
-
             }
             else if (Language.SelectedIndex == 2)
             {
@@ -780,7 +783,7 @@ namespace ProStudCreator
             }
             else
             {
-                throw new System.ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
+                throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
             }
 
             //project.LanguageGerman = LanguageGerman.Checked;
@@ -799,8 +802,8 @@ namespace ProStudCreator
             }
             else
             {
-                project.P2TypeId = new int?(int.Parse(PTwoType.SelectedValue));
-                project.P2TeamSizeId = new int?(int.Parse(PTwoTeamSize.SelectedValue));
+                project.P2TypeId = int.Parse(PTwoType.SelectedValue);
+                project.P2TeamSizeId = int.Parse(PTwoTeamSize.SelectedValue);
             }
             if (project.P1TeamSizeId == project.P2TeamSizeId && project.P1TypeId == project.P2TypeId)
             {
@@ -819,7 +822,8 @@ namespace ProStudCreator
             project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
             project.Reservation1Mail = Reservation1Mail.Text.Trim().ToLowerInvariant();
 
-            if (Reservation2Name.Visible)   // TODO Check team size instead of visibility (just because it makes more sense)
+            if (Reservation2Name.Visible
+            ) // TODO Check team size instead of visibility (just because it makes more sense)
             {
                 project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
                 project.Reservation2Mail = Reservation2Mail.Text.Trim().ToLowerInvariant();
@@ -838,33 +842,30 @@ namespace ProStudCreator
             }
 
 
-            int oldDepartmentId = project.DepartmentId;
+            var oldDepartmentId = project.DepartmentId;
             project.DepartmentId = int.Parse(Department.SelectedValue);
 
             // If project changed departments & already has a ProjectNr, generate a new one
             if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
             {
-                project.ProjectNr = 0;  // 'Remove' project number to allow finding a new one.
+                project.ProjectNr = 0; // 'Remove' project number to allow finding a new one.
                 project.GenerateProjectNr();
             }
 
             if (project.Semester == null)
-            {
                 project.Semester = Semester.NextSemester(db);
-            }
 
             //picture description
             project.ImgDescription = imgdescription.Text.FixupParagraph();
 
             if (AddPicture.HasFile)
-            {
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
-                    byte[] data = new byte[AddPicture.PostedFile.ContentLength];
-                    int offset = 0;
+                    var data = new byte[AddPicture.PostedFile.ContentLength];
+                    var offset = 0;
                     for (;;)
                     {
-                        int read = input.Read(data, offset, data.Length - offset);
+                        var read = input.Read(data, offset, data.Length - offset);
                         if (read == 0)
                             break;
 
@@ -872,7 +873,6 @@ namespace ProStudCreator
                     }
                     project.Picture = new Binary(data);
                 }
-            }
 
 
             //Previous Project
@@ -886,26 +886,25 @@ namespace ProStudCreator
                 var previousProjectId = int.Parse(dropPreviousProject.SelectedValue);
                 project.Project1 = db.Projects.Single(p => p.Id == previousProjectId);
             }
-
         }
 
         private void DisplayReservations(Project previousProject)
         {
             if (previousProject == null)
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                    Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
                 Reservation1Mail.Text = Reservation1Name.Text = Reservation2Mail.Text = Reservation2Name.Text = "";
             }
             else
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                    Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
                 Reservation1Mail.Text = previousProject.LogStudent1Mail;
                 Reservation2Mail.Text = previousProject.LogStudent2Mail;
                 Reservation1Name.Text = previousProject.LogStudent1Name;
                 Reservation2Name.Text = previousProject.LogStudent2Name;
             }
-
-
         }
 
         private void DisplayClient(Project project)
@@ -915,13 +914,13 @@ namespace ProStudCreator
                 drpClientTitle.SelectedValue = "1"; //Default
 
                 txtClientCompany.Text =
-                txtClientName.Text =
-                txtClientDepartment.Text =
-                txtClientStreet.Text =
-                txtClientPLZ.Text =
-                txtClientCity.Text =
-                txtClientReference.Text =
-                txtClientEmail.Text = "";
+                    txtClientName.Text =
+                        txtClientDepartment.Text =
+                            txtClientStreet.Text =
+                                txtClientPLZ.Text =
+                                    txtClientCity.Text =
+                                        txtClientReference.Text =
+                                            txtClientEmail.Text = "";
 
                 divClientForm.Visible = false;
                 radioClientType.SelectedValue = "Intern";
@@ -929,7 +928,7 @@ namespace ProStudCreator
             else
             {
                 txtClientCompany.Text = project?.ClientCompany;
-                drpClientTitle.SelectedValue = (project?.ClientAddressTitle == "Herr") ? "1" : "2";
+                drpClientTitle.SelectedValue = project?.ClientAddressTitle == "Herr" ? "1" : "2";
                 txtClientName.Text = project?.ClientPerson;
                 txtClientDepartment.Text = project?.ClientAddressDepartment;
                 txtClientStreet.Text = project?.ClientAddressStreet;
@@ -957,13 +956,9 @@ namespace ProStudCreator
                 POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = false;
                 POneType.SelectedValue = db.ProjectTypes.Single(p => !p.P5 && p.P6).Id.ToString();
                 if (string.IsNullOrEmpty(project.LogStudent2Mail))
-                {
                     POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => p.Size1 && !p.Size2).Id.ToString();
-                }
                 else
-                {
                     POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => !p.Size1 && p.Size2).Id.ToString();
-                }
             }
         }
 
@@ -971,26 +966,27 @@ namespace ProStudCreator
         private void prepareForm(bool hasPreviousProj)
         {
             //Priority
-            divPriorityTwo.Visible = POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
+            divPriorityTwo.Visible = POneTeamSize.Enabled =
+                POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
             //Reservations
-            Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
-
+            Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
         }
 
         private void prepareClientForm(Project project)
         {
-
             var hasClient = false;
 
-            string[] clientInformationStrings = { project.ClientAddressPostcode, project.ClientAddressCity, project.ClientAddressDepartment, project.ClientAddressStreet, project.ClientAddressTitle, project.ClientCompany, project.ClientMail, project.ClientPerson, project.ClientReferenceNumber };
+            string[] clientInformationStrings =
+            {
+                project.ClientAddressPostcode, project.ClientAddressCity, project.ClientAddressDepartment,
+                project.ClientAddressStreet, project.ClientAddressTitle, project.ClientCompany, project.ClientMail,
+                project.ClientPerson, project.ClientReferenceNumber
+            };
 
             foreach (var clientInformationstirng in clientInformationStrings)
-            {
                 if (!string.IsNullOrEmpty(clientInformationstirng))
-                {
                     hasClient = true;
-                }
-            }
 
             if (hasClient)
             {
@@ -1011,8 +1007,8 @@ namespace ProStudCreator
                 divClientCompany.Visible = divClientForm.Visible = false;
                 radioClientType.SelectedValue = "Intern";
             }
-
         }
     }
 }
+
 #endregion

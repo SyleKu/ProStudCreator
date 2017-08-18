@@ -1,15 +1,14 @@
-﻿using iTextSharp.text;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using iTextSharp.text;
+using ListItem = System.Web.UI.WebControls.ListItem;
+
 namespace ProStudCreator
 {
     public class ProjectSingleElement
@@ -26,25 +25,24 @@ namespace ProStudCreator
 
     public partial class Projectlist : Page
     {
-        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         protected PlaceHolder AdminView;
-        protected GridView CheckProjects;
         protected GridView AllProjects;
+        protected GridView CheckProjects;
+        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         protected Button NewProject;
 
         // SR test
-        IQueryable<Project> projects;
+        private IQueryable<Project> projects;
         //~SR test
 
         protected void Page_Init(object sender, EventArgs e)
         {
             dropSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
             dropSemester.DataBind();
-            dropSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", "allSemester"));
-            dropSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", "."));
-            dropSemester.SelectedValue = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate).First().Id.ToString();
-
-
+            dropSemester.Items.Insert(0, new ListItem("Alle Semester", "allSemester"));
+            dropSemester.Items.Insert(1, new ListItem("――――――――――――――――", "."));
+            dropSemester.SelectedValue = db.Semester.Where(s => s.StartDate > DateTime.Now).OrderBy(s => s.StartDate)
+                .First().Id.ToString();
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -56,17 +54,21 @@ namespace ProStudCreator
                 if (whichOwner.SelectedValue == "NotOwnEdited") //Set Semester to allSemester
                 {
                     Session["ComesFromNotOwn"] = true;
-                    Session["SelectedSemesterBeforeNotOwn"] = dropSemester.SelectedValue; //Save last semester if user changes Owner in filter
+                    Session["SelectedSemesterBeforeNotOwn"] =
+                        dropSemester.SelectedValue; //Save last semester if user changes Owner in filter
                     dropSemester.Enabled = false;
-                    Session["SelectedSemester"] = dropSemester.SelectedValue = "allSemester"; //Save the current State if user switches tab after this
+                    Session["SelectedSemester"] =
+                        dropSemester.SelectedValue =
+                            "allSemester"; //Save the current State if user switches tab after this
                     Session["SelectedOwner"] = whichOwner.SelectedValue;
-
                 }
                 else
                 {
-                    if (Session["ComesFromNotOwn"] == null ? false : (bool)Session["ComesFromNotOwn"]) //if user comes from NotOwn
+                    if (Session["ComesFromNotOwn"] == null
+                        ? false
+                        : (bool) Session["ComesFromNotOwn"]) //if user comes from NotOwn
                     {
-                        dropSemester.SelectedValue = (string)Session["SelectedSemesterBeforeNotOwn"];
+                        dropSemester.SelectedValue = (string) Session["SelectedSemesterBeforeNotOwn"];
                         Session["ComesFromNotOwn"] = false;
                     }
                     Session["SelectedSemester"] = dropSemester.SelectedValue;
@@ -76,11 +78,11 @@ namespace ProStudCreator
             }
             else if (Session["SelectedOwner"] != null) //User comes from another tab or realoaded the page
             {
-                if ((string)Session["SelectedOwner"] == "NotOwnEdited") //If last filter was set to NotOwn
+                if ((string) Session["SelectedOwner"] == "NotOwnEdited") //If last filter was set to NotOwn
                     dropSemester.Enabled = false;
 
-                whichOwner.SelectedValue = (string)Session["SelectedOwner"]; //Set Filter from the Sessionvars
-                dropSemester.SelectedValue = (string)Session["SelectedSemester"];
+                whichOwner.SelectedValue = (string) Session["SelectedOwner"]; //Set Filter from the Sessionvars
+                dropSemester.SelectedValue = (string) Session["SelectedSemester"];
             }
             else //Sessionvars don't exist yet
             {
@@ -90,7 +92,7 @@ namespace ProStudCreator
 
 
             AllProjects.DataSource =
-                from i in filterRelevantProjects(projects, (string)Session["SelectedOwner"])
+                from i in filterRelevantProjects(projects, (string) Session["SelectedOwner"])
                 select getProjectSingleElement(i);
             AllProjects.DataBind();
 
@@ -101,9 +103,7 @@ namespace ProStudCreator
             {
                 var item = whichOwner.Items.FindByValue("NotOwnEdited");
                 if (item != null)
-                {
                     whichOwner.Items.Remove(item);
-                }
             }
 
 
@@ -111,12 +111,8 @@ namespace ProStudCreator
         }
 
 
-
-
-
         private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects, string filter)
         {
-
             var projects = allProjects;
             switch (filter)
             {
@@ -125,47 +121,51 @@ namespace ProStudCreator
                     {
                         projects =
                             from p in projects
-                            where (p.Creator == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail()) && p.State != ProjectState.Deleted
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail() ||
+                                   p.Advisor1Mail == ShibUser.GetEmail()) && p.State != ProjectState.Deleted
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
                     else
                     {
-                        var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) == ProStudCreator.Semester.NextSemester(db).Id;
+                        var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
+                                                   Semester.NextSemester(db).Id;
                         projects =
                             from p in projects
-                            where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail())
-                                && (p.State != ProjectState.Deleted)
-                                && (((p.Semester.Id == int.Parse(dropSemester.SelectedValue) && p.State == ProjectState.Published) || nextSemesterSelected && p.Semester == null) || ((p.State != ProjectState.Deleted && p.State != ProjectState.Published) && nextSemesterSelected))
+                            where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() ||
+                                   p.Advisor2Mail == ShibUser.GetEmail())
+                                  && p.State != ProjectState.Deleted
+                                  && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
+                                      p.State == ProjectState.Published || nextSemesterSelected && p.Semester == null ||
+                                      p.State != ProjectState.Deleted && p.State != ProjectState.Published &&
+                                      nextSemesterSelected)
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
                     }
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                    {
                         projects =
                             from p in projects
                             where p.State == ProjectState.Published
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
-                    }
                     else
-                    {
                         projects =
                             from p in projects
-                            where p.State == ProjectState.Published && p.Semester.Id == int.Parse(dropSemester.SelectedValue)
+                            where p.State == ProjectState.Published &&
+                                  p.Semester.Id == int.Parse(dropSemester.SelectedValue)
                             orderby p.Department.DepartmentName, p.ProjectNr
                             select p;
-                    }
                     break;
                 case "NotOwnEdited":
                     var depId = ShibUser.GetDepartmentId(db);
-                    var lastSemStartDate = ProStudCreator.Semester.LastSemester(db).StartDate;
+                    var lastSemStartDate = Semester.LastSemester(db).StartDate;
                     projects = db.Projects.Where(p =>
-                                p.DepartmentId == depId &&
-                                p.ModificationDate > lastSemStartDate &&
-                                (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State == ProjectState.Submitted));
+                        p.DepartmentId == depId &&
+                        p.ModificationDate > lastSemStartDate &&
+                        (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected ||
+                         p.State == ProjectState.Submitted));
                     break;
             }
             return projects;
@@ -176,24 +176,66 @@ namespace ProStudCreator
             return new ProjectSingleElement
             {
                 id = i.Id,
-                advisorName = string.Concat(new string[]
+                advisorName = string.Concat(new[]
                 {
-                    (i.Advisor1Name!="") ? "<a href=\"mailto:" + i.Advisor1Mail + "\">"+Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;")+"</a>" : "?",
-                    (i.Advisor2Name!="") ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" + Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>" : ""
+                    i.Advisor1Name != ""
+                        ? "<a href=\"mailto:" + i.Advisor1Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
+                        : "?",
+                    i.Advisor2Name != ""
+                        ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
+                        : ""
                 }),
-                projectName = ((i.ProjectNr == 0) ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
+                projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
                 Institute = i.Department.DepartmentName,
-                p5 = i.POneType.P5 || (i.PTwoType != null && i.PTwoType.P5),
-                p6 = i.POneType.P6 || (i.PTwoType != null && i.PTwoType.P6),
-                projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : (i.TypeMathAlg ? "MathAlg" : (i.TypeAppWeb ? "AppWeb" : (i.TypeDBBigData ? "DBBigData" : (i.TypeSysSec ? "SysSec" : (i.TypeSE ? "SE" : "Transparent")))))))) + ".png",
-                projectType2 = "pictures/projectTyp" + ((i.TypeHW && i.TypeDesignUX) ? "HW" : ((i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" : ((i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" : ((i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" : ((i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb)) ? "DBBigData" : ((i.TypeSysSec && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb || i.TypeDBBigData)) ? "SysSec" : (i.TypeSE && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb || i.TypeDBBigData || i.TypeSysSec) ? "SE" : "Transparent"))))))) + ".png"
+                p5 = i.POneType.P5 || i.PTwoType != null && i.PTwoType.P5,
+                p6 = i.POneType.P6 || i.PTwoType != null && i.PTwoType.P6,
+                projectType1 = "pictures/projectTyp" + (i.TypeDesignUX
+                                   ? "DesignUX"
+                                   : (i.TypeHW
+                                       ? "HW"
+                                       : (i.TypeCGIP
+                                           ? "CGIP"
+                                           : (i.TypeMathAlg
+                                               ? "MathAlg"
+                                               : (i.TypeAppWeb
+                                                   ? "AppWeb"
+                                                   : (i.TypeDBBigData
+                                                       ? "DBBigData"
+                                                       : (i.TypeSysSec
+                                                           ? "SysSec"
+                                                           : (i.TypeSE ? "SE" : "Transparent")))))))) + ".png",
+                projectType2 = "pictures/projectTyp" + (i.TypeHW && i.TypeDesignUX
+                                   ? "HW"
+                                   : (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)
+                                       ? "CGIP"
+                                       : (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)
+                                           ? "MathAlg"
+                                           : (i.TypeAppWeb &&
+                                              (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)
+                                               ? "AppWeb"
+                                               : (i.TypeDBBigData &&
+                                                  (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                   i.TypeAppWeb)
+                                                   ? "DBBigData"
+                                                   : (i.TypeSysSec &&
+                                                      (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                       i.TypeAppWeb || i.TypeDBBigData)
+                                                       ? "SysSec"
+                                                       : (i.TypeSE && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP ||
+                                                                       i.TypeMathAlg || i.TypeAppWeb ||
+                                                                       i.TypeDBBigData || i.TypeSysSec)
+                                                           ? "SE"
+                                                           : "Transparent"))))))) + ".png"
             };
         }
+
         protected void AllProjects_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                Project project = db.Projects.Single((Project item) => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
+                var project = db.Projects.Single(item => item.Id == ((ProjectSingleElement) e.Row.DataItem).id);
 
                 if (project.State == ProjectState.Published)
                 {
@@ -211,30 +253,22 @@ namespace ProStudCreator
 
                 Color? col = null;
                 if (project.State == ProjectState.Published)
-                {
-                    col = new Color?(ColorTranslator.FromHtml("#A9F5A9"));
-                }
+                    col = ColorTranslator.FromHtml("#A9F5A9");
                 else if (project.State == ProjectState.Rejected)
-                {
-                    col = new Color?(ColorTranslator.FromHtml("#F5A9A9"));
-                }
+                    col = ColorTranslator.FromHtml("#F5A9A9");
                 else if (project.State == ProjectState.Submitted)
-                {
-                    col = new Color?(ColorTranslator.FromHtml("#ffcc99"));
-                }
+                    col = ColorTranslator.FromHtml("#ffcc99");
                 if (col.HasValue)
-                {
                     foreach (TableCell cell in e.Row.Cells)
-                    {
                         cell.BackColor = col.Value;
-                    }
-                }
             }
         }
+
         protected void newProject_Click(object sender, EventArgs e)
         {
             Response.Redirect("AddNewProject");
         }
+
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Sort")
@@ -244,13 +278,13 @@ namespace ProStudCreator
             switch (e.CommandName)
             {
                 case "revokeSubmission":
-                    Project projectr = db.Projects.Single((Project i) => i.Id == id);
+                    var projectr = db.Projects.Single(i => i.Id == id);
                     projectr.State = ProjectState.InProgress;
                     db.SubmitChanges();
                     Response.Redirect(Request.RawUrl);
                     break;
                 case "deleteProject":
-                    Project project = db.Projects.Single((Project i) => i.Id == id);
+                    var project = db.Projects.Single(i => i.Id == id);
                     project.Delete();
                     db.SubmitChanges();
                     Response.Redirect(Request.RawUrl);
@@ -278,7 +312,7 @@ namespace ProStudCreator
                 {
                     var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output,
-                        ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
+                        ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
                         .Select(p => db.Projects.Single(pr => pr.Id == p.id))
                         .OrderBy(p => p.Reservation1Name != "")
                         .ThenBy(p => p.Department.DepartmentName)
@@ -286,13 +320,15 @@ namespace ProStudCreator
                     );
                     document.Dispose();
                 }
-                catch (iTextSharp.text.DocumentException documentException) when (documentException.Message.Contains("0x800704CD"))
+                catch (DocumentException documentException) when (documentException.Message.Contains("0x800704CD"))
                 {
                     try
                     {
                         document.Dispose();
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
                 catch (Exception)
                 {
@@ -300,14 +336,16 @@ namespace ProStudCreator
                     {
                         document.Dispose();
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                     throw;
                 }
                 Response.End();
             }
             else
             {
-                string message = "In dieser Kategorie sind keine Projekte vorhanden!";
+                var message = "In dieser Kategorie sind keine Projekte vorhanden!";
                 var sb = new StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
                 sb.Append("window.onload=function(){");
@@ -315,7 +353,7 @@ namespace ProStudCreator
                 sb.Append(message);
                 sb.Append("')};");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(base.GetType(), "alert", sb.ToString());
+                ClientScript.RegisterClientScriptBlock(GetType(), "alert", sb.ToString());
             }
         }
 
@@ -324,11 +362,11 @@ namespace ProStudCreator
             byte[] bytesInStream;
             using (var output = new MemoryStream())
             {
-                ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
-                                .Select(p => db.Projects.Single(pr => pr.Id == p.id))
-                                .OrderBy(p => p.Reservation1Name != "")
-                                .ThenBy(p => p.Department.DepartmentName)
-                                .ThenBy(p => p.ProjectNr));
+                ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
+                    .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                    .OrderBy(p => p.Reservation1Name != "")
+                    .ThenBy(p => p.Department.DepartmentName)
+                    .ThenBy(p => p.ProjectNr));
                 bytesInStream = output.ToArray();
             }
 

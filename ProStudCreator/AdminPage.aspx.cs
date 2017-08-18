@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-
 namespace ProStudCreator
 {
-
     public class ProjectSingleTask
     {
         public string project { get; set; }
@@ -22,11 +18,10 @@ namespace ProStudCreator
 
     public partial class AdminPage : Page
     {
-
-        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         // SR test
-        IQueryable<Project> projects;
+        private IQueryable<Project> projects;
         //~SR test
 
         protected void Page_Init(object sender, EventArgs e)
@@ -34,8 +29,8 @@ namespace ProStudCreator
             SelectedSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
             SelectedSemester.DataBind();
             SelectedSemester.SelectedValue = Semester.CurrentSemester(db).Id.ToString();
-            SelectedSemester.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Alle Semester", ""));
-            SelectedSemester.Items.Insert(1, new System.Web.UI.WebControls.ListItem("――――――――――――――――", ".", false));
+            SelectedSemester.Items.Insert(0, new ListItem("Alle Semester", ""));
+            SelectedSemester.Items.Insert(1, new ListItem("――――――――――――――――", ".", false));
         }
 
 
@@ -51,8 +46,9 @@ namespace ProStudCreator
                 projects = db.Projects.Select(i => i);
                 CheckProjects.DataSource =
                     from item in projects
-                    where item.State == ProjectState.Submitted && (int?)item.DepartmentId == depid
-                    select item into i
+                    where item.State == ProjectState.Submitted && (int?) item.DepartmentId == depid
+                    select item
+                    into i
                     select getProjectSingleElement(i);
                 CheckProjects.DataBind();
 
@@ -67,22 +63,64 @@ namespace ProStudCreator
 
             Session["LastPage"] = "adminpage";
         }
+
         private ProjectSingleElement getProjectSingleElement(Project i)
         {
             return new ProjectSingleElement
             {
                 id = i.Id,
-                advisorName = string.Concat(new string[]
+                advisorName = string.Concat(new[]
                 {
-                    (i.Advisor1Name!="") ? "<a href=\"mailto:" + i.Advisor1Mail + "\">"+Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;")+"</a>" : "?",
-                    (i.Advisor2Name!="") ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" + Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>" : ""
+                    i.Advisor1Name != ""
+                        ? "<a href=\"mailto:" + i.Advisor1Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
+                        : "?",
+                    i.Advisor2Name != ""
+                        ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
+                        : ""
                 }),
-                projectName = ((i.ProjectNr == 0) ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
+                projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
                 Institute = i.Department.DepartmentName,
-                p5 = i.POneType.P5 || (i.PTwoType != null && i.PTwoType.P5),
-                p6 = i.POneType.P6 || (i.PTwoType != null && i.PTwoType.P6),
-                projectType1 = "pictures/projectTyp" + (i.TypeDesignUX ? "DesignUX" : (i.TypeHW ? "HW" : (i.TypeCGIP ? "CGIP" : (i.TypeMathAlg ? "MathAlg" : (i.TypeAppWeb ? "AppWeb" : (i.TypeDBBigData ? "DBBigData" : (i.TypeSysSec ? "SysSec" : (i.TypeSE ? "SE" : "Transparent")))))))) + ".png",
-                projectType2 = "pictures/projectTyp" + ((i.TypeHW && i.TypeDesignUX) ? "HW" : ((i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)) ? "CGIP" : ((i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)) ? "MathAlg" : ((i.TypeAppWeb && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)) ? "AppWeb" : ((i.TypeDBBigData && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb)) ? "DBBigData" : ((i.TypeSysSec && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb || i.TypeDBBigData)) ? "SysSec" : (i.TypeSE && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg || i.TypeAppWeb || i.TypeDBBigData || i.TypeSysSec) ? "SE" : "Transparent"))))))) + ".png"
+                p5 = i.POneType.P5 || i.PTwoType != null && i.PTwoType.P5,
+                p6 = i.POneType.P6 || i.PTwoType != null && i.PTwoType.P6,
+                projectType1 = "pictures/projectTyp" + (i.TypeDesignUX
+                                   ? "DesignUX"
+                                   : (i.TypeHW
+                                       ? "HW"
+                                       : (i.TypeCGIP
+                                           ? "CGIP"
+                                           : (i.TypeMathAlg
+                                               ? "MathAlg"
+                                               : (i.TypeAppWeb
+                                                   ? "AppWeb"
+                                                   : (i.TypeDBBigData
+                                                       ? "DBBigData"
+                                                       : (i.TypeSysSec
+                                                           ? "SysSec"
+                                                           : (i.TypeSE ? "SE" : "Transparent")))))))) + ".png",
+                projectType2 = "pictures/projectTyp" + (i.TypeHW && i.TypeDesignUX
+                                   ? "HW"
+                                   : (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)
+                                       ? "CGIP"
+                                       : (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)
+                                           ? "MathAlg"
+                                           : (i.TypeAppWeb &&
+                                              (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)
+                                               ? "AppWeb"
+                                               : (i.TypeDBBigData &&
+                                                  (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                   i.TypeAppWeb)
+                                                   ? "DBBigData"
+                                                   : (i.TypeSysSec &&
+                                                      (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                       i.TypeAppWeb || i.TypeDBBigData)
+                                                       ? "SysSec"
+                                                       : (i.TypeSE && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP ||
+                                                                       i.TypeMathAlg || i.TypeAppWeb ||
+                                                                       i.TypeDBBigData || i.TypeSysSec)
+                                                           ? "SE"
+                                                           : "Transparent"))))))) + ".png"
             };
         }
 
@@ -95,13 +133,13 @@ namespace ProStudCreator
             switch (e.CommandName)
             {
                 case "revokeSubmission":
-                    Project projectr = db.Projects.Single((Project i) => i.Id == id);
+                    var projectr = db.Projects.Single(i => i.Id == id);
                     projectr.State = ProjectState.InProgress;
                     db.SubmitChanges();
                     Response.Redirect(Request.RawUrl);
                     break;
                 case "deleteProject":
-                    Project project = db.Projects.Single((Project i) => i.Id == id);
+                    var project = db.Projects.Single(i => i.Id == id);
                     project.Delete();
                     db.SubmitChanges();
                     Response.Redirect(Request.RawUrl);
@@ -120,7 +158,7 @@ namespace ProStudCreator
             var empty = true;
             DateTime defensestart;
             if (!DateTime.TryParseExact(Semester.CurrentSemester(db).DefenseIP6Start, "dd.MM.yyyy",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out defensestart))
+                CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out defensestart))
                 throw new Exception(
                     "Die Daten in der Datenbank entsprechen nicht dem richtigen Format. Bitte melden Sie diesen Fehler einer Ansprechperson!");
 
@@ -158,7 +196,7 @@ namespace ProStudCreator
             }
 
             if (_project?.LogProjectType?.P6 == true && _project?.LogExpertPaid != true &&
-                (_project?.LogDefenceDate > DateTime.Now) && _project.State == 3)
+                _project?.LogDefenceDate > DateTime.Now && _project.State == 3)
             {
                 empty = false;
                 task.taskPayExpert = "pictures/experte_zahlen.png";
@@ -174,17 +212,11 @@ namespace ProStudCreator
         public IQueryable<ProjectSingleTask> AllTasks()
         {
             if (projects == null)
-            {
                 projects = db.Projects.Select(i => i);
-            }
             var allTaskList = new List<ProjectSingleTask>();
             foreach (var project in projects)
-            {
                 if (CheckDefenseOrganised(project) != null)
-                {
                     allTaskList.Add(CheckDefenseOrganised(project));
-                }
-            }
             return allTaskList.AsQueryable();
         }
 
@@ -192,11 +224,11 @@ namespace ProStudCreator
         {
             IEnumerable<Project> projectsToExport = null;
             if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
-            {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                                    i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
@@ -205,18 +237,18 @@ namespace ProStudCreator
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
                     projectsToExport = db.Projects
-                        .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published &&
+                                    i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
                 }
-            }
             else if (radioProjectStart.SelectedValue == "EndingProjects") //Projects which end in this Sem.
-            {
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                                    i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
@@ -224,23 +256,27 @@ namespace ProStudCreator
                 else
                 {
                     var selectedSemester = db.Semester.Single(s => s.Id == int.Parse(SelectedSemester.SelectedValue));
-                    var previousSemester = db.Semester.OrderByDescending(s => s.StartDate).FirstOrDefault(s => s.StartDate<selectedSemester.StartDate);
+                    var previousSemester = db.Semester.OrderByDescending(s => s.StartDate)
+                        .FirstOrDefault(s => s.StartDate < selectedSemester.StartDate);
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null && i.LogStudent1Mail != ""
-                                && ((i.LogProjectDuration == 1 && i.Semester == selectedSemester) || (i.LogProjectDuration == 2 && i.Semester == previousSemester)))
+                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                                    i.LogStudent1Mail != ""
+                                    && (i.LogProjectDuration == 1 && i.Semester == selectedSemester ||
+                                        i.LogProjectDuration == 2 && i.Semester == previousSemester))
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
                 }
-            }
             else
                 throw new Exception($"Unexpected selection: {radioProjectStart.SelectedIndex}");
-            
+
             //Response
             Response.Clear();
             Response.ContentType = "application/Excel";
-            Response.AddHeader("content-disposition", $"attachment; filename={SelectedSemester.SelectedItem.Text}_IP56_Informatikprojekte.xlsx");
-            ExcelCreator.GenerateMarketingList(Response.OutputStream, projectsToExport, db, SelectedSemester.SelectedItem.Text);
+            Response.AddHeader("content-disposition",
+                $"attachment; filename={SelectedSemester.SelectedItem.Text}_IP56_Informatikprojekte.xlsx");
+            ExcelCreator.GenerateMarketingList(Response.OutputStream, projectsToExport, db,
+                SelectedSemester.SelectedItem.Text);
             Response.End();
         }
     }

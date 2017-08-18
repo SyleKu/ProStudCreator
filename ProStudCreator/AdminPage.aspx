@@ -8,22 +8,22 @@
             <asp:GridView ID="GVTasks" ItemType="ProStudCreator.ProjectSingleTask" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" Width="100%">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
                 <Columns>
-                    <asp:BoundField DataField="project" HeaderText="Projekt" SortExpression="Project" ItemStyle-Width="60%" />
-                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseExpert" HeaderText="Tasks" ItemStyle-Width="20px" />
-                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseDate" ItemStyle-Width="20px" />
-                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseRoom" ItemStyle-Width="20px" />
-                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskPayExpert" ItemStyle-Width="20px" />
+                    <asp:BoundField DataField="project" HeaderText="Projekt" SortExpression="Project" ItemStyle-Width="60%"/>
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseExpert" HeaderText="Tasks" ItemStyle-Width="20px"/>
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseDate" ItemStyle-Width="20px"/>
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseRoom" ItemStyle-Width="20px"/>
+                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskPayExpert" ItemStyle-Width="20px"/>
                 </Columns>
-                <EditRowStyle BackColor="#2461BF" />
-                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
-                <RowStyle BackColor="#EFF3FB" />
-                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                <SortedAscendingCellStyle BackColor="#F5F7FB" />
-                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
-                <SortedDescendingCellStyle BackColor="#E9EBEF" />
-                <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                <EditRowStyle BackColor="#2461BF"/>
+                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White"/>
+                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White"/>
+                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center"/>
+                <RowStyle BackColor="#EFF3FB"/>
+                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333"/>
+                <SortedAscendingCellStyle BackColor="#F5F7FB"/>
+                <SortedAscendingHeaderStyle BackColor="#6D95E1"/>
+                <SortedDescendingCellStyle BackColor="#E9EBEF"/>
+                <SortedDescendingHeaderStyle BackColor="#4870BE"/>
             </asp:GridView>
         </div>
     </div>
@@ -34,13 +34,13 @@
                 <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick">
                     <%--<AlternatingRowStyle BackColor="White" />--%>
                     <Columns>
-                        <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" ItemStyle-Width="200px" HtmlEncode="false" ItemStyle-Wrap="false" />
-                        <asp:BoundField DataField="Institute" HeaderText="Institut" SortExpression="Institute" />
-                        <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="projectName" ItemStyle-Width="100%" />
-                        <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="P5" />
-                        <asp:CheckBoxField HeaderText="P6" DataField="p6" SortExpression="P6" />
-                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Themen" ItemStyle-Width="20px" />
-                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px" />
+                        <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" ItemStyle-Width="200px" HtmlEncode="false" ItemStyle-Wrap="false"/>
+                        <asp:BoundField DataField="Institute" HeaderText="Institut" SortExpression="Institute"/>
+                        <asp:BoundField DataField="projectName" HeaderText="Projektname" SortExpression="projectName" ItemStyle-Width="100%"/>
+                        <asp:CheckBoxField HeaderText="P5" DataField="p5" SortExpression="P5"/>
+                        <asp:CheckBoxField HeaderText="P6" DataField="p6" SortExpression="P6"/>
+                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType1" HeaderText="Themen" ItemStyle-Width="20px"/>
+                        <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px"/>
                         <asp:TemplateField ItemStyle-Wrap="false">
                             <ItemTemplate>
                                 <a title="Projekt Informationen" class="btn btn-default btnHeight glyphicon glyphicon-info-sign" href="ProjectInfoPage?id=<%# Item.id %>"></a>
@@ -62,16 +62,16 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
-                    <EditRowStyle BackColor="#2461BF" />
-                    <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                    <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                    <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
-                    <RowStyle BackColor="#EFF3FB" />
-                    <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                    <SortedAscendingCellStyle BackColor="#F5F7FB" />
-                    <SortedAscendingHeaderStyle BackColor="#6D95E1" />
-                    <SortedDescendingCellStyle BackColor="#E9EBEF" />
-                    <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                    <EditRowStyle BackColor="#2461BF"/>
+                    <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White"/>
+                    <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White"/>
+                    <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center"/>
+                    <RowStyle BackColor="#EFF3FB"/>
+                    <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333"/>
+                    <SortedAscendingCellStyle BackColor="#F5F7FB"/>
+                    <SortedAscendingHeaderStyle BackColor="#6D95E1"/>
+                    <SortedDescendingCellStyle BackColor="#E9EBEF"/>
+                    <SortedDescendingHeaderStyle BackColor="#4870BE"/>
                 </asp:GridView>
             </div>
         </div>
@@ -85,8 +85,8 @@
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control col-sm-3 alignbottom "></asp:DropDownList>
                 </div>
-                <br />
-                <hr />
+                <br/>
+                <hr/>
                 <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
                     <asp:ListItem Value="StartingProjects">&nbsp;Startende Projekte</asp:ListItem>
@@ -103,34 +103,46 @@
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <div class="form-group">
                 <asp:Label runat="server" Text="GitHub-Projekte:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProStudCreator" target="_blank">ProStud (Diese Seite)</a></asp:Label>
-                <br />
-                <br />
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="https://github.com/i4Ds/ProStudCreator" target="_blank">ProStud (Diese Seite)</a>
+                </asp:Label>
+                <br/>
+                <br/>
                 <div class="col-sm-3"></div>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://github.com/i4Ds/ProDist" target="_blank">ProDist (Projekt-Zuteilung)</a></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="https://github.com/i4Ds/ProDist" target="_blank">ProDist (Projekt-Zuteilung)</a>
+                </asp:Label>
             </div>
-            <hr />
+            <hr/>
             <div class="form-group">
                 <asp:Label runat="server" Text="Server-Infos:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" CssClass="col-sm-3 alignbottom">server1085.cs.technik.fhnw.ch</asp:Label>
             </div>
-            <hr />
+            <hr/>
             <div class="form-group">
                 <asp:Label runat="server" Text="Ansprechpersonen:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="mailto:simon.felix@fhnw.ch" target="_blank">Simon Felix</a></asp:Label>
-                <br />
-                <br />
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="mailto:simon.felix@fhnw.ch" target="_blank">Simon Felix</a>
+                </asp:Label>
+                <br/>
+                <br/>
                 <div class="col-sm-3"></div>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="mailto:flavio.mueller@fhnw.ch" target="_blank">Flavio Müller</a></asp:Label>
-                <br />
-                <br />
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="mailto:flavio.mueller@fhnw.ch" target="_blank">Flavio Müller</a>
+                </asp:Label>
+                <br/>
+                <br/>
                 <div class="col-sm-3"></div>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="mailto:stephen.randles@fhnw.ch" target="_blank">Stephen Randles</a></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="mailto:stephen.randles@fhnw.ch" target="_blank">Stephen Randles</a>
+                </asp:Label>
             </div>
-            <hr />
+            <hr/>
             <div class="form-group">
                 <asp:Label runat="server" Text="Semesterdaten:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" CssClass="col-sm-3 alignbottom"><a href="https://www.fhnw.ch/de/studium/technik/termine" target="_blank">Termine & Stundenpläne</a></asp:Label>
+                <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
+                    <a href="https://www.fhnw.ch/de/studium/technik/termine" target="_blank">Termine & Stundenpläne</a>
+                </asp:Label>
             </div>
         </div>
     </div>
