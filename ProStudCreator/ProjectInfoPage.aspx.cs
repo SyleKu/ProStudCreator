@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
+using Org.BouncyCastle.X509;
 
 namespace ProStudCreator
 {
@@ -204,16 +205,37 @@ namespace ProStudCreator
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
 
-            //FileExplorer settings
-            //FileExplorer.Configuration.ContentProviderTypeName =
-            //        typeof(ExtendedFileProvider).AssemblyQualifiedName;
-            //FileExplorer.Configuration.EnableAsyncUpload = true;
-            //FileExplorer.Configuration.MaxUploadFileSize = int.MaxValue;
-            //FileExplorer.Language = "de-DE";
-            //FileExplorer.Grid.Columns.Remove(FileExplorer.Grid.Columns[1]);
-            //FileExplorer.Grid.Columns[0].HeaderText = "Datei";
-            //FileExplorer.FindControl("chkOverwrite").Visible = false;
+
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataBind();
+
         }
+
+        private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
+        {
+            return new ProjectSingleAttachment()
+            {
+                Guid = attach.ROWGUID,
+                ProjectId = attach.ProjectId,
+                Name = attach.FileName,
+                Size = FixupSize(attach.UploadSize ?? 0),
+                UploadUser = "<a href=\"mailto:" + attach.UploadUserMail + "\">" + Server.HtmlEncode(attach.UploadUserName).Replace(" ", "&nbsp;") + "</a>"
+
+            };
+        }
+
+        private string FixupSize(decimal size)
+        {
+            if (size < 1024) //bytes
+                return size + "Bytes";
+            if (size / 1024 < 1024) //kilobytes
+                return (int)(size / 1024) + " Kb.";
+            if (size / 1048576 < 1024)
+                return (int)(size / 1048576) + " Mb.";
+
+            return (int)(size / 1073741824) + " Gb.";
+        }
+
 
         private void SetProjectDeliveryLabels()
         {
@@ -312,10 +334,7 @@ namespace ProStudCreator
         {
             var allBillingstatuswhichShowForm = db.BillingStatus.Where(s => s.ShowAddressOnInfoPage).ToArray();
 
-            foreach (var billingStatus in allBillingstatuswhichShowForm)
-                if (billingStatus.Id == id)
-                    return true;
-            return false;
+            return allBillingstatuswhichShowForm.Any(billingStatus => billingStatus.Id == id);
         }
 
         protected void BtnSaveBetween_OnClick(object sender, EventArgs e)
@@ -413,8 +432,34 @@ namespace ProStudCreator
         {
             var attachement = CreateNewAttach(e.FileSize, e.FileName);
             SaveFileInDb(attachement, e.GetStreamContents());
-            if(File.Exists(Path.GetTempPath()+Path.PathSeparator+e.FileName))
-                File.Delete(Path.GetTempPath()+Path.PathSeparator+e.FileName);
+
+            e.GetStreamContents().Close();
+
+
+            var di = new DirectoryInfo(Path.GetTempPath() + "_AjaxFileUpload");
+
+            foreach (var dir in di.GetDirectories())
+            {
+                try
+                {
+                    dir.Delete(true);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+
+
+
+            var id = int.Parse(Request.QueryString["id"]);
+
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataBind();
+
+            updateProjectAttachements.Update();
+
+
         }
 
         private Attachements CreateNewAttach(long fileSize, string fileName)
@@ -423,7 +468,8 @@ namespace ProStudCreator
             var attach = new Attachements
             {
                 ProjectId = int.Parse(Request.QueryString["id"]),
-                UploadUser = ShibUser.GetEmail(),
+                UploadUserMail = ShibUser.GetEmail(),
+                UploadUserName = ShibUser.GetFullName(),
                 UploadDate = DateTime.Now,
                 UploadSize = fileSize,
                 ProjectAttachement = new Binary(new byte[0]),
@@ -474,11 +520,47 @@ namespace ProStudCreator
             }
         }
 
+        protected void gridProjectAttachs_OnRowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+            var project =
+                db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).ProjectId);
+
+            if (!project.UserIsOwner() && !ShibUser.CanEditAllProjects())
+                e.Row.Cells[e.Row.Cells.Count - 2].Visible = false;
+        }
+
+        protected void gridProjectAttachs_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "deleteProjectAttach") return;
+            var guid = new Guid(e.CommandArgument.ToString());
+            var attach = db.Attachements.Single(a => a.ROWGUID == guid);
+            attach.DeletedDate = DateTime.Now;
+            attach.Deleted = true;
+            attach.DeletedUser = ShibUser.GetEmail();
+            db.SubmitChanges();
+
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
+                .Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataBind();
+
+            updateProjectAttachements.Update();
+        }
+
         private enum ProjectTypes
         {
             IP5,
             IP6,
             NotDefined
         }
+    }
+
+    public class ProjectSingleAttachment
+    {
+        public Guid Guid { get; set; }
+        public string Name { get; set; }
+        public string Size { get; set; }
+        public string UploadUser { get; set; }
+        public int ProjectId { get; set; }
     }
 }

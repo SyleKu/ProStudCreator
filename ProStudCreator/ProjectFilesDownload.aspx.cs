@@ -14,10 +14,9 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var id = int.Parse(Request.QueryString["id"]);
-            var fileName = Request.QueryString["fname"];
+            var guid = new Guid(Request.QueryString["guid"]);
 
-            var attach = db.Attachements.Single(i => i.ProjectId == id && i.FileName == fileName && !i.Deleted);
+            var attach = db.Attachements.Single(i => i.ROWGUID == guid);
 
             if (!ShibUser.IsAuthenticated(db))
             {
