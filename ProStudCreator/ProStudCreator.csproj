@@ -160,6 +160,9 @@
     <Content Include="Ablauf.aspx" />
     <Content Include="AdminPage.aspx" />
     <Content Include="Content\CreateFilestream.sql" />
+    <Content Include="Content\file.png" />
+    <Content Include="Content\jpg.png" />
+    <Content Include="Content\zip.png" />
     <Content Include="pictures\danger.png" />
     <Content Include="pictures\datum.png" />
     <Content Include="pictures\datun_grau.png" />

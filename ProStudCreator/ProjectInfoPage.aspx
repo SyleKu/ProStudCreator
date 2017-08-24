@@ -195,6 +195,7 @@
                     <div class="form-group col-sm-9">
                         <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" ItemType="ProStudCreator.ProjectSingleAttachment" CellPadding="4" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound">
                             <Columns>
+                                <asp:ImageField HeaderText="Typ" ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px"/>
                                 <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
                                 <asp:BoundField DataField="Size" HeaderText="Dateigrösse" />
                                 <asp:BoundField DataField="UploadUser" HeaderText="Bereitgestellt von" HtmlEncode="False" />

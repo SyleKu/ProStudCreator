@@ -219,9 +219,36 @@ namespace ProStudCreator
                 ProjectId = attach.ProjectId,
                 Name = attach.FileName,
                 Size = FixupSize(attach.UploadSize ?? 0),
-                UploadUser = "<a href=\"mailto:" + attach.UploadUserMail + "\">" + Server.HtmlEncode(attach.UploadUserName).Replace(" ", "&nbsp;") + "</a>"
+                UploadUser = "<a href=\"mailto:" + attach.UploadUserMail + "\">" + Server.HtmlEncode(attach.UploadUserName).Replace(" ", "&nbsp;") + "</a>",
+                FileType = getFileTypeImgPath(attach.FileName)
 
             };
+        }
+
+        private string getFileTypeImgPath(string filename)
+        {
+
+            switch (filename.Split('.').Last())
+            {
+                case "pdf":
+                    return "Content/pdf.png";
+                case "pptx":
+                    return "Content/ppt.png";
+                case "docx":
+                    return "Content/doc.png";
+                case "xlsx":
+                    return "Content/xls.png";
+                case "zip":
+                case "rar":
+                case "7z":
+                    return "Content/zip.png";
+                case "png":
+                case "jpg":
+                case "jpeg":
+                    return "Content/jpg.png";
+                default:
+                    return "Content/file.png";
+            }
         }
 
         private string FixupSize(decimal size)
@@ -562,5 +589,6 @@ namespace ProStudCreator
         public string Size { get; set; }
         public string UploadUser { get; set; }
         public int ProjectId { get; set; }
+        public string FileType { get; set; }
     }
 }
