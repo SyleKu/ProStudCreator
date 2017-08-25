@@ -42,8 +42,11 @@ namespace ProStudCreator
                 Response.End();
             }
 
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataBind();
 
             if (Page.IsPostBack) return;
+            
 
             //All Admins or Owners
             userCanEditAfterStart = project.UserCanEditAfterStart();
@@ -204,11 +207,6 @@ namespace ProStudCreator
 
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
-
-
-            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
-            gridProjectAttachs.DataBind();
-
         }
 
         private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
@@ -218,7 +216,7 @@ namespace ProStudCreator
                 Guid = attach.ROWGUID,
                 ProjectId = attach.ProjectId,
                 Name = attach.FileName,
-                Size = FixupSize(attach.UploadSize ?? 0),
+                Size = FixupSize((long) (attach.UploadSize ?? 0)),
                 UploadUser = "<a href=\"mailto:" + attach.UploadUserMail + "\">" + Server.HtmlEncode(attach.UploadUserName).Replace(" ", "&nbsp;") + "</a>",
                 FileType = getFileTypeImgPath(attach.FileName)
 
@@ -251,16 +249,16 @@ namespace ProStudCreator
             }
         }
 
-        private string FixupSize(decimal size)
+        private string FixupSize(long size)
         {
             if (size < 1024) //bytes
-                return size + "Bytes";
+                return size + " B";
             if (size / 1024 < 1024) //kilobytes
-                return (int)(size / 1024) + " Kb.";
-            if (size / 1048576 < 1024)
-                return (int)(size / 1048576) + " Mb.";
-
-            return (int)(size / 1073741824) + " Gb.";
+                return (size / 1024) + " KB";
+            if (size / (1024*1024) < 1024)
+                return (size / (1024*1024)) + " MB";
+        
+            return Math.Round((float)size / ((float)1024*1024*1024), 2) + " GB";
         }
 
 
@@ -476,17 +474,6 @@ namespace ProStudCreator
                     // ignored
                 }
             }
-
-
-
-            var id = int.Parse(Request.QueryString["id"]);
-
-            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
-            gridProjectAttachs.DataBind();
-
-            updateProjectAttachements.Update();
-
-
         }
 
         private Attachements CreateNewAttach(long fileSize, string fileName)
@@ -567,11 +554,12 @@ namespace ProStudCreator
             attach.DeletedUser = ShibUser.GetEmail();
             db.SubmitChanges();
 
-            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
-                .Select(i => getProjectSingleAttachment(i));
+
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
             updateProjectAttachements.Update();
+            
         }
 
         private enum ProjectTypes

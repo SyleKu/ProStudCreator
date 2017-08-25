@@ -189,13 +189,13 @@
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="lblProjectAttachements" Font-Size="24px" Height="50px" Text="Projekt Artefakte"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
-            <asp:UpdatePanel runat="server" ID="updateProjectAttachements" UpdateMode="Conditional" ChildrenAsTriggers="False">
+            <asp:UpdatePanel runat="server" ID="updateProjectAttachements" UpdateMode="Conditional">
                 <ContentTemplate>
                     <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group col-sm-9">
-                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" ItemType="ProStudCreator.ProjectSingleAttachment" CellPadding="4" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound">
+                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" ItemType="ProStudCreator.ProjectSingleAttachment" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound">
                             <Columns>
-                                <asp:ImageField HeaderText="Typ" ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px"/>
+                                <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px"/>
                                 <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
                                 <asp:BoundField DataField="Size" HeaderText="Dateigrösse" />
                                 <asp:BoundField DataField="UploadUser" HeaderText="Bereitgestellt von" HtmlEncode="False" />
@@ -218,10 +218,16 @@
                     <hr />
                     <asp:Label runat="server" Text="Upload Projekt Artefakte:" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group">
-                        <ajax:AjaxFileUpload runat="server" MaxFileSize="2147483" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True" ID="fileUpProjectAttach" AllowedFileTypes="pdf,xlsx,docx,pptx,7z,zip,rar,png,jpg,jpeg"/>
+                        <ajax:AjaxFileUpload runat="server" MaxFileSize="-1" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True" ID="fileUpProjectAttach" AllowedFileTypes="7z,aac,avi,bz2,csv,doc,docx,gif,gz,htm,html,jpeg,jpg,md,mp3,mp4,ods,odt,ogg,pdf,png,ppt,pptx,svg,tar,tgz,txt,xls,xlsx,xml,zip" OnClientUploadCompleteAll="doPostBack" MaximumNumberOfFiles="-1"/>
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
     </div>
+    <script type="text/javascript">
+        function doPostBack() {
+            var updatePanel1 = '<%=updateProjectAttachements.ClientID%>';
+            __doPostBack(updatePanel1, '');
+        }
+    </script>
 </asp:Content>
