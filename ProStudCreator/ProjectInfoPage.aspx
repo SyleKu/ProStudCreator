@@ -1,7 +1,6 @@
-﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" %>
+﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" EnableEventValidation="false" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
-
 <asp:Content ID="ProjectInofpageContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
@@ -193,32 +192,26 @@
                 <ContentTemplate>
                     <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group col-sm-9">
-                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" ItemType="ProStudCreator.ProjectSingleAttachment" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound">
+                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="gridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
                             <Columns>
-                                <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px"/>
+                                <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px" />
                                 <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
                                 <asp:BoundField DataField="Size" HeaderText="Dateigrösse" />
-                                <asp:BoundField DataField="UploadUser" HeaderText="Bereitgestellt von" HtmlEncode="False" />
                                 <asp:TemplateField ItemStyle-Wrap="False">
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="deleteProjectAttachButton" ToolTip="Datei löschen" CommandName="deleteProjectAttach" OnClientClick="return confirm('Wollen Sie diese Datei wirklich löschen?');" CommandArgument="<%# Item.Guid %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField ItemStyle-Wrap="false">
-                                    <ItemTemplate>
-                                        <a title="Datei herunterladen" class="btn btn-default btnHeight glyphicon glyphicon-download" href="ProjectFilesDownload?guid=<%# Item.Guid %>"></a>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
                             </Columns>
-                            <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                            <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                            <HeaderStyle BackColor="#a5c7ff" Font-Bold="True" ForeColor="Black" />
+                            <RowStyle BackColor="#FFFFFF" ForeColor="0000000"></RowStyle>
                         </asp:GridView>
                     </div>
                     <div style="clear: both"></div>
                     <hr />
                     <asp:Label runat="server" Text="Upload Projekt Artefakte:" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group">
-                        <ajax:AjaxFileUpload runat="server" MaxFileSize="-1" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True" ID="fileUpProjectAttach" AllowedFileTypes="7z,aac,avi,bz2,csv,doc,docx,gif,gz,htm,html,jpeg,jpg,md,mp3,mp4,ods,odt,ogg,pdf,png,ppt,pptx,svg,tar,tgz,txt,xls,xlsx,xml,zip" OnClientUploadCompleteAll="doPostBack" MaximumNumberOfFiles="-1"/>
+                        <ajax:AjaxFileUpload runat="server" MaxFileSize="-1" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True" ID="fileUpProjectAttach" AllowedFileTypes="7z,aac,avi,bz2,csv,doc,docx,gif,gz,htm,html,jpeg,jpg,md,mp3,mp4,ods,odt,ogg,pdf,png,ppt,pptx,svg,tar,tgz,txt,xls,xlsx,xml,zip" OnClientUploadCompleteAll="doPostBack" MaximumNumberOfFiles="-1" />
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
@@ -231,3 +224,4 @@
         }
     </script>
 </asp:Content>
+

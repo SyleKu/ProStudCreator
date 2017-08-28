@@ -46,7 +46,7 @@ namespace ProStudCreator
             gridProjectAttachs.DataBind();
 
             if (Page.IsPostBack) return;
-            
+
 
             //All Admins or Owners
             userCanEditAfterStart = project.UserCanEditAfterStart();
@@ -216,8 +216,7 @@ namespace ProStudCreator
                 Guid = attach.ROWGUID,
                 ProjectId = attach.ProjectId,
                 Name = attach.FileName,
-                Size = FixupSize((long) (attach.UploadSize ?? 0)),
-                UploadUser = "<a href=\"mailto:" + attach.UploadUserMail + "\">" + Server.HtmlEncode(attach.UploadUserName).Replace(" ", "&nbsp;") + "</a>",
+                Size = FixupSize((long)(attach.UploadSize ?? 0)),
                 FileType = getFileTypeImgPath(attach.FileName)
 
             };
@@ -255,10 +254,10 @@ namespace ProStudCreator
                 return size + " B";
             if (size / 1024 < 1024) //kilobytes
                 return (size / 1024) + " KB";
-            if (size / (1024*1024) < 1024)
-                return (size / (1024*1024)) + " MB";
-        
-            return Math.Round((float)size / ((float)1024*1024*1024), 2) + " GB";
+            if (size / (1024 * 1024) < 1024)
+                return (size / (1024 * 1024)) + " MB";
+
+            return Math.Round((float)size / ((float)1024 * 1024 * 1024), 2) + " GB";
         }
 
 
@@ -323,11 +322,6 @@ namespace ProStudCreator
         protected void BtnCancel_OnClick(object sender, EventArgs e)
         {
             Response.Redirect("Projectlist");
-        }
-
-        protected void FileExplorer_OnItemCommand(object sender, EventArgs e)
-        {
-            //OverRide = FileExplorer.OverwriteExistingFiles;
         }
 
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
@@ -542,6 +536,19 @@ namespace ProStudCreator
 
             if (!project.UserIsOwner() && !ShibUser.CanEditAllProjects())
                 e.Row.Cells[e.Row.Cells.Count - 2].Visible = false;
+
+
+            try
+            {
+                e.Row.Attributes.Add("onmouseover", "this.style.backgroundColor='#93A3B0'; this.style.color='White'; this.style.cursor='pointer'");
+                e.Row.Attributes.Add("onmouseout", "this.style.color='Black';this.style.backgroundColor='#FFFFFF';");
+                e.Row.Attributes.Add("onclick", Page.ClientScript.GetPostBackEventReference(gridProjectAttachs, "Select$" + e.Row.RowIndex.ToString()));
+
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         protected void gridProjectAttachs_OnRowCommand(object sender, GridViewCommandEventArgs e)
@@ -559,7 +566,12 @@ namespace ProStudCreator
             gridProjectAttachs.DataBind();
 
             updateProjectAttachements.Update();
-            
+
+        }
+
+        protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            Response.Redirect("ProjectFilesDownload?guid="+((Guid)gridProjectAttachs.SelectedValue));
         }
 
         private enum ProjectTypes
@@ -568,6 +580,8 @@ namespace ProStudCreator
             IP6,
             NotDefined
         }
+
+
     }
 
     public class ProjectSingleAttachment
@@ -575,7 +589,6 @@ namespace ProStudCreator
         public Guid Guid { get; set; }
         public string Name { get; set; }
         public string Size { get; set; }
-        public string UploadUser { get; set; }
         public int ProjectId { get; set; }
         public string FileType { get; set; }
     }

@@ -64,9 +64,7 @@ namespace ProStudCreator
                 }
                 else
                 {
-                    if (Session["ComesFromNotOwn"] == null
-                        ? false
-                        : (bool) Session["ComesFromNotOwn"]) //if user comes from NotOwn
+                    if ((bool?) Session["ComesFromNotOwn"] ?? false) //if user comes from NotOwn
                     {
                         dropSemester.SelectedValue = (string) Session["SelectedSemesterBeforeNotOwn"];
                         Session["ComesFromNotOwn"] = false;
