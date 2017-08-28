@@ -355,3 +355,193 @@ html .demo-container .ruFakeInput { width: 220px; }
 .hidden { display: none; }
 
 .dropPreviousProject { max-width: 280px; }
+
+
+/*File Upload styles*/
+.ajax__fileupload {
+    padding: 4px;
+    border: #D3D3D3 3px solid !important;
+    overflow: auto;
+    border-radius: 10px !important;
+}
+
+.ajax__fileupload_selectFileContainer {
+    height: 34px !important;
+    line-height: 24px;
+    width: 100px !important;
+}
+
+.ajax__fileupload_selectFileButton {
+    display: block;
+    height: 24px;
+    line-height: 24px;
+    width: 80px;
+    text-align: center;
+    background-color: #212121;
+    cursor: pointer;
+    margin-right: 4px;
+    border-radius: 5px !important;
+    font-size: 13px;
+    margin: 5px !important
+}
+
+.ajax__fileupload_selectFileButton:hover {
+    background-color: darkgray !important;
+    color: #ffffff;
+}
+
+.ajax__fileupload_topFileStatus {
+    color: rgb(127, 126, 126);
+}
+
+.ajax__fileupload_ProgressBarHolder 
+{
+    margin-right: 70px;
+    _margin-right: 0;
+}
+
+.ajax__fileupload_uploadbutton {
+    width: 60px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    background-color: #000099;
+    border-radius: 5px !important;
+}
+
+.ajax_fileupload_cancelbutton {
+    width: 70px !important;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    background-color: #990033;
+    border-radius: 5px !important;
+    margin: 4px !important;
+}
+
+.ajax__fileupload_dropzone {
+    border-style: none !important;
+    line-height: 50px;
+    text-align: center;
+    _text-align: left; /* IE Only */
+    margin-bottom: 2px;
+    font-size: 22px !important;
+    font-weight: bold;
+    border-bottom: solid !important;
+    border-bottom-color: #D3D3D3 !important;
+    border-bottom-width: 3px !important;
+}
+
+.ajax__fileupload_queueContainer 
+{
+    border: none !important;
+    border-width: 1px; 
+    margin-top:2px; 
+    padding:4px;
+    clear: both;
+}
+
+.ajax__fileupload_progressBar {
+    margin: 10px !important;
+    margin-right: 25px !important;
+    background-color: #7fc484 !important;
+}
+
+.ajax__fileupload_footer {
+    margin-top: 2px;
+    line-height: 20px;
+    height: 20px;
+}
+
+.ajax__fileupload_fileItemInfo {
+    line-height: 20px;
+    height: 20px;
+    margin: 5px !important;
+    overflow: hidden;
+}
+
+.ajax__fileupload_fileItemInfo .filename {
+    font-weight: bold;
+}
+
+.ajax__fileupload_fileItemInfo .uploadstatus {
+    font-style: italic;
+}
+
+.ajax__fileupload_fileItemInfo .removeButton {
+    cursor: pointer;
+    background-color: #900;
+    color: white;
+    width: 70px !important;
+    height: 25px;
+    line-height: 20px;
+    text-align: center;
+    display: block;
+    float: left;
+    border-radius: 5px !important;
+}
+
+.ajax__fileupload_fileItemInfo .uploadedState {
+    color: #060;
+    background-color: #fff;
+}
+
+.ajax__fileupload_fileItemInfo .uploadingState {
+    color: #FF9900;
+    background-color: #fff;
+}
+
+.ajax__fileupload_fileItemInfo .pendingState {
+    color: #009;
+    background-color: #fff;
+}
+
+.ajax__fileupload_fileItemInfo .errorState {
+    color: #ffffff;
+    background-color: #ff0000;
+}
+
+.ajax__fileupload_fileItemInfo .cancelledState {
+    color: #900;
+    background-color: #fff;
+}
+
+/*Check*/
+.ajax__fileupload_selectFileContainer {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    width: 80px;
+    /*float: left;*/
+}
+
+.ajax__fileupload_selectFileContainer input {
+    border: medium none;
+    cursor: pointer;
+    height: 40px;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+
+
+.ajax__fileupload_fileItemInfo 
+{
+    position: relative;
+    z-index: 0;
+}
+.ajax__fileupload_fileItemInfo div
+{
+    display: inline-block;
+}
+.ajax__fileupload_fileItemInfo div.removeButton 
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+}

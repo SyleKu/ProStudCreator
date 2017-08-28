@@ -207,6 +207,9 @@ namespace ProStudCreator
 
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
+
+            divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1Mail ||
+                                      ShibUser.GetEmail() == project.Advisor2Mail || !ShibUser.CanEditAllProjects();
         }
 
         private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
@@ -449,10 +452,20 @@ namespace ProStudCreator
 
         protected void OnUploadComplete(object sender, AjaxFileUploadEventArgs e)
         {
-            var attachement = CreateNewAttach(e.FileSize, e.FileName);
-            SaveFileInDb(attachement, e.GetStreamContents());
+            if (db.Attachements.Any(
+                a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName))
+            {
 
-            e.GetStreamContents().Close();
+                SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName), e.GetStreamContents());
+            }
+            else
+            {
+                var attachement = CreateNewAttach(e.FileSize, e.FileName);
+                SaveFileInDb(attachement, e.GetStreamContents());
+
+                e.GetStreamContents().Close();
+               
+            }
 
 
             var di = new DirectoryInfo(Path.GetTempPath() + "_AjaxFileUpload");
@@ -468,6 +481,7 @@ namespace ProStudCreator
                     // ignored
                 }
             }
+
         }
 
         private Attachements CreateNewAttach(long fileSize, string fileName)
@@ -534,8 +548,9 @@ namespace ProStudCreator
             var project =
                 db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).ProjectId);
 
-            if (!project.UserIsOwner() && !ShibUser.CanEditAllProjects())
-                e.Row.Cells[e.Row.Cells.Count - 2].Visible = false;
+            if (!(ShibUser.GetEmail() == project.Advisor1Mail || ShibUser.GetEmail() == project.Advisor2Mail || !ShibUser.CanEditAllProjects()))
+               e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
+            
 
 
             try
@@ -571,7 +586,7 @@ namespace ProStudCreator
 
         protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            Response.Redirect("ProjectFilesDownload?guid="+((Guid)gridProjectAttachs.SelectedValue));
+            Response.Redirect("ProjectFilesDownload?guid=" + ((Guid)gridProjectAttachs.SelectedValue));
         }
 
         private enum ProjectTypes
