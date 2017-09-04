@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -214,8 +215,6 @@
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\Webauftritt_IP5_2016HS.pdf" />
-    <Content Include="Content\Webauftritt_IP6_2016HS.pdf" />
     <Content Include="Content\P5_P6_Guide_20160906.pdf" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
