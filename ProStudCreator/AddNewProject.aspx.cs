@@ -3,6 +3,7 @@ using System.Data.Linq;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
