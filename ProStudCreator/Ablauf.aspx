@@ -12,7 +12,6 @@
                 <ul>
                     <li>Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).</li>
                     <li>Ein Hinweis, dass auf diesem <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a> Unterlagen zu finden sind.</li>
-                    <%--<li>Anleitung zum obligatorischen Websummary für <a href="Content/Webauftritt_IP5_2016HS.pdf" class="pdf">IP5</a> oder <a href="Content/Webauftritt_IP6_2016HS.pdf" class="pdf">IP6</a></li>--%>
                     <li>Optional: <a href="Content/P5_P6_Guide_20160906.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a>, <a href="Content/Leitfaden_Berichte_4.01.pdf" class="pdf">Offizieller Leitfaden für Berichte</a>, <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                     <li>Besprich den Bewertungsbogen (Schritt #1) mit den Studierenden</li>
                     <li>Die Studierenden müssen in den ersten Wochen eine Projektvereinbarung verfassen. Eine Vorlage dafür
@@ -26,6 +25,7 @@
                 </ul>
             </li>
             <li>Titeländerungen können bis 11 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
+            <li>Die Studierenden erstellen das obligatorische Websummary (Leitfaden unter <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene</a>).</li>
             <li>Nur für Projekte, die im Herbst abschliessen: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
             <li><ul>
