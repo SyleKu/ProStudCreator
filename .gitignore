@@ -122,6 +122,8 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+VSWorkspaceState.json
+slnx.sqlite
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -161,7 +163,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 *.pubxml
-/.vs/config
+.vs/
 /packages
 /fs_ProstudCreator/$FSLOG
 /fs_ProstudCreator/f0147ef4-b7fc-4741-aa61-9c18763392ab/1e24e665-f6a6-474d-ae34-cef13f4bb21a
