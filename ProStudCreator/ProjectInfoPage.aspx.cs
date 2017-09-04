@@ -206,7 +206,7 @@ namespace ProStudCreator
                                              userCanEditAfterStart;
 
             divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1Mail ||
-                                      ShibUser.GetEmail() == project.Advisor2Mail || !ShibUser.CanEditAllProjects();
+                                      ShibUser.GetEmail() == project.Advisor2Mail || ShibUser.CanEditAllProjects();
         }
 
         private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
@@ -299,7 +299,7 @@ namespace ProStudCreator
             }
 
 
-            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") + (project?.LogDefenceRoom != null ? "  /  Raum: " +project?.LogDefenceRoom : "");
+            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") + (project?.LogDefenceRoom != null ? ", Raum: " +project?.LogDefenceRoom : "");
         }
 
         private void ReturnAlert(string message)
