@@ -4,32 +4,11 @@
     <div class="well usernSettings">
         <h3>Durchführung eines Projektes</h3>
         <ol>
-<<<<<<< HEAD
             <li>Passe die Gewichtung im <a href="Content/Bewertungsbogen_P5_P9.xlsx" class="xls">Bewertungsbogen</a> an. Die Gewichtung der
                 Zwischennoten, z.B. "FACHLICHES", aber nicht verändern.
             </li>
             <li>Schreibe zum Semesterbeginn den Studierenden und Verlange die Organisation eines Kickoff-Meetings.</li>
             <li>Informiere die Studierenden über folgende Punkte beim Kickoff-Meeting:
-=======
-            <li>Den <a href="Content/Bewertungsbogen_P5_P9.xlsx" class="xls">Bewertungsbogen</a> herunterladen</li>
-            <li>
-                Die Gewichtung der Einzelpunkte passend festlegen. Die Gewichtung der
-                Zwischennoten (z.B. "FACHLICHES") nicht verändern. Die Gewichtung muss bis vor der
-                Projektvereinbarung mit den Studierenden besprochen und fixiert sein.
-            </li>
-            <li>
-                Die Studierenden verfassen in den ersten Wochen eine Projektvereinbarung. Eine Vorlage dafür
-                existiert nicht. Die Projektvereinbarung umfasst 1-2 Seiten und enthält folgende Punkte:
-                <ul>
-                    <li>Wiedergabe der Ausgangslage und Aufgabenstellung in eigenen Worten</li>
-                    <li>Vorgehen mit grobem Zeitplan und Meilensteinen</li>
-                    <li>Umgang mit Projektrisiken, falls nötig</li>
-                </ul>
-            </li>
-            <li>
-                Die Studierenden arbeiten am Projekt. Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).
-                Du gibst den Studierenden folgende Hilfsmittel ab:
->>>>>>> ProjectFileUpload
                 <ul>
                     <li>Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).</li>
                     <li>Ein Hinweis, dass auf diesem <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a> Unterlagen zu finden sind.</li>
@@ -46,45 +25,23 @@
                 </ul>
             </li>
             <li>Titeländerungen können bis 11 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
             <li>Die Studierenden erstellen das obligatorische Websummary (Leitfaden unter <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene</a>).</li>
->>>>>>> db3632c19af545deb70d229e604d723ab7f150d8
             <li>Nur für Projekte, die im Herbst abschliessen: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
                 können vom Empfang in A0-Grösse gedruckt werden.</li>
             <li><ul>
                     <li>IP5: Lasse die Studierenden ein Schlusspräsentation organisieren (Raum, Termin). Die Präsentation im IP5 wird verlangt, da sie der Vorbereitung auf die Schlusspräsentation und Verteidigung der Bachelorarbeit dient.</li>
                     <li>IP6: Die Schlusspräsentation (Raum, Termin, Experte/-in) wird von uns organisiert. Details sind auf der Projekt-Infoseite ersichtlich. Die Studierenden schicken ihre Arbeit an den Experten, in elektronischer oder Papier-Form, je nach Wunsch des Experten.</li>
                 </ul>
-=======
-            <li>
-                Nur für Projekte, die im Herbst abschliessen: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
-                können vom Empfang in A0-Grösse gedruckt werden.
-            </li>
-            <li>
-                IP5: Lasse die Studierenden ein Schlusspräsentation organisieren (Raum, Termin). Die Präsentation im IP5 wird verlangt, da sie der Vorbereitung auf die Schlusspräsentation und Verteidigung der Bachelorarbeit dient.<br/>
-                IP6: Die Schlusspräsentation (Raum, Termin, Experte/-in) wird von uns organisiert. Details sind auf der Projekt-Infoseite ersichtlich.<br/>
->>>>>>> ProjectFileUpload
             </li>
             <li>Fülle nach der Projektabgabe den Bewertungsbogen (Schritt #1) aus.</li>
             <li>Lade Kollegen und andere interessierte Gasthörer zur Schlusspräsentation ein.</li>
             <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten (IP6) und interessierten Gästen.</li>
-<<<<<<< HEAD
             <li>Notenbesprechung mit den Experten (IP6), ggf. Anpassung der Bewertung. Pro Student/-in soll eine <i>individuelle</i> Note festgelegt werden. Noten >5.8 müssen an die SGL gemeldet werden.</li>
             <li><strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
             <li>Im Idealfall machst Du eine Schlusssitzung mit den Studierenden. Den Bewertungsbogen den Studierenden <b>NICHT</b> zeigen oder abgeben.</li>
-=======
-            <li>Notenbesprechung mit den Experten (IP6), ggf. Anpassung der Bewertung. Pro Student/-in soll eine <i>individuelle</i> Note festgelegt werden.</li>
-            <li>
-                <strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong>
-            </li>
-            <li>Im Idealfall machst Du noch eine Schlusssitzung mit den Studierenden. Den Bewertungsbogen <b>NICHT</b> den Studierenden abgeben. Noten >5.8 müssen vorgängig an die SGL gemeldet werden.</li>
->>>>>>> ProjectFileUpload
         </ol>
         <p>
-            <i>
-                Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei uns. Je früher, desto besser.
+            <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei uns. Je früher, desto besser.
             </i>
         </p>
     </div>
@@ -100,7 +57,7 @@
             Für alle Projekte gelten dieselben Anforderungen (siehe <a href="FAQ.aspx">FAQ</a>).
         </p>
         <h3>Einreichen eines externen Projekts</h3>
-        <img src="Content/Prozess.PNG"/>
+        <img src="Content/Prozess.PNG" />
         <ol>
             <li>Ein externer Auftraggeber (nie ein Student selbst) schickt <a class="pdf" href="Content/Externe_Projekteingabe.pdf">dieses Formular</a> an Markus Oehninger.</li>
             <li>Markus verteilt das Projekt ans i4Ds und IMVS.</li>
