@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace ProStudCreator
 {
-    public partial class PDF : System.Web.UI.Page
+    public partial class PDF : Page
     {
-        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             var id = int.Parse(Request.QueryString["id"]);
             var forceDl = bool.Parse(Request.QueryString["dl"]);
 
-            var idPDF = db.Projects.Single((Project i) => i.Id == id);
+            var idPDF = db.Projects.Single(i => i.Id == id);
 
             if (!(ShibUser.IsAuthenticated(db) || idPDF.State == ProjectState.Published))
             {
@@ -45,7 +42,6 @@ namespace ProStudCreator
                     }
                     catch
                     {
-
                     }
                     throw;
                 }
@@ -57,7 +53,9 @@ namespace ProStudCreator
             if (forceDl)
             {
                 Response.ContentType = "application/force-download";
-                Response.AddHeader("content-disposition", "attachment; filename=" + idPDF.Department.DepartmentName + idPDF.ProjectNr.ToString("00") + ".pdf");
+                Response.AddHeader("content-disposition",
+                    "attachment; filename=" + idPDF.Department.DepartmentName + idPDF.ProjectNr.ToString("00") +
+                    ".pdf");
             }
             else
             {

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -16,7 +12,7 @@ namespace ProStudCreator
         private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
         private string _antiXsrfTokenValue;
 
-        public bool inDebugMode = false;
+        public bool inDebugMode;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -41,9 +37,7 @@ namespace ProStudCreator
                     Value = _antiXsrfTokenValue
                 };
                 if (FormsAuthentication.RequireSSL && Request.IsSecureConnection)
-                {
                     responseCookie.Secure = true;
-                }
                 Response.Cookies.Set(responseCookie);
             }
 
@@ -61,11 +55,9 @@ namespace ProStudCreator
             else
             {
                 // Anti-XSRF-Token überprüfen
-                if ((string)ViewState[AntiXsrfTokenKey] != _antiXsrfTokenValue
-                    || (string)ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? string.Empty))
-                {
+                if ((string) ViewState[AntiXsrfTokenKey] != _antiXsrfTokenValue
+                    || (string) ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? string.Empty))
                     throw new InvalidOperationException("Fehler bei der Überprüfung des Anti-XSRF-Tokens.");
-                }
             }
 
             if (!ShibUser.IsAuthenticated(new ProStudentCreatorDBDataContext()))
@@ -98,7 +90,6 @@ namespace ProStudCreator
 
         private void Page_Error(object sender, EventArgs e)
         {
-
         }
 
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -106,8 +97,5 @@ namespace ProStudCreator
             Context.GetOwinContext().Authentication.SignOut();
             Response.Redirect("/Account/Login.aspx");
         }
-
-
     }
-
 }

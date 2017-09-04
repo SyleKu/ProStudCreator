@@ -1,6 +1,6 @@
-﻿using System.Configuration;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
+
 namespace ProStudCreator
 {
     public static class ShibUser
@@ -13,6 +13,7 @@ namespace ProStudCreator
             return ShibUser.IsStaff() && ShibUser.GetDepartmentId(db).HasValue;
 #endif
         }
+
         public static bool IsAdmin()
         {
 #if DEBUG
@@ -28,6 +29,7 @@ namespace ProStudCreator
             return (bool)HttpContext.Current.Items["IsAdmin"];
 #endif
         }
+
         public static bool IsStaff()
         {
 #if DEBUG
@@ -40,6 +42,7 @@ namespace ProStudCreator
             }).Contains("staff");
 #endif
         }
+
         public static string GetEmail()
         {
 #if DEBUG
@@ -58,6 +61,7 @@ namespace ProStudCreator
             return result;
 #endif
         }
+
         public static string GetFirstName()
         {
 #if DEBUG
@@ -66,6 +70,7 @@ namespace ProStudCreator
             return HttpContext.Current.Request.Headers["givenName"];
 #endif
         }
+
         public static string GetLastName()
         {
 #if DEBUG
@@ -74,10 +79,12 @@ namespace ProStudCreator
             return HttpContext.Current.Request.Headers["surname"];
 #endif
         }
+
         public static string GetPhoneNumber()
         {
             return HttpContext.Current.Request.Headers["telephoneNumber"];
         }
+
         public static int? GetDepartmentId(ProStudentCreatorDBDataContext db)
         {
 #if DEBUG
@@ -91,6 +98,7 @@ namespace ProStudCreator
             else return dep.Id;
 #endif
         }
+
         public static string GetDepartmentName(ProStudentCreatorDBDataContext db)
         {
 #if DEBUG
@@ -121,12 +129,13 @@ namespace ProStudCreator
 
         public static string GetDebugInfo()
         {
-            return HttpContext.Current.Request.Headers["affiliation"] + ", " + HttpContext.Current.Request.Headers["orgunit-dn"];
+            return HttpContext.Current.Request.Headers["affiliation"] + ", " +
+                   HttpContext.Current.Request.Headers["orgunit-dn"];
         }
 
         internal static string GetFullName()
         {
-            return ShibUser.GetFirstName() + " " + ShibUser.GetLastName();
+            return GetFirstName() + " " + GetLastName();
         }
 
         private static Department GetDepartment(string orgUnitDn, ProStudentCreatorDBDataContext dbx)
@@ -134,20 +143,19 @@ namespace ProStudCreator
             if (orgUnitDn == null) orgUnitDn = "";
 
             Department dept;
-            dept = dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+            dept = dbx.Departments.ToList().SingleOrDefault(d => orgUnitDn.Contains(d.OUCode));
 
             if (dept == null)
             {
                 // Check if user is specifically mapped to a department. If so, return that dept.
-                string userEmail = ShibUser.GetEmail();
+                var userEmail = GetEmail();
                 var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
 
                 if (userDeptMap == null) return null;
-                else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
+                dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
             }
 
             return dept;
-
         }
 
         private static Department GetDepartment(string orgUnitDn)
@@ -158,16 +166,16 @@ namespace ProStudCreator
             using (var dbx = new ProStudentCreatorDBDataContext())
             {
                 dept =
-                    dbx.Departments.ToList<Department>().SingleOrDefault((Department d) => orgUnitDn.Contains(d.OUCode));
+                    dbx.Departments.ToList().SingleOrDefault(d => orgUnitDn.Contains(d.OUCode));
 
                 if (dept == null)
                 {
                     // Check if user is specifically mapped to a department. If so, return that dept.
-                    string userEmail = ShibUser.GetEmail();
+                    var userEmail = GetEmail();
                     var userDeptMap = dbx.UserDepartmentMap.SingleOrDefault(m => m.Mail == userEmail);
 
                     if (userDeptMap == null) return null;
-                    else dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
+                    dept = dbx.Departments.SingleOrDefault(d => d.Id == userDeptMap.DepartmentId);
                 }
 
                 return dept;
@@ -299,6 +307,5 @@ namespace ProStudCreator
             return (bool)HttpContext.Current.Items["CanSeeCreationDetails"];
 #endif
         }
-
     }
 }

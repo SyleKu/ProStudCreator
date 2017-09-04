@@ -1,5 +1,4 @@
-﻿using System;
-namespace ProStudCreator
+﻿namespace ProStudCreator
 {
     public static class ProjectState
     {

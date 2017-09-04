@@ -22,12 +22,14 @@
             <asp:GridView ID="AllEvents" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="True" AlternatingRowStyle-BackColor="#e7e7e7" Width="100%" OnDataBound="AllEvents_DataBinding">
                 <%--<AlternatingRowStyle BackColor="White" />--%>
             </asp:GridView>
-            <hr />
-            <p><b>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</b></p>
-            <br />
+            <hr/>
+            <p>
+                <b>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</b>
+            </p>
+            <br/>
             <a href="https://www.fhnw.ch/de/die-fhnw/hochschulen/ht/news-und-events/ausstellung-der-bachelor-abschlussarbeiten-2017/media/ausstellungsbroschuere-2017.pdf">Download Ausstellungsbroschüre</a>
-            <br />
-            <br />
+            <br/>
+            <br/>
             <a href="FAQ.aspx">Formular um Projekte einzureichen</a>
 
         </div>

@@ -7,17 +7,19 @@
         <p>
             Idealerweise stammen die Themen aus Industrie- oder Forschungsprojekten der Institute. Für externe Projekte gilt diese Einschränkung nicht.
             Projekte sollten einen Programmier-Teil (>50%) und einen Forschungs-Teil (>0%) enthalten.
-            </p>
-        <p>Als IP5 kommen viele Arbeiten in Frage: z.B. Webapplikationen ab einer gewissen Komplexität, Visualisierungen, Bildverarbeitung, …. Die
+        </p>
+        <p>
+            Als IP5 kommen viele Arbeiten in Frage: z.B. Webapplikationen ab einer gewissen Komplexität, Visualisierungen, Bildverarbeitung, …. Die
             Studierenden sollen ein klares Ziel haben und der Arbeitsumfang soll angemessen sein. Üblicherweise geht es darum, bestehende
             Technologien/Algorithmen/Methoden anzuwenden und sich auf das IP6 vorzubereiten. Im IP6 werden die Weichen mehr Richtung Wissenschaft
             gestellt. Laut Richtlinien sollen die Studierenden in der Bachelorthesis eine „bestimmte Aufgabe wissenschaftlich reflektiert, theoretisch
             und praktisch sowie selbständig lösen“.
-            </p>
-        <p>Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es soll nicht von vornherein klar sein, wie man ein Aufgabe
+        </p>
+        <p>
+            Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es soll nicht von vornherein klar sein, wie man ein Aufgabe
             löst. Nur das Ziel der Arbeit soll klar definiert sein. Achte darauf, dass die Aufgabenstellung eine gewisse intellektuelle Flughöhe
             erreicht, aber gegen oben nicht begrenzt ist. Ideale Arbeiten enthalten einen offenen Teil, wo sich die Studierenden austoben können.
-            </p>
+        </p>
         <h4>Was gehört in einen Projektbeschrieb?</h4>
         <p>
             Die Studierenden entscheiden sich anhand des Beschriebs für bzw. gegen ein Projekt. Das Review wird ebenfalls anhand des
@@ -26,17 +28,21 @@
         <ul>
             <li>Es muss klar sein, wo die Herausforderung der Arbeit liegt. Was muss "erforscht" werden?</li>
             <li>Wo liegen die Schwerpunkte der Arbeit?</li>
-            <li>Welche Teile bestehen bereits, welche fertigen Libraries dürfen/müssen eingesetzt werden und was muss selbst gemacht
+            <li>
+                Welche Teile bestehen bereits, welche fertigen Libraries dürfen/müssen eingesetzt werden und was muss selbst gemacht
                 werden?
             </li>
-            <li>Der benötigte Arbeitsaufwand muss abschätzbar sein. Auch bei offenen Forschungsthemen muss ersichtlich sein, was erwartet wird.
+            <li>
+                Der benötigte Arbeitsaufwand muss abschätzbar sein. Auch bei offenen Forschungsthemen muss ersichtlich sein, was erwartet wird.
                 Die Formulierung muss detailliert genug sein, dass man dafür eine Offerte erstellen könnte.
             </li>
         </ul>
         <h4>Wer ist meine Ansprechperson bei Fragen?</h4>
-        <p id="imvs2" visible="false" runat="server"><a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
+        <p id="imvs2" visible="false" runat="server">
+            <a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
         </p>
-        <p id="i4ds2" visible="false" runat="server"><a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
+        <p id="i4ds2" visible="false" runat="server">
+            <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
         </p>
         <h4>Wie können externe Auftraggeber Projekte einreichen?</h4>
         <p>
@@ -77,9 +83,9 @@
         </p>
         <h4>Wie kann man Projekte verlängern?</h4>
         <p>
-            IP5 können als IP6 verlängert werden. Wie bei allen anderen IP6 musst Du dazu rechtzeitig einen Projektbeschrieb einreichen. Für 
+            IP5 können als IP6 verlängert werden. Wie bei allen anderen IP6 musst Du dazu rechtzeitig einen Projektbeschrieb einreichen. Für
             Folgeprojekte gelten die allgemeinen Anforderungen ebenfalls, d.h. für diese Folgeprojekte muss eine neue Herausforderung definiert
-			werden, z.B. eine weitere oder schwierigere Problemstellung (daher ist die neue Projektbeschreibung nötig).
+            werden, z.B. eine weitere oder schwierigere Problemstellung (daher ist die neue Projektbeschreibung nötig).
         </p>
         <h4>Muss ich nicht gewählte Projekte erneut einreichen?</h4>
         <p>
@@ -90,9 +96,11 @@
             Nein, das geht leider nicht. Allerdings kannst Du es sofort fürs nächste Semester einreichen.
         </p>
         <h4>Wer organisiert Experten für meine Projekte?</h4>
-        <p id="i4ds1" visible="false" runat="server">Der Experte und die Verteidigung wird organisiert. Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere doch <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a>.
+        <p id="i4ds1" visible="false" runat="server">
+            Der Experte und die Verteidigung wird organisiert. Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere doch <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a>.
         </p>
-        <p id="imvs1" visible="false" runat="server">Du bist für die Organisation des Experten und der Verteidigung verantwortlich.
+        <p id="imvs1" visible="false" runat="server">
+            Du bist für die Organisation des Experten und der Verteidigung verantwortlich.
         </p>
         <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
         <p>
@@ -104,6 +112,8 @@
             Der Auftraggeber. Die Studierenden müssen/sollen das direkt mit dem Auftraggeber abrechnen.
         </p>
         <h4>Was mache ich mit allen Unterlagen nach dem Ende der Arbeit?</h4>
-        <p><b>Neu: Bitte lade alle Unterlagen auf der Projektinfoseite hoch. Papierunterlagen solltest Du bis 30 Tage nach Notenbekanntgabe aufbewahren, weil erst dann die Rekursfrist abläuft.</b></p>
+        <p>
+            <b>Neu: Bitte lade alle Unterlagen auf der Projektinfoseite hoch. Papierunterlagen solltest Du bis 30 Tage nach Notenbekanntgabe aufbewahren, weil erst dann die Rekursfrist abläuft.</b>
+        </p>
     </div>
 </asp:Content>

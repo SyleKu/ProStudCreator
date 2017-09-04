@@ -1,43 +1,82 @@
 ﻿using System;
-using NPOI.XSSF.UserModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NPOI.SS.UserModel;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.Text;
-using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace ProStudCreator
 {
     public class ExcelCreator
     {
-        private static string SHEET_NAME = "Projects";
-        private static string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
-        private static readonly string[] HEADERS = new string[] {
-                "Abbreviation",
-                "Name",
-                "Display Name",
-                "1P_Type",
-                "2P_Type",
-                "1P_Teamsize",
-                "2P_Teamsize",
-                "Major",
-                "Wichtigkeit",
-                "Betreuer",
-                "Betreuer2",
-                "Modules",
-                "Fixe Zuteilung",
-                "Fixe Zuteilung 2",
-                "Kommentar",
-                "ID",
-                "SingleSemester",
-                "Continuation",
-                "German",
-                "English"
-            };
+        private static readonly string SHEET_NAME = "Projects";
+        private static readonly string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
+
+        private static readonly string[] HEADERS =
+        {
+            "Abbreviation",
+            "Name",
+            "Display Name",
+            "1P_Type",
+            "2P_Type",
+            "1P_Teamsize",
+            "2P_Teamsize",
+            "Major",
+            "Wichtigkeit",
+            "Betreuer",
+            "Betreuer2",
+            "Modules",
+            "Fixe Zuteilung",
+            "Fixe Zuteilung 2",
+            "Kommentar",
+            "ID",
+            "SingleSemester",
+            "Continuation",
+            "German",
+            "English"
+        };
+
+        private static readonly string[] MARKETING_HEADERS =
+        {
+            "Projektnummer",
+            "Institut",
+            "Projekttitel",
+            "Projektstart",
+            "Projektabgabe",
+            "Ausstellung Bachelorthesis",
+            "Student/in 1",
+            "Student/in 1 E-Mail",
+            "Note Student/in 1",
+            "Student/in 2",
+            "Student/in 2 E-Mail",
+            "Note Student/in 2",
+            "Wurde reserviert",
+            "Hauptbetreuende/r",
+            "Hauptbetreuende/r E-Mail",
+            "Nebenbetreuende/r",
+            "Nebenbetreuende/r E-Mail",
+            "Weiterführung von",
+            "Projekttyp",
+            "Anzahl Semester",
+            "Durchführungssprache",
+            "Experte",
+            "Verteidigung-Datum",
+            "Verteidigung-Raum",
+            "Verrechungsstatus",
+            "Kunden-Unternehmen",
+            "Kunden-Anrede",
+            "Kunden-Name",
+            "Kunden-E-Mail Adresse",
+            "Kunden-Abteilung",
+            "Kunden-Strasse und Nummer",
+            "Kunden-PLZ",
+            "Kunden-Ort",
+            "Kunden-Referenznummer",
+            "Kunden-Adresse",
+            "Interne DB-ID"
+        };
 
         // References
         // - http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
@@ -49,10 +88,8 @@ namespace ProStudCreator
 
             // Header
             worksheet.CreateRow(0);
-            for (int i = 0; i < HEADERS.Length; i++)
-            {
+            for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.GetRow(0).CreateCell(i).SetCellValue(HEADERS[i]);
-            }
 
             // Project entries
             var projects = _projects.ToArray();
@@ -63,7 +100,7 @@ namespace ProStudCreator
                 projectToExcelRow(projects[i], row);
             }
 
-            for (int i = 0; i < HEADERS.Length; i++)
+            for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
 
             // Save
@@ -72,11 +109,12 @@ namespace ProStudCreator
 
         private static void projectToExcelRow(Project p, IRow row)
         {
-            ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+            var db = new ProStudentCreatorDBDataContext();
             p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;
 
-            string abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
-            string dispName = abbreviation + "_" + p.Name;
+            var abbreviation = /*Semester.CurrentSemester.ToString() +*/
+                p.Semester + "_" + p.Department.DepartmentName + p.ProjectNr.ToString("D2");
+            var dispName = abbreviation + "_" + p.Name;
 
             row.CreateCell(0).SetCellValue(abbreviation);
             row.CreateCell(1).SetCellValue(p.Name);
@@ -85,14 +123,14 @@ namespace ProStudCreator
             row.CreateCell(4).SetCellValue(p.PTwoType != null ? p.PTwoType.Export() : p.POneType.Export());
             row.CreateCell(5).SetCellValue(p.POneTeamSize.Export());
             row.CreateCell(6).SetCellValue(p.PTwoTeamSize != null ? p.PTwoTeamSize.Export() : p.POneTeamSize.Export());
-            row.CreateCell(7).SetCellValue("-");    // Major undefined
-            row.CreateCell(8).SetCellValue(0);      // Importance undefined
+            row.CreateCell(7).SetCellValue("-"); // Major undefined
+            row.CreateCell(8).SetCellValue(0); // Importance undefined
             row.CreateCell(9).SetCellValue(p.Advisor1Mail);
             row.CreateCell(10).SetCellValue(p.Advisor2Mail);
-            row.CreateCell(11).SetCellValue("");    // Modules undefined
+            row.CreateCell(11).SetCellValue(""); // Modules undefined
             row.CreateCell(12).SetCellValue(p.Reservation1Mail);
             row.CreateCell(13).SetCellValue(p.Reservation2Mail);
-            row.CreateCell(14).SetCellValue("");  // Comment undefined
+            row.CreateCell(14).SetCellValue(""); // Comment undefined
             row.CreateCell(15).SetCellValue(p.Id);
 
             row.CreateCell(16).SetCellValue(p.DurationOneSemester ? 1 : 0);
@@ -102,7 +140,8 @@ namespace ProStudCreator
         }
 
 
-        public static void GenerateMarketingList(Stream outStream, IEnumerable<Project> _projects, ProStudentCreatorDBDataContext db, string semesterName)
+        public static void GenerateMarketingList(Stream outStream, IEnumerable<Project> _projects,
+            ProStudentCreatorDBDataContext db, string semesterName)
         {
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(semesterName + MARKETING_SHEET_NAME);
@@ -119,12 +158,11 @@ namespace ProStudCreator
 
             // Header
             worksheet.CreateRow(0);
-            for (int i = 0; i < MARKETING_HEADERS.Length; i++)
+            for (var i = 0; i < MARKETING_HEADERS.Length; i++)
             {
                 var cell = worksheet.GetRow(0).CreateCell(i);
                 cell.CellStyle = HeaderStyle;
                 cell.SetCellValue(MARKETING_HEADERS[i]);
-
             }
 
             // Project entries
@@ -136,7 +174,7 @@ namespace ProStudCreator
                 ProjectToExcelMarketingRow(projects[i], row, db, DateStyle);
             }
 
-            for (int i = 0; i < HEADERS.Length; i++)
+            for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
 
             // Save
@@ -144,13 +182,14 @@ namespace ProStudCreator
         }
 
 
-        private static void ProjectToExcelMarketingRow(Project p, IRow row, ProStudentCreatorDBDataContext db, ICellStyle DateStyle)
+        private static void ProjectToExcelMarketingRow(Project p, IRow row, ProStudentCreatorDBDataContext db,
+            ICellStyle DateStyle)
         {
-
-            var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester.ToString() + "_" +
+            var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester + "_" +
                                                                          p.Department.DepartmentName +
                                                                          p.ProjectNr.ToString("D2");
-            var clientDepartment = string.IsNullOrEmpty(p.ClientAddressDepartment) || string.IsNullOrEmpty(p.ClientCompany)
+            var clientDepartment = string.IsNullOrEmpty(p.ClientAddressDepartment) ||
+                                   string.IsNullOrEmpty(p.ClientCompany)
                 ? ""
                 : p.ClientCompany + " Abt:" + p.ClientAddressDepartment;
 
@@ -215,91 +254,43 @@ namespace ProStudCreator
             row.CreateCell(i++).SetCellValue(p.Id);
         }
 
-        private static readonly string[] MARKETING_HEADERS = new string[]
-        {
-            "Projektnummer",
-            "Institut",
-            "Projekttitel",
-            "Projektstart",
-            "Projektabgabe",
-            "Ausstellung Bachelorthesis",
-            "Student/in 1",
-            "Student/in 1 E-Mail",
-            "Note Student/in 1",
-            "Student/in 2",
-            "Student/in 2 E-Mail",
-            "Note Student/in 2",
-            "Wurde reserviert",
-            "Hauptbetreuende/r",
-            "Hauptbetreuende/r E-Mail",
-            "Nebenbetreuende/r",
-            "Nebenbetreuende/r E-Mail",
-            "Weiterführung von",
-            "Projekttyp",
-            "Anzahl Semester",
-            "Durchführungssprache",
-            "Experte",
-            "Verteidigung-Datum",
-            "Verteidigung-Raum",
-            "Verrechungsstatus",
-            "Kunden-Unternehmen",
-            "Kunden-Anrede",
-            "Kunden-Name",
-            "Kunden-E-Mail Adresse",
-            "Kunden-Abteilung",
-            "Kunden-Strasse und Nummer",
-            "Kunden-PLZ",
-            "Kunden-Ort",
-            "Kunden-Referenznummer",
-            "Kunden-Adresse",
-            "Interne DB-ID"
-        };
-
         private static string GetLanguage(Project p)
         {
             if ((p.LogLanguageGerman ?? false) && !(p.LogLanguageEnglish ?? false))
-            {
                 return "Deutsch";
-            }
 
             if (!(p.LogLanguageGerman ?? false) && (p.LogLanguageEnglish ?? false))
-            {
                 return "Englisch";
-            }
 
             return "";
-
         }
 
         private static byte GetProjectDuration(Project p)
         {
             if (p.LogProjectDuration == null)
-            {
                 return 0;
-            }
             return p.LogProjectDuration.Value;
         }
 
         private static double GetStudentGrade(float? grade)
         {
             if (grade == null)
-            {
                 return -1;
-            }
-            return Math.Round((double)grade, 1);
+            return Math.Round((double) grade, 1);
         }
 
         private static string GetAbbreviationProject(Project p)
         {
             if (p.Project1 == null)
-            {
                 return "";
-            }
             return p.Project1?.Semester + "_" + p.Project1?.Department.DepartmentName +
-                                       p.Project1?.ProjectNr.ToString("D2");
+                   p.Project1?.ProjectNr.ToString("D2");
         }
 
-        private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db) => p.Semester?.StartDate ?? Semester.NextSemester(db).StartDate.Date;
+        private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db)
+        {
+            return p.Semester?.StartDate ?? Semester.NextSemester(db).StartDate.Date;
+        }
 
 
         private static string GetClientAddress(Project p)
@@ -307,9 +298,7 @@ namespace ProStudCreator
             var address = new StringBuilder();
             address.AppendLine(p.ClientCompany ?? "");
             if (!string.IsNullOrEmpty(p.ClientAddressDepartment))
-            {
                 address.AppendLine("Abt:" + p.ClientAddressDepartment);
-            }
             address.Append(p.ClientAddressTitle ?? "");
             address.Append(" ");
             address.AppendLine(p.ClientPerson ?? "");
@@ -321,6 +310,4 @@ namespace ProStudCreator
             return address.ToString();
         }
     }
-
-
 }

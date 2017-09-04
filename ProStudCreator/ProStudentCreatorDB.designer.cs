@@ -3792,6 +3792,8 @@ namespace ProStudCreator
 		
 		private string _DeletedUser;
 		
+		private string _UploadUserName;
+		
 		private EntityRef<Project> _Project;
 		
     #region Extensibility Method Definitions
@@ -3804,8 +3806,8 @@ namespace ProStudCreator
     partial void OnProjectAttachementChanged();
     partial void OnProjectIdChanging(int value);
     partial void OnProjectIdChanged();
-    partial void OnUploadUserChanging(string value);
-    partial void OnUploadUserChanged();
+    partial void OnUploadUserMailChanging(string value);
+    partial void OnUploadUserMailChanged();
     partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
     partial void OnUploadDateChanged();
     partial void OnUploadSizeChanging(System.Nullable<decimal> value);
@@ -3818,6 +3820,8 @@ namespace ProStudCreator
     partial void OnFileNameChanged();
     partial void OnDeletedUserChanging(string value);
     partial void OnDeletedUserChanged();
+    partial void OnUploadUserNameChanging(string value);
+    partial void OnUploadUserNameChanged();
     #endregion
 		
 		public Attachements()
@@ -3890,8 +3894,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadUser", DbType="VarChar(50)")]
-		public string UploadUser
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="UploadUser", Storage="_UploadUser", DbType="VarChar(50)")]
+		public string UploadUserMail
 		{
 			get
 			{
@@ -3901,11 +3905,11 @@ namespace ProStudCreator
 			{
 				if ((this._UploadUser != value))
 				{
-					this.OnUploadUserChanging(value);
+					this.OnUploadUserMailChanging(value);
 					this.SendPropertyChanging();
 					this._UploadUser = value;
-					this.SendPropertyChanged("UploadUser");
-					this.OnUploadUserChanged();
+					this.SendPropertyChanged("UploadUserMail");
+					this.OnUploadUserMailChanged();
 				}
 			}
 		}
@@ -4026,6 +4030,26 @@ namespace ProStudCreator
 					this._DeletedUser = value;
 					this.SendPropertyChanged("DeletedUser");
 					this.OnDeletedUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadUserName", DbType="varchar(50)")]
+		public string UploadUserName
+		{
+			get
+			{
+				return this._UploadUserName;
+			}
+			set
+			{
+				if ((this._UploadUserName != value))
+				{
+					this.OnUploadUserNameChanging(value);
+					this.SendPropertyChanging();
+					this._UploadUserName = value;
+					this.SendPropertyChanged("UploadUserName");
+					this.OnUploadUserNameChanged();
 				}
 			}
 		}

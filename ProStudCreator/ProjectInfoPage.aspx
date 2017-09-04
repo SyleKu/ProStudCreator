@@ -1,23 +1,7 @@
-﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" %>
+﻿<%@ Page Title="Projekt Information" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProjectInfoPage.aspx.cs" Inherits="ProStudCreator.ProjectInfoPage" EnableEventValidation="false" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="ProjectInofpageContent" ContentPlaceHolderID="MainContent" runat="server">
-    <script language="javascript" type="text/javascript">
-
-        function OnClientFileOpen(oExplorer, args) {
-            var item = args.get_item();
-
-
-            // File is a image document, do not open a new window
-            args.set_cancel(true);
-
-            // Tell browser to open file directly
-            $incomingUrl = "ProjectFilesDownload?fname=" + item._name + "&id=<%: int.Parse(Request.QueryString["id"]) %>";
-            document.location = encodeURI($incomingUrl);
-
-        }
-
-        global.OnClientFileOpen = OnClientFileOpen;
-    </script>
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px" Text="Projektinformationen"></asp:Label>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
@@ -193,21 +177,54 @@
                     </asp:PlaceHolder>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <hr />
-            <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
-            <div class="form-group">
-                <telerik:RadFileExplorer RenderMode="Auto" runat="server" CssClass="col-sm-3" ID="FileExplorer" Width="650px" Height="350px"
-                    AllowPaging="false" Skin="Default" VisibleControls="ListView,ContextMenus,Toolbar" ToolTip="Laden Sie hier Ihre Dokumente zum Projekt hoch." EnableCreateNewFolder="False" Configuration-ViewPaths="~\App_Data\ProjectFiles" Configuration-UploadPaths="~\App_Data\ProjectFiles" Configuration-DeletePaths="~\App_Data\ProjectFiles" EnableTheming="True" Configuration-AllowFileExtensionRename="False" OnItemCommand="FileExplorer_OnItemCommand" OnClientFileOpen="OnClientFileOpen">
-                </telerik:RadFileExplorer>
-            </div>
         </div>
+        <div style="clear: both"></div>
         <div style="text-align: right;">
             <asp:Button runat="server" ID="BtnSaveChanges" OnClick="BtnSaveChanges_OnClick" CssClass="btn btn-default" Text="Speichern & Schliessen"></asp:Button>
             <asp:Button runat="server" ID="BtnSaveBetween" OnClick="BtnSaveBetween_OnClick" CssClass="btn btn-default" Text="Zwischenspeichern" />
             <asp:Button runat="server" ID="BtnCancel" OnClick="BtnCancel_OnClick" CssClass="btn btn-default" Text="Abbrechen"></asp:Button>
         </div>
     </div>
+    <div class="well newProjectSettings">
+        <asp:Label runat="server" ID="lblProjectAttachements" Font-Size="24px" Height="50px" Text="Projekt Artefakte"></asp:Label>
+        <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
+            <asp:UpdatePanel runat="server" ID="updateProjectAttachements" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
+                    <div class="form-group col-sm-9">
+                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" EmptyDataText="             Noch keine Dokumente hochgeladen." ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="gridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
+                            <Columns>
+                                <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px" />
+                                <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
+                                <asp:BoundField DataField="Size" HeaderText="Dateigrösse" />
+                                <asp:TemplateField ItemStyle-Wrap="False">
+                                    <ItemTemplate>
+                                        <asp:LinkButton runat="server" ID="deleteProjectAttachButton" ToolTip="Datei löschen" CommandName="deleteProjectAttach" OnClientClick="return confirm('Wollen Sie diese Datei wirklich löschen?');" CommandArgument="<%# Item.Guid %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                            <HeaderStyle BackColor="#a5c7ff" Font-Bold="True" ForeColor="Black" />
+                            <RowStyle BackColor="#FFFFFF" ForeColor="0000000"></RowStyle>
+                        </asp:GridView>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div runat="server" id="divFileUpload">
+                        <hr />
+                        <asp:Label runat="server" Text="Upload Projekt Artefakte:" CssClass="control-label col-sm-3"></asp:Label>
+                        <div class="form-group">
+                            <ajax:AjaxFileUpload runat="server" MaxFileSize="-1" OnUploadComplete="OnUploadComplete" ClearFileListAfterUpload="True" AutoStartUpload="True" ID="fileUpProjectAttach" AllowedFileTypes="7z,aac,avi,bz2,csv,doc,docx,gif,gz,htm,html,jpeg,jpg,md,mp3,mp4,ods,odt,ogg,pdf,png,ppt,pptx,svg,tar,tgz,txt,xls,xlsx,xml,zip" OnClientUploadCompleteAll="doPostBack" MaximumNumberOfFiles="-1" />
+                            <small class="col-sm-offset-3">Dokumente mit gleichem Namen werden überschriben.</small>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function doPostBack() {
+            var updatePanel1 = '<%=updateProjectAttachements.ClientID%>';
+            __doPostBack(updatePanel1, '');
+        }
+    </script>
 </asp:Content>
-
-
 

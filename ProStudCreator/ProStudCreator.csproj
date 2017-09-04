@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=17.1.1.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AjaxControlToolkit.17.1.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="AspNet.ScriptManager.jQuery, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AspNet.ScriptManager.jQuery.2.1.3\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
       <Private>True</Private>
@@ -137,30 +140,6 @@
     <Reference Include="Microsoft.AspNet.FriendlyUrls">
       <HintPath>..\packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Web.Spreadsheet">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Web.Spreadsheet.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Web.UI">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\Telerik.Web.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Web.UI.Skins">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\Telerik.Web.UI.Skins.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Documents.Core">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Windows.Documents.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Documents.Flow">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Windows.Documents.Flow.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Documents.Spreadsheet">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Windows.Documents.Spreadsheet.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Documents.Spreadsheet.FormatProviders.OpenXml">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Windows.Documents.Spreadsheet.FormatProviders.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Zip">
-      <HintPath>..\lib\RCAJAX\2017.2.711.45\AdditionalLibraries\Bin45\Telerik.Windows.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -181,6 +160,9 @@
     <Content Include="Ablauf.aspx" />
     <Content Include="AdminPage.aspx" />
     <Content Include="Content\CreateFilestream.sql" />
+    <Content Include="Content\file.png" />
+    <Content Include="Content\jpg.png" />
+    <Content Include="Content\zip.png" />
     <Content Include="pictures\danger.png" />
     <Content Include="pictures\datum.png" />
     <Content Include="pictures\datun_grau.png" />
@@ -429,7 +411,6 @@
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>RadFileExplorer.designer.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\ProjectFiles\" />

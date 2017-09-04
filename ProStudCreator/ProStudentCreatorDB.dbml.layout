@@ -100,7 +100,7 @@
         <elementListCompartment Id="769894c1-97f6-4997-87d9-72fd89e1bd88" absoluteBounds="1.39, 14.96, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.375 : 15.4765942382813); (4.875 : 15.4765942382813)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.375 : 15.4765942382813); (4.875 : 15.4765942382813)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Semester/Semester_Project" />
       <nodes>
         <classShapeMoniker Id="a9d37d51-caa9-4f8d-b1ec-f876a2697971" />
@@ -114,13 +114,13 @@
         <classShapeMoniker Id="405e4684-a9d4-4455-b7c5-b5db4ed6d5d0" />
       </nodes>
     </associationConnector>
-    <classShape Id="cfc1c727-26b7-42b9-a79b-18c779da4294" absoluteBounds="8, 2.375, 2, 2.7324039713541666">
+    <classShape Id="cfc1c727-26b7-42b9-a79b-18c779da4294" absoluteBounds="8, 2.375, 2, 2.9247054036458326">
       <DataClassMoniker Name="/ProStudentCreatorDBDataContext/Attachements" />
       <nestedChildShapes>
-        <elementListCompartment Id="98428067-25c0-46a8-9939-a147c5814b08" absoluteBounds="8.015, 2.835, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="98428067-25c0-46a8-9939-a147c5814b08" absoluteBounds="8.015, 2.835, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(6.875 : 3.74120198567708); (8 : 3.74120198567708)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(6.875 : 3.83735270182292); (8 : 3.83735270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Project/Project_Attachements" />
       <nodes>
         <classShapeMoniker Id="405e4684-a9d4-4455-b7c5-b5db4ed6d5d0" />
