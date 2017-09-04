@@ -192,13 +192,10 @@ namespace ProStudCreator
                             BtnSaveChanges.Enabled =
                                 drpBillingstatus.Enabled = userCanEditAfterStart;
 
-            //set the visibility
-            if (project.Department.ShowDefenseOnInfoPage) //i4ds
-                divExpert.Visible = project?.LogProjectType?.P6 ?? false;
-            else //imvs
-                divExpert.Visible = false;
 
-            divPresentation.Visible = project?.Department?.ShowDefenseOnInfoPage ?? false;
+            divExpert.Visible = project.Expert != null;
+
+            divPresentation.Visible = project.LogDefenceDate != null;
 
             divBachelor.Visible = project?.LogProjectType?.P6 ?? false;
 
@@ -301,8 +298,8 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
             }
 
-            if (project.LogDefenceDate != null)
-                ProjectEndPresentation.Text = project.LogDefenceDate.ToString();
+
+            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") + (project?.LogDefenceRoom != null ? "  /  Raum: " +project?.LogDefenceRoom : "");
         }
 
         private void ReturnAlert(string message)
@@ -491,7 +488,6 @@ namespace ProStudCreator
             {
                 ProjectId = int.Parse(Request.QueryString["id"]),
                 UploadUserMail = ShibUser.GetEmail(),
-                UploadUserName = ShibUser.GetFullName(),
                 UploadDate = DateTime.Now,
                 UploadSize = fileSize,
                 ProjectAttachement = new Binary(new byte[0]),
