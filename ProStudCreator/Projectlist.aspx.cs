@@ -64,9 +64,9 @@ namespace ProStudCreator
                 }
                 else
                 {
-                    if ((bool?) Session["ComesFromNotOwn"] ?? false) //if user comes from NotOwn
+                    if ((bool?)Session["ComesFromNotOwn"] ?? false) //if user comes from NotOwn
                     {
-                        dropSemester.SelectedValue = (string) Session["SelectedSemesterBeforeNotOwn"];
+                        dropSemester.SelectedValue = (string)Session["SelectedSemesterBeforeNotOwn"];
                         Session["ComesFromNotOwn"] = false;
                     }
                     Session["SelectedSemester"] = dropSemester.SelectedValue;
@@ -76,11 +76,11 @@ namespace ProStudCreator
             }
             else if (Session["SelectedOwner"] != null) //User comes from another tab or realoaded the page
             {
-                if ((string) Session["SelectedOwner"] == "NotOwnEdited") //If last filter was set to NotOwn
+                if ((string)Session["SelectedOwner"] == "NotOwnEdited") //If last filter was set to NotOwn
                     dropSemester.Enabled = false;
 
-                whichOwner.SelectedValue = (string) Session["SelectedOwner"]; //Set Filter from the Sessionvars
-                dropSemester.SelectedValue = (string) Session["SelectedSemester"];
+                whichOwner.SelectedValue = (string)Session["SelectedOwner"]; //Set Filter from the Sessionvars
+                dropSemester.SelectedValue = (string)Session["SelectedSemester"];
             }
             else //Sessionvars don't exist yet
             {
@@ -89,9 +89,8 @@ namespace ProStudCreator
             }
 
 
-            AllProjects.DataSource =
-                from i in filterRelevantProjects(projects, (string) Session["SelectedOwner"])
-                select getProjectSingleElement(i);
+            AllProjects.DataSource = filterRelevantProjects(projects, (string) Session["SelectedOwner"])
+                .Select(i => getProjectSingleElement(i));
             AllProjects.DataBind();
 
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
@@ -117,44 +116,36 @@ namespace ProStudCreator
                 case "OwnProjects":
                     if (dropSemester.SelectedValue == "allSemester")
                     {
-                        projects =
-                            from p in projects
-                            where (p.Creator == ShibUser.GetEmail() || p.Advisor2Mail == ShibUser.GetEmail() ||
-                                   p.Advisor1Mail == ShibUser.GetEmail()) && p.State != ProjectState.Deleted
-                            orderby p.Department.DepartmentName, p.ProjectNr
-                            select p;
+                        projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
+                                                           p.Advisor2Mail == ShibUser.GetEmail() ||
+                                                           p.Advisor1Mail == ShibUser.GetEmail()) &&
+                                                          p.State != ProjectState.Deleted).OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     else
                     {
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
                                                    Semester.NextSemester(db).Id;
-                        projects =
-                            from p in projects
-                            where (p.Creator == ShibUser.GetEmail() || p.Advisor1Mail == ShibUser.GetEmail() ||
-                                   p.Advisor2Mail == ShibUser.GetEmail())
-                                  && p.State != ProjectState.Deleted
-                                  && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
-                                      p.State == ProjectState.Published || nextSemesterSelected && p.Semester == null ||
-                                      p.State != ProjectState.Deleted && p.State != ProjectState.Published &&
-                                      nextSemesterSelected)
-                            orderby p.Department.DepartmentName, p.ProjectNr
-                            select p;
+                        projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
+                                                           p.Advisor1Mail == ShibUser.GetEmail() ||
+                                                           p.Advisor2Mail == ShibUser.GetEmail())
+                                                          && p.State != ProjectState.Deleted
+                                                          && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
+                                                              p.State == ProjectState.Published ||
+                                                              nextSemesterSelected && p.Semester == null ||
+                                                              p.State != ProjectState.Deleted && p.State !=
+                                                              ProjectState.Published &&
+                                                              nextSemesterSelected))
+                            .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                        projects =
-                            from p in projects
-                            where p.State == ProjectState.Published
-                            orderby p.Department.DepartmentName, p.ProjectNr
-                            select p;
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published)
+                            .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects =
-                            from p in projects
-                            where p.State == ProjectState.Published &&
-                                  p.Semester.Id == int.Parse(dropSemester.SelectedValue)
-                            orderby p.Department.DepartmentName, p.ProjectNr
-                            select p;
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published &&
+                                                          p.Semester.Id == int.Parse(dropSemester.SelectedValue))
+                            .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
                 case "NotOwnEdited":
                     var depId = ShibUser.GetDepartmentId(db);
@@ -233,7 +224,7 @@ namespace ProStudCreator
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                var project = db.Projects.Single(item => item.Id == ((ProjectSingleElement) e.Row.DataItem).id);
+                var project = db.Projects.Single(item => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
 
                 if (project.State == ProjectState.Published)
                 {
@@ -310,7 +301,7 @@ namespace ProStudCreator
                 {
                     var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output,
-                        ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
+                        ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                         .Select(p => db.Projects.Single(pr => pr.Id == p.id))
                         .OrderBy(p => p.Reservation1Name != "")
                         .ThenBy(p => p.Department.DepartmentName)
@@ -360,7 +351,7 @@ namespace ProStudCreator
             byte[] bytesInStream;
             using (var output = new MemoryStream())
             {
-                ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
+                ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>)AllProjects.DataSource)
                     .Select(p => db.Projects.Single(pr => pr.Id == p.id))
                     .OrderBy(p => p.Reservation1Name != "")
                     .ThenBy(p => p.Department.DepartmentName)
