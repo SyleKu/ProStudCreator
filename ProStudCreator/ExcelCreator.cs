@@ -203,7 +203,7 @@ namespace ProStudCreator
             var cell2 = row.CreateCell(i++);
             cell2.CellStyle = DateStyle;
             cell2.SetCellValue(p.GetDeliveryDate());
-            row.CreateCell(i++).SetCellValue(p.GetEndSemester(db).ExhibitionBachelorThesis ?? "");
+            row.CreateCell(i++).SetCellValue(p.ExhibitionBachelorThesis(db));
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
             var cell3 = row.CreateCell(i++);

@@ -126,7 +126,7 @@ namespace ProStudCreator
             SetProjectDeliveryLabels();
 
             //Set the Exhibition date? of the Bachelorthesis
-            ProjectExhibition.Text = project.Semester.ExhibitionBachelorThesis;
+            ProjectExhibition.Text = project.ExhibitionBachelorThesis(db);
 
             //Set the LogLanguage
             if (project.LogLanguageEnglish != null && project.LogLanguageGerman != null)

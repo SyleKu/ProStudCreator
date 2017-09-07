@@ -159,9 +159,18 @@ namespace ProStudCreator
 
         public static Semester GetEndSemester(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            if (_p.LogProjectDuration == 2)
-                return Semester.NextSemester(_p.Semester, db);
-            return _p.Semester;
+            return _p.LogProjectDuration == 2 ? Semester.NextSemester(_p.Semester, db) : _p.Semester;
+        }
+
+        public static string ExhibitionBachelorThesis(this Project _p, ProStudentCreatorDBDataContext db)
+        {
+            if (_p.LogProjectType?.P5 == true
+                || (_p.LogProjectType?.P6 == true && _p.LogProjectDuration == 1 && !_p.Semester.IsSpringSemester())
+                || (_p.LogProjectType?.P6 == true && _p.LogProjectDuration == 2 && _p.Semester.IsSpringSemester()))
+            {
+                return "";
+            }
+            return _p.GetEndSemester(db).ExhibitionBachelorThesis;
         }
 
         #endregion

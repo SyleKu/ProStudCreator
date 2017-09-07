@@ -52,6 +52,11 @@ namespace ProStudCreator
             return db.Semester.Single(s => s.StartDate < date && s.SemesterActiveUntil > date);
         }
 
+        public bool IsSpringSemester()
+        {
+            return this.Name.Contains("FS");
+        }
+
         public override string ToString()
         {
             return Name;
