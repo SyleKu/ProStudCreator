@@ -450,10 +450,10 @@ namespace ProStudCreator
         protected void OnUploadComplete(object sender, AjaxFileUploadEventArgs e)
         {
             if (db.Attachements.Any(
-                a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName))
+                a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
             {
 
-                SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName), e.GetStreamContents());
+                SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted), e.GetStreamContents());
             }
             else
             {
@@ -551,7 +551,7 @@ namespace ProStudCreator
 
             try
             {
-                e.Row.Attributes.Add("onmouseover", "this.style.backgroundColor='#93A3B0'; this.style.color='White'; this.style.cursor='pointer'");
+                e.Row.Attributes.Add("onmouseover", "this.style.backgroundColor='#cecece'; this.style.color='Black'; this.style.cursor='pointer'");
                 e.Row.Attributes.Add("onmouseout", "this.style.color='Black';this.style.backgroundColor='#FFFFFF';");
                 e.Row.Attributes.Add("onclick", Page.ClientScript.GetPostBackEventReference(gridProjectAttachs, "Select$" + e.Row.RowIndex.ToString()));
 

@@ -294,16 +294,6 @@
     <Compile Include="AdminPage.aspx.designer.cs">
       <DependentUpon>AdminPage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_GlobalResources\RadEditor.Dialogs.de-DE.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RadEditor.Dialogs.de-DE.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\RadFileExplorer.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RadFileExplorer.resx</DependentUpon>
-    </Compile>
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -402,16 +392,6 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_GlobalResources\RadEditor.Dialogs.de-DE.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>RadEditor.Dialogs.de-DE.designer.cs</LastGenOutput>
-    </Content>
-    <Content Include="App_GlobalResources\RadFileExplorer.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>RadFileExplorer.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="App_Data\ProjectFiles\" />
   </ItemGroup>
   <PropertyGroup>
@@ -425,7 +405,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>8482</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
