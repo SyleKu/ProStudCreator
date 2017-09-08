@@ -37,7 +37,7 @@
                     <asp:AsyncPostBackTrigger ControlID="btnAdminProjectsCollapse" EventName="Click" />
                 </Triggers>
                 <ContentTemplate>
-                    <div class="radioButtonSettingsAdmin">
+                    <div class="radioButtonSettingsAdmin" runat="server" id="divRadioProjects">
                         <asp:RadioButtonList runat="server" ID="radioSelectedProjects" RepeatDirection="Horizontal" OnSelectedIndexChanged="radioSelectedProjects_OnSelectedIndexChanged" AutoPostBack="True" CssClass="col-sm-5" TextAlign="Right" OnRowDataBound="CheckProjects_RowDataBound">
                             <asp:ListItem Value="toPublish">Projekte zur Freigabe</asp:ListItem>
                             <asp:ListItem Value="inProgress">Projekte in Bearbeitung</asp:ListItem>
@@ -47,8 +47,8 @@
                         <asp:Button runat="server" ID="btnAdminProjectsCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="btnAdminProjectsCollapse_OnClick" />
                     </div>
                     <br />
-                    <div class="well" style="background-color: #ffffff">
-                        <div id="DivAdminProjectsCollapsable" runat="server" visible="False">
+                    <div id="DivAdminProjectsCollapsable" runat="server" visible="False">
+                        <div class="well" style="background-color: #ffffff">
                             <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" ViewStateMode="Disabled">
                                 <%--<AlternatingRowStyle BackColor="White" />--%>
                                 <Columns>
@@ -108,8 +108,9 @@
                     <asp:Button runat="server" ID="btnExcelExportCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="btnExcelExportCollapse_OnClick" />
                 </div>
                 <br />
-                <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
-                    <div class="form-group" runat="server" id="DivExcelExportCollapsable" visible="False">
+                <div class="form-group" runat="server" id="DivExcelExportCollapsable" visible="False">
+
+                    <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
 
                         <asp:Label runat="server" Text="Semester:" CssClass="control-label col-sm-3"></asp:Label>
                         <div class="col-sm-3">
@@ -123,14 +124,13 @@
                             <asp:ListItem Value="EndingProjects" Selected="True">&nbsp;Endende Projekte</asp:ListItem>
                         </asp:RadioButtonList>
                     </div>
+                    
+                    <div style="text-align: right;">
+                        <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
+                    </div>
                 </div>
-
             </ContentTemplate>
         </asp:UpdatePanel>
-
-        <div style="text-align: right;">
-            <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
-        </div>
     </div>
     <div class="well newProjectSettings">
         <asp:UpdatePanel runat="server" ID="UpdateAddInfo">
@@ -141,8 +141,8 @@
                     <asp:Button runat="server" ID="btnAddInfoCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="btnAddInfoCollapse_OnClick" />
                 </div>
                 <br />
-                <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
-                    <div runat="server" id="DivAddInfoCollapsable" visible="true">
+                <div runat="server" id="DivAddInfoCollapsable" visible="true">
+                    <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
                         <div class="form-group">
                             <asp:Label runat="server" Text="GitHub-Projekte:" CssClass="control-label col-sm-3"></asp:Label>
                             <asp:Label runat="server" CssClass="col-sm-3 alignbottom">

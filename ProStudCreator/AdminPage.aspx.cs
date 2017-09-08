@@ -52,18 +52,18 @@ namespace ProStudCreator
                     }
 
                     if (Session["AdminProjectCollapsed"] == null)
-                        CollapseAdminProjects(true);
+                        CollapseAdminProjects(false);
                     else
                         CollapseAdminProjects((bool)Session["AdminProjectCollapsed"]);
 
                     if(Session["ExcelExportCollapsed"] == null)
-                        CollapseExcelExport(true);
+                        CollapseExcelExport(false);
                     else
                         CollapseExcelExport((bool)Session["ExcelExportCollapsed"]);
 
 
                     if (Session["AddInfoCollapsed"] == null)
-                        CollapseAddInfo(false);
+                        CollapseAddInfo(true);
                     else
                         CollapseAddInfo((bool)Session["AddInfoCollapsed"]);
 
@@ -199,7 +199,7 @@ namespace ProStudCreator
         private void CollapseAdminProjects(bool collapse)
         {
             Session["AdminProjectCollapsed"] = collapse;
-            DivAdminProjectsCollapsable.Visible = !collapse;
+            DivAdminProjectsCollapsable.Visible = divRadioProjects.Visible = !collapse;
             btnAdminProjectsCollapse.Text = collapse ? "◄" : "▼";
         }
 
