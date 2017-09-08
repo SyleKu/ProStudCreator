@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Web.UI;
@@ -20,10 +21,6 @@ namespace ProStudCreator
     {
         private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
-        // SR test
-        private IQueryable<Project> projects;
-        //~SR test
-
         protected void Page_Init(object sender, EventArgs e)
         {
             SelectedSemester.DataSource = db.Semester.OrderByDescending(s => s.StartDate);
@@ -38,20 +35,25 @@ namespace ProStudCreator
         {
             if (ShibUser.CanVisitAdminPage())
             {
-                DivProjectPublish.Visible = ShibUser.CanPublishProject();
+                DivAdminProjects.Visible = ShibUser.CanPublishProject();
                 DivExcelExport.Visible = ShibUser.CanExportExcel();
 
-                var depid = ShibUser.GetDepartmentId(db);
 
-                projects = db.Projects.Select(i => i);
-                CheckProjects.DataSource =
-                    from item in projects
-                    where item.State == ProjectState.Submitted && (int?) item.DepartmentId == depid
-                    select item
-                    into i
-                    select getProjectSingleElement(i);
+                if (!Page.IsPostBack)
+                {
+                    if (Session["SelectedAdminProjects"] == null)
+                    {
+                        radioSelectedProjects.SelectedIndex = 0;
+                        Session["SelectedAdminProjects"] = radioSelectedProjects.SelectedIndex;
+                    }
+                    else
+                    {
+                        radioSelectedProjects.SelectedIndex = (int)Session["SelectedAdminProjects"];
+                    }
+                }
+
+                CheckProjects.DataSource = GetSelectedProjects();
                 CheckProjects.DataBind();
-
                 GVTasks.DataSource = AllTasks();
                 GVTasks.DataBind();
             }
@@ -122,6 +124,31 @@ namespace ProStudCreator
                                                            ? "SE"
                                                            : "Transparent"))))))) + ".png"
             };
+        }
+
+        private IQueryable<ProjectSingleElement> GetSelectedProjects()
+        {
+            var depId = ShibUser.GetDepartmentId(db);
+
+            if (radioSelectedProjects.SelectedValue == "inProgress")
+            {
+                var lastSemStartDate = Semester.LastSemester(db).StartDate;
+                return db.Projects.Where(p =>
+                    p.DepartmentId == depId &&
+                    p.ModificationDate > lastSemStartDate &&
+                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State == ProjectState.Submitted))
+                    .OrderBy(i => i.Department.DepartmentName)
+                    .ThenBy(i => i.ProjectNr)
+                    .Select(i => getProjectSingleElement(i));
+            }
+            else
+            {
+                return db.Projects
+                    .Where(item => item.State == ProjectState.Submitted && (int?)item.DepartmentId == depId)
+                    .OrderBy(i => i.Department.DepartmentName)
+                    .ThenBy(i => i.ProjectNr)
+                    .Select(i => getProjectSingleElement(i));
+            }
         }
 
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
@@ -211,8 +238,8 @@ namespace ProStudCreator
 
         public IQueryable<ProjectSingleTask> AllTasks()
         {
-            if (projects == null)
-                projects = db.Projects.Select(i => i);
+            var projects = db.Projects.Select(i => i);
+
             var allTaskList = new List<ProjectSingleTask>();
             foreach (var project in projects)
                 if (CheckDefenseOrganised(project) != null)
@@ -278,6 +305,36 @@ namespace ProStudCreator
             ExcelCreator.GenerateMarketingList(Response.OutputStream, projectsToExport, db,
                 SelectedSemester.SelectedItem.Text);
             Response.End();
+        }
+
+        protected void radioSelectedProjects_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            Session["SelectedAdminProjects"] = radioSelectedProjects.SelectedIndex;
+            CheckProjects.DataSource = GetSelectedProjects();
+            CheckProjects.DataBind();
+
+        }
+        protected void CheckProjects_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+            var project = db.Projects.Single(item => item.Id == ((ProjectSingleElement)e.Row.DataItem).id);
+
+            Color? col = null;
+            switch (project.State)
+            {
+                case ProjectState.Published:
+                    col = ColorTranslator.FromHtml("#A9F5A9");
+                    break;
+                case ProjectState.Rejected:
+                    col = ColorTranslator.FromHtml("#F5A9A9");
+                    break;
+                case ProjectState.Submitted:
+                    col = ColorTranslator.FromHtml("#ffcc99");
+                    break;
+            }
+            if (!col.HasValue) return;
+            foreach (TableCell cell in e.Row.Cells)
+                cell.BackColor = col.Value;
         }
     }
 }

@@ -14,7 +14,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
-using Org.BouncyCastle.X509;
+using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip;
+
 
 namespace ProStudCreator
 {
@@ -45,7 +47,12 @@ namespace ProStudCreator
             gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
-            if (Page.IsPostBack) return;
+            if (Page.IsPostBack)
+            {
+                id = int.Parse(Request.QueryString["id"]);
+                project = db.Projects.Single(p => (int?)p.Id == id);
+                return;
+            }
 
 
             //All Admins or Owners
@@ -591,8 +598,6 @@ namespace ProStudCreator
             IP6,
             NotDefined
         }
-
-
     }
 
     public class ProjectSingleAttachment

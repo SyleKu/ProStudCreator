@@ -31,13 +31,31 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.PlaceHolder AdminView;
         
         /// <summary>
-        /// DivProjectPublish control.
+        /// DivAdminProjects control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivProjectPublish;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivAdminProjects;
+        
+        /// <summary>
+        /// updateAdminProjects control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updateAdminProjects;
+        
+        /// <summary>
+        /// radioSelectedProjects control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList radioSelectedProjects;
         
         /// <summary>
         /// CheckProjects control.

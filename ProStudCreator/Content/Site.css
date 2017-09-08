@@ -363,6 +363,12 @@ small {
     text-align: center;
     width: 100%;
 }
+.radioButtonSettingsAdmin label {
+    font-family: Arial 12px !important;
+    margin-right: 20px;
+    padding-left: 5px;
+    margin-top: 5px;
+}
 
 .marginProject {
     margin-left: 20px;
