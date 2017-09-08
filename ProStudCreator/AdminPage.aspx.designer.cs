@@ -58,6 +58,24 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.RadioButtonList radioSelectedProjects;
         
         /// <summary>
+        /// btnAdminProjectsCollapse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAdminProjectsCollapse;
+        
+        /// <summary>
+        /// DivAdminProjectsCollapsable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivAdminProjectsCollapsable;
+        
+        /// <summary>
         /// CheckProjects control.
         /// </summary>
         /// <remarks>
@@ -74,6 +92,33 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivExcelExport;
+        
+        /// <summary>
+        /// UpdateExcelExport control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdateExcelExport;
+        
+        /// <summary>
+        /// btnExcelExportCollapse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnExcelExportCollapse;
+        
+        /// <summary>
+        /// DivExcelExportCollapsable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivExcelExportCollapsable;
         
         /// <summary>
         /// SelectedSemester control.
@@ -101,5 +146,32 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnMarketingExport;
+        
+        /// <summary>
+        /// UpdateAddInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdateAddInfo;
+        
+        /// <summary>
+        /// btnAddInfoCollapse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddInfoCollapse;
+        
+        /// <summary>
+        /// DivAddInfoCollapsable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivAddInfoCollapsable;
     }
 }

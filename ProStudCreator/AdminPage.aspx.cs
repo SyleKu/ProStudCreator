@@ -50,12 +50,29 @@ namespace ProStudCreator
                     {
                         radioSelectedProjects.SelectedIndex = (int)Session["SelectedAdminProjects"];
                     }
+
+                    if (Session["AdminProjectCollapsed"] == null)
+                        CollapseAdminProjects(true);
+                    else
+                        CollapseAdminProjects((bool)Session["AdminProjectCollapsed"]);
+
+                    if(Session["ExcelExportCollapsed"] == null)
+                        CollapseExcelExport(true);
+                    else
+                        CollapseExcelExport((bool)Session["ExcelExportCollapsed"]);
+
+
+                    if (Session["AddInfoCollapsed"] == null)
+                        CollapseAddInfo(false);
+                    else
+                        CollapseAddInfo((bool)Session["AddInfoCollapsed"]);
+
                 }
 
                 CheckProjects.DataSource = GetSelectedProjects();
                 CheckProjects.DataBind();
-                GVTasks.DataSource = AllTasks();
-                GVTasks.DataBind();
+                //GVTasks.DataSource = AllTasks();
+                //GVTasks.DataBind();
             }
             else
             {
@@ -177,6 +194,27 @@ namespace ProStudCreator
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
             }
+        }
+
+        private void CollapseAdminProjects(bool collapse)
+        {
+            Session["AdminProjectCollapsed"] = collapse;
+            DivAdminProjectsCollapsable.Visible = !collapse;
+            btnAdminProjectsCollapse.Text = collapse ? "◄" : "▼";
+        }
+
+        private void CollapseExcelExport(bool collapse)
+        {
+            Session["ExcelExportCollapsed"] = collapse;
+            DivExcelExportCollapsable.Visible = !collapse;
+            btnExcelExportCollapse.Text = collapse ? "◄" : "▼";
+        }
+
+        private void CollapseAddInfo(bool collapse)
+        {
+            Session["AddInfoCollapsed"] = collapse;
+            DivAddInfoCollapsable.Visible = !collapse;
+            btnAddInfoCollapse.Text = collapse ? "◄" : "▼";
         }
 
         private ProjectSingleTask CheckDefenseOrganised(Project _project)
@@ -335,6 +373,21 @@ namespace ProStudCreator
             if (!col.HasValue) return;
             foreach (TableCell cell in e.Row.Cells)
                 cell.BackColor = col.Value;
+        }
+
+        protected void btnAdminProjectsCollapse_OnClick(object sender, EventArgs e)
+        {
+            CollapseAdminProjects(!(bool)Session["AdminProjectCollapsed"]);
+        }
+
+        protected void btnExcelExportCollapse_OnClick(object sender, EventArgs e)
+        {
+            CollapseExcelExport(!(bool)Session["ExcelExportCollapsed"]);
+        }
+
+        protected void btnAddInfoCollapse_OnClick(object sender, EventArgs e)
+        {
+            CollapseAddInfo(!(bool)Session["AddInfoCollapsed"]);
         }
     }
 }
