@@ -101,6 +101,7 @@
         <asp:UpdatePanel runat="server" ID="UpdateExcelExport">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="btnExcelExportCollapse" EventName="Click" />
+                <asp:PostBackTrigger ControlID="btnMarketingExport"/>
             </Triggers>
             <ContentTemplate>
                 <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export" CssClass="col-sm-4"></asp:Label>
