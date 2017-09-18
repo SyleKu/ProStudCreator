@@ -409,7 +409,7 @@ namespace ProStudCreator
                 if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
                     if (radioClientType.SelectedValue == "Company" && txtClientCompany.Text == "" ||
                         txtClientName.Text == "" || txtClientStreet.Text == "" ||
-                        txtClientPLZ.Text == "" || txtClientCity.Text == "")
+                        txtClientPLZ.Text == "" || txtClientCity.Text == "" || txtClientEmail.Text == "")
                     {
                         validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
                     }
@@ -418,7 +418,7 @@ namespace ProStudCreator
                         project.ClientCompany = txtClientCompany.Text;
                         project.ClientAddressTitle = drpClientTitle.SelectedValue == "1" ? "Herr" : "Frau";
                         project.ClientPerson = txtClientName.Text;
-                        project.ClientMail = txtClientEmail.Text == "" ? null : txtClientEmail.Text;
+                        project.ClientMail = txtClientEmail.Text;
                         project.ClientAddressDepartment = txtClientDepartment.Text == ""
                             ? null
                             : txtClientDepartment.Text;

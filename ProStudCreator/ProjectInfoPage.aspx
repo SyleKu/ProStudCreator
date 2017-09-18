@@ -138,7 +138,7 @@
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
-                            <asp:Label runat="server" Text="E-Mail Adresse" CssClass="control-label col-sm-3"></asp:Label>
+                            <asp:Label runat="server" Text="E-Mail Adresse*:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientEmail" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                             </div>
