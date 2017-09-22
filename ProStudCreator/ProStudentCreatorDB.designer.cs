@@ -57,6 +57,15 @@ namespace ProStudCreator
     partial void InsertUserDepartmentMap(UserDepartmentMap instance);
     partial void UpdateUserDepartmentMap(UserDepartmentMap instance);
     partial void DeleteUserDepartmentMap(UserDepartmentMap instance);
+    partial void InsertTaskType(TaskType instance);
+    partial void UpdateTaskType(TaskType instance);
+    partial void DeleteTaskType(TaskType instance);
+    partial void InsertRemindType(RemindType instance);
+    partial void UpdateRemindType(RemindType instance);
+    partial void DeleteRemindType(RemindType instance);
+    partial void InsertTask(Task instance);
+    partial void UpdateTask(Task instance);
+    partial void DeleteTask(Task instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
@@ -158,6 +167,30 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<UserDepartmentMap>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TaskType> TaskTypes
+		{
+			get
+			{
+				return this.GetTable<TaskType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<RemindType> RemindTypes
+		{
+			get
+			{
+				return this.GetTable<RemindType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Task> Tasks
+		{
+			get
+			{
+				return this.GetTable<Task>();
 			}
 		}
 	}
@@ -1304,6 +1337,8 @@ namespace ProStudCreator
 		
 		private EntitySet<Attachements> _Attachements;
 		
+		private EntitySet<Task> _Tasks;
+		
 		private EntityRef<BillingStatus> _BillingStatus;
 		
 		private EntityRef<Expert> _Expert;
@@ -1472,6 +1507,7 @@ namespace ProStudCreator
 		{
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
 			this._Attachements = new EntitySet<Attachements>(new Action<Attachements>(this.attach_Attachements), new Action<Attachements>(this.detach_Attachements));
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
 			this._BillingStatus = default(EntityRef<BillingStatus>);
 			this._Expert = default(EntityRef<Expert>);
 			this._Project1 = default(EntityRef<Project>);
@@ -2931,6 +2967,19 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Task", Storage="_Tasks", ThisKey="Id", OtherKey="Project")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BillingStatus_Project", Storage="_BillingStatus", ThisKey="BillingStatusID", OtherKey="Id", IsForeignKey=true)]
 		public BillingStatus BillingStatus
 		{
@@ -3313,6 +3362,18 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.Project = null;
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Project1 = this;
+		}
+		
+		private void detach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Project1 = null;
 		}
 	}
 	
@@ -4109,6 +4170,12 @@ namespace ProStudCreator
 		
 		private bool _CanSeeCreationDetails;
 		
+		private int _Id;
+		
+		private EntitySet<Task> _Tasks;
+		
+		private EntitySet<Task> _Tasks1;
+		
 		private EntityRef<Department> _Department;
 		
     #region Extensibility Method Definitions
@@ -4133,15 +4200,19 @@ namespace ProStudCreator
     partial void OnCanSubmitAllProjectsChanged();
     partial void OnCanSeeCreationDetailsChanging(bool value);
     partial void OnCanSeeCreationDetailsChanged();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
     #endregion
 		
 		public UserDepartmentMap()
 		{
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
+			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
 			this._Department = default(EntityRef<Department>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mail", DbType="VarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mail", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
 		public string Mail
 		{
 			get
@@ -4325,6 +4396,52 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="int", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_Tasks", ThisKey="Id", OtherKey="Supervisor")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_Tasks1", ThisKey="Id", OtherKey="ResponsibleUser")]
+		public EntitySet<Task> Tasks1
+		{
+			get
+			{
+				return this._Tasks1;
+			}
+			set
+			{
+				this._Tasks1.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_UserDepartmentMap", Storage="_Department", ThisKey="DepartmentId", OtherKey="Id", IsForeignKey=true)]
 		public Department Department
 		{
@@ -4355,6 +4472,717 @@ namespace ProStudCreator
 						this._DepartmentId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Department");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.UserDepartmentMap = this;
+		}
+		
+		private void detach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.UserDepartmentMap = null;
+		}
+		
+		private void attach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.UserDepartmentMap1 = this;
+		}
+		
+		private void detach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.UserDepartmentMap1 = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TaskTypes")]
+	public partial class TaskType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Description;
+		
+		private int _RemindType;
+		
+		private EntitySet<Task> _Tasks;
+		
+		private EntityRef<RemindType> _RemindType1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnRemindTypeChanging(int value);
+    partial void OnRemindTypeChanged();
+    #endregion
+		
+		public TaskType()
+		{
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
+			this._RemindType1 = default(EntityRef<RemindType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(300) NOT NULL", CanBeNull=false)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindType", DbType="Int NOT NULL")]
+		public int RemindType
+		{
+			get
+			{
+				return this._RemindType;
+			}
+			set
+			{
+				if ((this._RemindType != value))
+				{
+					if (this._RemindType1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnRemindTypeChanging(value);
+					this.SendPropertyChanging();
+					this._RemindType = value;
+					this.SendPropertyChanged("RemindType");
+					this.OnRemindTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TaskType_Task", Storage="_Tasks", ThisKey="Id", OtherKey="TaskType")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="RemindType_TaskType", Storage="_RemindType1", ThisKey="RemindType", OtherKey="Id", IsForeignKey=true)]
+		public RemindType RemindType1
+		{
+			get
+			{
+				return this._RemindType1.Entity;
+			}
+			set
+			{
+				RemindType previousValue = this._RemindType1.Entity;
+				if (((previousValue != value) 
+							|| (this._RemindType1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._RemindType1.Entity = null;
+						previousValue.TaskTypes.Remove(this);
+					}
+					this._RemindType1.Entity = value;
+					if ((value != null))
+					{
+						value.TaskTypes.Add(this);
+						this._RemindType = value.Id;
+					}
+					else
+					{
+						this._RemindType = default(int);
+					}
+					this.SendPropertyChanged("RemindType1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.TaskType1 = this;
+		}
+		
+		private void detach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.TaskType1 = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.RemindTypes")]
+	public partial class RemindType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private bool _RemindOnce;
+		
+		private string _RemindTillDone;
+		
+		private EntitySet<TaskType> _TaskTypes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnRemindOnceChanging(bool value);
+    partial void OnRemindOnceChanged();
+    partial void OnRemindTillDoneChanging(string value);
+    partial void OnRemindTillDoneChanged();
+    #endregion
+		
+		public RemindType()
+		{
+			this._TaskTypes = new EntitySet<TaskType>(new Action<TaskType>(this.attach_TaskTypes), new Action<TaskType>(this.detach_TaskTypes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindOnce", DbType="Bit NOT NULL")]
+		public bool RemindOnce
+		{
+			get
+			{
+				return this._RemindOnce;
+			}
+			set
+			{
+				if ((this._RemindOnce != value))
+				{
+					this.OnRemindOnceChanging(value);
+					this.SendPropertyChanging();
+					this._RemindOnce = value;
+					this.SendPropertyChanged("RemindOnce");
+					this.OnRemindOnceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindTillDone", DbType="NChar(10) NOT NULL", CanBeNull=false)]
+		public string RemindTillDone
+		{
+			get
+			{
+				return this._RemindTillDone;
+			}
+			set
+			{
+				if ((this._RemindTillDone != value))
+				{
+					this.OnRemindTillDoneChanging(value);
+					this.SendPropertyChanging();
+					this._RemindTillDone = value;
+					this.SendPropertyChanged("RemindTillDone");
+					this.OnRemindTillDoneChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="RemindType_TaskType", Storage="_TaskTypes", ThisKey="Id", OtherKey="RemindType")]
+		public EntitySet<TaskType> TaskTypes
+		{
+			get
+			{
+				return this._TaskTypes;
+			}
+			set
+			{
+				this._TaskTypes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_TaskTypes(TaskType entity)
+		{
+			this.SendPropertyChanging();
+			entity.RemindType1 = this;
+		}
+		
+		private void detach_TaskTypes(TaskType entity)
+		{
+			this.SendPropertyChanging();
+			entity.RemindType1 = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Tasks")]
+	public partial class Task : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private int _TaskType;
+		
+		private System.Nullable<int> _Project;
+		
+		private System.Nullable<System.DateTime> _DueDate;
+		
+		private System.Nullable<int> _Supervisor;
+		
+		private int _ResponsibleUser;
+		
+		private System.Nullable<System.DateTime> _LastReminded;
+		
+		private EntityRef<TaskType> _TaskType1;
+		
+		private EntityRef<UserDepartmentMap> _UserDepartmentMap;
+		
+		private EntityRef<UserDepartmentMap> _UserDepartmentMap1;
+		
+		private EntityRef<Project> _Project1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnTaskTypeChanging(int value);
+    partial void OnTaskTypeChanged();
+    partial void OnProjectChanging(System.Nullable<int> value);
+    partial void OnProjectChanged();
+    partial void OnDueDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDueDateChanged();
+    partial void OnSupervisorChanging(System.Nullable<int> value);
+    partial void OnSupervisorChanged();
+    partial void OnResponsibleUserChanging(int value);
+    partial void OnResponsibleUserChanged();
+    partial void OnLastRemindedChanging(System.Nullable<System.DateTime> value);
+    partial void OnLastRemindedChanged();
+    #endregion
+		
+		public Task()
+		{
+			this._TaskType1 = default(EntityRef<TaskType>);
+			this._UserDepartmentMap = default(EntityRef<UserDepartmentMap>);
+			this._UserDepartmentMap1 = default(EntityRef<UserDepartmentMap>);
+			this._Project1 = default(EntityRef<Project>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaskType", DbType="Int NOT NULL")]
+		public int TaskType
+		{
+			get
+			{
+				return this._TaskType;
+			}
+			set
+			{
+				if ((this._TaskType != value))
+				{
+					if (this._TaskType1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTaskTypeChanging(value);
+					this.SendPropertyChanging();
+					this._TaskType = value;
+					this.SendPropertyChanged("TaskType");
+					this.OnTaskTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Project", DbType="Int")]
+		public System.Nullable<int> Project
+		{
+			get
+			{
+				return this._Project;
+			}
+			set
+			{
+				if ((this._Project != value))
+				{
+					if (this._Project1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProjectChanging(value);
+					this.SendPropertyChanging();
+					this._Project = value;
+					this.SendPropertyChanged("Project");
+					this.OnProjectChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DueDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DueDate
+		{
+			get
+			{
+				return this._DueDate;
+			}
+			set
+			{
+				if ((this._DueDate != value))
+				{
+					this.OnDueDateChanging(value);
+					this.SendPropertyChanging();
+					this._DueDate = value;
+					this.SendPropertyChanged("DueDate");
+					this.OnDueDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Supervisor", DbType="Int")]
+		public System.Nullable<int> Supervisor
+		{
+			get
+			{
+				return this._Supervisor;
+			}
+			set
+			{
+				if ((this._Supervisor != value))
+				{
+					if (this._UserDepartmentMap.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSupervisorChanging(value);
+					this.SendPropertyChanging();
+					this._Supervisor = value;
+					this.SendPropertyChanged("Supervisor");
+					this.OnSupervisorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ResponsibleUser", DbType="Int NOT NULL")]
+		public int ResponsibleUser
+		{
+			get
+			{
+				return this._ResponsibleUser;
+			}
+			set
+			{
+				if ((this._ResponsibleUser != value))
+				{
+					if (this._UserDepartmentMap1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnResponsibleUserChanging(value);
+					this.SendPropertyChanging();
+					this._ResponsibleUser = value;
+					this.SendPropertyChanged("ResponsibleUser");
+					this.OnResponsibleUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastReminded", DbType="DateTime")]
+		public System.Nullable<System.DateTime> LastReminded
+		{
+			get
+			{
+				return this._LastReminded;
+			}
+			set
+			{
+				if ((this._LastReminded != value))
+				{
+					this.OnLastRemindedChanging(value);
+					this.SendPropertyChanging();
+					this._LastReminded = value;
+					this.SendPropertyChanged("LastReminded");
+					this.OnLastRemindedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TaskType_Task", Storage="_TaskType1", ThisKey="TaskType", OtherKey="Id", IsForeignKey=true)]
+		public TaskType TaskType1
+		{
+			get
+			{
+				return this._TaskType1.Entity;
+			}
+			set
+			{
+				TaskType previousValue = this._TaskType1.Entity;
+				if (((previousValue != value) 
+							|| (this._TaskType1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TaskType1.Entity = null;
+						previousValue.Tasks.Remove(this);
+					}
+					this._TaskType1.Entity = value;
+					if ((value != null))
+					{
+						value.Tasks.Add(this);
+						this._TaskType = value.Id;
+					}
+					else
+					{
+						this._TaskType = default(int);
+					}
+					this.SendPropertyChanged("TaskType1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_UserDepartmentMap", ThisKey="Supervisor", OtherKey="Id", IsForeignKey=true)]
+		public UserDepartmentMap UserDepartmentMap
+		{
+			get
+			{
+				return this._UserDepartmentMap.Entity;
+			}
+			set
+			{
+				UserDepartmentMap previousValue = this._UserDepartmentMap.Entity;
+				if (((previousValue != value) 
+							|| (this._UserDepartmentMap.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._UserDepartmentMap.Entity = null;
+						previousValue.Tasks.Remove(this);
+					}
+					this._UserDepartmentMap.Entity = value;
+					if ((value != null))
+					{
+						value.Tasks.Add(this);
+						this._Supervisor = value.Id;
+					}
+					else
+					{
+						this._Supervisor = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("UserDepartmentMap");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_UserDepartmentMap1", ThisKey="ResponsibleUser", OtherKey="Id", IsForeignKey=true)]
+		public UserDepartmentMap UserDepartmentMap1
+		{
+			get
+			{
+				return this._UserDepartmentMap1.Entity;
+			}
+			set
+			{
+				UserDepartmentMap previousValue = this._UserDepartmentMap1.Entity;
+				if (((previousValue != value) 
+							|| (this._UserDepartmentMap1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._UserDepartmentMap1.Entity = null;
+						previousValue.Tasks1.Remove(this);
+					}
+					this._UserDepartmentMap1.Entity = value;
+					if ((value != null))
+					{
+						value.Tasks1.Add(this);
+						this._ResponsibleUser = value.Id;
+					}
+					else
+					{
+						this._ResponsibleUser = default(int);
+					}
+					this.SendPropertyChanged("UserDepartmentMap1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Task", Storage="_Project1", ThisKey="Project", OtherKey="Id", IsForeignKey=true)]
+		public Project Project1
+		{
+			get
+			{
+				return this._Project1.Entity;
+			}
+			set
+			{
+				Project previousValue = this._Project1.Entity;
+				if (((previousValue != value) 
+							|| (this._Project1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Project1.Entity = null;
+						previousValue.Tasks.Remove(this);
+					}
+					this._Project1.Entity = value;
+					if ((value != null))
+					{
+						value.Tasks.Add(this);
+						this._Project = value.Id;
+					}
+					else
+					{
+						this._Project = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Project1");
 				}
 			}
 		}
