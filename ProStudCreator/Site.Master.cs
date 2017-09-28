@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -55,8 +56,8 @@ namespace ProStudCreator
             else
             {
                 // Anti-XSRF-Token überprüfen
-                if ((string) ViewState[AntiXsrfTokenKey] != _antiXsrfTokenValue
-                    || (string) ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? string.Empty))
+                if ((string)ViewState[AntiXsrfTokenKey] != _antiXsrfTokenValue
+                    || (string)ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? string.Empty))
                     throw new InvalidOperationException("Fehler bei der Überprüfung des Anti-XSRF-Tokens.");
             }
 
@@ -70,15 +71,6 @@ namespace ProStudCreator
 
 
             NavAdmin.Visible = ShibUser.CanVisitAdminPage();
-
-
-            //var adminpage = new AdminPage();
-            //var checktasks = adminpage.AllTasks();
-
-            //if (checktasks.ToArray().Length != 0)
-            //{
-            //    tasksToDo.Visible = true;
-            //}
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -86,6 +78,14 @@ namespace ProStudCreator
 #if DEBUG
             inDebugMode = true;
 #endif
+            using (var db = new ProStudentCreatorDBDataContext()) //register new Users
+            {
+                if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(ShibUser.GetEmail()))
+                {
+                    db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartmentId(db), Mail = ShibUser.GetEmail()});
+                }
+            }
+
         }
 
         private void Page_Error(object sender, EventArgs e)

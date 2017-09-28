@@ -383,6 +383,7 @@
     <Compile Include="Ext\Termine.aspx.designer.cs">
       <DependentUpon>Termine.aspx</DependentUpon>
     </Compile>
+    <Compile Include="TaskExtensions.cs" />
     <Compile Include="TaskHandler.cs" />
     <Compile Include="Termine.aspx.cs">
       <DependentUpon>Termine.aspx</DependentUpon>

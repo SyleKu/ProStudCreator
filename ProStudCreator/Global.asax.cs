@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Web;
 using System.Web.Caching;
@@ -26,6 +27,8 @@ namespace ProStudCreator
             StreamUtil.AddToResourceSearch(Assembly.Load("itext-hyph-xml"));
 
             Application.Add("dummyRequest", "");
+
+            TaskHandler.CheckAllTasks();
         }
 
 

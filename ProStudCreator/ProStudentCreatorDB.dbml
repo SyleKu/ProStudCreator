@@ -125,7 +125,7 @@
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
-      <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="Project" Type="Task" />
+      <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />
       <Association Name="BillingStatus_Project" Member="BillingStatus" ThisKey="BillingStatusID" OtherKey="Id" Type="BillingStatus" IsForeignKey="true" />
       <Association Name="Expert_Project" Member="Expert" ThisKey="LogExpertID" OtherKey="id" Type="Expert" IsForeignKey="true" />
       <Association Name="Project_Project" Member="Project1" ThisKey="PreviousProjectID" OtherKey="Id" Type="Project" IsForeignKey="true" />
@@ -185,9 +185,10 @@
       <Column Name="CanEditAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Member="Id" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="Supervisor" Type="Task" />
-      <Association Name="UserDepartmentMap_Task1" Member="Tasks1" ThisKey="Id" OtherKey="ResponsibleUser" Type="Task" />
+      <Column Name="Id" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IsSupervisor" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="SupervisorId" Type="Task" />
+      <Association Name="UserDepartmentMap_Task1" Member="Tasks1" ThisKey="Id" OtherKey="ResponsibleUserId" Type="Task" />
       <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
@@ -195,9 +196,10 @@
     <Type Name="TaskType">
       <Column Name="Id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
-      <Column Name="RemindType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="TaskType_Task" Member="Tasks" ThisKey="Id" OtherKey="TaskType" Type="Task" />
-      <Association Name="RemindType_TaskType" Member="RemindType1" ThisKey="RemindType" OtherKey="Id" Type="RemindType" IsForeignKey="true" />
+      <Column Name="RemindTypeId" Storage="_RemindType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GradesRegistered" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Association Name="TaskType_Task" Member="Tasks" ThisKey="Id" OtherKey="TaskTypeId" Type="Task" />
+      <Association Name="RemindType_TaskType" Member="RemindType" Storage="_RemindType1" ThisKey="RemindTypeId" OtherKey="Id" Type="RemindType" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.RemindTypes" Member="RemindTypes">
@@ -205,22 +207,23 @@
       <Column Name="Id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="RemindOnce" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="RemindTillDone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
-      <Association Name="RemindType_TaskType" Member="TaskTypes" ThisKey="Id" OtherKey="RemindType" Type="TaskType" />
+      <Association Name="RemindType_TaskType" Member="TaskTypes" ThisKey="Id" OtherKey="RemindTypeId" Type="TaskType" />
     </Type>
   </Table>
   <Table Name="dbo.Tasks" Member="Tasks">
     <Type Name="Task">
       <Column Name="Id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="TaskType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Project" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TaskTypeId" Storage="_TaskType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ProjectId" Storage="_Project" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DueDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Supervisor" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ResponsibleUser" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SupervisorId" Storage="_Supervisor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ResponsibleUserId" Storage="_ResponsibleUser" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="LastReminded" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="TaskType_Task" Member="TaskType1" ThisKey="TaskType" OtherKey="Id" Type="TaskType" IsForeignKey="true" />
-      <Association Name="UserDepartmentMap_Task" Member="UserDepartmentMap" ThisKey="Supervisor" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
-      <Association Name="UserDepartmentMap_Task1" Member="UserDepartmentMap1" ThisKey="ResponsibleUser" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
-      <Association Name="Project_Task" Member="Project1" ThisKey="Project" OtherKey="Id" Type="Project" IsForeignKey="true" />
+      <Column Name="Done" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Association Name="TaskType_Task" Member="TaskType" Storage="_TaskType1" ThisKey="TaskTypeId" OtherKey="Id" Type="TaskType" IsForeignKey="true" />
+      <Association Name="UserDepartmentMap_Task" Member="Supervisor" Storage="_UserDepartmentMap" ThisKey="SupervisorId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
+      <Association Name="UserDepartmentMap_Task1" Member="ResponsibleUser" Storage="_UserDepartmentMap1" ThisKey="ResponsibleUserId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
+      <Association Name="Project_Task" Member="Project" Storage="_Project1" ThisKey="ProjectId" OtherKey="Id" Type="Project" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
