@@ -198,6 +198,7 @@
       <Column Name="Description" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
       <Column Name="RemindTypeId" Storage="_RemindType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="GradesRegistered" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="TicksBetweenReminds" Type="System.Int64" DbType="bigint" CanBeNull="false" />
       <Association Name="TaskType_Task" Member="Tasks" ThisKey="Id" OtherKey="TaskTypeId" Type="Task" />
       <Association Name="RemindType_TaskType" Member="RemindType" Storage="_RemindType1" ThisKey="RemindTypeId" OtherKey="Id" Type="RemindType" IsForeignKey="true" />
     </Type>

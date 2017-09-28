@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web;
 
@@ -82,7 +83,7 @@ namespace ProStudCreator
         }
 
 
-        private static IEnumerable<Task> GetAllTasksToMail() //gets all tasks which got last reminded more than 3 days ago
+        private static IEnumerable<Task> GetAllTasksToMail()
         {
             var openTasks = db.Tasks.Where(i => !i.Done);
             var tasksToMail = new List<Task>();
@@ -95,7 +96,7 @@ namespace ProStudCreator
                     tasksToMail.Add(task);
                     task.Done = true;
                 }
-                else if (task.LastReminded?.AddDays(3) < DateTime.Now || task.LastReminded == null)
+                else if (DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds || task.LastReminded == null)
                 {
                     tasksToMail.Add(task);
                     task.LastReminded = DateTime.Now;
@@ -132,7 +133,7 @@ namespace ProStudCreator
 
                     foreach (var underTask in copyTasksToMail)
                     {
-                        if (underTask.ResponsibleUserId != -1 && underTask.ResponsibleUserId == task.ResponsibleUserId)
+                        if (underTask.ResponsibleUserId != -1 && underTask.ResponsibleUserId == task.ResponsibleUserId) //todo gleiche Tasks zusammenfassen.
                         {
                             underTask.AddToList();
                             mailMessage.Append(task.Project != null ? "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id=" +
@@ -142,7 +143,7 @@ namespace ProStudCreator
 
                     mailMessage.Append("</ul>"
                         + "<br/>"
-                        + "<p>Freundliche Grüsse</p><br/>"
+                        + "<p>Freundliche Grüsse</p>"
                         + "Dein ProStud-Team"
                         );
 

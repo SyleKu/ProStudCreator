@@ -28,45 +28,45 @@ namespace ProStudCreator
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 		
-	#region Extensibility Method Definitions
-	partial void OnCreated();
-	partial void InsertDepartment(Department instance);
-	partial void UpdateDepartment(Department instance);
-	partial void DeleteDepartment(Department instance);
-	partial void InsertProjectTeamSize(ProjectTeamSize instance);
-	partial void UpdateProjectTeamSize(ProjectTeamSize instance);
-	partial void DeleteProjectTeamSize(ProjectTeamSize instance);
-	partial void InsertProjectType(ProjectType instance);
-	partial void UpdateProjectType(ProjectType instance);
-	partial void DeleteProjectType(ProjectType instance);
-	partial void InsertExpert(Expert instance);
-	partial void UpdateExpert(Expert instance);
-	partial void DeleteExpert(Expert instance);
-	partial void InsertBillingStatus(BillingStatus instance);
-	partial void UpdateBillingStatus(BillingStatus instance);
-	partial void DeleteBillingStatus(BillingStatus instance);
-	partial void InsertProject(Project instance);
-	partial void UpdateProject(Project instance);
-	partial void DeleteProject(Project instance);
-	partial void InsertSemester(Semester instance);
-	partial void UpdateSemester(Semester instance);
-	partial void DeleteSemester(Semester instance);
-	partial void InsertAttachements(Attachements instance);
-	partial void UpdateAttachements(Attachements instance);
-	partial void DeleteAttachements(Attachements instance);
-	partial void InsertUserDepartmentMap(UserDepartmentMap instance);
-	partial void UpdateUserDepartmentMap(UserDepartmentMap instance);
-	partial void DeleteUserDepartmentMap(UserDepartmentMap instance);
-	partial void InsertTaskType(TaskType instance);
-	partial void UpdateTaskType(TaskType instance);
-	partial void DeleteTaskType(TaskType instance);
-	partial void InsertRemindType(RemindType instance);
-	partial void UpdateRemindType(RemindType instance);
-	partial void DeleteRemindType(RemindType instance);
-	partial void InsertTask(Task instance);
-	partial void UpdateTask(Task instance);
-	partial void DeleteTask(Task instance);
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnCreated();
+    partial void InsertDepartment(Department instance);
+    partial void UpdateDepartment(Department instance);
+    partial void DeleteDepartment(Department instance);
+    partial void InsertProjectTeamSize(ProjectTeamSize instance);
+    partial void UpdateProjectTeamSize(ProjectTeamSize instance);
+    partial void DeleteProjectTeamSize(ProjectTeamSize instance);
+    partial void InsertProjectType(ProjectType instance);
+    partial void UpdateProjectType(ProjectType instance);
+    partial void DeleteProjectType(ProjectType instance);
+    partial void InsertExpert(Expert instance);
+    partial void UpdateExpert(Expert instance);
+    partial void DeleteExpert(Expert instance);
+    partial void InsertBillingStatus(BillingStatus instance);
+    partial void UpdateBillingStatus(BillingStatus instance);
+    partial void DeleteBillingStatus(BillingStatus instance);
+    partial void InsertProject(Project instance);
+    partial void UpdateProject(Project instance);
+    partial void DeleteProject(Project instance);
+    partial void InsertSemester(Semester instance);
+    partial void UpdateSemester(Semester instance);
+    partial void DeleteSemester(Semester instance);
+    partial void InsertAttachements(Attachements instance);
+    partial void UpdateAttachements(Attachements instance);
+    partial void DeleteAttachements(Attachements instance);
+    partial void InsertUserDepartmentMap(UserDepartmentMap instance);
+    partial void UpdateUserDepartmentMap(UserDepartmentMap instance);
+    partial void DeleteUserDepartmentMap(UserDepartmentMap instance);
+    partial void InsertTaskType(TaskType instance);
+    partial void UpdateTaskType(TaskType instance);
+    partial void DeleteTaskType(TaskType instance);
+    partial void InsertRemindType(RemindType instance);
+    partial void UpdateRemindType(RemindType instance);
+    partial void DeleteRemindType(RemindType instance);
+    partial void InsertTask(Task instance);
+    partial void UpdateTask(Task instance);
+    partial void DeleteTask(Task instance);
+    #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
 				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["aspnet_ProStudCreator_20140818043155ConnectionString"].ConnectionString, mappingSource)
@@ -217,23 +217,23 @@ namespace ProStudCreator
 		
 		private EntitySet<UserDepartmentMap> _UserDepartmentMap;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnDepartmentNameChanging(string value);
-	partial void OnDepartmentNameChanged();
-	partial void OnOUCodeChanging(string value);
-	partial void OnOUCodeChanged();
-	partial void OnShowDefenseOnInfoPageChanging(bool value);
-	partial void OnShowDefenseOnInfoPageChanged();
-	partial void OnIMVSChanging(bool value);
-	partial void OnIMVSChanged();
-	partial void Oni4DSChanging(bool value);
-	partial void Oni4DSChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDepartmentNameChanging(string value);
+    partial void OnDepartmentNameChanged();
+    partial void OnOUCodeChanging(string value);
+    partial void OnOUCodeChanged();
+    partial void OnShowDefenseOnInfoPageChanging(bool value);
+    partial void OnShowDefenseOnInfoPageChanged();
+    partial void OnIMVSChanging(bool value);
+    partial void OnIMVSChanged();
+    partial void Oni4DSChanging(bool value);
+    partial void Oni4DSChanged();
+    #endregion
 		
 		public Department()
 		{
@@ -453,21 +453,21 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects1;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnDescriptionChanging(string value);
-	partial void OnDescriptionChanged();
-	partial void OnSize1Changing(bool value);
-	partial void OnSize1Changed();
-	partial void OnSize2Changing(bool value);
-	partial void OnSize2Changed();
-	partial void OnExportValueChanging(string value);
-	partial void OnExportValueChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnSize1Changing(bool value);
+    partial void OnSize1Changed();
+    partial void OnSize2Changing(bool value);
+    partial void OnSize2Changed();
+    partial void OnExportValueChanging(string value);
+    partial void OnExportValueChanged();
+    #endregion
 		
 		public ProjectTeamSize()
 		{
@@ -669,21 +669,21 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Project;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnDescriptionChanging(string value);
-	partial void OnDescriptionChanged();
-	partial void OnP5Changing(bool value);
-	partial void OnP5Changed();
-	partial void OnP6Changing(bool value);
-	partial void OnP6Changed();
-	partial void OnExportValueChanging(string value);
-	partial void OnExportValueChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnP5Changing(bool value);
+    partial void OnP5Changed();
+    partial void OnP6Changing(bool value);
+    partial void OnP6Changed();
+    partial void OnExportValueChanging(string value);
+    partial void OnExportValueChanged();
+    #endregion
 		
 		public ProjectType()
 		{
@@ -905,19 +905,19 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnidChanging(int value);
-	partial void OnidChanged();
-	partial void OnNameChanging(string value);
-	partial void OnNameChanged();
-	partial void OnMailChanging(string value);
-	partial void OnMailChanged();
-	partial void OnUnternehmenChanging(string value);
-	partial void OnUnternehmenChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnMailChanging(string value);
+    partial void OnMailChanged();
+    partial void OnUnternehmenChanging(string value);
+    partial void OnUnternehmenChanged();
+    #endregion
 		
 		public Expert()
 		{
@@ -1065,17 +1065,17 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Projects;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnDisplayNameChanging(string value);
-	partial void OnDisplayNameChanged();
-	partial void OnShowAddressOnInfoPageChanging(bool value);
-	partial void OnShowAddressOnInfoPageChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDisplayNameChanging(string value);
+    partial void OnDisplayNameChanged();
+    partial void OnShowAddressOnInfoPageChanging(bool value);
+    partial void OnShowAddressOnInfoPageChanged();
+    #endregion
 		
 		public BillingStatus()
 		{
@@ -1359,149 +1359,149 @@ namespace ProStudCreator
 		
 		private EntityRef<ProjectType> _LogProjectType;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnNameChanging(string value);
-	partial void OnNameChanged();
-	partial void OnCreatorChanging(string value);
-	partial void OnCreatorChanged();
-	partial void OnClientCompanyChanging(string value);
-	partial void OnClientCompanyChanged();
-	partial void OnClientPersonChanging(string value);
-	partial void OnClientPersonChanged();
-	partial void OnClientMailChanging(string value);
-	partial void OnClientMailChanged();
-	partial void OnAdvisor1NameChanging(string value);
-	partial void OnAdvisor1NameChanged();
-	partial void OnAdvisor2NameChanging(string value);
-	partial void OnAdvisor2NameChanged();
-	partial void OnAdvisor1MailChanging(string value);
-	partial void OnAdvisor1MailChanged();
-	partial void OnAdvisor2MailChanging(string value);
-	partial void OnAdvisor2MailChanged();
-	partial void OnTypeDesignUXChanging(bool value);
-	partial void OnTypeDesignUXChanged();
-	partial void OnTypeHWChanging(bool value);
-	partial void OnTypeHWChanged();
-	partial void OnTypeCGIPChanging(bool value);
-	partial void OnTypeCGIPChanged();
-	partial void OnTypeMathAlgChanging(bool value);
-	partial void OnTypeMathAlgChanged();
-	partial void OnTypeAppWebChanging(bool value);
-	partial void OnTypeAppWebChanged();
-	partial void OnTypeDBBigDataChanging(bool value);
-	partial void OnTypeDBBigDataChanged();
-	partial void OnP1TypeIdChanging(int value);
-	partial void OnP1TypeIdChanged();
-	partial void OnP1TeamSizeIdChanging(int value);
-	partial void OnP1TeamSizeIdChanged();
-	partial void OnP2TypeIdChanging(System.Nullable<int> value);
-	partial void OnP2TypeIdChanged();
-	partial void OnP2TeamSizeIdChanging(System.Nullable<int> value);
-	partial void OnP2TeamSizeIdChanged();
-	partial void OnInitialPositionChanging(string value);
-	partial void OnInitialPositionChanged();
-	partial void OnPictureChanging(System.Data.Linq.Binary value);
-	partial void OnPictureChanged();
-	partial void OnObjectiveChanging(string value);
-	partial void OnObjectiveChanged();
-	partial void OnProblemStatementChanging(string value);
-	partial void OnProblemStatementChanged();
-	partial void OnReferencesChanging(string value);
-	partial void OnReferencesChanged();
-	partial void OnRemarksChanging(string value);
-	partial void OnRemarksChanged();
-	partial void OnReservation1NameChanging(string value);
-	partial void OnReservation1NameChanged();
-	partial void OnReservation1MailChanging(string value);
-	partial void OnReservation1MailChanged();
-	partial void OnReservation2NameChanging(string value);
-	partial void OnReservation2NameChanged();
-	partial void OnReservation2MailChanging(string value);
-	partial void OnReservation2MailChanged();
-	partial void OnImportantChanging(bool value);
-	partial void OnImportantChanged();
-	partial void OnStateChanging(int value);
-	partial void OnStateChanged();
-	partial void OnDepartmentIdChanging(int value);
-	partial void OnDepartmentIdChanged();
-	partial void OnOverOnePageChanging(bool value);
-	partial void OnOverOnePageChanged();
-	partial void OnCreateDateChanging(System.DateTime value);
-	partial void OnCreateDateChanged();
-	partial void OnModificationDateChanging(System.DateTime value);
-	partial void OnModificationDateChanged();
-	partial void OnPublishedDateChanging(System.DateTime value);
-	partial void OnPublishedDateChanged();
-	partial void OnLastEditedByChanging(string value);
-	partial void OnLastEditedByChanged();
-	partial void OnProjectNrChanging(int value);
-	partial void OnProjectNrChanged();
-	partial void OnLanguageGermanChanging(bool value);
-	partial void OnLanguageGermanChanged();
-	partial void OnLanguageEnglishChanging(bool value);
-	partial void OnLanguageEnglishChanged();
-	partial void OnDurationOneSemesterChanging(bool value);
-	partial void OnDurationOneSemesterChanged();
-	partial void OnTypeSysSecChanging(bool value);
-	partial void OnTypeSysSecChanged();
-	partial void OnTypeSEChanging(bool value);
-	partial void OnTypeSEChanged();
-	partial void OnImgDescriptionChanging(string value);
-	partial void OnImgDescriptionChanged();
-	partial void OnIsContinuationChanging(bool value);
-	partial void OnIsContinuationChanged();
-	partial void OnPreviousProjectIDChanging(System.Nullable<int> value);
-	partial void OnPreviousProjectIDChanged();
-	partial void OnClientAddressStreetChanging(string value);
-	partial void OnClientAddressStreetChanged();
-	partial void OnClientAddressPostcodeChanging(string value);
-	partial void OnClientAddressPostcodeChanged();
-	partial void OnClientAddressCityChanging(string value);
-	partial void OnClientAddressCityChanged();
-	partial void OnBillingStatusIDChanging(System.Nullable<int> value);
-	partial void OnBillingStatusIDChanged();
-	partial void OnLogProjectTypeIDChanging(System.Nullable<int> value);
-	partial void OnLogProjectTypeIDChanged();
-	partial void OnLogProjectDurationChanging(System.Nullable<byte> value);
-	partial void OnLogProjectDurationChanged();
-	partial void OnLogStudent1NameChanging(string value);
-	partial void OnLogStudent1NameChanged();
-	partial void OnLogStudent1MailChanging(string value);
-	partial void OnLogStudent1MailChanged();
-	partial void OnLogStudent2NameChanging(string value);
-	partial void OnLogStudent2NameChanged();
-	partial void OnLogStudent2MailChanging(string value);
-	partial void OnLogStudent2MailChanged();
-	partial void OnLogExpertIDChanging(System.Nullable<int> value);
-	partial void OnLogExpertIDChanged();
-	partial void OnLogExpertPaidChanging(System.Nullable<bool> value);
-	partial void OnLogExpertPaidChanged();
-	partial void OnLogDefenceDateChanging(System.Nullable<System.DateTime> value);
-	partial void OnLogDefenceDateChanged();
-	partial void OnLogDefenceRoomChanging(string value);
-	partial void OnLogDefenceRoomChanged();
-	partial void OnSemesterIdChanging(System.Nullable<int> value);
-	partial void OnSemesterIdChanged();
-	partial void OnLogGradeStudent1Changing(System.Nullable<float> value);
-	partial void OnLogGradeStudent1Changed();
-	partial void OnLogLanguageEnglishChanging(System.Nullable<bool> value);
-	partial void OnLogLanguageEnglishChanged();
-	partial void OnLogLanguageGermanChanging(System.Nullable<bool> value);
-	partial void OnLogLanguageGermanChanged();
-	partial void OnClientAddressTitleChanging(string value);
-	partial void OnClientAddressTitleChanged();
-	partial void OnClientAddressDepartmentChanging(string value);
-	partial void OnClientAddressDepartmentChanged();
-	partial void OnClientReferenceNumberChanging(string value);
-	partial void OnClientReferenceNumberChanged();
-	partial void OnLogGradeStudent2Changing(System.Nullable<float> value);
-	partial void OnLogGradeStudent2Changed();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnCreatorChanging(string value);
+    partial void OnCreatorChanged();
+    partial void OnClientCompanyChanging(string value);
+    partial void OnClientCompanyChanged();
+    partial void OnClientPersonChanging(string value);
+    partial void OnClientPersonChanged();
+    partial void OnClientMailChanging(string value);
+    partial void OnClientMailChanged();
+    partial void OnAdvisor1NameChanging(string value);
+    partial void OnAdvisor1NameChanged();
+    partial void OnAdvisor2NameChanging(string value);
+    partial void OnAdvisor2NameChanged();
+    partial void OnAdvisor1MailChanging(string value);
+    partial void OnAdvisor1MailChanged();
+    partial void OnAdvisor2MailChanging(string value);
+    partial void OnAdvisor2MailChanged();
+    partial void OnTypeDesignUXChanging(bool value);
+    partial void OnTypeDesignUXChanged();
+    partial void OnTypeHWChanging(bool value);
+    partial void OnTypeHWChanged();
+    partial void OnTypeCGIPChanging(bool value);
+    partial void OnTypeCGIPChanged();
+    partial void OnTypeMathAlgChanging(bool value);
+    partial void OnTypeMathAlgChanged();
+    partial void OnTypeAppWebChanging(bool value);
+    partial void OnTypeAppWebChanged();
+    partial void OnTypeDBBigDataChanging(bool value);
+    partial void OnTypeDBBigDataChanged();
+    partial void OnP1TypeIdChanging(int value);
+    partial void OnP1TypeIdChanged();
+    partial void OnP1TeamSizeIdChanging(int value);
+    partial void OnP1TeamSizeIdChanged();
+    partial void OnP2TypeIdChanging(System.Nullable<int> value);
+    partial void OnP2TypeIdChanged();
+    partial void OnP2TeamSizeIdChanging(System.Nullable<int> value);
+    partial void OnP2TeamSizeIdChanged();
+    partial void OnInitialPositionChanging(string value);
+    partial void OnInitialPositionChanged();
+    partial void OnPictureChanging(System.Data.Linq.Binary value);
+    partial void OnPictureChanged();
+    partial void OnObjectiveChanging(string value);
+    partial void OnObjectiveChanged();
+    partial void OnProblemStatementChanging(string value);
+    partial void OnProblemStatementChanged();
+    partial void OnReferencesChanging(string value);
+    partial void OnReferencesChanged();
+    partial void OnRemarksChanging(string value);
+    partial void OnRemarksChanged();
+    partial void OnReservation1NameChanging(string value);
+    partial void OnReservation1NameChanged();
+    partial void OnReservation1MailChanging(string value);
+    partial void OnReservation1MailChanged();
+    partial void OnReservation2NameChanging(string value);
+    partial void OnReservation2NameChanged();
+    partial void OnReservation2MailChanging(string value);
+    partial void OnReservation2MailChanged();
+    partial void OnImportantChanging(bool value);
+    partial void OnImportantChanged();
+    partial void OnStateChanging(int value);
+    partial void OnStateChanged();
+    partial void OnDepartmentIdChanging(int value);
+    partial void OnDepartmentIdChanged();
+    partial void OnOverOnePageChanging(bool value);
+    partial void OnOverOnePageChanged();
+    partial void OnCreateDateChanging(System.DateTime value);
+    partial void OnCreateDateChanged();
+    partial void OnModificationDateChanging(System.DateTime value);
+    partial void OnModificationDateChanged();
+    partial void OnPublishedDateChanging(System.DateTime value);
+    partial void OnPublishedDateChanged();
+    partial void OnLastEditedByChanging(string value);
+    partial void OnLastEditedByChanged();
+    partial void OnProjectNrChanging(int value);
+    partial void OnProjectNrChanged();
+    partial void OnLanguageGermanChanging(bool value);
+    partial void OnLanguageGermanChanged();
+    partial void OnLanguageEnglishChanging(bool value);
+    partial void OnLanguageEnglishChanged();
+    partial void OnDurationOneSemesterChanging(bool value);
+    partial void OnDurationOneSemesterChanged();
+    partial void OnTypeSysSecChanging(bool value);
+    partial void OnTypeSysSecChanged();
+    partial void OnTypeSEChanging(bool value);
+    partial void OnTypeSEChanged();
+    partial void OnImgDescriptionChanging(string value);
+    partial void OnImgDescriptionChanged();
+    partial void OnIsContinuationChanging(bool value);
+    partial void OnIsContinuationChanged();
+    partial void OnPreviousProjectIDChanging(System.Nullable<int> value);
+    partial void OnPreviousProjectIDChanged();
+    partial void OnClientAddressStreetChanging(string value);
+    partial void OnClientAddressStreetChanged();
+    partial void OnClientAddressPostcodeChanging(string value);
+    partial void OnClientAddressPostcodeChanged();
+    partial void OnClientAddressCityChanging(string value);
+    partial void OnClientAddressCityChanged();
+    partial void OnBillingStatusIDChanging(System.Nullable<int> value);
+    partial void OnBillingStatusIDChanged();
+    partial void OnLogProjectTypeIDChanging(System.Nullable<int> value);
+    partial void OnLogProjectTypeIDChanged();
+    partial void OnLogProjectDurationChanging(System.Nullable<byte> value);
+    partial void OnLogProjectDurationChanged();
+    partial void OnLogStudent1NameChanging(string value);
+    partial void OnLogStudent1NameChanged();
+    partial void OnLogStudent1MailChanging(string value);
+    partial void OnLogStudent1MailChanged();
+    partial void OnLogStudent2NameChanging(string value);
+    partial void OnLogStudent2NameChanged();
+    partial void OnLogStudent2MailChanging(string value);
+    partial void OnLogStudent2MailChanged();
+    partial void OnLogExpertIDChanging(System.Nullable<int> value);
+    partial void OnLogExpertIDChanged();
+    partial void OnLogExpertPaidChanging(System.Nullable<bool> value);
+    partial void OnLogExpertPaidChanged();
+    partial void OnLogDefenceDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnLogDefenceDateChanged();
+    partial void OnLogDefenceRoomChanging(string value);
+    partial void OnLogDefenceRoomChanged();
+    partial void OnSemesterIdChanging(System.Nullable<int> value);
+    partial void OnSemesterIdChanged();
+    partial void OnLogGradeStudent1Changing(System.Nullable<float> value);
+    partial void OnLogGradeStudent1Changed();
+    partial void OnLogLanguageEnglishChanging(System.Nullable<bool> value);
+    partial void OnLogLanguageEnglishChanged();
+    partial void OnLogLanguageGermanChanging(System.Nullable<bool> value);
+    partial void OnLogLanguageGermanChanged();
+    partial void OnClientAddressTitleChanging(string value);
+    partial void OnClientAddressTitleChanged();
+    partial void OnClientAddressDepartmentChanging(string value);
+    partial void OnClientAddressDepartmentChanged();
+    partial void OnClientReferenceNumberChanging(string value);
+    partial void OnClientReferenceNumberChanged();
+    partial void OnLogGradeStudent2Changing(System.Nullable<float> value);
+    partial void OnLogGradeStudent2Changed();
+    #endregion
 		
 		public Project()
 		{
@@ -3417,43 +3417,43 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Project;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnStartDateChanging(System.DateTime value);
-	partial void OnStartDateChanged();
-	partial void OnEndDateChanging(System.DateTime value);
-	partial void OnEndDateChanged();
-	partial void OnProjectSubmissionUntilChanging(System.DateTime value);
-	partial void OnProjectSubmissionUntilChanged();
-	partial void OnProjectAllocationChanging(string value);
-	partial void OnProjectAllocationChanged();
-	partial void OnSubmissionIP5FullPartTimeChanging(string value);
-	partial void OnSubmissionIP5FullPartTimeChanged();
-	partial void OnSubmissionIP5AccompanyingChanging(string value);
-	partial void OnSubmissionIP5AccompanyingChanged();
-	partial void OnSubmissionIP6NormalChanging(string value);
-	partial void OnSubmissionIP6NormalChanged();
-	partial void OnSubmissionIP6Variant2Changing(string value);
-	partial void OnSubmissionIP6Variant2Changed();
-	partial void OnDefenseIP6StartChanging(string value);
-	partial void OnDefenseIP6StartChanged();
-	partial void OnDefenseIP6EndChanging(string value);
-	partial void OnDefenseIP6EndChanged();
-	partial void OnExhibitionBachelorThesisChanging(string value);
-	partial void OnExhibitionBachelorThesisChanged();
-	partial void OnNameChanging(string value);
-	partial void OnNameChanged();
-	partial void OnSemesterActiveUntilChanging(System.Nullable<System.DateTime> value);
-	partial void OnSemesterActiveUntilChanged();
-	partial void OnDefenseIP6BStartChanging(string value);
-	partial void OnDefenseIP6BStartChanged();
-	partial void OnDefenseIP6BEndChanging(string value);
-	partial void OnDefenseIP6BEndChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnStartDateChanging(System.DateTime value);
+    partial void OnStartDateChanged();
+    partial void OnEndDateChanging(System.DateTime value);
+    partial void OnEndDateChanged();
+    partial void OnProjectSubmissionUntilChanging(System.DateTime value);
+    partial void OnProjectSubmissionUntilChanged();
+    partial void OnProjectAllocationChanging(string value);
+    partial void OnProjectAllocationChanged();
+    partial void OnSubmissionIP5FullPartTimeChanging(string value);
+    partial void OnSubmissionIP5FullPartTimeChanged();
+    partial void OnSubmissionIP5AccompanyingChanging(string value);
+    partial void OnSubmissionIP5AccompanyingChanged();
+    partial void OnSubmissionIP6NormalChanging(string value);
+    partial void OnSubmissionIP6NormalChanged();
+    partial void OnSubmissionIP6Variant2Changing(string value);
+    partial void OnSubmissionIP6Variant2Changed();
+    partial void OnDefenseIP6StartChanging(string value);
+    partial void OnDefenseIP6StartChanged();
+    partial void OnDefenseIP6EndChanging(string value);
+    partial void OnDefenseIP6EndChanged();
+    partial void OnExhibitionBachelorThesisChanging(string value);
+    partial void OnExhibitionBachelorThesisChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnSemesterActiveUntilChanging(System.Nullable<System.DateTime> value);
+    partial void OnSemesterActiveUntilChanged();
+    partial void OnDefenseIP6BStartChanging(string value);
+    partial void OnDefenseIP6BStartChanged();
+    partial void OnDefenseIP6BEndChanging(string value);
+    partial void OnDefenseIP6BEndChanged();
+    #endregion
 		
 		public Semester()
 		{
@@ -3855,31 +3855,31 @@ namespace ProStudCreator
 		
 		private EntityRef<Project> _Project;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnROWGUIDChanging(System.Guid value);
-	partial void OnROWGUIDChanged();
-	partial void OnProjectAttachementChanging(System.Data.Linq.Binary value);
-	partial void OnProjectAttachementChanged();
-	partial void OnProjectIdChanging(int value);
-	partial void OnProjectIdChanged();
-	partial void OnUploadUserMailChanging(string value);
-	partial void OnUploadUserMailChanged();
-	partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
-	partial void OnUploadDateChanged();
-	partial void OnUploadSizeChanging(System.Nullable<decimal> value);
-	partial void OnUploadSizeChanged();
-	partial void OnDeletedChanging(bool value);
-	partial void OnDeletedChanged();
-	partial void OnDeletedDateChanging(System.Nullable<System.DateTime> value);
-	partial void OnDeletedDateChanged();
-	partial void OnFileNameChanging(string value);
-	partial void OnFileNameChanged();
-	partial void OnDeletedUserChanging(string value);
-	partial void OnDeletedUserChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnROWGUIDChanging(System.Guid value);
+    partial void OnROWGUIDChanged();
+    partial void OnProjectAttachementChanging(System.Data.Linq.Binary value);
+    partial void OnProjectAttachementChanged();
+    partial void OnProjectIdChanging(int value);
+    partial void OnProjectIdChanged();
+    partial void OnUploadUserMailChanging(string value);
+    partial void OnUploadUserMailChanged();
+    partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnUploadDateChanged();
+    partial void OnUploadSizeChanging(System.Nullable<decimal> value);
+    partial void OnUploadSizeChanged();
+    partial void OnDeletedChanging(bool value);
+    partial void OnDeletedChanged();
+    partial void OnDeletedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDeletedDateChanged();
+    partial void OnFileNameChanging(string value);
+    partial void OnFileNameChanged();
+    partial void OnDeletedUserChanging(string value);
+    partial void OnDeletedUserChanged();
+    #endregion
 		
 		public Attachements()
 		{
@@ -4180,33 +4180,33 @@ namespace ProStudCreator
 		
 		private EntityRef<Department> _Department;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnMailChanging(string value);
-	partial void OnMailChanged();
-	partial void OnDepartmentIdChanging(System.Nullable<int> value);
-	partial void OnDepartmentIdChanged();
-	partial void OnCanExportExcelChanging(bool value);
-	partial void OnCanExportExcelChanged();
-	partial void OnCanPublishProjectChanging(bool value);
-	partial void OnCanPublishProjectChanged();
-	partial void OnCanVisitAdminPageChanging(bool value);
-	partial void OnCanVisitAdminPageChanged();
-	partial void OnCanSeeAllProjectsInProgressChanging(bool value);
-	partial void OnCanSeeAllProjectsInProgressChanged();
-	partial void OnCanEditAllProjectsChanging(bool value);
-	partial void OnCanEditAllProjectsChanged();
-	partial void OnCanSubmitAllProjectsChanging(bool value);
-	partial void OnCanSubmitAllProjectsChanged();
-	partial void OnCanSeeCreationDetailsChanging(bool value);
-	partial void OnCanSeeCreationDetailsChanged();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnIsSupervisorChanging(bool value);
-	partial void OnIsSupervisorChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnMailChanging(string value);
+    partial void OnMailChanged();
+    partial void OnDepartmentIdChanging(System.Nullable<int> value);
+    partial void OnDepartmentIdChanged();
+    partial void OnCanExportExcelChanging(bool value);
+    partial void OnCanExportExcelChanged();
+    partial void OnCanPublishProjectChanging(bool value);
+    partial void OnCanPublishProjectChanged();
+    partial void OnCanVisitAdminPageChanging(bool value);
+    partial void OnCanVisitAdminPageChanged();
+    partial void OnCanSeeAllProjectsInProgressChanging(bool value);
+    partial void OnCanSeeAllProjectsInProgressChanged();
+    partial void OnCanEditAllProjectsChanging(bool value);
+    partial void OnCanEditAllProjectsChanged();
+    partial void OnCanSubmitAllProjectsChanging(bool value);
+    partial void OnCanSubmitAllProjectsChanged();
+    partial void OnCanSeeCreationDetailsChanging(bool value);
+    partial void OnCanSeeCreationDetailsChanged();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnIsSupervisorChanging(bool value);
+    partial void OnIsSupervisorChanged();
+    #endregion
 		
 		public UserDepartmentMap()
 		{
@@ -4559,23 +4559,27 @@ namespace ProStudCreator
 		
 		private bool _GradesRegistered;
 		
+		private long _TicksBetweenReminds;
+		
 		private EntitySet<Task> _Tasks;
 		
 		private EntityRef<RemindType> _RemindType1;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnDescriptionChanging(string value);
-	partial void OnDescriptionChanged();
-	partial void OnRemindTypeIdChanging(int value);
-	partial void OnRemindTypeIdChanged();
-	partial void OnGradesRegisteredChanging(bool value);
-	partial void OnGradesRegisteredChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnRemindTypeIdChanging(int value);
+    partial void OnRemindTypeIdChanged();
+    partial void OnGradesRegisteredChanging(bool value);
+    partial void OnGradesRegisteredChanged();
+    partial void OnTicksBetweenRemindsChanging(long value);
+    partial void OnTicksBetweenRemindsChanged();
+    #endregion
 		
 		public TaskType()
 		{
@@ -4664,6 +4668,26 @@ namespace ProStudCreator
 					this._GradesRegistered = value;
 					this.SendPropertyChanged("GradesRegistered");
 					this.OnGradesRegisteredChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TicksBetweenReminds", DbType="bigint")]
+		public long TicksBetweenReminds
+		{
+			get
+			{
+				return this._TicksBetweenReminds;
+			}
+			set
+			{
+				if ((this._TicksBetweenReminds != value))
+				{
+					this.OnTicksBetweenRemindsChanging(value);
+					this.SendPropertyChanging();
+					this._TicksBetweenReminds = value;
+					this.SendPropertyChanged("TicksBetweenReminds");
+					this.OnTicksBetweenRemindsChanged();
 				}
 			}
 		}
@@ -4762,17 +4786,17 @@ namespace ProStudCreator
 		
 		private EntitySet<TaskType> _TaskTypes;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnRemindOnceChanging(bool value);
-	partial void OnRemindOnceChanged();
-	partial void OnRemindTillDoneChanging(string value);
-	partial void OnRemindTillDoneChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnRemindOnceChanging(bool value);
+    partial void OnRemindOnceChanged();
+    partial void OnRemindTillDoneChanging(string value);
+    partial void OnRemindTillDoneChanged();
+    #endregion
 		
 		public RemindType()
 		{
@@ -4916,27 +4940,27 @@ namespace ProStudCreator
 		
 		private EntityRef<Project> _Project1;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void OnIdChanging(int value);
-	partial void OnIdChanged();
-	partial void OnTaskTypeIdChanging(int value);
-	partial void OnTaskTypeIdChanged();
-	partial void OnProjectIdChanging(System.Nullable<int> value);
-	partial void OnProjectIdChanged();
-	partial void OnDueDateChanging(System.Nullable<System.DateTime> value);
-	partial void OnDueDateChanged();
-	partial void OnSupervisorIdChanging(System.Nullable<int> value);
-	partial void OnSupervisorIdChanged();
-	partial void OnResponsibleUserIdChanging(int value);
-	partial void OnResponsibleUserIdChanged();
-	partial void OnLastRemindedChanging(System.Nullable<System.DateTime> value);
-	partial void OnLastRemindedChanged();
-	partial void OnDoneChanging(bool value);
-	partial void OnDoneChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnTaskTypeIdChanging(int value);
+    partial void OnTaskTypeIdChanged();
+    partial void OnProjectIdChanging(System.Nullable<int> value);
+    partial void OnProjectIdChanged();
+    partial void OnDueDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDueDateChanged();
+    partial void OnSupervisorIdChanging(System.Nullable<int> value);
+    partial void OnSupervisorIdChanged();
+    partial void OnResponsibleUserIdChanging(int value);
+    partial void OnResponsibleUserIdChanged();
+    partial void OnLastRemindedChanging(System.Nullable<System.DateTime> value);
+    partial void OnLastRemindedChanged();
+    partial void OnDoneChanging(bool value);
+    partial void OnDoneChanged();
+    #endregion
 		
 		public Task()
 		{
