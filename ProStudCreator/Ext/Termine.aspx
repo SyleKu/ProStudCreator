@@ -65,7 +65,7 @@
                     <a href="../Content/Externe_Projekteingabe.pdf" class="pdf">Formular für Projekte von externen Auftraggebern.</a>
                 </p>
                 <p>
-                    <a href="../Content/IP56_Handbuch_Studierende_V170913.pdf">Handbuch für studierende</a>
+                    <a href="../Content/IP56_Handbuch_Studierende_V170913.pdf" class="pdf">Handbuch für studierende</a>
                 </p>
             </div>
         </div>
