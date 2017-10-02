@@ -1333,6 +1333,10 @@ namespace ProStudCreator
 		
 		private System.Nullable<float> _LogGradeStudent2;
 		
+		private int _Advisor1Id;
+		
+		private int _Advisor2Id;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1501,6 +1505,10 @@ namespace ProStudCreator
     partial void OnClientReferenceNumberChanged();
     partial void OnLogGradeStudent2Changing(System.Nullable<float> value);
     partial void OnLogGradeStudent2Changed();
+    partial void OnAdvisor1IdChanging(int value);
+    partial void OnAdvisor1IdChanged();
+    partial void OnAdvisor2IdChanging(int value);
+    partial void OnAdvisor2IdChanged();
     #endregion
 		
 		public Project()
@@ -2941,6 +2949,46 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Id", DbType="int")]
+		public int Advisor1Id
+		{
+			get
+			{
+				return this._Advisor1Id;
+			}
+			set
+			{
+				if ((this._Advisor1Id != value))
+				{
+					this.OnAdvisor1IdChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor1Id = value;
+					this.SendPropertyChanged("Advisor1Id");
+					this.OnAdvisor1IdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Id", DbType="int")]
+		public int Advisor2Id
+		{
+			get
+			{
+				return this._Advisor2Id;
+			}
+			set
+			{
+				if ((this._Advisor2Id != value))
+				{
+					this.OnAdvisor2IdChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor2Id = value;
+					this.SendPropertyChanged("Advisor2Id");
+					this.OnAdvisor2IdChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Project", Storage="_Projects", ThisKey="Id", OtherKey="PreviousProjectID")]
 		public EntitySet<Project> Projects
 		{
@@ -3951,7 +3999,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="UploadUser", Storage="_UploadUser", DbType="VarChar(50)", IsDbGenerated=true, IsVersion=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="UploadUser", Storage="_UploadUser", DbType="VarChar(50)")]
 		public string UploadUserMail
 		{
 			get
@@ -4174,6 +4222,10 @@ namespace ProStudCreator
 		
 		private bool _IsSupervisor;
 		
+		private bool _CanBeAdvisor1;
+		
+		private string _Name;
+		
 		private EntitySet<Task> _Tasks;
 		
 		private EntitySet<Task> _Tasks1;
@@ -4206,6 +4258,10 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnIsSupervisorChanging(bool value);
     partial void OnIsSupervisorChanged();
+    partial void OnCanBeAdvisor1Changing(bool value);
+    partial void OnCanBeAdvisor1Changed();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4436,6 +4492,46 @@ namespace ProStudCreator
 					this._IsSupervisor = value;
 					this.SendPropertyChanged("IsSupervisor");
 					this.OnIsSupervisorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanBeAdvisor1", DbType="bit")]
+		public bool CanBeAdvisor1
+		{
+			get
+			{
+				return this._CanBeAdvisor1;
+			}
+			set
+			{
+				if ((this._CanBeAdvisor1 != value))
+				{
+					this.OnCanBeAdvisor1Changing(value);
+					this.SendPropertyChanging();
+					this._CanBeAdvisor1 = value;
+					this.SendPropertyChanged("CanBeAdvisor1");
+					this.OnCanBeAdvisor1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="varchar(50)")]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
 		}

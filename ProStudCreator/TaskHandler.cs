@@ -23,6 +23,17 @@ namespace ProStudCreator
 
             //Write all the Mails
             WriteAllMails();
+
+
+
+            //only run to create users
+            foreach (var advisorMail in db.Projects.Select(i => i.Advisor1Mail))
+            {
+                if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(advisorMail))
+                {
+                   // db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){Mail = });
+                }
+            }
         }
 
 

@@ -82,7 +82,7 @@ namespace ProStudCreator
             {
                 if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(ShibUser.GetEmail()))
                 {
-                    db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartmentId(db), Mail = ShibUser.GetEmail()});
+                    db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartmentId(db), Mail = ShibUser.GetEmail(), Name = ShibUser.GetFullName()});
                 }
             }
 
