@@ -49,11 +49,3 @@ FOR ATTACH
 GO
 ```
 
-5. Telerik-Setup durchführen
-
-
-
-Telerik-Setup
-======
-
-[Anleitung von Telerik](http://docs.telerik.com/devtools/aspnet-ajax/general-information/adding-the-telerik-controls-to-your-project)
