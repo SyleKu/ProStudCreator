@@ -3951,7 +3951,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="UploadUser", Storage="_UploadUser", DbType="VarChar(50)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="UploadUser", Storage="_UploadUser", DbType="VarChar(50)", IsDbGenerated=true, IsVersion=true)]
 		public string UploadUserMail
 		{
 			get

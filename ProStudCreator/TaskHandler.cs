@@ -29,6 +29,7 @@ namespace ProStudCreator
         private static void CheckGradesRegistered()
         {
             var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered).Select(i => i.ProjectId);
+
             var allProjects = db.Projects.Where(p => true).AsEnumerable();
 
             foreach (var project in allProjects.Where(p => p.GetEndSemester(db) == Semester.LastSemester(db)))
@@ -125,28 +126,29 @@ namespace ProStudCreator
                 {
                     var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
                     mail.To.Add(new MailAddress(task.ResponsibleUser.Mail));
-                    mail.Subject = "Offene Aufgaben bei Prostud";
+                    mail.Subject = "Offene Aufgaben bei Prostud (DEBUG)";
                     mail.IsBodyHtml = true;
-
-                    mailMessage.Append("<h4>Hallo<h4>"
+                    mailMessage.Append("<div style=\"font-family: Arial\">");
+                    mailMessage.Append("<p style=\"font-size: 110%\">Guten Tag<p>"
                                         + "<p>Du hast noch folgende offene Aufgaben:</p><ul>");
 
                     foreach (var underTask in copyTasksToMail)
                     {
-                        if (underTask.ResponsibleUserId != -1 && underTask.ResponsibleUserId == task.ResponsibleUserId) //todo gleiche Tasks zusammenfassen.
+                        if (underTask.ResponsibleUserId == task.ResponsibleUserId)
                         {
                             underTask.AddToList();
-                            mailMessage.Append(task.Project != null ? "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id=" +
-                                               task.ProjectId + $"\">{underTask.TaskType.Description} beim Projekt {underTask.Project.Name}</a><li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a><li>");
+                            mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id= {task.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
                         }
                     }
 
                     mailMessage.Append("</ul>"
+                        + "<p>Bitte erledige diese so schnell wie möglich, Danke.</p>"
                         + "<br/>"
                         + "<p>Freundliche Grüsse</p>"
                         + "Dein ProStud-Team"
                         );
 
+                    mailMessage.Append("</div>");
                     mail.Body = mailMessage.ToString();
                     mailsToSend.Add(mail);
                 }

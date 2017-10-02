@@ -152,7 +152,7 @@
         <elementListCompartment Id="6117277c-ad62-478c-8469-32af9c2afb9e" absoluteBounds="1.3899999999999997, 18.835, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.375 : 18.375); (2.375 : 18.2708968098958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.375 : 18.375); (2.375 : 18.2708968098958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/RemindType/RemindType_TaskType" />
       <nodes>
         <classShapeMoniker Id="dc79678f-3194-4fe6-af16-bd50998b8eb5" />
@@ -165,7 +165,7 @@
         <elementListCompartment Id="1dad8433-b7dd-493d-ab3b-27445ebf54c2" absoluteBounds="1.3900000000000001, 14.335, 1.9700000000000002, 1.7878011067708333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.375 : 16.5); (2.375 : 16.2228011067708)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.375 : 16.5); (2.375 : 16.2228011067708)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/TaskType/TaskType_Task" />
       <nodes>
         <classShapeMoniker Id="e25119ac-c74e-4e00-9434-6b2cb6191131" />
