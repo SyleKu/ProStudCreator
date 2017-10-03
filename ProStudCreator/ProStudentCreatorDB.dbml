@@ -123,8 +123,8 @@
       <Column Name="ClientAddressDepartment" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
       <Column Name="ClientReferenceNumber" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
-      <Column Name="Advisor1Id" Type="System.Int32" DbType="int" CanBeNull="false" />
-      <Column Name="Advisor2Id" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="Advisor1Id" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="Advisor2Id" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />
@@ -187,7 +187,7 @@
       <Column Name="CanEditAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Id" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Id" AutoSync="Never" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="IsSupervisor" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="CanBeAdvisor1" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="varchar(50)" CanBeNull="true" />

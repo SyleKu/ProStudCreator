@@ -1333,9 +1333,9 @@ namespace ProStudCreator
 		
 		private System.Nullable<float> _LogGradeStudent2;
 		
-		private int _Advisor1Id;
+		private System.Nullable<int> _Advisor1Id;
 		
-		private int _Advisor2Id;
+		private System.Nullable<int> _Advisor2Id;
 		
 		private EntitySet<Project> _Projects;
 		
@@ -1505,9 +1505,9 @@ namespace ProStudCreator
     partial void OnClientReferenceNumberChanged();
     partial void OnLogGradeStudent2Changing(System.Nullable<float> value);
     partial void OnLogGradeStudent2Changed();
-    partial void OnAdvisor1IdChanging(int value);
+    partial void OnAdvisor1IdChanging(System.Nullable<int> value);
     partial void OnAdvisor1IdChanged();
-    partial void OnAdvisor2IdChanging(int value);
+    partial void OnAdvisor2IdChanging(System.Nullable<int> value);
     partial void OnAdvisor2IdChanged();
     #endregion
 		
@@ -2950,7 +2950,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Id", DbType="int")]
-		public int Advisor1Id
+		public System.Nullable<int> Advisor1Id
 		{
 			get
 			{
@@ -2970,7 +2970,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Id", DbType="int")]
-		public int Advisor2Id
+		public System.Nullable<int> Advisor2Id
 		{
 			get
 			{
@@ -4456,7 +4456,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="int", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="int", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get

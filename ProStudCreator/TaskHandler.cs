@@ -13,39 +13,43 @@ namespace ProStudCreator
     public class TaskHandler
     {
 
-        private static ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
-            CheckGradesRegistered();
-            Debug.WriteLine("Checking for new Taksks: " + DateTime.Now);
 
-
-            //Write all the Mails
-            WriteAllMails();
-
-
-
-            //only run to create users
-            foreach (var advisorMail in db.Projects.Select(i => i.Advisor1Mail))
+            using (var db = new ProStudentCreatorDBDataContext())
             {
-                if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(advisorMail))
+                CheckGradesRegistered(db);
+                Debug.WriteLine("Checking for new Taksks: " + DateTime.Now);
+
+
+                //Write all the Mails
+                WriteAllMails(db);
+
+
+
+                //only run to create users
+                foreach (var project in db.Projects.Select(i => i))
                 {
-                   // db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){Mail = });
+                    if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
+                    {
+                        db.UserDepartmentMap.InsertOnSubmit(
+                            new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name });
+                    }
+                    db.SubmitChanges();
                 }
             }
         }
 
 
-        private static void CheckGradesRegistered()
+        private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
             var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered).Select(i => i.ProjectId);
 
-            var allProjects = db.Projects.Where(p => true).AsEnumerable();
+            var allProjects = db.Projects.ToList();
 
             foreach (var project in allProjects.Where(p => p.GetEndSemester(db) == Semester.LastSemester(db)))
             {
-                if ((project.LogGradeStudent1 == null) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
+                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
                 {
                     if (!allActiveGradeTasks.Contains(project.Id))
                     {
@@ -65,12 +69,12 @@ namespace ProStudCreator
                 }
             }
 
-            checkForFinishedGradesRegistered();
+            checkForFinishedGradesRegistered(db);
 
             db.SubmitChanges();
         }
 
-        private static void checkForFinishedGradesRegistered()
+        private static void checkForFinishedGradesRegistered(ProStudentCreatorDBDataContext db)
         {
             var openGradeTasks =
                 db.Tasks.Where(i => !i.Done && i.TaskType == db.TaskTypes.Single(t => t.GradesRegistered));
@@ -79,7 +83,7 @@ namespace ProStudCreator
             {
                 if (openTask.Project.LogGradeStudent1.HasValue &&
                     (openTask.Project.LogGradeStudent2.HasValue ||
-                     !string.IsNullOrEmpty(openTask.Project.LogStudent2Mail)))
+                     string.IsNullOrEmpty(openTask.Project.LogStudent2Mail)))
                 {
                     openTask.Done = true;
                 }
@@ -89,13 +93,13 @@ namespace ProStudCreator
 
 
         #region Mailing
-        private static void WriteAllMails()
+        private static void WriteAllMails(ProStudentCreatorDBDataContext db)
         {
-            sendMails(GenerateEmails(GetAllTasksToMail()));
+            sendMails(GenerateEmails(GetAllTasksToMail(db)));
         }
 
 
-        private static IEnumerable<Task> GetAllTasksToMail()
+        private static IEnumerable<Task> GetAllTasksToMail(ProStudentCreatorDBDataContext db)
         {
             var openTasks = db.Tasks.Where(i => !i.Done);
             var tasksToMail = new List<Task>();
@@ -140,7 +144,7 @@ namespace ProStudCreator
                     mail.Subject = "Offene Aufgaben bei Prostud (DEBUG)";
                     mail.IsBodyHtml = true;
                     mailMessage.Append("<div style=\"font-family: Arial\">");
-                    mailMessage.Append("<p style=\"font-size: 110%\">Guten Tag<p>"
+                    mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {task.ResponsibleUser.Name.Split(' ')[0]}<p>"
                                         + "<p>Du hast noch folgende offene Aufgaben:</p><ul>");
 
                     foreach (var underTask in copyTasksToMail)
