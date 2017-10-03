@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="aspnet-ProStudCreator-20140818043155" Class="ProStudentCreatorDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-NKIG02J;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -54,36 +54,36 @@
   </Table>
   <Table Name="dbo.Projects" Member="Projects">
     <Type Name="Project">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Creator" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="ClientCompany" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="ClientMail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeDesignUX" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeHW" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeCGIP" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeMathAlg" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeAppWeb" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeDBBigData" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="P1TypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="P1TeamSizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="P2TypeId" Type="System.Int32" DbType="Int" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="P2TeamSizeId" Type="System.Int32" DbType="Int" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="InitialPosition" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Creator" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientCompany" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientMail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="TypeDesignUX" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TypeHW" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TypeCGIP" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TypeMathAlg" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TypeAppWeb" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TypeDBBigData" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="P1TypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="P1TeamSizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="P2TypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="P2TeamSizeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InitialPosition" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" IsDelayLoaded="true" />
-      <Column Name="Objective" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Reservation1Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Reservation1Mail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Reservation2Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Reservation2Mail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Important" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="State" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="OverOnePage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Objective" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Reservation1Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Reservation1Mail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Reservation2Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Reservation2Mail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Important" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OverOnePage" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="ModificationDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="PublishedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
@@ -121,10 +121,10 @@
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Column Name="Advisor1Id" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="Advisor2Id" Type="System.Int32" DbType="int" CanBeNull="true" />
-      <Column Name="IsMainVersion" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
-      <Column Name="ProjectId" Type="System.Int32" DbType="int" CanBeNull="true" />
-      <Column Name="Ablehnungsgrund" Type="System.String" DbType="nvarchar(MAX)" CanBeNull="true" />
-      <Column Member="ClientType" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="Advisor1Mail" Type="System.String" CanBeNull="true" />
+      <Column Name="Advisor2Mail" Type="System.String" CanBeNull="true" />
+      <Column Name="Advisor1Name" Type="System.String" CanBeNull="true" />
+      <Column Name="Advisor2Name" Type="System.String" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />
@@ -190,13 +190,12 @@
       <Column Name="CanSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Id" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IsSupervisor" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
-      <Column Name="CanBeAdvisor1" Type="System.Boolean" CanBeNull="false" />
-      <Column Name="IsSupervisor" Type="System.Boolean" CanBeNull="false" />
-      <Association Name="UserDepartmentMap_Project" Member="Projects" ThisKey="Id" OtherKey="Advisor1Id" Type="Project" />
-      <Association Name="UserDepartmentMap_Project1" Member="Projects1" ThisKey="Id" OtherKey="Advisor2Id" Type="Project" />
       <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="SupervisorId" Type="Task" />
       <Association Name="UserDepartmentMap_Task1" Member="Tasks1" ThisKey="Id" OtherKey="ResponsibleUserId" Type="Task" />
+      <Association Name="UserDepartmentMap_Project" Member="Projects" ThisKey="Id" OtherKey="Advisor1Id" Type="Project" />
+      <Association Name="UserDepartmentMap_Project1" Member="Projects1" ThisKey="Id" OtherKey="Advisor2Id" Type="Project" />
       <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>
