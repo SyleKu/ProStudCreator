@@ -579,9 +579,7 @@ namespace ProStudCreator
 
         protected void downloadFiles_OnClick(object sender, EventArgs e)
         {
-            var attachments = db.Attachements.Where(item => item.ProjectId == project.Id).ToList();
-            var zip = ZipFile.Create(project.Name + ".zip");
-
+            var attachments = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).ToList();
 
             if (!ShibUser.IsAuthenticated(db))
             {
@@ -589,62 +587,66 @@ namespace ProStudCreator
                 Response.End();
                 return;
             }
-
-            using (var connection = new SqlConnection(db.Connection.ConnectionString))
+            using (var memoryStream = new MemoryStream())
             {
-                connection.Open();
-
-                foreach (var attachment in attachments)
+                var zip = new ZipFile(memoryStream);
+                decimal? totalSize = 0;
+                using (var connection = new SqlConnection(db.Connection.ConnectionString))
                 {
-                    var command =
-                        new SqlCommand(
-                            $"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID;",
-                            connection);
-                    command.Parameters.AddWithValue("@ROWGUID", attachment.ROWGUID.ToString());
-                    using (var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
+                    connection.Open();
+                    foreach (var attachment in attachments)
                     {
-                        command.Transaction = tran;
-
-                        using (var reader = command.ExecuteReader())
+                        totalSize += attachment.UploadSize;
+                        var command =
+                            new SqlCommand(
+                                $"SELECT TOP(1) ProjectAttachement.PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM Attachements WHERE ROWGUID = @ROWGUID;",
+                                connection);
+                        command.Parameters.AddWithValue("@ROWGUID", attachment.ROWGUID.ToString());
+                        using (var tran = connection.BeginTransaction(IsolationLevel.ReadCommitted))
                         {
-                            while (reader.Read())
+                            command.Transaction = tran;
+
+                            using (var reader = command.ExecuteReader())
                             {
-                                // Get the pointer for the file  
-                                var path = reader.GetString(0);
-                                var transactionContext = reader.GetSqlBytes(1).Buffer;
-
-                                //used to save a stream to a zipfile
-                                var customStaticDataSource = new CustomStaticDataSource(); 
-
-                                // Create the SqlFileStream  
-                                using (
-                                    Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Read,
-                                        FileOptions.SequentialScan, 0))
+                                while (reader.Read())
                                 {
-                                    //update zipfile
-                                    zip.BeginUpdate();
-                                    customStaticDataSource.SetStream(fileStream);
-                                    zip.Add(customStaticDataSource, attachment.FileName);
-                                    zip.CommitUpdate();
+                                    // Get the pointer for the file  
+                                    var path = reader.GetString(0);
+                                    var transactionContext = reader.GetSqlBytes(1).Buffer;
+
+                                    //used to save a stream to a zipfile
+                                    var customStaticDataSource = new CustomStaticDataSource();
+
+                                    // Create the SqlFileStream  
+                                    using (
+                                        Stream fileStream = new SqlFileStream(path, transactionContext,
+                                            FileAccess.Read,
+                                            FileOptions.SequentialScan, 0))
+                                    {
+                                        //update zipfile
+                                        zip.BeginUpdate();
+                                        customStaticDataSource.SetStream(fileStream);
+                                        zip.Add(customStaticDataSource, attachment.FileName);
+                                        zip.CommitUpdate();
+                                        zip.IsStreamOwner = false;
+                                    }
                                 }
                             }
+                            tran.Commit();
                         }
-                        tran.Commit();
                     }
                 }
-                ;
+                zip.Close();
+                Response.Clear();
+                Response.ClearHeaders();
+                Response.ClearContent();
+                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + project.Name + ".zip" + "\"");
+                Response.AddHeader("Content-Length", totalSize.ToString());
+                Response.ContentType = "text/plain";
+                memoryStream.WriteTo(Response.OutputStream);
+                Response.Flush();
+                Response.End();
             }
-            zip.Close();
-            var file = new FileInfo(zip.Name);
-            Response.Clear();
-            Response.ClearHeaders();
-            Response.ClearContent();
-            Response.AddHeader("Content-Disposition", "attachment; filename=\"" + file.Name + "\"");
-            Response.AddHeader("Content-Length", file.Length.ToString());
-            Response.ContentType = "text/plain";
-            Response.Flush();
-            Response.TransmitFile(file.FullName);
-            Response.End();
         }
 
         protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
