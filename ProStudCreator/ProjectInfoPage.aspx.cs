@@ -635,6 +635,10 @@ namespace ProStudCreator
                             tran.Commit();
                         }
                     }
+                    if (totalSize == 0)
+                    {
+                        return;
+                    }
                 }
                 zip.Close();
                 Response.Clear();
