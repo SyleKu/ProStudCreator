@@ -112,40 +112,22 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList dropPreviousProject;
         
         /// <summary>
-        /// NameBetreuer1 control.
+        /// dropAdvisor1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox NameBetreuer1;
+        protected global::System.Web.UI.WebControls.DropDownList dropAdvisor1;
         
         /// <summary>
-        /// EMail1 control.
+        /// dropAdvisor2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EMail1;
-        
-        /// <summary>
-        /// NameBetreuer2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox NameBetreuer2;
-        
-        /// <summary>
-        /// EMail2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EMail2;
+        protected global::System.Web.UI.WebControls.DropDownList dropAdvisor2;
         
         /// <summary>
         /// Department control.

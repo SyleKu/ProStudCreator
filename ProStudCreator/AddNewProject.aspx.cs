@@ -54,7 +54,7 @@ namespace ProStudCreator
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single(p => (int?) p.Id == id);
+                project = db.Projects.Single(p => (int?)p.Id == id);
                 if (!project.UserCanEdit())
                 {
                     Response.Redirect("error/AccessDenied.aspx");
@@ -79,7 +79,7 @@ namespace ProStudCreator
 
             if (IsPostBack)
             {
-                projectType = (bool[]) ViewState["Types"];
+                projectType = (bool[])ViewState["Types"];
             }
             else
             {
@@ -120,8 +120,6 @@ namespace ProStudCreator
                 if (dep.HasValue)
                     Department.SelectedValue = dep.Value.ToString();
 
-                NameBetreuer2.Text = ShibUser.GetFullName();
-                EMail2.Text = ShibUser.GetEmail();
                 DataBind();
 
                 POneTeamSize.SelectedIndex = 1;
@@ -143,16 +141,28 @@ namespace ProStudCreator
                     Page.Title = "Neues Projekt";
                     SiteTitle.Text = "Neues Projekt anlegen";
 
-                    fillDropPreviousProject(Semester.CurrentSemester(db));
+                    FillDropPreviousProject(Semester.CurrentSemester(db));
                     dropPreviousProject.SelectedIndex = 0;
                     radioClientType.SelectedValue = "Intern";
                     divClientForm.Visible = false;
+                    FillDropAdvisors();
                 }
                 ToggleReservationTwoVisible();
             }
         }
 
-        private void fillDropPreviousProject(Semester projectSemester)
+        private void FillDropAdvisors()
+        {
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanSubmitAllProjects);
+            dropAdvisor1.DataBind();
+            dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor1.SelectedIndex = 0;
+            dropAdvisor2.DataSource = db.UserDepartmentMap;
+            dropAdvisor2.DataBind();
+            dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
+        }
+
+        private void FillDropPreviousProject(Semester projectSemester)
         {
             var lastSem = Semester.LastSemester(projectSemester, db);
             var beforeLastSem = Semester.LastSemester(lastSem, db);
@@ -170,10 +180,14 @@ namespace ProStudCreator
             AddPictureLabel.Text = "Bild ändern:";
 
             ProjectName.Text = project.Name;
-            NameBetreuer1.Text = project.Advisor1Name;
-            EMail1.Text = project.Advisor1Mail;
-            NameBetreuer2.Text = project.Advisor2Name;
-            EMail2.Text = project.Advisor2Mail;
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanSubmitAllProjects);
+            dropAdvisor1.DataBind();
+            dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor1.SelectedValue = project.Advisor1Id?.ToString() ?? "ImpossibleValue";
+            dropAdvisor2.DataSource = db.UserDepartmentMap;
+            dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor2.SelectedValue = project.Advisor2Id?.ToString() ?? "ImpossibleValue";
 
             if (project.TypeDesignUX)
             {
@@ -217,9 +231,9 @@ namespace ProStudCreator
             }
 
             POneType.SelectedValue = project.POneType.Id.ToString();
-            PTwoType.SelectedValue = project.PTwoType == null ? null : project.PTwoType.Id.ToString();
+            PTwoType.SelectedValue = project.PTwoType?.Id.ToString();
             POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
-            PTwoTeamSize.SelectedValue = project.PTwoTeamSize == null ? null : project.PTwoTeamSize.Id.ToString();
+            PTwoTeamSize.SelectedValue = project.PTwoTeamSize?.Id.ToString();
 
             if (project.LanguageEnglish && !project.LanguageGerman)
                 Language.SelectedIndex = 2;
@@ -277,7 +291,7 @@ namespace ProStudCreator
             DisplayClient(project);
 
 
-            fillDropPreviousProject(project.Semester);
+            FillDropPreviousProject(project.Semester);
 
             if (project.PreviousProjectID == null)
             {
@@ -517,15 +531,15 @@ namespace ProStudCreator
             if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
-            if (!project.Advisor1Name.IsValidName())
+            if ((!project.Advisor1?.Name.IsValidName()) ?? true)
                 return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            if (!project.Advisor1Mail.IsValidEmail())
+            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
                 return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            if (project.Advisor2Name != "" && !project.Advisor2Name.IsValidName())
+            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            if (project.Advisor2Name != "" && !project.Advisor2Mail.IsValidEmail())
+            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2Name == "" && project.Advisor2Mail != "")
+            if (project.Advisor2 == null && project.Advisor2.Mail != "")
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
 
             var numAssignedTypes = projectType.Count(a => a);
@@ -542,7 +556,7 @@ namespace ProStudCreator
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
-            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1Mail)
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
                 return "Nur Hauptbetreuer können Projekte einreichen.";
 
             if (project.Reservation1Mail != "" && project.Reservation1Name == "")
@@ -600,7 +614,7 @@ namespace ProStudCreator
             smtpClient.Send(mailMessage);
 #endif
 
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         protected void refuseProject_Click(object sender, EventArgs e)
@@ -639,7 +653,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
 #endif
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         protected void cancelRefusion_Click(object sender, EventArgs e)
@@ -657,7 +671,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             else if (project.UserCanUnsubmit())
                 project.Unsubmit();
             db.SubmitChanges();
-            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string) Session["LastPage"]);
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
         #endregion
@@ -724,10 +738,17 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         private void Fillproject(Project project)
         {
             project.Name = ProjectName.Text.FixupParagraph();
-            project.Advisor1Name = NameBetreuer1.Text.FixupParagraph();
-            project.Advisor1Mail = EMail1.Text.Trim().ToLowerInvariant();
-            project.Advisor2Name = NameBetreuer2.Text.FixupParagraph();
-            project.Advisor2Mail = EMail2.Text.Trim().ToLowerInvariant();
+
+            if (dropAdvisor1.SelectedValue == "ImpossibleValue")
+                project.Advisor1Id = null;
+            else
+                project.Advisor1Id = int.Parse(dropAdvisor1.SelectedValue);
+
+            if (dropAdvisor2.SelectedValue == "ImpossibleValue")
+                project.Advisor2Id = null;
+            else
+                project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
+
 
             if (radioClientType.SelectedValue != "Intern")
             {
@@ -864,7 +885,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
                     var offset = 0;
-                    for (;;)
+                    for (; ; )
                     {
                         var read = input.Read(data, offset, data.Length - offset);
                         if (read == 0)

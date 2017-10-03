@@ -1207,14 +1207,6 @@ namespace ProStudCreator
 		
 		private string _ClientMail;
 		
-		private string _Advisor1Name;
-		
-		private string _Advisor2Name;
-		
-		private string _Advisor1Mail;
-		
-		private string _Advisor2Mail;
-		
 		private bool _TypeDesignUX;
 		
 		private bool _TypeHW;
@@ -1337,6 +1329,14 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _Advisor2Id;
 		
+		private string _Advisor1Mail;
+		
+		private string _Advisor2Mail;
+		
+		private string _Advisor1Name;
+		
+		private string _Advisor2Name;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1363,6 +1363,10 @@ namespace ProStudCreator
 		
 		private EntityRef<ProjectType> _LogProjectType;
 		
+		private EntityRef<UserDepartmentMap> _Advisor1;
+		
+		private EntityRef<UserDepartmentMap> _Advisor2;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1379,14 +1383,6 @@ namespace ProStudCreator
     partial void OnClientPersonChanged();
     partial void OnClientMailChanging(string value);
     partial void OnClientMailChanged();
-    partial void OnAdvisor1NameChanging(string value);
-    partial void OnAdvisor1NameChanged();
-    partial void OnAdvisor2NameChanging(string value);
-    partial void OnAdvisor2NameChanged();
-    partial void OnAdvisor1MailChanging(string value);
-    partial void OnAdvisor1MailChanged();
-    partial void OnAdvisor2MailChanging(string value);
-    partial void OnAdvisor2MailChanged();
     partial void OnTypeDesignUXChanging(bool value);
     partial void OnTypeDesignUXChanged();
     partial void OnTypeHWChanging(bool value);
@@ -1509,6 +1505,14 @@ namespace ProStudCreator
     partial void OnAdvisor1IdChanged();
     partial void OnAdvisor2IdChanging(System.Nullable<int> value);
     partial void OnAdvisor2IdChanged();
+    partial void OnAdvisor1MailChanging(string value);
+    partial void OnAdvisor1MailChanged();
+    partial void OnAdvisor2MailChanging(string value);
+    partial void OnAdvisor2MailChanged();
+    partial void OnAdvisor1NameChanging(string value);
+    partial void OnAdvisor1NameChanged();
+    partial void OnAdvisor2NameChanging(string value);
+    partial void OnAdvisor2NameChanged();
     #endregion
 		
 		public Project()
@@ -1526,6 +1530,8 @@ namespace ProStudCreator
 			this._PTwoTeamSize = default(EntityRef<ProjectTeamSize>);
 			this._Semesters = default(EntityRef<Semester>);
 			this._LogProjectType = default(EntityRef<ProjectType>);
+			this._Advisor1 = default(EntityRef<UserDepartmentMap>);
+			this._Advisor2 = default(EntityRef<UserDepartmentMap>);
 			OnCreated();
 		}
 		
@@ -1645,86 +1651,6 @@ namespace ProStudCreator
 					this._ClientMail = value;
 					this.SendPropertyChanged("ClientMail");
 					this.OnClientMailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string Advisor1Name
-		{
-			get
-			{
-				return this._Advisor1Name;
-			}
-			set
-			{
-				if ((this._Advisor1Name != value))
-				{
-					this.OnAdvisor1NameChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor1Name = value;
-					this.SendPropertyChanged("Advisor1Name");
-					this.OnAdvisor1NameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string Advisor2Name
-		{
-			get
-			{
-				return this._Advisor2Name;
-			}
-			set
-			{
-				if ((this._Advisor2Name != value))
-				{
-					this.OnAdvisor2NameChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor2Name = value;
-					this.SendPropertyChanged("Advisor2Name");
-					this.OnAdvisor2NameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string Advisor1Mail
-		{
-			get
-			{
-				return this._Advisor1Mail;
-			}
-			set
-			{
-				if ((this._Advisor1Mail != value))
-				{
-					this.OnAdvisor1MailChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor1Mail = value;
-					this.SendPropertyChanged("Advisor1Mail");
-					this.OnAdvisor1MailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string Advisor2Mail
-		{
-			get
-			{
-				return this._Advisor2Mail;
-			}
-			set
-			{
-				if ((this._Advisor2Mail != value))
-				{
-					this.OnAdvisor2MailChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor2Mail = value;
-					this.SendPropertyChanged("Advisor2Mail");
-					this.OnAdvisor2MailChanged();
 				}
 			}
 		}
@@ -2960,6 +2886,10 @@ namespace ProStudCreator
 			{
 				if ((this._Advisor1Id != value))
 				{
+					if (this._Advisor1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnAdvisor1IdChanging(value);
 					this.SendPropertyChanging();
 					this._Advisor1Id = value;
@@ -2980,11 +2910,95 @@ namespace ProStudCreator
 			{
 				if ((this._Advisor2Id != value))
 				{
+					if (this._Advisor2.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnAdvisor2IdChanging(value);
 					this.SendPropertyChanging();
 					this._Advisor2Id = value;
 					this.SendPropertyChanged("Advisor2Id");
 					this.OnAdvisor2IdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Mail")]
+		public string Advisor1Mail
+		{
+			get
+			{
+				return this._Advisor1Mail;
+			}
+			set
+			{
+				if ((this._Advisor1Mail != value))
+				{
+					this.OnAdvisor1MailChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor1Mail = value;
+					this.SendPropertyChanged("Advisor1Mail");
+					this.OnAdvisor1MailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Mail")]
+		public string Advisor2Mail
+		{
+			get
+			{
+				return this._Advisor2Mail;
+			}
+			set
+			{
+				if ((this._Advisor2Mail != value))
+				{
+					this.OnAdvisor2MailChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor2Mail = value;
+					this.SendPropertyChanged("Advisor2Mail");
+					this.OnAdvisor2MailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Name")]
+		public string Advisor1Name
+		{
+			get
+			{
+				return this._Advisor1Name;
+			}
+			set
+			{
+				if ((this._Advisor1Name != value))
+				{
+					this.OnAdvisor1NameChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor1Name = value;
+					this.SendPropertyChanged("Advisor1Name");
+					this.OnAdvisor1NameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Name")]
+		public string Advisor2Name
+		{
+			get
+			{
+				return this._Advisor2Name;
+			}
+			set
+			{
+				if ((this._Advisor2Name != value))
+				{
+					this.OnAdvisor2NameChanging(value);
+					this.SendPropertyChanging();
+					this._Advisor2Name = value;
+					this.SendPropertyChanged("Advisor2Name");
+					this.OnAdvisor2NameChanged();
 				}
 			}
 		}
@@ -3364,6 +3378,74 @@ namespace ProStudCreator
 						this._LogProjectTypeID = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("LogProjectType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Project", Storage="_Advisor1", ThisKey="Advisor1Id", OtherKey="Id", IsForeignKey=true)]
+		public UserDepartmentMap Advisor1
+		{
+			get
+			{
+				return this._Advisor1.Entity;
+			}
+			set
+			{
+				UserDepartmentMap previousValue = this._Advisor1.Entity;
+				if (((previousValue != value) 
+							|| (this._Advisor1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Advisor1.Entity = null;
+						previousValue.Projects.Remove(this);
+					}
+					this._Advisor1.Entity = value;
+					if ((value != null))
+					{
+						value.Projects.Add(this);
+						this._Advisor1Id = value.Id;
+					}
+					else
+					{
+						this._Advisor1Id = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Advisor1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Project1", Storage="_Advisor2", ThisKey="Advisor2Id", OtherKey="Id", IsForeignKey=true)]
+		public UserDepartmentMap Advisor2
+		{
+			get
+			{
+				return this._Advisor2.Entity;
+			}
+			set
+			{
+				UserDepartmentMap previousValue = this._Advisor2.Entity;
+				if (((previousValue != value) 
+							|| (this._Advisor2.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Advisor2.Entity = null;
+						previousValue.Projects1.Remove(this);
+					}
+					this._Advisor2.Entity = value;
+					if ((value != null))
+					{
+						value.Projects1.Add(this);
+						this._Advisor2Id = value.Id;
+					}
+					else
+					{
+						this._Advisor2Id = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Advisor2");
 				}
 			}
 		}
@@ -3935,7 +4017,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ROWGUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid ROWGUID
 		{
 			get
@@ -4222,13 +4304,15 @@ namespace ProStudCreator
 		
 		private bool _IsSupervisor;
 		
-		private bool _CanBeAdvisor1;
-		
 		private string _Name;
 		
 		private EntitySet<Task> _Tasks;
 		
 		private EntitySet<Task> _Tasks1;
+		
+		private EntitySet<Project> _Projects;
+		
+		private EntitySet<Project> _Projects1;
 		
 		private EntityRef<Department> _Department;
 		
@@ -4258,8 +4342,6 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnIsSupervisorChanging(bool value);
     partial void OnIsSupervisorChanged();
-    partial void OnCanBeAdvisor1Changing(bool value);
-    partial void OnCanBeAdvisor1Changed();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
     #endregion
@@ -4268,6 +4350,8 @@ namespace ProStudCreator
 		{
 			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
 			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
+			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
 			this._Department = default(EntityRef<Department>);
 			OnCreated();
 		}
@@ -4456,7 +4540,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="int", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="int", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -4492,26 +4576,6 @@ namespace ProStudCreator
 					this._IsSupervisor = value;
 					this.SendPropertyChanged("IsSupervisor");
 					this.OnIsSupervisorChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanBeAdvisor1", DbType="bit")]
-		public bool CanBeAdvisor1
-		{
-			get
-			{
-				return this._CanBeAdvisor1;
-			}
-			set
-			{
-				if ((this._CanBeAdvisor1 != value))
-				{
-					this.OnCanBeAdvisor1Changing(value);
-					this.SendPropertyChanging();
-					this._CanBeAdvisor1 = value;
-					this.SendPropertyChanged("CanBeAdvisor1");
-					this.OnCanBeAdvisor1Changed();
 				}
 			}
 		}
@@ -4559,6 +4623,32 @@ namespace ProStudCreator
 			set
 			{
 				this._Tasks1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Project", Storage="_Projects", ThisKey="Id", OtherKey="Advisor1Id")]
+		public EntitySet<Project> Projects
+		{
+			get
+			{
+				return this._Projects;
+			}
+			set
+			{
+				this._Projects.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Project1", Storage="_Projects1", ThisKey="Id", OtherKey="Advisor2Id")]
+		public EntitySet<Project> Projects1
+		{
+			get
+			{
+				return this._Projects1;
+			}
+			set
+			{
+				this._Projects1.Assign(value);
 			}
 		}
 		
@@ -4639,6 +4729,30 @@ namespace ProStudCreator
 			this.SendPropertyChanging();
 			entity.ResponsibleUser = null;
 		}
+		
+		private void attach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Advisor1 = this;
+		}
+		
+		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Advisor1 = null;
+		}
+		
+		private void attach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Advisor2 = this;
+		}
+		
+		private void detach_Projects1(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Advisor2 = null;
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TaskTypes")]
@@ -4684,7 +4798,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -4900,7 +5014,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -5067,7 +5181,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get

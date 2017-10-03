@@ -90,13 +90,13 @@ namespace ProStudCreator
                 id = i.Id,
                 advisorName = string.Concat(new[]
                 {
-                    i.Advisor1Name != ""
-                        ? "<a href=\"mailto:" + i.Advisor1Mail + "\">" +
-                          Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
+                    i.Advisor1 != null
+                        ? "<a href=\"mailto:" + i.Advisor1.Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor1.Name).Replace(" ", "&nbsp;") + "</a>"
                         : "?",
-                    i.Advisor2Name != ""
-                        ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" +
-                          Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
+                    i.Advisor2 != null
+                        ? "<br /><a href=\"mailto:" + i.Advisor2.Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
                         : ""
                 }),
                 projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,

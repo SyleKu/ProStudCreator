@@ -30,11 +30,36 @@ namespace ProStudCreator
                 //only run to create users
                 foreach (var project in db.Projects.Select(i => i))
                 {
-                    if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
+
+                    if (project.Advisor1Mail == "simon.felix@fhnw.ch" || project.Advisor2Mail == "simon.felix@fhnw.ch")
+                    {
+                        var a = 5;
+                    }
+
+                    if (project.Advisor1Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
                     {
                         db.UserDepartmentMap.InsertOnSubmit(
-                            new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name });
+                            new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name, CanSubmitAllProjects = true });
                     }
+
+                    if (project.Advisor2Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor2Mail))
+                    {
+                        db.UserDepartmentMap.InsertOnSubmit(
+                            new UserDepartmentMap() { Mail = project.Advisor2Mail, Name = project.Advisor2Name});
+                    }
+
+                    db.SubmitChanges();
+
+                    if (project.Advisor1 == null && !string.IsNullOrEmpty(project.Advisor1Mail))
+                    {
+                        project.Advisor1 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor1Mail);
+                    }
+
+                    if (project.Advisor2 == null && !string.IsNullOrEmpty(project.Advisor2Mail))
+                    {
+                        project.Advisor2 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor2Mail);
+                    }
+
                     db.SubmitChanges();
                 }
             }
@@ -58,9 +83,9 @@ namespace ProStudCreator
                             ProjectId = project.Id,
                             ResponsibleUser =
                                 db.UserDepartmentMap.Single(
-                                    p => p.Mail == (string.IsNullOrEmpty(project.Advisor1Mail)
-                                             ? project.Advisor2Mail
-                                             : project.Advisor1Mail)),
+                                    p => p.Mail == (!project.Advisor1Id.HasValue
+                                             ? project.Advisor2.Mail
+                                             : project.Advisor1.Mail)),
                             TaskType = db.TaskTypes.Single(t => t.GradesRegistered),
                             Supervisor =
                                 db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)

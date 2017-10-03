@@ -125,8 +125,8 @@ namespace ProStudCreator
             row.CreateCell(6).SetCellValue(p.PTwoTeamSize != null ? p.PTwoTeamSize.Export() : p.POneTeamSize.Export());
             row.CreateCell(7).SetCellValue("-"); // Major undefined
             row.CreateCell(8).SetCellValue(0); // Importance undefined
-            row.CreateCell(9).SetCellValue(p.Advisor1Mail);
-            row.CreateCell(10).SetCellValue(p.Advisor2Mail);
+            row.CreateCell(9).SetCellValue(p.Advisor1?.Mail ?? "");
+            row.CreateCell(10).SetCellValue(p.Advisor2?.Mail ?? "");
             row.CreateCell(11).SetCellValue(""); // Modules undefined
             row.CreateCell(12).SetCellValue(p.Reservation1Mail);
             row.CreateCell(13).SetCellValue(p.Reservation2Mail);
@@ -229,10 +229,10 @@ namespace ProStudCreator
                 cell4.SetCellValue(GetStudentGrade(p.LogGradeStudent2));
             }
             row.CreateCell(i++).SetCellValue(string.IsNullOrEmpty(p.Reservation1Mail) ? "Nein" : "Ja");
-            row.CreateCell(i++).SetCellValue(p.Advisor1Name ?? "");
-            row.CreateCell(i++).SetCellValue(p.Advisor1Mail ?? "");
-            row.CreateCell(i++).SetCellValue(p.Advisor2Name ?? "");
-            row.CreateCell(i++).SetCellValue(p.Advisor2Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor1?.Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor1?.Mail ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor2?.Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.Advisor2?.Mail ?? "");
             row.CreateCell(i++).SetCellValue(GetAbbreviationProject(p));
             row.CreateCell(i++).SetCellValue(p.LogProjectType?.ExportValue ?? "-");
             row.CreateCell(i++).SetCellValue(GetProjectDuration(p));
