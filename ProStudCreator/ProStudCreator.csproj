@@ -303,6 +303,7 @@
     <Compile Include="CheckAllTasks.aspx.designer.cs">
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CustomStaticDataSource.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

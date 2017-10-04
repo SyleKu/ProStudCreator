@@ -271,7 +271,7 @@ namespace ProStudCreator
             Response.Clear();
             Response.ContentType = "application/Excel";
             Response.AddHeader("content-disposition",
-                $"attachment; filename={SelectedSemester.SelectedItem.Text}_IP56_Informatikprojekte.xlsx");
+                $"attachment; filename={SelectedSemester.SelectedItem.Text.Replace(" ", "_")}_IP56_Informatikprojekte.xlsx");
             ExcelCreator.GenerateMarketingList(Response.OutputStream, projectsToExport, db,
                 SelectedSemester.SelectedItem.Text);
             Response.End();

@@ -11,6 +11,7 @@
             <li>Informiere die Studierenden über folgende Punkte beim Kickoff-Meeting:
                 <ul>
                     <li>Bitte kommuniziere, wie Du informiert werden möchtest (z.B. jede Woche ein kurzes Treffen).</li>
+                    <li>Terminplan besprechen (Abgabetermin, Ausstellung, Projektwoche, Präsentation/Verteidigung, z.B. Inhaltsverzeichnis der Doku nach einem Drittel, ...)</li>
                     <li>Ein Hinweis, dass auf diesem <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">Netzwerkshare (\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene)</a> Unterlagen zu finden sind.</li>
                     <li>Optional: <a href="Content/P5_P6_Guide_20160906.pdf" class="pdf">Guide von Marco Soldati für IP5 und IP6</a>, <a href="Content/Leitfaden_Berichte_4.01.pdf" class="pdf">Offizieller Leitfaden für Berichte</a>, <a href="Content/Vorlage_Bericht_2016.dot" class="doc">Offizielle Vorlage für Berichte</a></li>
                     <li>Besprich den Bewertungsbogen (Schritt #1) mit den Studierenden</li>

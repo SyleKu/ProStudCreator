@@ -4,9 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using iTextSharp.text;
+using NPOI.OpenXmlFormats.Vml;
 using ListItem = System.Web.UI.WebControls.ListItem;
 
 namespace ProStudCreator
@@ -328,6 +330,23 @@ namespace ProStudCreator
             Response.AddHeader("content-disposition", "attachment; filename=Informatikprojekte.xlsx");
             Response.BinaryWrite(bytesInStream);
             Response.End();
+        }
+
+        private void updateGridView()
+        {
+            if (filterText.Value=="")return;
+
+            var searchString =  filterText.Value;
+            projects = db.Projects.Select(i => i);
+            projects = db.Projects.Where(p => searchString == "" || p.LogStudent1Name.Contains(searchString) || p.LogStudent2Name.Contains(searchString))
+                .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
+            AllProjects.DataSource = projects
+                .Select(i => getProjectSingleElement(i));
+            AllProjects.DataBind();
+        }
+       protected void filterButton_Click(object sender, EventArgs e)
+        {
+            updateGridView();
         }
 
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)

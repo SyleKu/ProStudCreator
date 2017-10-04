@@ -187,6 +187,7 @@
     </div>
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="lblProjectAttachements" Font-Size="24px" Height="50px" Text="Projekt Artefakte"></asp:Label>
+        <button runat="server" class="btn" OnServerClick="downloadFiles_OnClick"><img src="Content/zip.png" style="height: 30px;" alt="download"/>  Download ZIP </button>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <asp:UpdatePanel runat="server" ID="updateProjectAttachements" UpdateMode="Conditional">
                 <ContentTemplate>
