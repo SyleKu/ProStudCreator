@@ -56,7 +56,7 @@ namespace ProStudCreator
                     else
                         CollapseAdminProjects((bool)Session["AdminProjectCollapsed"]);
 
-                    if(Session["ExcelExportCollapsed"] == null)
+                    if (Session["ExcelExportCollapsed"] == null)
                         CollapseExcelExport(false);
                     else
                         CollapseExcelExport((bool)Session["ExcelExportCollapsed"]);
@@ -73,6 +73,44 @@ namespace ProStudCreator
                 CheckProjects.DataBind();
                 //GVTasks.DataSource = AllTasks();
                 //GVTasks.DataBind();
+
+
+                foreach (var project in db.Projects.Select(i => i))
+                {
+                    if (project.Advisor1Mail != null && !db.UserDepartmentMap.Select(i => i.Mail)
+                            .Contains(project.Advisor1Mail))
+                    {
+                        db.UserDepartmentMap.InsertOnSubmit(
+                            new UserDepartmentMap()
+                            {
+                                Mail = project.Advisor1Mail,
+                                Name = project.Advisor1Name,
+                                CanSubmitAllProjects = true
+                            });
+                    }
+
+                    if (project.Advisor2Mail != null && !db.UserDepartmentMap.Select(i => i.Mail)
+                            .Contains(project.Advisor2Mail))
+                    {
+                        db.UserDepartmentMap.InsertOnSubmit(
+                            new UserDepartmentMap() { Mail = project.Advisor2Mail, Name = project.Advisor2Name });
+                    }
+
+                    db.SubmitChanges();
+
+                    if (project.Advisor1 == null && !string.IsNullOrEmpty(project.Advisor1Mail))
+                    {
+                        project.Advisor1 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor1Mail);
+                    }
+
+                    if (project.Advisor2 == null && !string.IsNullOrEmpty(project.Advisor2Mail))
+                    {
+                        project.Advisor2 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor2Mail);
+                    }
+
+                    db.SubmitChanges();
+                }
+
             }
             else
             {
