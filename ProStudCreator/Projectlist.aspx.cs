@@ -91,8 +91,8 @@ namespace ProStudCreator
                     if (dropSemester.SelectedValue == "allSemester")
                     {
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
-                                                           p.Advisor2Mail == ShibUser.GetEmail() ||
-                                                           p.Advisor1Mail == ShibUser.GetEmail()) &&
+                                                           p.Advisor2.Mail == ShibUser.GetEmail() ||
+                                                           p.Advisor1.Mail == ShibUser.GetEmail()) &&
                                                           p.State != ProjectState.Deleted)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
@@ -101,8 +101,8 @@ namespace ProStudCreator
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
                                                    Semester.NextSemester(db).Id;
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
-                                                           p.Advisor1Mail == ShibUser.GetEmail() ||
-                                                           p.Advisor2Mail == ShibUser.GetEmail())
+                                                           p.Advisor1.Mail == ShibUser.GetEmail() ||
+                                                           p.Advisor2.Mail == ShibUser.GetEmail())
                                                           && p.State != ProjectState.Deleted
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
                                                               p.State == ProjectState.Published ||
@@ -133,13 +133,13 @@ namespace ProStudCreator
                 id = i.Id,
                 advisorName = string.Concat(new[]
                 {
-                    i.Advisor1Name != ""
-                        ? "<a href=\"mailto:" + i.Advisor1Mail + "\">" +
-                          Server.HtmlEncode(i.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
+                    i.Advisor1 != null
+                        ? "<a href=\"mailto:" + i.Advisor1.Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor1.Name).Replace(" ", "&nbsp;") + "</a>"
                         : "?",
-                    i.Advisor2Name != ""
-                        ? "<br /><a href=\"mailto:" + i.Advisor2Mail + "\">" +
-                          Server.HtmlEncode(i.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
+                    i.Advisor2 != null
+                        ? "<br /><a href=\"mailto:" + i.Advisor2.Mail + "\">" +
+                          Server.HtmlEncode(i.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
                         : ""
                 }),
                 projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,

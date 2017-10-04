@@ -128,10 +128,10 @@ namespace ProStudCreator
 
             //  Row 1
             projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
-            if (proj.Advisor1Name != "")
-                projectTable.AddCell(new Anchor(proj.Advisor1Name, fontRegularLink)
+            if (proj.Advisor1 != null)
+                projectTable.AddCell(new Anchor(proj.Advisor1.Name, fontRegularLink)
                 {
-                    Reference = "mailto:" + proj.Advisor1Mail
+                    Reference = "mailto:" + proj.Advisor1.Mail
                 });
             else
                 projectTable.AddCell(new Paragraph("?", fontRegular));
@@ -141,12 +141,12 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
 
             // Row 2
-            if (proj.Advisor2Name != "")
+            if (proj.Advisor2 != null)
             {
                 projectTable.AddCell("");
-                projectTable.AddCell(new Anchor(proj.Advisor2Name, fontRegularLink)
+                projectTable.AddCell(new Anchor(proj.Advisor2.Name, fontRegularLink)
                 {
-                    Reference = "mailto:" + proj.Advisor2Mail
+                    Reference = "mailto:" + proj.Advisor2.Mail
                 });
             }
             else if (proj.ClientCompany != "")
@@ -165,7 +165,7 @@ namespace ProStudCreator
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
             // Row 3
-            if (proj.ClientCompany != "" && proj.Advisor2Name != "")
+            if (proj.ClientCompany != "" && proj.Advisor2 != null)
             {
                 projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));

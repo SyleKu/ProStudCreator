@@ -187,7 +187,7 @@ namespace ProStudCreator
         public static bool UserIsOwner(this Project _p)
         {
             return _p.Creator == ShibUser.GetEmail() || _p.ClientMail == ShibUser.GetEmail() ||
-                   _p.Advisor1Mail == ShibUser.GetEmail() || _p.Advisor2Mail == ShibUser.GetEmail();
+                   _p.Advisor1?.Mail == ShibUser.GetEmail() || _p.Advisor2?.Mail == ShibUser.GetEmail();
         }
 
         public static bool UserCanEditAfterStart(this Project _p)
