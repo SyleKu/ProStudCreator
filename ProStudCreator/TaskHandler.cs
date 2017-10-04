@@ -30,12 +30,6 @@ namespace ProStudCreator
                 //only run to create users
                 foreach (var project in db.Projects.Select(i => i))
                 {
-
-                    if (project.Advisor1Mail == "simon.felix@fhnw.ch" || project.Advisor2Mail == "simon.felix@fhnw.ch")
-                    {
-                        var a = 5;
-                    }
-
                     if (project.Advisor1Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
                     {
                         db.UserDepartmentMap.InsertOnSubmit(
