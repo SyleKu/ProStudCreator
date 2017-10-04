@@ -85,7 +85,8 @@ namespace ProStudCreator
                             {
                                 Mail = project.Advisor1Mail,
                                 Name = project.Advisor1Name,
-                                CanSubmitAllProjects = true
+                                CanSubmitAllProjects = true,
+                                Department = project.Department
                             });
                     }
 
@@ -93,7 +94,9 @@ namespace ProStudCreator
                             .Contains(project.Advisor2Mail))
                     {
                         db.UserDepartmentMap.InsertOnSubmit(
-                            new UserDepartmentMap() { Mail = project.Advisor2Mail, Name = project.Advisor2Name });
+                            new UserDepartmentMap() { Mail = project.Advisor2Mail, Name = project.Advisor2Name,
+                                Department = project.Department
+                            });
                     }
 
                     db.SubmitChanges();
