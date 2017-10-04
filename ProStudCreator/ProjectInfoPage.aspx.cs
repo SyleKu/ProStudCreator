@@ -76,13 +76,13 @@ namespace ProStudCreator
                 : "";
 
             //Set the Advisor
-            Advisor1Name.Text = !string.IsNullOrEmpty(project.Advisor1Name)
-                ? "<a href=\"mailto:" + project.Advisor1Mail + "\">" +
-                  Server.HtmlEncode(project.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
+            Advisor1Name.Text = project.Advisor1 != null
+                ? "<a href=\"mailto:" + project.Advisor1.Mail + "\">" +
+                  Server.HtmlEncode(project.Advisor1.Name).Replace(" ", "&nbsp;") + "</a>"
                 : "?";
-            Advisor2Name.Text = !string.IsNullOrEmpty(project.Advisor2Name)
-                ? "<a href=\"mailto:" + project.Advisor2Mail + "\">" +
-                  Server.HtmlEncode(project.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
+            Advisor2Name.Text = project.Advisor2 != null
+                ? "<a href=\"mailto:" + project.Advisor2.Mail + "\">" +
+                  Server.HtmlEncode(project.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
 
@@ -212,8 +212,8 @@ namespace ProStudCreator
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
 
-            divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1Mail ||
-                                      ShibUser.GetEmail() == project.Advisor2Mail || ShibUser.CanEditAllProjects();
+            divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1?.Mail ||
+                                      ShibUser.GetEmail() == project.Advisor2?.Mail || ShibUser.CanEditAllProjects();
         }
 
         private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
@@ -551,7 +551,7 @@ namespace ProStudCreator
             var project =
                 db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).ProjectId);
 
-            if (!(ShibUser.GetEmail() == project.Advisor1Mail || ShibUser.GetEmail() == project.Advisor2Mail || !ShibUser.CanEditAllProjects()))
+            if (!(ShibUser.GetEmail() == project.Advisor1?.Mail || ShibUser.GetEmail() == project.Advisor2?.Mail || !ShibUser.CanEditAllProjects()))
                e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
             
 
