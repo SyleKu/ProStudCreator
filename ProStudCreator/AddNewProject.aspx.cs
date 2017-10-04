@@ -153,7 +153,7 @@ namespace ProStudCreator
 
         private void FillDropAdvisors()
         {
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanSubmitAllProjects);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
@@ -180,7 +180,7 @@ namespace ProStudCreator
             AddPictureLabel.Text = "Bild ändern:";
 
             ProjectName.Text = project.Name;
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanSubmitAllProjects);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedValue = project.Advisor1Id?.ToString() ?? "ImpossibleValue";

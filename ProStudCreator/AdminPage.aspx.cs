@@ -85,7 +85,7 @@ namespace ProStudCreator
                             {
                                 Mail = project.Advisor1Mail,
                                 Name = project.Advisor1Name,
-                                CanSubmitAllProjects = true,
+                                CanBeAdvisor1 = true,
                                 Department = project.Department
                             });
                     }

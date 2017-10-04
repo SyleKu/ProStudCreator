@@ -33,7 +33,7 @@ namespace ProStudCreator
                             if (project.Advisor1Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
                             {
                                 db.UserDepartmentMap.InsertOnSubmit(
-                                    new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name, CanSubmitAllProjects = true });
+                                    new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name, CanBeAdvisor1 = true });
                             }
 
                             if (project.Advisor2Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor2Mail))
@@ -82,7 +82,7 @@ namespace ProStudCreator
                                                      : project.Advisor1.Mail)),
                                     TaskType = db.TaskTypes.Single(t => t.GradesRegistered),
                                     Supervisor =
-                                        db.UserDepartmentMap.Single(i => i.CanSubmitAllProjects && i.Department == project.Department)
+                                        db.UserDepartmentMap.Single(i => i.isSupervisor && i.Department == project.Department)
                                 });
                             }
                         }

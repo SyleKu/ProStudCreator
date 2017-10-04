@@ -4304,6 +4304,10 @@ namespace ProStudCreator
 		
 		private string _Name;
 		
+		private bool _CanBeAdvisor1;
+		
+		private bool _IsSupervisor;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -4340,6 +4344,10 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnCanBeAdvisor1Changing(bool value);
+    partial void OnCanBeAdvisor1Changed();
+    partial void OnIsSupervisorChanging(bool value);
+    partial void OnIsSupervisorChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4572,6 +4580,46 @@ namespace ProStudCreator
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanBeAdvisor1")]
+		public bool CanBeAdvisor1
+		{
+			get
+			{
+				return this._CanBeAdvisor1;
+			}
+			set
+			{
+				if ((this._CanBeAdvisor1 != value))
+				{
+					this.OnCanBeAdvisor1Changing(value);
+					this.SendPropertyChanging();
+					this._CanBeAdvisor1 = value;
+					this.SendPropertyChanged("CanBeAdvisor1");
+					this.OnCanBeAdvisor1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor")]
+		public bool IsSupervisor
+		{
+			get
+			{
+				return this._IsSupervisor;
+			}
+			set
+			{
+				if ((this._IsSupervisor != value))
+				{
+					this.OnIsSupervisorChanging(value);
+					this.SendPropertyChanging();
+					this._IsSupervisor = value;
+					this.SendPropertyChanged("IsSupervisor");
+					this.OnIsSupervisorChanged();
 				}
 			}
 		}
