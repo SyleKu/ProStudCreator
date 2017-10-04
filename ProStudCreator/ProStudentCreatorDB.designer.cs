@@ -4302,17 +4302,15 @@ namespace ProStudCreator
 		
 		private int _Id;
 		
-		private bool _IsSupervisor;
-		
 		private string _Name;
-		
-		private EntitySet<Task> _Tasks;
-		
-		private EntitySet<Task> _Tasks1;
 		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
+		
+		private EntitySet<Task> _Tasks;
+		
+		private EntitySet<Task> _Tasks1;
 		
 		private EntityRef<Department> _Department;
 		
@@ -4340,18 +4338,16 @@ namespace ProStudCreator
     partial void OnCanSeeCreationDetailsChanged();
     partial void OnIdChanging(int value);
     partial void OnIdChanged();
-    partial void OnIsSupervisorChanging(bool value);
-    partial void OnIsSupervisorChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
     #endregion
 		
 		public UserDepartmentMap()
 		{
-			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
-			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
 			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
+			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
 			this._Department = default(EntityRef<Department>);
 			OnCreated();
 		}
@@ -4560,26 +4556,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor", DbType="bit")]
-		public bool IsSupervisor
-		{
-			get
-			{
-				return this._IsSupervisor;
-			}
-			set
-			{
-				if ((this._IsSupervisor != value))
-				{
-					this.OnIsSupervisorChanging(value);
-					this.SendPropertyChanging();
-					this._IsSupervisor = value;
-					this.SendPropertyChanged("IsSupervisor");
-					this.OnIsSupervisorChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="varchar(50)")]
 		public string Name
 		{
@@ -4597,32 +4573,6 @@ namespace ProStudCreator
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
 				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_Tasks", ThisKey="Id", OtherKey="SupervisorId")]
-		public EntitySet<Task> Tasks
-		{
-			get
-			{
-				return this._Tasks;
-			}
-			set
-			{
-				this._Tasks.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_Tasks1", ThisKey="Id", OtherKey="ResponsibleUserId")]
-		public EntitySet<Task> Tasks1
-		{
-			get
-			{
-				return this._Tasks1;
-			}
-			set
-			{
-				this._Tasks1.Assign(value);
 			}
 		}
 		
@@ -4649,6 +4599,32 @@ namespace ProStudCreator
 			set
 			{
 				this._Projects1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_Tasks", ThisKey="Id", OtherKey="SupervisorId")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_Tasks1", ThisKey="Id", OtherKey="ResponsibleUserId")]
+		public EntitySet<Task> Tasks1
+		{
+			get
+			{
+				return this._Tasks1;
+			}
+			set
+			{
+				this._Tasks1.Assign(value);
 			}
 		}
 		
@@ -4706,30 +4682,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		private void attach_Tasks(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.Supervisor = this;
-		}
-		
-		private void detach_Tasks(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.Supervisor = null;
-		}
-		
-		private void attach_Tasks1(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.ResponsibleUser = this;
-		}
-		
-		private void detach_Tasks1(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.ResponsibleUser = null;
-		}
-		
 		private void attach_Projects(Project entity)
 		{
 			this.SendPropertyChanging();
@@ -4752,6 +4704,30 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.Advisor2 = null;
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = this;
+		}
+		
+		private void detach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = null;
+		}
+		
+		private void attach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.ResponsibleUser = this;
+		}
+		
+		private void detach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.ResponsibleUser = null;
 		}
 	}
 	
