@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using iTextSharp.text;
 using NPOI.OpenXmlFormats.Vml;
@@ -32,7 +33,7 @@ namespace ProStudCreator
         protected GridView CheckProjects;
         private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         protected Button NewProject;
-
+        
         // SR test
         private IQueryable<Project> projects;
         //~SR test
@@ -196,23 +197,34 @@ namespace ProStudCreator
                 {
                     if (!ShibUser.CanEditAllProjects())
                     {
-                        e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
-                        e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                        e.Row.Cells[e.Row.Cells.Count - 4].Visible = false; //edit
+                        e.Row.Cells[e.Row.Cells.Count - 2].Visible = false; //delete
                     }
                 }
                 else if (!project.UserCanEdit())
                 {
-                    e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
-                    e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                    e.Row.Cells[e.Row.Cells.Count - 4].Visible = false; //edit
+                    e.Row.Cells[e.Row.Cells.Count - 2].Visible = false; //delete
                 }
 
                 Color? col = null;
                 if (project.State == ProjectState.Published)
+                {
                     col = ColorTranslator.FromHtml("#A9F5A9");
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
+                }
+                    
+
                 else if (project.State == ProjectState.Rejected)
+                {
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#F5A9A9");
+                }
                 else if (project.State == ProjectState.Submitted)
+                {
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#ffcc99");
+                }
                 if (col.HasValue)
                     foreach (TableCell cell in e.Row.Cells)
                         cell.BackColor = col.Value;
@@ -349,6 +361,117 @@ namespace ProStudCreator
             updateGridView();
         }
 
+        private bool[] getProjectTypeBools(Project project)
+        {
+            bool[] projectType = new bool[8];
+            if (project.TypeDesignUX)
+            {
+                projectType[0] = true;
+            }
+            if (project.TypeHW)
+            {
+                projectType[1] = true;
+            }
+            if (project.TypeCGIP)
+            {
+                projectType[2] = true;
+            }
+            if (project.TypeMathAlg)
+            {
+                projectType[3] = true;
+            }
+            if (project.TypeAppWeb)
+            {
+                projectType[4] = true;
+            }
+            if (project.TypeDBBigData)
+            {
+               projectType[5] = true;
+            }
+            if (project.TypeSysSec)
+            {
+               projectType[6] = true;
+            }
+            if (project.TypeSE)
+            {
+               projectType[7] = true;
+            }
+            return projectType;
+        }
+        private string generateValidationMessage(Project project)
+        {
+            var projectType = getProjectTypeBools(project);
+            if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+                return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+            if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+                return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+
+            if ((!project.Advisor1?.Name.IsValidName()) ?? true)
+                return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
+            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
+                return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
+            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
+                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
+                return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
+            if (project.Advisor2 == null && project.Advisor2.Mail != "")
+                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+
+            var numAssignedTypes = projectType.Count(a => a);
+            if (numAssignedTypes != 1 && numAssignedTypes != 2)
+                return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+            /*
+            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
+            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
+                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";*/
+
+            if (project.OverOnePage)
+                return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
+
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
+                return "Nur Hauptbetreuer können Projekte einreichen.";
+
+            if (project.Reservation1Mail != "" && project.Reservation1Name == "")
+                return
+                    "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+                return
+                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+
+            if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            return null;
+        }
+        protected void einreichenButton_Click(object sender, EventArgs e)
+        {
+            HtmlAnchor htmlAnchor = (HtmlAnchor) sender;
+            int id = int.Parse(htmlAnchor.Attributes["projectId"]);
+            Project project = db.Projects.Single(p => p.Id == id);
+            var validationMessage = generateValidationMessage(project);
+            if (validationMessage != null)
+            {
+                var sb = new StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(validationMessage);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(GetType(), "alert", sb.ToString());
+            }
+            else
+            {
+                project.Submit();
+                db.SubmitChanges();
+                Response.Redirect("projectlist");
+            }
+
+        }
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
             //AllProjects.DataSource =
