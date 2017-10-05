@@ -9,6 +9,7 @@ using System.Web.Caching;
 using System.Web.Optimization;
 using System.Web.Routing;
 using iTextSharp.text.io;
+using NPOI.Util;
 
 namespace ProStudCreator
 {
@@ -16,7 +17,7 @@ namespace ProStudCreator
     {
 
         private const string DummyCacheItemKey = "DummyCacheItem";
-        private string DummyPage = "CheckAllTasks.aspx";
+        private string DummyPage = "CheckAllTasks";
 
         private void Application_Start(object sender, EventArgs e)
         {
@@ -28,15 +29,15 @@ namespace ProStudCreator
 
             Application.Add("dummyRequest", "");
 
-            //TaskHandler.CheckAllTasks();
+            TaskHandler.CheckAllTasks();
         }
 
 
         private void RegisterChacheEntry()
         {
             if (null != HttpContext.Current.Cache[DummyCacheItemKey]) return;
-            HttpContext.Current.Cache.Add(DummyCacheItemKey, "DummyTest", null,
-                DateTime.MaxValue, TimeSpan.FromMinutes(1),
+            HttpContext.Current.Cache.Add(DateTime.Now.ToString(), "DummyTest", null,
+                DateTime.MaxValue, TimeSpan.FromHours(3),
                 CacheItemPriority.Normal,
                 new CacheItemRemovedCallback(CacheItemRemovedCallback));
         }
@@ -54,7 +55,9 @@ namespace ProStudCreator
         private void HitPage()
         {
             var client = new WebClient();
-            client.DownloadData(Application.Get("dummyRequest").ToString());
+
+            client.DownloadData("http://localhost:80/prostud/" + DummyPage);
+            //client.DownloadData(Application.Get("dummyRequest").ToString());
         }
 
 
@@ -80,7 +83,7 @@ namespace ProStudCreator
 
         private void CheckAllTasks() //checks for open tasks And generate Emails to remind users of their open Tasks
         {
-            //TaskHandler.CheckAllTasks();
+            TaskHandler.CheckAllTasks();
         }
     }
 }
