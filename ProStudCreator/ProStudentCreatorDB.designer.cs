@@ -1329,14 +1329,6 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _Advisor2Id;
 		
-		private string _Advisor1Mail;
-		
-		private string _Advisor2Mail;
-		
-		private string _Advisor1Name;
-		
-		private string _Advisor2Name;
-		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1505,14 +1497,6 @@ namespace ProStudCreator
     partial void OnAdvisor1IdChanged();
     partial void OnAdvisor2IdChanging(System.Nullable<int> value);
     partial void OnAdvisor2IdChanged();
-    partial void OnAdvisor1MailChanging(string value);
-    partial void OnAdvisor1MailChanged();
-    partial void OnAdvisor2MailChanging(string value);
-    partial void OnAdvisor2MailChanged();
-    partial void OnAdvisor1NameChanging(string value);
-    partial void OnAdvisor1NameChanged();
-    partial void OnAdvisor2NameChanging(string value);
-    partial void OnAdvisor2NameChanged();
     #endregion
 		
 		public Project()
@@ -2919,86 +2903,6 @@ namespace ProStudCreator
 					this._Advisor2Id = value;
 					this.SendPropertyChanged("Advisor2Id");
 					this.OnAdvisor2IdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Mail")]
-		public string Advisor1Mail
-		{
-			get
-			{
-				return this._Advisor1Mail;
-			}
-			set
-			{
-				if ((this._Advisor1Mail != value))
-				{
-					this.OnAdvisor1MailChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor1Mail = value;
-					this.SendPropertyChanged("Advisor1Mail");
-					this.OnAdvisor1MailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Mail")]
-		public string Advisor2Mail
-		{
-			get
-			{
-				return this._Advisor2Mail;
-			}
-			set
-			{
-				if ((this._Advisor2Mail != value))
-				{
-					this.OnAdvisor2MailChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor2Mail = value;
-					this.SendPropertyChanged("Advisor2Mail");
-					this.OnAdvisor2MailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Name")]
-		public string Advisor1Name
-		{
-			get
-			{
-				return this._Advisor1Name;
-			}
-			set
-			{
-				if ((this._Advisor1Name != value))
-				{
-					this.OnAdvisor1NameChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor1Name = value;
-					this.SendPropertyChanged("Advisor1Name");
-					this.OnAdvisor1NameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Name")]
-		public string Advisor2Name
-		{
-			get
-			{
-				return this._Advisor2Name;
-			}
-			set
-			{
-				if ((this._Advisor2Name != value))
-				{
-					this.OnAdvisor2NameChanging(value);
-					this.SendPropertyChanging();
-					this._Advisor2Name = value;
-					this.SendPropertyChanged("Advisor2Name");
-					this.OnAdvisor2NameChanged();
 				}
 			}
 		}

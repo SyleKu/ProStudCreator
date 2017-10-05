@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -37,7 +38,7 @@ namespace ProStudCreator
         {
             if (null != HttpContext.Current.Cache[DummyCacheItemKey]) return;
             HttpContext.Current.Cache.Add(DateTime.Now.ToString(), "DummyTest", null,
-                DateTime.MaxValue, TimeSpan.FromHours(3),
+                DateTime.MaxValue, TimeSpan.FromMilliseconds(10000),
                 CacheItemPriority.Normal,
                 new CacheItemRemovedCallback(CacheItemRemovedCallback));
         }
@@ -56,8 +57,12 @@ namespace ProStudCreator
         {
             var client = new WebClient();
 
-            client.DownloadData("http://localhost:80/prostud/" + DummyPage);
-            //client.DownloadData(Application.Get("dummyRequest").ToString());
+#if DEBUG
+            client.DownloadData(Application.Get("dummyRequest").ToString());
+#else
+
+            client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
+#endif
         }
 
 

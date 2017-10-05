@@ -121,10 +121,6 @@
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Column Name="Advisor1Id" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="Advisor2Id" Type="System.Int32" DbType="int" CanBeNull="true" />
-      <Column Name="Advisor1Mail" Type="System.String" CanBeNull="true" />
-      <Column Name="Advisor2Mail" Type="System.String" CanBeNull="true" />
-      <Column Name="Advisor1Name" Type="System.String" CanBeNull="true" />
-      <Column Name="Advisor2Name" Type="System.String" CanBeNull="true" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />
