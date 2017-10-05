@@ -217,7 +217,6 @@ namespace ProStudCreator
 
                 else if (project.State == ProjectState.Rejected)
                 {
-                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#F5A9A9");
                 }
                 else if (project.State == ProjectState.Submitted)

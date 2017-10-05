@@ -303,7 +303,6 @@ namespace ProStudCreator
                     break;
                 case ProjectState.Rejected:
                     col = ColorTranslator.FromHtml("#F5A9A9");
-                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     break;
                 case ProjectState.Submitted:
                     col = ColorTranslator.FromHtml("#ffcc99");
