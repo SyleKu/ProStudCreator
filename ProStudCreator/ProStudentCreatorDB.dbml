@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="aspnet-ProStudCreator-20140818043155" Class="ProStudentCreatorDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=FLAVIOLAPTOP;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=FlavioLaptop;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -190,12 +190,13 @@
       <Column Name="CanSubmitAllProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CanSeeCreationDetails" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Id" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="IsSupervisor" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="varchar(50)" CanBeNull="true" />
-      <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="SupervisorId" Type="Task" />
-      <Association Name="UserDepartmentMap_Task1" Member="Tasks1" ThisKey="Id" OtherKey="ResponsibleUserId" Type="Task" />
+      <Column Name="CanBeAdvisor1" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="IsSupervisor" Type="System.Boolean" CanBeNull="false" />
       <Association Name="UserDepartmentMap_Project" Member="Projects" ThisKey="Id" OtherKey="Advisor1Id" Type="Project" />
       <Association Name="UserDepartmentMap_Project1" Member="Projects1" ThisKey="Id" OtherKey="Advisor2Id" Type="Project" />
+      <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="SupervisorId" Type="Task" />
+      <Association Name="UserDepartmentMap_Task1" Member="Tasks1" ThisKey="Id" OtherKey="ResponsibleUserId" Type="Task" />
       <Association Name="Department_UserDepartmentMap" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
     </Type>
   </Table>

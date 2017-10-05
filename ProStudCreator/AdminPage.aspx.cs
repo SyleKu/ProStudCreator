@@ -56,7 +56,7 @@ namespace ProStudCreator
                     else
                         CollapseAdminProjects((bool)Session["AdminProjectCollapsed"]);
 
-                    if(Session["ExcelExportCollapsed"] == null)
+                    if (Session["ExcelExportCollapsed"] == null)
                         CollapseExcelExport(false);
                     else
                         CollapseExcelExport((bool)Session["ExcelExportCollapsed"]);
@@ -73,6 +73,7 @@ namespace ProStudCreator
                 CheckProjects.DataBind();
                 //GVTasks.DataSource = AllTasks();
                 //GVTasks.DataBind();
+
             }
             else
             {
