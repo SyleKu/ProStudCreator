@@ -598,10 +598,10 @@ namespace ProStudCreator
 #if !DEBUG // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
-            if(project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
-                mailMessage.To.Add(project.Advisor1Mail);
-            if(project.Advisor2Mail!=null && project.Advisor2Mail.IsValidEmail() && project.Advisor2Mail!=project.Creator)
-                mailMessage.To.Add(project.Advisor2Mail);
+            if(project.Advisor1?.Mail!=null && project.Advisor1.Mail.IsValidEmail() && project.Advisor1.Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor1.Mail);
+            if(project.Advisor2?.Mail!=null && project.Advisor2.Mail.IsValidEmail() && project.Advisor2.Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor2.Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
             mailMessage.Subject = $"Projekt '{project.Name}' veröffentlicht";
             mailMessage.Body = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} veröffentlicht.\n"
@@ -641,10 +641,10 @@ namespace ProStudCreator
 #if !DEBUG
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
-            if (project.Advisor1Mail!=null && project.Advisor1Mail.IsValidEmail() && project.Advisor1Mail!=project.Creator)
-                mailMessage.To.Add(project.Advisor1Mail);
-            if (project.Advisor2Mail!=null && project.Advisor2Mail.IsValidEmail() && project.Creator!=project.Advisor2Mail)
-                mailMessage.To.Add(project.Advisor2Mail);
+            if (project.Advisor1?.Mail!=null && project.Advisor1.Mail.IsValidEmail() && project.Advisor1.Mail!=project.Creator)
+                mailMessage.To.Add(project.Advisor1.Mail);
+            if (project.Advisor2?.Mail!=null && project.Advisor2.Mail.IsValidEmail() && project.Creator!=project.Advisor2.Mail)
+                mailMessage.To.Add(project.Advisor2.Mail);
             mailMessage.From = new MailAddress(ShibUser.GetEmail());
             mailMessage.CC.Add(ShibUser.GetEmail());
             mailMessage.Subject = $"Projekt '{project.Name}' abgelehnt";

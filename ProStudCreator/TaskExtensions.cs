@@ -5,23 +5,8 @@ using System.Web;
 
 namespace ProStudCreator
 {
-    public static class TaskExtensions
+    public partial class Task
     {
-        private static bool addedToList = false;
-
-        public static void AddToList(this Task _t)
-        {
-            addedToList = true;
-        }
-
-        public static void RemoveFromList(this Task _t)
-        {
-            addedToList = false;
-        }
-
-        public static bool isAddedToList(this Task _t)
-        {
-            return addedToList;
-        }
+        public bool AlreadyChecked { get; set; } = false;
     }
 }
