@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using AjaxControlToolkit;
-using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Zip;
-
 
 namespace ProStudCreator
 {
@@ -44,7 +38,8 @@ namespace ProStudCreator
                 Response.End();
             }
 
-            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
+                .Select(i => getProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
             if (Page.IsPostBack)
@@ -76,13 +71,13 @@ namespace ProStudCreator
                 : "";
 
             //Set the Advisor
-            Advisor1Name.Text = project.Advisor1 != null
-                ? "<a href=\"mailto:" + project.Advisor1.Mail + "\">" +
-                  Server.HtmlEncode(project.Advisor1.Name).Replace(" ", "&nbsp;") + "</a>"
+            Advisor1Name.Text = !string.IsNullOrEmpty(project.Advisor1Name)
+                ? "<a href=\"mailto:" + project.Advisor1Mail + "\">" +
+                  Server.HtmlEncode(project.Advisor1Name).Replace(" ", "&nbsp;") + "</a>"
                 : "?";
-            Advisor2Name.Text = project.Advisor2 != null
-                ? "<a href=\"mailto:" + project.Advisor2.Mail + "\">" +
-                  Server.HtmlEncode(project.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
+            Advisor2Name.Text = !string.IsNullOrEmpty(project.Advisor2Name)
+                ? "<a href=\"mailto:" + project.Advisor2Mail + "\">" +
+                  Server.HtmlEncode(project.Advisor2Name).Replace(" ", "&nbsp;") + "</a>"
                 : "";
 
 
@@ -212,26 +207,24 @@ namespace ProStudCreator
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
 
-            divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1?.Mail ||
-                                      ShibUser.GetEmail() == project.Advisor2?.Mail || ShibUser.CanEditAllProjects();
+            divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1Mail ||
+                                    ShibUser.GetEmail() == project.Advisor2Mail || ShibUser.CanEditAllProjects();
         }
 
         private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
         {
-            return new ProjectSingleAttachment()
+            return new ProjectSingleAttachment
             {
                 Guid = attach.ROWGUID,
                 ProjectId = attach.ProjectId,
                 Name = attach.FileName,
                 Size = FixupSize((long)(attach.UploadSize ?? 0)),
                 FileType = getFileTypeImgPath(attach.FileName)
-
             };
         }
 
         private string getFileTypeImgPath(string filename)
         {
-
             switch (filename.Split('.').Last())
             {
                 case "pdf":
@@ -260,11 +253,11 @@ namespace ProStudCreator
             if (size < 1024) //bytes
                 return size + " B";
             if (size / 1024 < 1024) //kilobytes
-                return (size / 1024) + " KB";
+                return size / 1024 + " KB";
             if (size / (1024 * 1024) < 1024)
-                return (size / (1024 * 1024)) + " MB";
+                return size / (1024 * 1024) + " MB";
 
-            return Math.Round((float)size / ((float)1024 * 1024 * 1024), 2) + " GB";
+            return Math.Round(size / ((float)1024 * 1024 * 1024), 2) + " GB";
         }
 
 
@@ -306,7 +299,8 @@ namespace ProStudCreator
             }
 
 
-            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") + (project?.LogDefenceRoom != null ? ", Raum: " +project?.LogDefenceRoom : "");
+            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") +
+                                          (project?.LogDefenceRoom != null ? ", Raum: " + project?.LogDefenceRoom : "");
         }
 
         private void ReturnAlert(string message)
@@ -459,8 +453,9 @@ namespace ProStudCreator
             if (db.Attachements.Any(
                 a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
             {
-
-                SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted), e.GetStreamContents());
+                SaveFileInDb(
+                    db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] &&
+                                                a.FileName == e.FileName && !a.Deleted), e.GetStreamContents());
             }
             else
             {
@@ -468,14 +463,12 @@ namespace ProStudCreator
                 SaveFileInDb(attachement, e.GetStreamContents());
 
                 e.GetStreamContents().Close();
-               
             }
 
 
             var di = new DirectoryInfo(Path.GetTempPath() + "_AjaxFileUpload");
 
             foreach (var dir in di.GetDirectories())
-            {
                 try
                 {
                     dir.Delete(true);
@@ -484,13 +477,10 @@ namespace ProStudCreator
                 {
                     // ignored
                 }
-            }
-
         }
 
         private Attachements CreateNewAttach(long fileSize, string fileName)
         {
-
             var attach = new Attachements
             {
                 ProjectId = int.Parse(Request.QueryString["id"]),
@@ -504,7 +494,6 @@ namespace ProStudCreator
             db.SubmitChanges();
 
             return attach;
-
         }
 
 
@@ -551,17 +540,18 @@ namespace ProStudCreator
             var project =
                 db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).ProjectId);
 
-            if (!(ShibUser.GetEmail() == project.Advisor1?.Mail || ShibUser.GetEmail() == project.Advisor2?.Mail || !ShibUser.CanEditAllProjects()))
-               e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
-            
+            if (!(ShibUser.GetEmail() == project.Advisor1Mail || ShibUser.GetEmail() == project.Advisor2Mail ||
+                  !ShibUser.CanEditAllProjects()))
+                e.Row.Cells[e.Row.Cells.Count - 1].Visible = false;
 
 
             try
             {
-                e.Row.Attributes.Add("onmouseover", "this.style.backgroundColor='#cecece'; this.style.color='Black'; this.style.cursor='pointer'");
+                e.Row.Attributes.Add("onmouseover",
+                    "this.style.backgroundColor='#cecece'; this.style.color='Black'; this.style.cursor='pointer'");
                 e.Row.Attributes.Add("onmouseout", "this.style.color='Black';this.style.backgroundColor='#FFFFFF';");
-                e.Row.Attributes.Add("onclick", Page.ClientScript.GetPostBackEventReference(gridProjectAttachs, "Select$" + e.Row.RowIndex.ToString()));
-
+                e.Row.Attributes.Add("onclick",
+                    Page.ClientScript.GetPostBackEventReference(gridProjectAttachs, "Select$" + e.Row.RowIndex));
             }
             catch
             {
@@ -580,16 +570,16 @@ namespace ProStudCreator
             db.SubmitChanges();
 
 
-            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).Select(i => getProjectSingleAttachment(i));
+            gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
+                .Select(i => getProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
             updateProjectAttachements.Update();
-
         }
 
         protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            Response.Redirect("ProjectFilesDownload?guid=" + ((Guid)gridProjectAttachs.SelectedValue));
+            Response.Redirect("ProjectFilesDownload?guid=" + (Guid)gridProjectAttachs.SelectedValue);
         }
 
         private enum ProjectTypes
