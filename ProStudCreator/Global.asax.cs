@@ -56,13 +56,21 @@ namespace ProStudCreator
         private void HitPage()
         {
             var client = new WebClient();
-
+            try
+            {
 #if DEBUG
-            client.DownloadData(Application.Get("dummyRequest").ToString());
+                client.DownloadData(Application.Get("dummyRequest").ToString());
 #else
 
             client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
 #endif
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
+            }
+
+
         }
 
 
