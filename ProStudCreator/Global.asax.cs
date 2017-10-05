@@ -30,23 +30,27 @@ namespace ProStudCreator
 
             Application.Add("dummyRequest", "");
 
-            TaskHandler.CheckAllTasks();
+            //TaskHandler.CheckAllTasks();
+
         }
 
 
         private void RegisterChacheEntry()
         {
             if (null != HttpContext.Current.Cache[DummyCacheItemKey]) return;
-            HttpContext.Current.Cache.Add(DateTime.Now.ToString(), "DummyTest", null,
-                DateTime.MaxValue, TimeSpan.FromMilliseconds(10000),
+            HttpContext.Current.Cache.Add(DummyCacheItemKey, "DummyTest", null,
+                DateTime.MaxValue, TimeSpan.FromHours(3),
                 CacheItemPriority.Normal,
                 new CacheItemRemovedCallback(CacheItemRemovedCallback));
+
         }
 
 
         public void CacheItemRemovedCallback(string key,
             object value, CacheItemRemovedReason reason)
         {
+
+
             HitPage();
 
             // Do the service works
@@ -55,6 +59,8 @@ namespace ProStudCreator
 
         private void HitPage()
         {
+
+
             var client = new WebClient();
             try
             {
@@ -62,7 +68,7 @@ namespace ProStudCreator
                 client.DownloadData(Application.Get("dummyRequest").ToString());
 #else
 
-            client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
+                client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
 #endif
             }
             catch (Exception e)
@@ -77,11 +83,23 @@ namespace ProStudCreator
 
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
+
+#if DEBUG
             if (Application.Get("dummyRequest").ToString() == "")
             {
                 Application.Set("dummyRequest", "http://" + Request.ServerVariables["HTTP_HOST"] + "/" + DummyPage);
                 RegisterChacheEntry();
             }
+#else
+
+            if (Application.Get("dummyRequest").ToString() == "")
+            {
+                Application.Set("dummyRequest", ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
+                RegisterChacheEntry();
+            }
+
+
+#endif
 
             if (HttpContext.Current.Request.Url.ToString() == Application.Get("dummyRequest").ToString())
             {
@@ -96,7 +114,8 @@ namespace ProStudCreator
 
         private void CheckAllTasks() //checks for open tasks And generate Emails to remind users of their open Tasks
         {
-            TaskHandler.CheckAllTasks();
+
+            //TaskHandler.CheckAllTasks();
         }
     }
 }
