@@ -172,7 +172,6 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
-                mail.CC.Add("flavio.mueller@fhnw.ch");
                 smtpClient.Send(mail);
             }
         }
