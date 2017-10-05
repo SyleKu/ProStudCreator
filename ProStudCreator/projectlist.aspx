@@ -33,14 +33,14 @@
                     <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="projectType2" ItemStyle-Width="20px"/>
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
-                            <a title="Projekt Informationen" class="btn btn-default btnHeight glyphicon glyphicon-info-sign" href="ProjectInfoPage?id=<%# Item.id %>"></a>
+                            <a  class="btn btn-default btnHeight glyphicon glyphicon-info-sign" href="ProjectInfoPage?id=<%# Item.id %>"></a>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
                             <a title="Projekt bearbeiten" class="btn btn-default btnHeight glyphicon glyphicon-pencil" href="AddNewProject?id=<%# Item.id %>"></a>
                         </ItemTemplate>
-                    </asp:TemplateField>
+                    </asp:TemplateField> 
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
                             <a title="PDF anzeigen" class="btn btn-default btnHeight glyphicon glyph-pdf" href="PDF?dl=false&id=<%# Item.id %>"></a>
@@ -49,6 +49,11 @@
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
                             <asp:LinkButton runat="server" ID="deleteProjectButton" ToolTip="Projekt löschen" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField ItemStyle-Wrap="false">
+                        <ItemTemplate>
+                            <a runat="server" ID="submitBtn" title="Projekt einreichen" class="btn btn-default btnHeight greenButton"  OnClientClick="return confirmSaving('Dieses Projekt einreichen?');" OnServerClick="einreichenButton_Click" projectId="<%#Item.id%>">Einreichen</a>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
