@@ -20,7 +20,6 @@ namespace ProStudCreator
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
-                Debug.WriteLine("Checking for new Taksks: " + DateTime.Now);
 
 
                 //Write all the Mails
@@ -127,7 +126,7 @@ namespace ProStudCreator
             {
                 var mailMessage = new StringBuilder();
 
-                if (!task.isAddedToList())
+                if (!task.AlreadyChecked)
                 {
                     var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
                     mail.To.Add(new MailAddress(task.ResponsibleUser.Mail));
@@ -141,8 +140,8 @@ namespace ProStudCreator
                     {
                         if (underTask.ResponsibleUserId == task.ResponsibleUserId)
                         {
-                            underTask.AddToList();
-                            mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id= {task.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
+                            underTask.AlreadyChecked = true;
+                            mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
                         }
                     }
 
@@ -160,7 +159,7 @@ namespace ProStudCreator
             }
             foreach (var task in copyTasksToMail)
             {
-                task.RemoveFromList();
+                task.AlreadyChecked = false;
             }
 
             return mailsToSend.ToArray();

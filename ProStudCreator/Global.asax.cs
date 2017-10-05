@@ -30,7 +30,7 @@ namespace ProStudCreator
 
             Application.Add("dummyRequest", "");
 
-            //TaskHandler.CheckAllTasks();
+            TaskHandler.CheckAllTasks();
 
         }
 
@@ -115,7 +115,7 @@ namespace ProStudCreator
         private void CheckAllTasks() //checks for open tasks And generate Emails to remind users of their open Tasks
         {
 
-            //TaskHandler.CheckAllTasks();
+            TaskHandler.CheckAllTasks();
         }
     }
 }
