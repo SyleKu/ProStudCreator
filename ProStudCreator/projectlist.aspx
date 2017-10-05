@@ -1,6 +1,11 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Projectlist.aspx.cs" Inherits="ProStudCreator.Projectlist" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+        function confirmSaving(message) {
+            return confirm(message);
+        }
+    </script>
     <div class="well usernSettings">
         <div class="col-sm-3">
             <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="dropSemester" AutoPostBack="true" CssClass="form-control"></asp:DropDownList>
@@ -53,7 +58,7 @@
                     </asp:TemplateField>
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
-                            <a runat="server" ID="submitBtn" title="Projekt einreichen" class="btn btn-default btnHeight greenButton"  OnClientClick="return confirmSaving('Dieses Projekt einreichen?');" OnServerClick="einreichenButton_Click" projectId="<%#Item.id%>">Einreichen</a>
+                            <asp:LinkButton runat="server" ID="submitBtn" title="Projekt einreichen" class="btn btn-default btnHeight greenButton"  OnClientClick="return confirmSaving('Dieses Projekt einreichen?');" CommandArgument="<%# Item.id %>" CommandName="submitProject">Einreichen</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>

@@ -1,7 +1,11 @@
-﻿<%@ Page Title="Admin Bereich" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminPage.aspx.cs" Inherits="ProStudCreator.AdminPage" %>
-
+﻿<%@ Page Title="Admin Bereich" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="AdminPage.aspx.cs" Inherits="ProStudCreator.AdminPage" %>
 
 <asp:Content ID="AdminPageContent" ContentPlaceHolderID="MainContent" runat="server">
+<script type="text/javascript">
+    function confirmSaving(message) {
+        return confirm(message);
+    }
+</script>
     <div class="well newProjectSettings" runat="server" visible="False">
         <%-- Admin-Todos--%>
         <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Diese Seite ist noch in der Entwicklung!" ForeColor="red"></asp:Label>
@@ -38,7 +42,7 @@
                 </Triggers>
                 <ContentTemplate>
                     <div class="radioButtonSettingsAdmin" runat="server" id="divRadioProjects">
-                        <asp:RadioButtonList runat="server" ID="radioSelectedProjects" RepeatDirection="Horizontal" OnSelectedIndexChanged="radioSelectedProjects_OnSelectedIndexChanged" AutoPostBack="True" CssClass="col-sm-5" TextAlign="Right" OnRowDataBound="CheckProjects_RowDataBound">
+                        <asp:RadioButtonList runat="server" ID="radioSelectedProjects" RepeatDirection="Horizontal" OnSelectedIndexChanged="radioSelectedProjects_OnSelectedIndexChanged" AutoPostBack="True" CssClass="col-sm-5" TextAlign="Right">
                             <asp:ListItem Value="toPublish">Projekte zur Freigabe</asp:ListItem>
                             <asp:ListItem Value="inProgress">Projekte in Bearbeitung</asp:ListItem>
                         </asp:RadioButtonList>
@@ -49,7 +53,7 @@
                     <br />
                     <div id="DivAdminProjectsCollapsable" runat="server" visible="False">
                         <div class="well" style="background-color: #ffffff">
-                            <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" ViewStateMode="Disabled">
+                            <asp:GridView ID="CheckProjects" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="ProjectRowClick" OnRowDataBound="CheckProjects_RowDataBound" ViewStateMode="Disabled">
                                 <%--<AlternatingRowStyle BackColor="White" />--%>
                                 <Columns>
                                     <asp:BoundField DataField="advisorName" HeaderText="Betreuer" SortExpression="Advisor" ItemStyle-Width="200px" HtmlEncode="false" ItemStyle-Wrap="false" />
@@ -78,6 +82,11 @@
                                         <ItemTemplate>
                                             <asp:LinkButton runat="server" ID="deleteProjectButton" ToolTip="Projekt löschen" CommandName="deleteProject" OnClientClick="return confirm('Wollen Sie dieses Projekt wirklich löschen?');" CommandArgument="<%# Item.id %>" CssClass="btn btn-default btnHeight glyphicon glyphicon-remove"></asp:LinkButton>
                                         </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField ItemStyle-Wrap="false">
+                                    <ItemTemplate>
+                                        <asp:LinkButton runat="server" ID="submitBtn" ToolTip="Projekt Einreichen" title="Projekt einreichen" class="btn btn-default btnHeight greenButton"  OnClientClick="return confirmSaving('Dieses Projekt einreichen?');" CommandName="submitProject"  CommandArgument="<%# Item.id %> ">Einreichen</asp:LinkButton>
+                                    </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />

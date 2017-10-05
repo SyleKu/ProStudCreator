@@ -211,18 +211,18 @@ namespace ProStudCreator
                 if (project.State == ProjectState.Published)
                 {
                     col = ColorTranslator.FromHtml("#A9F5A9");
-                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                 }
                     
 
                 else if (project.State == ProjectState.Rejected)
                 {
-                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#F5A9A9");
                 }
                 else if (project.State == ProjectState.Submitted)
                 {
-                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<HtmlAnchor>().First().Visible = false; //submit
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#ffcc99");
                 }
                 if (col.HasValue)
@@ -258,6 +258,9 @@ namespace ProStudCreator
                     break;
                 case "editProject":
                     Response.Redirect("AddNewProject?id=" + id);
+                    break;
+                case "submitProject":
+                    einreichenButton_Click(id);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -447,10 +450,8 @@ namespace ProStudCreator
 
             return null;
         }
-        protected void einreichenButton_Click(object sender, EventArgs e)
+        protected void einreichenButton_Click(int id)
         {
-            HtmlAnchor htmlAnchor = (HtmlAnchor) sender;
-            int id = int.Parse(htmlAnchor.Attributes["projectId"]);
             Project project = db.Projects.Single(p => p.Id == id);
             var validationMessage = generateValidationMessage(project);
             if (validationMessage != null)
