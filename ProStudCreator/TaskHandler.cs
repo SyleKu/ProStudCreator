@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -16,7 +17,7 @@ namespace ProStudCreator
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
-
+            var startTime = DateTime.Now;
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
@@ -27,18 +28,21 @@ namespace ProStudCreator
 
             }
 
+            System.IO.File.AppendAllText(@"C:\Users\flavio.mueller\Desktop\logs\log.txt", (DateTime.Now - startTime).ToString());
         }
 
 
         private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
-            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered).Select(i => i.ProjectId);
+            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered)
+                .Select(i => i.ProjectId);
 
-            var allProjects = db.Projects.ToList();
+            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published).ToList();
 
-            foreach (var project in allProjects.Where(p => p.GetEndSemester(db) == Semester.LastSemester(db)))
+            foreach (var project in allPublishedProjects.Where(p => p.GetProjectRelevantForGradeTasks(db)))
             {
-                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
+                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) ||
+                    (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
                 {
                     if (!allActiveGradeTasks.Contains(project.Id))
                     {
@@ -172,7 +176,7 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
-                smtpClient.Send(mail);
+                //smtpClient.Send(mail);
             }
         }
         #endregion
