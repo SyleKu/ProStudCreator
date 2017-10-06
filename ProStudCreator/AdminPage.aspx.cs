@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -154,7 +155,7 @@ namespace ProStudCreator
                 return db.Projects.Where(p =>
                     p.DepartmentId == depId &&
                     p.ModificationDate > lastSemStartDate &&
-                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected || p.State == ProjectState.Submitted))
+                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected))
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
                     .Select(i => getProjectSingleElement(i));
@@ -191,6 +192,9 @@ namespace ProStudCreator
                     break;
                 case "editProject":
                     Response.Redirect("AddNewProject?id=" + id);
+                    break;
+                case "submitProject":
+                    einreichenButton_Click(id);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -295,12 +299,14 @@ namespace ProStudCreator
             {
                 case ProjectState.Published:
                     col = ColorTranslator.FromHtml("#A9F5A9");
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     break;
                 case ProjectState.Rejected:
                     col = ColorTranslator.FromHtml("#F5A9A9");
                     break;
                 case ProjectState.Submitted:
                     col = ColorTranslator.FromHtml("#ffcc99");
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     break;
             }
             if (!col.HasValue) return;
@@ -321,6 +327,117 @@ namespace ProStudCreator
         protected void btnAddInfoCollapse_OnClick(object sender, EventArgs e)
         {
             CollapseAddInfo(!(bool)Session["AddInfoCollapsed"]);
+        }
+
+        private bool[] getProjectTypeBools(Project project)
+        {
+            bool[] projectType = new bool[8];
+            if (project.TypeDesignUX)
+            {
+                projectType[0] = true;
+            }
+            if (project.TypeHW)
+            {
+                projectType[1] = true;
+            }
+            if (project.TypeCGIP)
+            {
+                projectType[2] = true;
+            }
+            if (project.TypeMathAlg)
+            {
+                projectType[3] = true;
+            }
+            if (project.TypeAppWeb)
+            {
+                projectType[4] = true;
+            }
+            if (project.TypeDBBigData)
+            {
+                projectType[5] = true;
+            }
+            if (project.TypeSysSec)
+            {
+                projectType[6] = true;
+            }
+            if (project.TypeSE)
+            {
+                projectType[7] = true;
+            }
+            return projectType;
+        }
+
+        private string generateValidationMessage(Project project)
+        {
+            var projectType = getProjectTypeBools(project);
+            if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+                return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+            if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+                return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+
+            if ((!project.Advisor1?.Name.IsValidName()) ?? true)
+                return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
+            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
+                return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
+            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
+                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
+                return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
+            if (project.Advisor2 == null && project.Advisor2.Mail != "")
+                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+
+            var numAssignedTypes = projectType.Count(a => a);
+            if (numAssignedTypes != 1 && numAssignedTypes != 2)
+                return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+            /*
+            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
+            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
+                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";*/
+
+            if (project.OverOnePage)
+                return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
+
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
+                return "Nur Hauptbetreuer können Projekte einreichen.";
+
+            if (project.Reservation1Mail != "" && project.Reservation1Name == "")
+                return
+                    "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+                return
+                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+
+            if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            return null;
+        }
+
+        protected void einreichenButton_Click(int id)
+        {
+            Project project = db.Projects.Single(p => p.Id == id);
+            var validationMessage = generateValidationMessage(project);
+
+            if (validationMessage != null)
+            {
+                var sb = new StringBuilder();
+                sb.Append("alert('");
+                sb.Append(validationMessage);
+                sb.Append("');");
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(),
+                    "key", sb.ToString(), true);
+            }
+            else
+            {
+                project.Submit();
+                db.SubmitChanges();
+                Response.Redirect("projectlist");
+            }
+
         }
     }
 }
