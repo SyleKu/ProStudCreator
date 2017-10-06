@@ -17,7 +17,6 @@ namespace ProStudCreator
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
-            var startTime = DateTime.Now;
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
@@ -28,7 +27,6 @@ namespace ProStudCreator
 
             }
 
-            System.IO.File.AppendAllText(@"C:\Users\flavio.mueller\Desktop\logs\log.txt", (DateTime.Now - startTime).ToString());
         }
 
 
