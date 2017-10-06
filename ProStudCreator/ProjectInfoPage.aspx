@@ -221,8 +221,8 @@
         </div>
         <asp:UpdatePanel ID="updateDownloadButton" runat="server" UpdateMode="Conditional">
             <Triggers>
-                <asp:AsyncPostBackTrigger runat="server" ControlID="gridProjectAttachs" EventName="DataBound"/>
-                    <asp:AsyncPostBackTrigger ControlID="btnDownloadAllFiles" EventName="Click"/> 
+                <%--<asp:AsyncPostBackTrigger runat="server" ControlID="gridProjectAttachs" EventName="DataBound"/>--%>
+                <asp:PostBackTrigger ControlID="btnDownloadAllFiles"/>
             </Triggers>
             <ContentTemplate>
                 <div runat="server" ID="divDownloadBtn" style="text-align: right;">
