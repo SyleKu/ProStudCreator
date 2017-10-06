@@ -176,7 +176,7 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
-                //smtpClient.Send(mail);
+                smtpClient.Send(mail);
             }
         }
         #endregion
