@@ -157,7 +157,7 @@ namespace ProStudCreator
 
 
             //fill the Billingstatus dropdown with Data
-            drpBillingstatus.DataSource = db.BillingStatus;
+            drpBillingstatus.DataSource = db.BillingStatus.OrderBy(i => i.DisplayName);
             drpBillingstatus.DataBind();
             drpBillingstatus.Items.Insert(0,
                 new ListItem(userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
