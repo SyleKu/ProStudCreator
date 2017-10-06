@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="aspnet-ProStudCreator-20140818043155" Class="ProStudentCreatorDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=FlavioLaptop;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-NKIG02J;Initial Catalog=aspnet-ProStudCreator-20140818043155;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="aspnet_ProStudCreator_20140818043155ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Departments" Member="Departments">
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -136,6 +136,7 @@
       <Association Name="ProjectType_Project2" Member="LogProjectType" ThisKey="LogProjectTypeID" OtherKey="Id" Type="ProjectType" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Project" Member="Advisor1" ThisKey="Advisor1Id" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Project1" Member="Advisor2" ThisKey="Advisor2Id" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
+      <Association Name="Version_Project" Member="Version" ThisKey="Id" OtherKey="p_id" Type="Version" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="" Member="Semester">
@@ -229,6 +230,15 @@
       <Association Name="UserDepartmentMap_Task" Member="Supervisor" Storage="_UserDepartmentMap" ThisKey="SupervisorId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Task1" Member="ResponsibleUser" Storage="_UserDepartmentMap1" ThisKey="ResponsibleUserId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="Project_Task" Member="Project" Storage="_Project1" ThisKey="ProjectId" OtherKey="Id" Type="Project" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Versions">
+    <Type Name="Version">
+      <Column Name="id" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="p_id" Type="System.Int32" CanBeNull="false" />
+      <Column Name="description" Type="System.String" DbType="VARCHAR(255)" CanBeNull="true" />
+      <Column Name="date" Type="System.DateTime" CanBeNull="true" />
+      <Association Name="Version_Project" Member="Projects" ThisKey="p_id" OtherKey="Id" Type="Project" />
     </Type>
   </Table>
 </Database>

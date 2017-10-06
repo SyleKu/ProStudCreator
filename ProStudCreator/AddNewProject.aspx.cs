@@ -18,7 +18,7 @@ namespace ProStudCreator
         private ProjectType projectPriority = new ProjectType();
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
-
+        private Version version;
         #region Timer tick
 
         protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
@@ -49,17 +49,23 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             AdminView.Visible = ShibUser.CanSeeCreationDetails();
-
+            btnHistoryCollapse.CausesValidation = false;
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
             {
                 id = int.Parse(Request.QueryString["id"]);
-                project = db.Projects.Single(p => (int?)p.Id == id);
+                project = db.Projects.Single(p => (int?) p.Id == id);
                 if (!project.UserCanEdit())
                 {
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
+                CompleteHistory.DataSource = db.Versions.Where(v => v.p_id == project.Id);
+                CompleteHistory.DataBind();
+            }
+            else
+            {
+                divHistory.Visible = false;
             }
 
             // Project picture
@@ -83,6 +89,11 @@ namespace ProStudCreator
             }
             else
             {
+                if (Session["AddInfoCollapsed"] == null)
+                    CollapseHistory(true);
+                else
+                    CollapseHistory((bool)Session["AddInfoCollapsed"]);
+
                 // Fix for unsupported maxlength on multi-line in ASP.NET
                 // Note: Recursive search of all controls is possible but not worthwhile (yet)
                 //InitialPositionContent.Attributes.Add("maxlength", InitialPositionContent.MaxLength.ToString());
@@ -314,12 +325,13 @@ namespace ProStudCreator
         {
             if (project == null) // New project
             {
-                project = new Project();
+                project = new Project();               
                 project.InitNew();
                 db.Projects.InsertOnSubmit(project);
             }
             else
             {
+
                 if (!project.UserCanEdit())
                     throw new UnauthorizedAccessException();
             }
@@ -330,6 +342,9 @@ namespace ProStudCreator
 
             db.SubmitChanges();
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            version = new Version();
+            version.InitNew(project.Id);
+            db.Versions.InsertOnSubmit(version);
             db.SubmitChanges();
         }
 
@@ -730,6 +745,10 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 divClientCompany.Visible = false;
             }
         }
+        protected void btnHistoryCollapse_OnClick(object sender, EventArgs e)
+        {
+            CollapseHistory(!(bool)Session["AddInfoCollapsed"]);
+        }
 
         #endregion
 
@@ -1030,7 +1049,14 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 radioClientType.SelectedValue = "Intern";
             }
         }
+        private void CollapseHistory(bool collapse)
+        {
+            Session["AddInfoCollapsed"] = collapse;
+            DivHistoryCollapsable.Visible = !collapse;
+            btnHistoryCollapse.Text = collapse ? "◄" : "▼";
+        }
     }
+
 }
 
 #endregion

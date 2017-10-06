@@ -66,6 +66,9 @@ namespace ProStudCreator
     partial void InsertTask(Task instance);
     partial void UpdateTask(Task instance);
     partial void DeleteTask(Task instance);
+    partial void InsertVersion(Version instance);
+    partial void UpdateVersion(Version instance);
+    partial void DeleteVersion(Version instance);
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
@@ -191,6 +194,14 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<Task>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Version> Versions
+		{
+			get
+			{
+				return this.GetTable<Version>();
 			}
 		}
 	}
@@ -1359,6 +1370,8 @@ namespace ProStudCreator
 		
 		private EntityRef<UserDepartmentMap> _Advisor2;
 		
+		private EntityRef<Version> _Version;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1516,6 +1529,7 @@ namespace ProStudCreator
 			this._LogProjectType = default(EntityRef<ProjectType>);
 			this._Advisor1 = default(EntityRef<UserDepartmentMap>);
 			this._Advisor2 = default(EntityRef<UserDepartmentMap>);
+			this._Version = default(EntityRef<Version>);
 			OnCreated();
 		}
 		
@@ -1530,6 +1544,10 @@ namespace ProStudCreator
 			{
 				if ((this._Id != value))
 				{
+					if (this._Version.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnIdChanging(value);
 					this.SendPropertyChanging();
 					this._Id = value;
@@ -3350,6 +3368,40 @@ namespace ProStudCreator
 						this._Advisor2Id = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Advisor2");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Version_Project", Storage="_Version", ThisKey="Id", OtherKey="p_id", IsForeignKey=true)]
+		public Version Version
+		{
+			get
+			{
+				return this._Version.Entity;
+			}
+			set
+			{
+				Version previousValue = this._Version.Entity;
+				if (((previousValue != value) 
+							|| (this._Version.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Version.Entity = null;
+						previousValue.Projects.Remove(this);
+					}
+					this._Version.Entity = value;
+					if ((value != null))
+					{
+						value.Projects.Add(this);
+						this._Id = value.p_id;
+					}
+					else
+					{
+						this._Id = default(int);
+					}
+					this.SendPropertyChanged("Version");
 				}
 			}
 		}
@@ -5439,6 +5491,168 @@ namespace ProStudCreator
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class Version : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _p_id;
+		
+		private string _description;
+		
+		private System.Nullable<System.DateTime> _date;
+		
+		private EntitySet<Project> _Projects;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void Onp_idChanging(int value);
+    partial void Onp_idChanged();
+    partial void OndescriptionChanging(string value);
+    partial void OndescriptionChanged();
+    partial void OndateChanging(System.Nullable<System.DateTime> value);
+    partial void OndateChanged();
+    #endregion
+		
+		public Version()
+		{
+			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_p_id")]
+		public int p_id
+		{
+			get
+			{
+				return this._p_id;
+			}
+			set
+			{
+				if ((this._p_id != value))
+				{
+					this.Onp_idChanging(value);
+					this.SendPropertyChanging();
+					this._p_id = value;
+					this.SendPropertyChanged("p_id");
+					this.Onp_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_description", DbType="VARCHAR(255)")]
+		public string description
+		{
+			get
+			{
+				return this._description;
+			}
+			set
+			{
+				if ((this._description != value))
+				{
+					this.OndescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._description = value;
+					this.SendPropertyChanged("description");
+					this.OndescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date")]
+		public System.Nullable<System.DateTime> date
+		{
+			get
+			{
+				return this._date;
+			}
+			set
+			{
+				if ((this._date != value))
+				{
+					this.OndateChanging(value);
+					this.SendPropertyChanging();
+					this._date = value;
+					this.SendPropertyChanged("date");
+					this.OndateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Version_Project", Storage="_Projects", ThisKey="p_id", OtherKey="Id")]
+		public EntitySet<Project> Projects
+		{
+			get
+			{
+				return this._Projects;
+			}
+			set
+			{
+				this._Projects.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Version = this;
+		}
+		
+		private void detach_Projects(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Version = null;
 		}
 	}
 }

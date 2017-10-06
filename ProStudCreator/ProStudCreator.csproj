@@ -394,6 +394,7 @@
     <Compile Include="Termine.aspx.designer.cs">
       <DependentUpon>Termine.aspx</DependentUpon>
     </Compile>
+    <Compile Include="VersionExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ProStudentCreatorDB.dbml.layout">

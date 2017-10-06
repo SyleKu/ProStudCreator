@@ -110,6 +110,7 @@
     </div>
     <div class="well newProjectSettings ">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
+        <asp:LinkButton runat="server" CssClass="btn btn-default">History</asp:LinkButton>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="True">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
         </asp:PlaceHolder>
@@ -392,4 +393,28 @@
             <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
         </div>
     </div>
+<div runat="server" class="well newProjectSettings" ID="divHistory">
+    <asp:UpdatePanel runat="server" ID="UpdateHistory">
+        <Triggers></Triggers>
+        <ContentTemplate>
+            <asp:Label runat="server" Font-Size="24px" Height="50px" Text="History" CssClass="col-sm-5"></asp:Label>
+            <div style="text-align: right;">
+                <asp:Button runat="server" ID="btnHistoryCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="btnHistoryCollapse_OnClick" />
+            </div>
+            <br />
+            <div runat="server" id="DivHistoryCollapsable" visible="true">
+                <div class="well" style="background-color: #ffffff">
+                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:BoundField DataField="id" HeaderText="Versionsnummer" SortExpression="version" />
+                            <asp:BoundField DataField="description" HeaderText="Beschreibung" SortExpression="description"/>
+                            <asp:BoundField DataField="date" HeaderText="Datum" SortExpression="date" />
+                            <asp:BoundField DataField="state" HeaderText="Status" SortExpression="state"/>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+</div>
 </asp:Content>
