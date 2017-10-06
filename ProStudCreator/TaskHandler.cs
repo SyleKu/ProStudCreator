@@ -178,10 +178,12 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
+#if !DEBUG
                 smtpClient.Send(mail);
+#endif
             }
         }
-        #endregion
+#endregion
     }
 
 }
