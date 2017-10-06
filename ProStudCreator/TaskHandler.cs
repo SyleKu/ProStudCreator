@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -16,7 +17,6 @@ namespace ProStudCreator
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
-
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
@@ -32,13 +32,15 @@ namespace ProStudCreator
 
         private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
-            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered).Select(i => i.ProjectId);
+            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered)
+                .Select(i => i.ProjectId);
 
-            var allProjects = db.Projects.ToList();
+            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published).ToList();
 
-            foreach (var project in allProjects.Where(p => p.GetEndSemester(db) == Semester.LastSemester(db)))
+            foreach (var project in allPublishedProjects.Where(p => p.GetProjectRelevantForGradeTasks(db)))
             {
-                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
+                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) ||
+                    (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
                 {
                     if (!allActiveGradeTasks.Contains(project.Id))
                     {
@@ -140,6 +142,10 @@ namespace ProStudCreator
                     {
                         if (underTask.ResponsibleUserId == task.ResponsibleUserId)
                         {
+                            if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate)
+                            {
+                                mail.CC.Add(underTask.Supervisor?.Mail ?? "");
+                            }
                             underTask.AlreadyChecked = true;
                             mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
                         }
@@ -172,10 +178,12 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
+#if !DEBUG
                 smtpClient.Send(mail);
+#endif
             }
         }
-        #endregion
+#endregion
     }
 
 }

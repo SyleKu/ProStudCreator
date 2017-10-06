@@ -173,6 +173,43 @@ namespace ProStudCreator
             return _p.GetEndSemester(db).ExhibitionBachelorThesis;
         }
 
+
+        public static bool GetProjectRelevantForGradeTasks(this Project p, ProStudentCreatorDBDataContext db)
+        {
+
+            if (p.Semester.EndDate >= Semester.ActiveSemester(new DateTime(2017, 4, 1), db).EndDate)
+            {
+                if (p.LogProjectType?.P5 == true)
+                {
+                    if (DateTime.Now > p.GetDeliveryDate().AddDays(21))
+                    {
+                        return true;
+                    }
+                }
+                if (p.LogProjectType?.P6 == true)
+                {
+                    if (p.LogProjectDuration == 2)
+                    {
+                        if (DateTime.ParseExact(p.Semester.DefenseIP6BEnd, "dd.MM.yyyy",
+                                CultureInfo.InvariantCulture) < DateTime.Now)
+                        {
+                            return true;
+                        }
+                    }
+                    if (p.LogProjectDuration == 1)
+                    {
+                        if (DateTime.ParseExact(p.Semester.DefenseIP6End, "dd.MM.yyyy",
+                                CultureInfo.InvariantCulture) < DateTime.Now)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
         #endregion
 
         #region Permissions

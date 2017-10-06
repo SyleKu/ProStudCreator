@@ -187,13 +187,12 @@
     </div>
     <div class="well newProjectSettings">
         <asp:Label runat="server" ID="lblProjectAttachements" Font-Size="24px" Height="50px" Text="Projekt Artefakte"></asp:Label>
-        <button runat="server" class="btn" OnServerClick="downloadFiles_OnClick"><img src="Content/zip.png" style="height: 30px;" alt="download"/>  Download ZIP </button>
         <div class="well contentDesign form-horizontal" style="background-color: #ffffff">
             <asp:UpdatePanel runat="server" ID="updateProjectAttachements" UpdateMode="Conditional">
                 <ContentTemplate>
                     <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group col-sm-9">
-                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" EmptyDataText="             Noch keine Dokumente hochgeladen." ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="gridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
+                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" EmptyDataText="Noch keine Dokumente hochgeladen." ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="gridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
                             <Columns>
                                 <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px" />
                                 <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
@@ -220,6 +219,17 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
+        <asp:UpdatePanel ID="updateDownloadButton" runat="server" UpdateMode="Conditional">
+            <Triggers>
+                <%--<asp:AsyncPostBackTrigger runat="server" ControlID="gridProjectAttachs" EventName="DataBound"/>--%>
+                <asp:PostBackTrigger ControlID="btnDownloadAllFiles"/>
+            </Triggers>
+            <ContentTemplate>
+                <div runat="server" ID="divDownloadBtn" style="text-align: right;">
+                <button runat="server" ID="btnDownloadAllFiles" class="btn btn-default" OnServerClick="downloadFiles_OnClick"><img src="Content/zip.png" style="height: 30px;" alt="download"/>  Download ZIP </button>
+            </div>
+          </ContentTemplate>
+        </asp:UpdatePanel>
     </div>
     <script type="text/javascript">
         function doPostBack() {

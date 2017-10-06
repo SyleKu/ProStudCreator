@@ -431,6 +431,7 @@ html .demo-container .ruFakeInput {
     border: #D3D3D3 3px solid !important;
     overflow: auto;
     border-radius: 10px !important;
+    margin-right: 18px !important;
 }
 
 .ajax__fileupload_selectFileContainer {

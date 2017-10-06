@@ -31,13 +31,15 @@ namespace ProStudCreator
             {
                 id = int.Parse(Request.QueryString["id"]);
                 project = db.Projects.Single(p => (int?)p.Id == id);
+                divDownloadBtn.Visible = false;
+                updateDownloadButton.Update();
             }
             else
             {
                 Response.Redirect("Projectlist.aspx");
                 Response.End();
             }
-
+            
             gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
                 .Select(i => getProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
@@ -155,7 +157,7 @@ namespace ProStudCreator
 
 
             //fill the Billingstatus dropdown with Data
-            drpBillingstatus.DataSource = db.BillingStatus;
+            drpBillingstatus.DataSource = db.BillingStatus.OrderBy(i => i.DisplayName);
             drpBillingstatus.DataBind();
             drpBillingstatus.Items.Insert(0,
                 new ListItem(userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
@@ -465,6 +467,7 @@ namespace ProStudCreator
                 e.GetStreamContents().Close();
             }
 
+            divDownloadBtn.Visible = true;
 
             var di = new DirectoryInfo(Path.GetTempPath() + "_AjaxFileUpload");
 
@@ -557,6 +560,9 @@ namespace ProStudCreator
             {
                 // ignored
             }
+
+            divDownloadBtn.Visible = true;
+            updateDownloadButton.Update();
         }
 
         protected void gridProjectAttachs_OnRowCommand(object sender, GridViewCommandEventArgs e)
@@ -575,6 +581,8 @@ namespace ProStudCreator
             gridProjectAttachs.DataBind();
 
             updateProjectAttachements.Update();
+            divDownloadBtn.Visible = gridProjectAttachs.Rows.Count > 0;
+            updateDownloadButton.Update();
         }
 
         protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
