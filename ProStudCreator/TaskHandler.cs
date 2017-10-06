@@ -142,6 +142,10 @@ namespace ProStudCreator
                     {
                         if (underTask.ResponsibleUserId == task.ResponsibleUserId)
                         {
+                            if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate)
+                            {
+                                mail.CC.Add(underTask.Supervisor?.Mail ?? "");
+                            }
                             underTask.AlreadyChecked = true;
                             mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
                         }
