@@ -496,6 +496,26 @@ namespace ProStudCreator
 
         #region Click handlers: Buttons (user)
 
+        protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
+        {
+
+
+            var id = Convert.ToInt32(e.CommandArgument);
+            switch (e.CommandName)
+            {
+                case "revertProject":
+                    project.IsMainVersion = false;
+                    db.SubmitChanges();
+                    var revertedProject = db.Projects.SingleOrDefault(p => p.Id == id);
+                    revertedProject.IsMainVersion = true;
+                    db.SubmitChanges();
+                    Response.Redirect("~/AddNewProject.aspx?Id=" + id);
+                    break;
+                default:
+                    throw new Exception("Unknown command " + e.CommandName);
+            }
+        }
+
         /// <summary>
         ///     Saves the current state of the form and continue editing.
         /// </summary>

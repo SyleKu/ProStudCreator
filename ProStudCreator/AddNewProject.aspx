@@ -404,12 +404,22 @@
             <br />
             <div runat="server" id="DivHistoryCollapsable" visible="true">
                 <div class="well" style="background-color: #ffffff">
-                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.Project" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False">
+                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.Project" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False"  OnRowCommand="ProjectRowClick">
                         <Columns>
                             <asp:BoundField DataField="Id" HeaderText="Versionsnummer" SortExpression="version" />
                             <asp:BoundField DataField="VersionDescription" HeaderText="Beschreibung" SortExpression="description"/>
                             <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" />
-                            <asp:BoundField DataField="State" HeaderText="Status" SortExpression="state"/>
+                            <asp:BoundField DataField="StateAsString" HeaderText="Status" SortExpression="state"/>
+                    <asp:TemplateField ItemStyle-Wrap="false">
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="<%# Item.Id %>" CommandName="showChanges">Änderungen zeigen</asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                            <asp:TemplateField ItemStyle-Wrap="false">
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="<%# Item.Id %>" CommandName="revertProject">Projekt zurücksetzen</asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>  
                         </Columns>
                     </asp:GridView>
                 </div>
