@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data.Linq;
+using System.Data.Linq.Mapping;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -60,7 +62,7 @@ namespace ProStudCreator
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
-                CompleteHistory.DataSource = db.Versions.Where(v => v.p_id == project.Id);
+                CompleteHistory.DataSource = db.Projects.Where(p => p.Name == project.Name && !p.IsMainVersion);
                 CompleteHistory.DataBind();
             }
             else
@@ -328,24 +330,34 @@ namespace ProStudCreator
                 project = new Project();               
                 project.InitNew();
                 db.Projects.InsertOnSubmit(project);
+                Fillproject(project);
+                project.ModificationDate = DateTime.Now;
+                project.LastEditedBy = ShibUser.GetEmail();
+                db.SubmitChanges();
+                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+                db.SubmitChanges();
+
             }
             else
             {
-
                 if (!project.UserCanEdit())
+                {
                     throw new UnauthorizedAccessException();
+                }
+                var theProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
+                theProject.IsMainVersion = false;
+                db.SubmitChanges();
+
+                project = new Project();
+                project.InitNew();
+                Fillproject(project);
+                db.Projects.InsertOnSubmit(project);
+                project.ModificationDate = DateTime.Now;
+                project.LastEditedBy = ShibUser.GetEmail();
+                db.SubmitChanges();
+                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+                db.SubmitChanges();
             }
-            project.ModificationDate = DateTime.Now;
-            project.LastEditedBy = ShibUser.GetEmail();
-
-            Fillproject(project);
-
-            db.SubmitChanges();
-            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
-            version = new Version();
-            version.InitNew(project.Id);
-            db.Versions.InsertOnSubmit(version);
-            db.SubmitChanges();
         }
 
         private void ToggleReservationTwoVisible()

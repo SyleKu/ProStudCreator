@@ -304,6 +304,7 @@
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="CustomStaticDataSource.cs" />
+    <Compile Include="LinqExtension.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -342,11 +343,6 @@
     <Compile Include="PDF.aspx.designer.cs">
       <DependentUpon>PDF.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ProStudentCreatorDB.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProStudentCreatorDB.dbml</DependentUpon>
-    </Compile>
     <Compile Include="FAQ.aspx.cs">
       <DependentUpon>FAQ.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -367,6 +363,11 @@
     </Compile>
     <Compile Include="ProjectState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProStudentCreatorDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProStudentCreatorDB.dbml</DependentUpon>
+    </Compile>
     <Compile Include="SemesterExtensions.cs" />
     <Compile Include="ShibUser.cs" />
     <Compile Include="Site.Master.cs">

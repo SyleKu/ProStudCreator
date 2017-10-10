@@ -57,7 +57,7 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="Creator" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="ClientCompany" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ClientCompany" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="true" />
       <Column Name="ClientPerson" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="ClientMail" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="TypeDesignUX" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
@@ -71,7 +71,7 @@
       <Column Name="P2TypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="P2TeamSizeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="InitialPosition" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" IsDelayLoaded="true" />
+      <Column Name="Picture" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" IsDelayLoaded="true" />
       <Column Name="Objective" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="ProblemStatement" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="[References]" Member="References" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
@@ -121,6 +121,7 @@
       <Column Name="LogGradeStudent2" Type="System.Single" DbType="float" CanBeNull="true" />
       <Column Name="Advisor1Id" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="Advisor2Id" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="IsMainVersion" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />
@@ -136,7 +137,6 @@
       <Association Name="ProjectType_Project2" Member="LogProjectType" ThisKey="LogProjectTypeID" OtherKey="Id" Type="ProjectType" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Project" Member="Advisor1" ThisKey="Advisor1Id" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Project1" Member="Advisor2" ThisKey="Advisor2Id" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
-      <Association Name="Version_Project" Member="Version" ThisKey="Id" OtherKey="p_id" Type="Version" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="" Member="Semester">
@@ -230,15 +230,6 @@
       <Association Name="UserDepartmentMap_Task" Member="Supervisor" Storage="_UserDepartmentMap" ThisKey="SupervisorId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="UserDepartmentMap_Task1" Member="ResponsibleUser" Storage="_UserDepartmentMap1" ThisKey="ResponsibleUserId" OtherKey="Id" Type="UserDepartmentMap" IsForeignKey="true" />
       <Association Name="Project_Task" Member="Project" Storage="_Project1" ThisKey="ProjectId" OtherKey="Id" Type="Project" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="" Member="Versions">
-    <Type Name="Version">
-      <Column Name="id" AutoSync="Never" Type="System.Int32" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="p_id" Type="System.Int32" CanBeNull="false" />
-      <Column Name="description" Type="System.String" DbType="VARCHAR(255)" CanBeNull="true" />
-      <Column Name="date" Type="System.DateTime" CanBeNull="true" />
-      <Association Name="Version_Project" Member="Projects" ThisKey="p_id" OtherKey="Id" Type="Project" />
     </Type>
   </Table>
 </Database>

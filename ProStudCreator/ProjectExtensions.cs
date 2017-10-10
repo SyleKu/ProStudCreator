@@ -14,6 +14,7 @@ namespace ProStudCreator
             _p.CreateDate = DateTime.Now;
             _p.PublishedDate = DateTime.Now;
             _p.State = ProjectState.InProgress;
+            _p.IsMainVersion = true;
         }
 
         /// <summary>

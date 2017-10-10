@@ -404,12 +404,12 @@
             <br />
             <div runat="server" id="DivHistoryCollapsable" visible="true">
                 <div class="well" style="background-color: #ffffff">
-                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.ProjectSingleElement" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False">
+                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.Project" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False">
                         <Columns>
-                            <asp:BoundField DataField="id" HeaderText="Versionsnummer" SortExpression="version" />
-                            <asp:BoundField DataField="description" HeaderText="Beschreibung" SortExpression="description"/>
-                            <asp:BoundField DataField="date" HeaderText="Datum" SortExpression="date" />
-                            <asp:BoundField DataField="state" HeaderText="Status" SortExpression="state"/>
+                            <asp:BoundField DataField="Id" HeaderText="Versionsnummer" SortExpression="version" />
+                            <asp:BoundField DataField="VersionDescription" HeaderText="Beschreibung" SortExpression="description"/>
+                            <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" />
+                            <asp:BoundField DataField="State" HeaderText="Status" SortExpression="state"/>
                         </Columns>
                     </asp:GridView>
                 </div>
