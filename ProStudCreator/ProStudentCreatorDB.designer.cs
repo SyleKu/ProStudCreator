@@ -1333,6 +1333,8 @@ namespace ProStudCreator
 		
 		private string _VersionDescription;
 		
+		private int _ProjectId;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1505,6 +1507,8 @@ namespace ProStudCreator
     partial void OnIsMainVersionChanged();
     partial void OnVersionDescriptionChanging(string value);
     partial void OnVersionDescriptionChanged();
+    partial void OnProjectIdChanging(int value);
+    partial void OnProjectIdChanged();
     #endregion
 		
 		public Project()
@@ -2951,6 +2955,26 @@ namespace ProStudCreator
 					this._VersionDescription = value;
 					this.SendPropertyChanged("VersionDescription");
 					this.OnVersionDescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int NOT NULL")]
+		public int ProjectId
+		{
+			get
+			{
+				return this._ProjectId;
+			}
+			set
+			{
+				if ((this._ProjectId != value))
+				{
+					this.OnProjectIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProjectId = value;
+					this.SendPropertyChanged("ProjectId");
+					this.OnProjectIdChanged();
 				}
 			}
 		}

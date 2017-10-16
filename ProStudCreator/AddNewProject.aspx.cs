@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using HtmlDiff;
+using System.Collections.Generic;
 
 namespace ProStudCreator
 {
@@ -62,7 +64,7 @@ namespace ProStudCreator
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
-                CompleteHistory.DataSource = db.Projects.Where(p => p.Name == project.Name && !p.IsMainVersion);
+                CompleteHistory.DataSource = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
                 CompleteHistory.DataBind();
             }
             else
@@ -160,7 +162,8 @@ namespace ProStudCreator
                     divClientForm.Visible = false;
                     FillDropAdvisors();
                 }
-                ToggleReservationTwoVisible();
+                if(Request.QueryString["showChanges"]==null)
+                    ToggleReservationTwoVisible();
             }
         }
 
@@ -186,9 +189,320 @@ namespace ProStudCreator
             dropPreviousProject.DataBind();
             dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
         }
+        private void GetControlList<T>(ControlCollection controlCollection, List<T> resultCollection)
+where T : Control
+        {
+            foreach (Control control in controlCollection)
+            {
+                if (control is T) // This is cleaner
+                    resultCollection.Add((T)control);
 
+                if (control.HasControls())
+                    GetControlList(control.Controls, resultCollection);
+            }
+        }
+        private void showAllControls()
+        {
+            List<Label> labelList = new List<Label>();
+            GetControlList<Label>(Controls, labelList);
+            foreach (Label l in labelList)
+            {
+                l.Visible = true;
+            }
+            Image1Previous.Visible = true;
+            ReferenceDiv.Visible = true;
+            Panel1.Visible = true;
+            Panel2.Visible = true;
+        }
+        private string createSimpleDiffString(string oldText, string newText)
+        {
+            if (oldText != newText)
+                return "<del class='diffmod'>" + oldText + "</del> " + "<ins class='diffmod'>" + newText + "</ins>";
+            else
+                return newText;
+        }
+        private string createDiffString(string oldText, string newText)
+        {
+            string returnString;
+            try { 
+            HtmlDiff.HtmlDiff h = new HtmlDiff.HtmlDiff(oldText, newText);
+            returnString = h.Build();
+            }
+            catch (Exception e)
+            {
+                return " ";
+            }
+            return returnString;
+        }
+
+        private void hideUnwantedControls()
+        {
+            List<TextBox> textBoxList = new List<TextBox>();
+            List<DropDownList> drpList = new List<DropDownList>();
+            GetControlList<DropDownList>(Controls, drpList);
+            GetControlList<TextBox>(Controls, textBoxList);
+            foreach (var t in textBoxList)
+            {
+                t.Visible = false;
+            }
+            foreach (var drp in drpList)
+            {
+                drp.Visible = false;
+            }
+            Image1.Visible = false;
+            
+        }
+        private void RetrieveProjectComparison()
+        {
+            var currentProject = db.Projects.Single(p => p.Id == int.Parse(Request.QueryString["showChanges"]));
+            showAllControls();
+            hideUnwantedControls();
+            
+
+            CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
+            AddPictureLabel.Text = "Bild ändern:";
+            ProjectNameLabel.Text = createSimpleDiffString(project.Name,currentProject.Name);
+            dropAdvisor1Label.Text = createSimpleDiffString(project.Advisor1?.Name ?? "", currentProject.Advisor1?.Name ?? "");
+            dropAdvisor2Label.Text = createSimpleDiffString(project.Advisor2?.Name ?? "", currentProject.Advisor2?.Name ?? "");
+
+            if (currentProject.TypeDesignUX)
+            {
+                DesignUX.ImageUrl = "pictures/projectTypDesignUX.png";
+                projectType[0] = true;
+
+                if (!project.TypeDesignUX)
+                {
+                    DesignUX.BorderStyle = BorderStyle.Solid;
+                    DesignUX.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeDesignUX)
+                {
+                    DesignUX.BorderStyle = BorderStyle.Solid;
+                    DesignUX.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeHW)
+            {
+                HW.ImageUrl = "pictures/projectTypHW.png";
+                projectType[1] = true;
+                if (!project.TypeHW)
+                {
+                    HW.BorderStyle = BorderStyle.Solid;
+                    HW.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeHW)
+                {
+                    HW.BorderStyle = BorderStyle.Solid;
+                    HW.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeCGIP)
+            {
+                CGIP.ImageUrl = "pictures/projectTypCGIP.png";
+                projectType[2] = true;
+                if (!project.TypeCGIP)
+                {
+                    CGIP.BorderStyle = BorderStyle.Solid;
+                    CGIP.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeCGIP)
+                {
+                    CGIP.BorderStyle = BorderStyle.Solid;
+                    CGIP.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeMathAlg)
+            {
+                MathAlg.ImageUrl = "pictures/projectTypMathAlg.png";
+                projectType[3] = true;
+                if (!project.TypeMathAlg)
+                {
+                    MathAlg.BorderStyle = BorderStyle.Solid;
+                    MathAlg.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeMathAlg)
+                {
+                    MathAlg.BorderStyle = BorderStyle.Solid;
+                    MathAlg.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeAppWeb)
+            {
+                AppWeb.ImageUrl = "pictures/projectTypAppWeb.png";
+                projectType[4] = true;
+                if (!project.TypeAppWeb)
+                {
+                    AppWeb.BorderStyle = BorderStyle.Solid;
+                    AppWeb.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeAppWeb)
+                {
+                    AppWeb.BorderStyle = BorderStyle.Solid;
+                    AppWeb.BorderColor = Color.Red;
+                }
+            }
+            if (currentProject.TypeDBBigData)
+            {
+                DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
+                projectType[5] = true;
+                if (!project.TypeDBBigData)
+                {
+                    DBBigData.BorderStyle = BorderStyle.Solid;
+                    DBBigData.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeDBBigData)
+                {
+                    DBBigData.BorderStyle = BorderStyle.Solid;
+                    DBBigData.BorderColor = Color.Red;
+                }
+            }
+            if (currentProject.TypeSysSec)
+            {
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
+                if (!project.TypeSysSec)
+                {
+                    SysSec.BorderStyle = BorderStyle.Solid;
+                    SysSec.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeSysSec)
+                {
+                    SysSec.BorderStyle = BorderStyle.Solid;
+                    SysSec.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeSE)
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
+                if (!project.TypeSE)
+                {
+                    SE.BorderStyle = BorderStyle.Solid;
+                    SE.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeSE)
+                {
+                    SE.BorderStyle = BorderStyle.Solid;
+                    SE.BorderColor = Color.Red;
+                }
+            }
+
+            POneType.SelectedValue = project.POneType.Id.ToString();
+            PTwoType.SelectedValue = project.PTwoType?.Id.ToString();
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+            PTwoTeamSize.SelectedValue = project.PTwoTeamSize?.Id.ToString();
+
+            if (project.LanguageEnglish && !project.LanguageGerman)
+                Language.SelectedIndex = 2;
+            else if (!project.LanguageEnglish && project.LanguageGerman)
+                Language.SelectedIndex = 1;
+            else
+                Language.SelectedIndex = 0;
+
+            //LanguageGerman.Checked = project.LanguageGerman;
+            //LanguageEnglish.Checked = project.LanguageEnglish;
+
+            DurationOneSemester.Checked = project.DurationOneSemester;
+            InitialPositionContentLabel.Text = createDiffString(project.InitialPosition, currentProject.InitialPosition);
+            if (project.Picture != null)
+            {
+                Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
+                DeleteImageButton.Visible = false;
+               
+                imgdescription.Text = createDiffString(project.ImgDescription, currentProject.ImgDescription);
+            }
+            else
+            {
+                ImageLabel.Visible = false;
+                Image1Previous.Visible = false;
+            }
+            ObjectivContentLabel.Text = createDiffString(project.Objective, currentProject.Objective);
+
+            ProblemStatementContentLabel.Text = createDiffString(project.ProblemStatement, currentProject.ProblemStatement);
+            
+            ReferencesContentLabel.Text = createDiffString(project.References, currentProject.References);
+
+            RemarksContentLabel.Text = createDiffString(project.Remarks, currentProject.Remarks);
+
+            
+            Reservation1NameLabel.Text = createSimpleDiffString(project.Reservation1Name, currentProject.Reservation1Name);
+            
+            Reservation1MailLabel.Text = createSimpleDiffString(project.Reservation1Mail, currentProject.Reservation1Mail);
+            
+            Reservation2NameLabel.Text = createSimpleDiffString(project.Reservation2Name, currentProject.Reservation2Name);
+           
+            Reservation2MailLabel.Text = createSimpleDiffString(project.Reservation2Mail, currentProject.Reservation2Mail);
+                        
+            DepartmentLabel.Text = createSimpleDiffString(project.Department.DepartmentName, currentProject.Department.DepartmentName);
+
+            // Button visibility
+            saveProject.Visible = false;
+            submitProject.Visible = false;
+            publishProject.Visible = false;
+            refuseProject.Visible = false;
+            rollbackProject.Visible = false;
+
+            POneTypeLabel.Text = createSimpleDiffString(project.POneType.Description, currentProject.POneType.Description);
+            POneTeamSize.SelectedValue = createSimpleDiffString(project.POneTeamSize.Description, currentProject.POneTeamSize.Description);
+
+            Reservation1MailLabel.Text = createSimpleDiffString(project?.Reservation1Mail,currentProject?.Reservation1Mail);
+            Reservation1NameLabel.Text = createSimpleDiffString(project.Reservation1Name, currentProject?.Reservation1Name); 
+            Reservation2MailLabel.Text = createSimpleDiffString(project.Reservation2Mail, currentProject?.Reservation2Mail); 
+            Reservation2NameLabel.Text = createSimpleDiffString(project.Reservation2Name, currentProject?.Reservation2Name); 
+
+            CompareClient(project, currentProject);
+
+
+            FillDropPreviousProject(project.Semester);
+
+            if (project.PreviousProjectID == null)
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID.ToString();
+                prepareForm(false);
+            }
+            else
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ??
+                                                    "dropPreviousProjectImpossibleValue";
+                prepareForm(true);
+            }
+        }
         private void RetrieveProjectToEdit()
         {
+            if (Request.QueryString["showChanges"] != null)
+            {
+                RetrieveProjectComparison();
+                return;
+            }
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
             AddPictureLabel.Text = "Bild ändern:";
 
@@ -344,13 +658,14 @@ namespace ProStudCreator
                 {
                     throw new UnauthorizedAccessException();
                 }
-                var theProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
-                theProject.IsMainVersion = false;
+                var currentProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
+                currentProject.IsMainVersion = false;
                 db.SubmitChanges();
 
                 project = new Project();
-                project.InitNew();
+                project.InitNew();       
                 Fillproject(project);
+                project.ProjectId = currentProject.ProjectId;
                 db.Projects.InsertOnSubmit(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
@@ -500,16 +815,22 @@ namespace ProStudCreator
         {
 
 
-            var id = Convert.ToInt32(e.CommandArgument);
+            var pid = Convert.ToInt32(e.CommandArgument);
             switch (e.CommandName)
             {
                 case "revertProject":
                     project.IsMainVersion = false;
                     db.SubmitChanges();
-                    var revertedProject = db.Projects.SingleOrDefault(p => p.Id == id);
+                    var revertedProject = db.Projects.SingleOrDefault(p => p.Id == pid);
                     revertedProject.IsMainVersion = true;
                     db.SubmitChanges();
-                    Response.Redirect("~/AddNewProject.aspx?Id=" + id);
+                    Response.Redirect("~/AddNewProject.aspx?id=" + pid);
+                    break;
+                case "showChanges":
+                    
+
+                    var mainProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion).Id;
+                    Response.Redirect("~/AddNewProject.aspx?id=" + pid + "&showChanges=" + mainProject);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -804,7 +1125,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             if (radioClientType.SelectedValue != "Intern")
             {
                 if (radioClientType.SelectedValue == "Company")
-                    project.ClientCompany = txtClientCompany.Text.FixupParagraph();
+                project.ClientCompany = txtClientCompany.Text.FixupParagraph();
                 project.ClientAddressTitle = drpClientTitle.SelectedItem.Text;
                 project.ClientPerson = txtClientName.Text.FixupParagraph();
                 project.ClientAddressDepartment = txtClientDepartment.Text.FixupParagraph();
@@ -1014,6 +1335,21 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
         }
 
+        private void CompareClient(Project project, Project currentProject)
+        {
+            txtClientCompanyLabel.Text = createDiffString(project?.ClientCompany, currentProject?.ClientCompany);
+            drpClientTitleLabel.Text = createDiffString(project?.ClientAddressTitle, currentProject?.ClientAddressTitle);
+            txtClientNameLabel.Text = createDiffString(project?.ClientPerson, currentProject?.ClientPerson);
+            txtClientDepartmentLabel.Text = createDiffString(project?.ClientAddressDepartment, currentProject?.ClientAddressDepartment);
+            txtClientStreetLabel.Text = createDiffString(project?.ClientAddressStreet, currentProject?.ClientAddressStreet);
+            txtClientPLZLabel.Text = createDiffString(project?.ClientAddressPostcode, currentProject?.ClientAddressPostcode);
+            txtClientCityLabel.Text = createDiffString(project?.ClientAddressCity, currentProject?.ClientAddressCity);
+            txtClientReferenceLabel.Text = createDiffString(project?.ClientReferenceNumber, currentProject?.ClientReferenceNumber);
+            txtClientEmailLabel.Text = createDiffString(project?.ClientMail, currentProject?.ClientMail);
+
+            prepareClientForm(project);
+        }
+
         private void DisplayPriority(Project project)
         {
             if (project == null)
@@ -1086,6 +1422,15 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             Session["AddInfoCollapsed"] = collapse;
             DivHistoryCollapsable.Visible = !collapse;
             btnHistoryCollapse.Text = collapse ? "◄" : "▼";
+        }
+
+        protected void CompleteHistory_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            
+            foreach(TableCell cell in e.Row.Cells)
+            {
+                cell.BackColor = ColorTranslator.FromHtml(project.StateColor);
+            } 
         }
     }
 

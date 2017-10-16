@@ -592,6 +592,24 @@ html .demo-container .ruFakeInput {
         top: 0;
     }
 
+span{
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+.ellipsisLabel {
+    text-overflow: ellipsis !important;
+    overflow:hidden;
+}
+ins {
+    background-color: #cfc;
+    text-decoration: none;
+    
+}
+
+del {
+    color: #999;
+    background-color:#FEC8C8;
+}
 
 
 .ajax__fileupload_fileItemInfo {

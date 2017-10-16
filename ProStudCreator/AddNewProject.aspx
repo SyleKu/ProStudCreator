@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
+<%@ Register Src="~/HtmlTextBox.ascx" TagName="HtmlTextBox" TagPrefix="uc" %>
 
 <%@ Import Namespace="ProStudCreator" %>
 
@@ -18,6 +19,7 @@
             }
             return ok;
         }
+
 
         function isContentStud(currentObject) {
             var txtBoxValue = currentObject.value;
@@ -110,7 +112,6 @@
     </div>
     <div class="well newProjectSettings ">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
-        <asp:LinkButton runat="server" CssClass="btn btn-default">History</asp:LinkButton>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="True">
             <asp:Label runat="server" ID="CreatorID" CssClass="pull-right" Font-Size="24px" Height="50px"></asp:Label>
         </asp:PlaceHolder>
@@ -119,6 +120,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="80" placeholder="Projektname"></asp:TextBox>
+                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
@@ -126,6 +128,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
+                     <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
                 </div>
             </div>
             <hr />
@@ -133,6 +136,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Hauptbetreuung:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" ID="dropAdvisor1" DataValueField="Id" DataTextField="Name" CssClass="form-control"></asp:DropDownList>
+                    <asp:Label runat="server" ID="dropAdvisor1Label" CssClass="form-control" Visible="false"></asp:Label>
                 </div>
                 <div class="col-sm-3"></div>
             </div>
@@ -140,6 +144,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Nebenbetreuung"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" ID="dropAdvisor2" CssClass="form-control" DataValueField="Id" DataTextField="Name"></asp:DropDownList>
+                    <asp:Label runat="server" ID="dropAdvisor2Label" CssClass="form-control" Visible="false"></asp:Label>
                 </div>
                 <div class="col-sm-3"></div>
             </div>
@@ -147,6 +152,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Institut:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DepartmentName" ID="Department" CssClass="form-control"></asp:DropDownList>
+                    <asp:Label runat="server" ID="DepartmentLabel" CssClass="form-control" Visible="false"></asp:Label>
                 </div>
             </div>
             <hr />
@@ -170,7 +176,8 @@
                         <div class="form-group" style="text-align: left" runat="server" id="divClientCompany">
                             <asp:Label runat="server" Text="Unternehmen:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
-                                <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control maxWidth" MaxLength="255"></asp:TextBox>
+                               <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control col-sm-3"></asp:TextBox>
+                                 <asp:Label runat="server" ID="txtClientCompanyLabel" CssClass="form-control col-sm-3" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
@@ -180,45 +187,53 @@
                                     <asp:ListItem Text="Herr" Value="1" />
                                     <asp:ListItem Text="Frau" Value="2" />
                                 </asp:DropDownList>
+                                <asp:Label runat="server" ID="drpClientTitleLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Vor- und Nachname:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientName" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientNameLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="E-Mail Adresse" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientEmail" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientEmailLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Abteilung:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientDepartment" CssClass="form-control maxWidth" Placeholder="Falls vorhanden" MaxLength="50"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientDepartmentLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Strasse und Nummer:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientStreet" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientStreetLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="PLZ und Ort:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-2">
                                 <asp:TextBox runat="server" ID="txtClientPLZ" CssClass="form-control maxWidth" TextMode="Number" MaxLength="10"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientPLZLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                             <div class="col-sm-4">
                                 <asp:TextBox runat="server" ID="txtClientCity" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientCityLabel" CssClass="form-control maxWidth" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Referenz des Kunden:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6">
                                 <asp:TextBox runat="server" ID="txtClientReference" CssClass="form-control maxWidth" Placeholder="Falls vorhanden." ToolTip="z.B. Bestellnummer des Auftraggebers." MaxLength="50"></asp:TextBox>
+                                <asp:Label runat="server" ID="txtClientReferenceLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                     </div>
@@ -236,9 +251,11 @@
                         <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
+                            <asp:Label runat="server" ID="Reservation1NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
+                            <asp:Label runat="server"  ID="Reservation1MailLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
                     </div>
 
@@ -246,9 +263,11 @@
                         <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)"></asp:TextBox>
+                             <asp:Label runat="server" ID="Reservation2NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
+                            <asp:Label runat="server" ID="Reservation2MailLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
                     </div>
                 </ContentTemplate>
@@ -277,22 +296,26 @@
                 </Triggers>
                 <ContentTemplate>
                     <div class="form-group">
-                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-4" Text="Priorität 1:"></asp:Label>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
+                            <asp:Label runat="server" ID="POneTypeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
                         </div>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="POneTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
-                        </div>
+                            <asp:Label runat="server" ID="POneTeamSizeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
+                         </div>
                         <div class="col-sm-3"></div>
                     </div>
                     <div class="form-group" runat="server" id="divPriorityTwo">
-                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2:"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-4" Text="Priorität 2:"></asp:Label>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
+                             <asp:Label runat="server" ID="PTwoTypeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
                         </div>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="PTwoTeamSize" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" OnSelectedIndexChanged="TeamSize_SelectedIndexChanged" AutoPostBack="true" />
+                             <asp:Label runat="server" ID="PTwoTeamSizeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
                         </div>
                     </div>
                 </ContentTemplate>
@@ -330,12 +353,14 @@
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <div class="col-sm-9">
                     <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
+                    <asp:Image runat="server" ID="Image1Previous" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass=" col-sm-3" Text=""></asp:Label>
                 <div class="col-md-9">
                     <asp:TextBox runat="server" ID="imgdescription" CssClass="form-control" placeholder="Beschreibung des Bildes" TextMode="Search" MaxLength="255"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="imgdescriptionLabel" CssClass="form-control" Visible="false"></asp:TextBox>
                 </div>
             </div>
             <hr />
@@ -343,30 +368,41 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                    <asp:Label runat="server" ID="InitialPositionContentLabel" CssClass="form-control" Visible="false"></asp:Label>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
+                    <asp:Panel runat="server" class="form-control" ID="Panel2" style="overflow:auto;height:300px;" visible="false">
+                        <asp:Label runat="server" ID="ObjectivContentLabel" CssClass="col-sm-9" Visible="false"></asp:Label>
+                    </asp:Panel>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
+                    <asp:Panel runat="server" class="form-control" ID="Panel1" style="overflow:auto;height:300px;" visible="false">
+                        <asp:Label runat="server" ID="ProblemStatementContentLabel" Visible="false"></asp:Label>
+                    </asp:Panel>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine"></asp:TextBox>
-                </div>
+                    <asp:Panel runat="server" class="form-control" ID="ReferenceDiv" style="overflow:auto;height:300px;" visible="false">
+                        <asp:Label runat="server" ID="ReferencesContentLabel" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine" Visible="false"></asp:Label>
+                    </asp:Panel>
+               </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Bemerkungen (optional):"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="RemarksContent" CssClass="form-control" placeholder="Bemerkungen" TextMode="MultiLine"></asp:TextBox>
+                     <asp:Label runat="server" ID="RemarksContentLabel" CssClass="form-control"  style="overflow:auto;height:300px;" Visible="false"></asp:Label>
                 </div>
             </div>
 
@@ -404,12 +440,17 @@
             <br />
             <div runat="server" id="DivHistoryCollapsable" visible="true">
                 <div class="well" style="background-color: #ffffff">
-                    <asp:GridView ID="CompleteHistory" ItemType="ProStudCreator.Project" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False"  OnRowCommand="ProjectRowClick">
+                    <asp:GridView ID="CompleteHistory" HeaderStyle-BackColor="#507CD1" RowStyle-BackColor="#EFF3FB" ItemType="ProStudCreator.Project" runat="server" CellPadding="6" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False"  OnRowCommand="ProjectRowClick" OnRowDataBound="CompleteHistory_RowDataBound">
                         <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Versionsnummer" SortExpression="version" />
+                            <asp:BoundField DataField="Id" HeaderText="Version" SortExpression="version" ItemStyle-Width="10%" />
                             <asp:BoundField DataField="VersionDescription" HeaderText="Beschreibung" SortExpression="description"/>
-                            <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" />
+                            <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" ItemStyle-Width="18%"/>
                             <asp:BoundField DataField="StateAsString" HeaderText="Status" SortExpression="state"/>
+                            <asp:TemplateField ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" class="glyphicon glyphicon-arrow-left" ID="currentViewedHistory" projectId="<%# Item.Id %>"></asp:Label>
+                                </ItemTemplate>    
+                            </asp:TemplateField>
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
                             <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="<%# Item.Id %>" CommandName="showChanges">Änderungen zeigen</asp:LinkButton>
