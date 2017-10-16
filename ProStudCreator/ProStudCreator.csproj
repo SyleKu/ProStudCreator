@@ -168,7 +168,6 @@
     <Content Include="Content\file.png" />
     <Content Include="Content\jpg.png" />
     <Content Include="Content\zip.png" />
-    <Content Include="HtmlTextBox.ascx" />
     <Content Include="pictures\danger.png" />
     <Content Include="pictures\datum.png" />
     <Content Include="pictures\datun_grau.png" />
@@ -222,7 +221,6 @@
     </Content>
     <Content Include="Content\P5_P6_Guide_20160906.pdf" />
     <Content Include="Content\IP56_Handbuch_Studierende_V170913.pdf" />
-    <Content Include="WebForm1.aspx" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>
@@ -309,12 +307,6 @@
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="CustomStaticDataSource.cs" />
-    <Compile Include="HtmlTextBox.ascx.cs">
-      <DependentUpon>HtmlTextBox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="HtmlTextBox.ascx.designer.cs">
-      <DependentUpon>HtmlTextBox.ascx</DependentUpon>
-    </Compile>
     <Compile Include="LinqExtension.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
@@ -407,12 +399,6 @@
       <DependentUpon>Termine.aspx</DependentUpon>
     </Compile>
     <Compile Include="VersionExtension.cs" />
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ProStudentCreatorDB.dbml.layout">
