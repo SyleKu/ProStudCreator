@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="Projekt bearbeiten" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="AddNewProject.aspx.cs" Inherits="ProStudCreator.AddNewProject" %>
-<%@ Register Src="~/HtmlTextBox.ascx" TagName="HtmlTextBox" TagPrefix="uc" %>
 
 <%@ Import Namespace="ProStudCreator" %>
 
@@ -253,7 +252,7 @@
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
                             <asp:Label runat="server" ID="Reservation1NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation1Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
                             <asp:Label runat="server"  ID="Reservation1MailLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
@@ -265,7 +264,7 @@
                             <asp:TextBox runat="server" ID="Reservation2Name" CssClass="col-sm-9 form-control contentReservation" placeholder="(Vorname Nachname)"></asp:TextBox>
                              <asp:Label runat="server" ID="Reservation2NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <asp:TextBox runat="server" onchange="isContentStud(this)" ID="Reservation2Mail" CssClass="col-sm-9 form-control" placeholder="(E-Mail)" TextMode="Email"></asp:TextBox>
                             <asp:Label runat="server" ID="Reservation2MailLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
                         </div>
@@ -368,7 +367,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ausgangslage:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="InitialPositionContent" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Label runat="server" ID="InitialPositionContentLabel" CssClass="form-control" Visible="false"></asp:Label>
+                    <asp:Label runat="server" ID="InitialPositionContentLabel" CssClass="form-control" style="overflow:auto;height:300px;" Visible="false"></asp:Label>
                 </div>
             </div>
             <div class="form-group">
@@ -431,7 +430,6 @@
     </div>
 <div runat="server" class="well newProjectSettings" ID="divHistory">
     <asp:UpdatePanel runat="server" ID="UpdateHistory">
-        <Triggers></Triggers>
         <ContentTemplate>
             <asp:Label runat="server" Font-Size="24px" Height="50px" Text="History" CssClass="col-sm-5"></asp:Label>
             <div style="text-align: right;">
@@ -446,11 +444,6 @@
                             <asp:BoundField DataField="VersionDescription" HeaderText="Beschreibung" SortExpression="description"/>
                             <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" ItemStyle-Width="18%"/>
                             <asp:BoundField DataField="StateAsString" HeaderText="Status" SortExpression="state"/>
-                            <asp:TemplateField ItemStyle-Wrap="false">
-                                <ItemTemplate>
-                                    <asp:Label runat="server" class="glyphicon glyphicon-arrow-left" ID="currentViewedHistory" projectId="<%# Item.Id %>"></asp:Label>
-                                </ItemTemplate>    
-                            </asp:TemplateField>
                     <asp:TemplateField ItemStyle-Wrap="false">
                         <ItemTemplate>
                             <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="<%# Item.Id %>" CommandName="showChanges">Änderungen zeigen</asp:LinkButton>
@@ -461,6 +454,11 @@
                             <asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="<%# Item.Id %>" CommandName="revertProject">Projekt zurücksetzen</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>  
+                        <asp:TemplateField ItemStyle-Wrap="false">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" class="glyphicon glyphicon-arrow-left" ID="currentViewedHistory" projectId="<%# Item.Id %>" Visible='<%# checkVisibility(Item.Id) %>'></asp:Label>
+                                </ItemTemplate>    
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>

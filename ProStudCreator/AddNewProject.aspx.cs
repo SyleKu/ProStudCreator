@@ -207,7 +207,8 @@ where T : Control
             GetControlList<Label>(Controls, labelList);
             foreach (Label l in labelList)
             {
-                l.Visible = true;
+                if(l.ID != "currentViewedHistory")
+                    l.Visible = true;
             }
             Image1Previous.Visible = true;
             ReferenceDiv.Visible = true;
@@ -807,6 +808,12 @@ where T : Control
             ViewState["Types"] = projectType;
         }
 
+        public bool checkVisibility(int id)
+        {
+            var paramId = Request.QueryString.Get("id");
+            return paramId == id.ToString();
+        }
+
         #endregion
 
         #region Click handlers: Buttons (user)
@@ -829,7 +836,7 @@ where T : Control
                 case "showChanges":
                     
 
-                    var mainProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion).Id;
+                    var mainProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted).Id;
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid + "&showChanges=" + mainProject);
                     break;
                 default:
