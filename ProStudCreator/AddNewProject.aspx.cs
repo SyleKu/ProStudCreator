@@ -194,7 +194,7 @@ where T : Control
         {
             foreach (Control control in controlCollection)
             {
-                if (control is T) // This is cleaner
+                if (control is T)
                     resultCollection.Add((T)control);
 
                 if (control.HasControls())
@@ -222,6 +222,7 @@ where T : Control
             else
                 return newText;
         }
+
         private string createDiffString(string oldText, string newText)
         {
             string returnString;
@@ -471,6 +472,7 @@ where T : Control
             publishProject.Visible = false;
             refuseProject.Visible = false;
             rollbackProject.Visible = false;
+            saveCloseProject.Visible = false;
 
             POneTypeLabel.Text = createSimpleDiffString(project.POneType.Description, currentProject.POneType.Description);
             POneTeamSize.SelectedValue = createSimpleDiffString(project.POneTeamSize.Description, currentProject.POneTeamSize.Description);
@@ -826,7 +828,8 @@ where T : Control
             switch (e.CommandName)
             {
                 case "revertProject":
-                    project.IsMainVersion = false;
+                    var currentProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted);
+                    currentProject.IsMainVersion = false;
                     db.SubmitChanges();
                     var revertedProject = db.Projects.SingleOrDefault(p => p.Id == pid);
                     revertedProject.IsMainVersion = true;
@@ -834,8 +837,6 @@ where T : Control
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid);
                     break;
                 case "showChanges":
-                    
-
                     var mainProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted).Id;
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid + "&showChanges=" + mainProject);
                     break;
