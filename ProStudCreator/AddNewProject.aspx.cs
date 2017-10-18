@@ -64,8 +64,17 @@ namespace ProStudCreator
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
-                CompleteHistory.DataSource = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
-                CompleteHistory.DataBind();
+                var historyDatasource = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
+                if (historyDatasource.ToList().Count>0)
+                {
+                    CompleteHistory.DataSource = historyDatasource;
+                    CompleteHistory.DataBind();
+                }
+                else
+                {
+                    divHistory.Visible = false;
+                }
+                
             }
             else
             {
@@ -640,7 +649,7 @@ where T : Control
         /// <summary>
         ///     Saves changes to the project in the database.
         /// </summary>
-        private void SaveProject()
+        private void SaveProject(string versionDescription=null)
         {
             if (project == null) // New project
             {
@@ -663,6 +672,7 @@ where T : Control
                 }
                 var currentProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
                 currentProject.IsMainVersion = false;
+                currentProject.VersionDescription = versionDescription;
                 db.SubmitChanges();
 
                 project = new Project();
@@ -871,7 +881,7 @@ where T : Control
 
         protected void submitProject_Click(object sender, EventArgs e)
         {
-            SaveProject();
+            SaveProject("Projekt eingereicht");
 
             var validationMessage = generateValidationMessage();
 
@@ -961,13 +971,8 @@ where T : Control
 
         protected void publishProject_Click(object sender, EventArgs e)
         {
-            project.ModificationDate = DateTime.Now;
-            project.LastEditedBy = ShibUser.GetEmail();
-            Fillproject(project);
-
-            db.SubmitChanges();
-
-            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            var versionDescription = Request.QueryString["versionDescription"];
+            SaveProject("Veröffentlicht");
             project.Publish(db);
             db.SubmitChanges();
 
