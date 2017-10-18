@@ -153,14 +153,22 @@ namespace ProStudCreator
 
         private void FillDropAdvisors()
         {
+            var user = db.UserDepartmentMap.Single(u => u.Mail == ShibUser.GetEmail());
             dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
-            dropAdvisor1.SelectedIndex = 0;
             dropAdvisor2.DataSource = db.UserDepartmentMap;
             dropAdvisor2.DataBind();
             dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
-            dropAdvisor2.SelectedIndex = 0;
+            if (user.CanBeAdvisor1)
+            {
+                dropAdvisor1.SelectedValue = user.Id.ToString();
+            }
+            else
+            {
+                dropAdvisor1.SelectedIndex = 0;
+                dropAdvisor2.SelectedValue = user.Id.ToString();
+            } 
         }
 
         private void FillDropPreviousProject(Semester projectSemester)
