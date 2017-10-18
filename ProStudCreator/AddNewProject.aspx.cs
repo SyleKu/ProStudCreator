@@ -159,7 +159,8 @@ namespace ProStudCreator
             dropAdvisor1.SelectedIndex = 0;
             dropAdvisor2.DataSource = db.UserDepartmentMap;
             dropAdvisor2.DataBind();
-            dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor2.SelectedIndex = 0;
         }
 
         private void FillDropPreviousProject(Semester projectSemester)
