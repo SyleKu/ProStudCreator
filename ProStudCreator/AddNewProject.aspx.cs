@@ -334,7 +334,6 @@ namespace ProStudCreator
             }
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
-
             Fillproject(project);
 
             db.SubmitChanges();
@@ -535,7 +534,7 @@ namespace ProStudCreator
         /// <returns>First applicable error message from the validation.</returns>
         private string generateValidationMessage()
         {
-            if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+            if (project?.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
             if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
@@ -548,7 +547,7 @@ namespace ProStudCreator
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
             if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2.Mail != "")
+            if (project.Advisor2 == null && project.Advisor2?.Mail != "")
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
 
             var numAssignedTypes = projectType.Count(a => a);
