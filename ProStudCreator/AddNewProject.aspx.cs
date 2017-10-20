@@ -64,11 +64,11 @@ namespace ProStudCreator
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
-                var historyDatasource = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
-                if (historyDatasource.ToList().Count>0)
+                var history = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
+                if (history.ToList().Count>0)
                 {
-                    CompleteHistory.DataSource = historyDatasource;
-                    CompleteHistory.DataBind();
+                    historyListView.DataSource = history;
+                    historyListView.DataBind();
                 }
                 else
                 {
@@ -175,7 +175,6 @@ namespace ProStudCreator
                     ToggleReservationTwoVisible();
             }
         }
-
         private void FillDropAdvisors()
         {
             dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);

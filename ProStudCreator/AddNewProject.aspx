@@ -336,7 +336,7 @@
                         <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>
                     </div>
-                    <asp:Timer runat="server" Interval="60000" />
+                    <asp:Timer runat="server" Interval="60000" Enabled="false" />
                 </ContentTemplate>
             </asp:UpdatePanel>
             <div class="form-group">
@@ -414,7 +414,7 @@
                 <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                     <ContentTemplate>
                         <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
-                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick">
+                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick" Enabled="false">
                         </asp:Timer>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -436,33 +436,39 @@
                 <asp:Button runat="server" ID="btnHistoryCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="btnHistoryCollapse_OnClick" />
             </div>
             <br />
-            <div runat="server" id="DivHistoryCollapsable" visible="true">
-                <div class="well" style="background-color: #ffffff">
-                    <asp:GridView ID="CompleteHistory" HeaderStyle-BackColor="#507CD1" RowStyle-BackColor="#EFF3FB" ItemType="ProStudCreator.Project" runat="server" CellPadding="6" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False"  OnRowCommand="ProjectRowClick" OnRowDataBound="CompleteHistory_RowDataBound">
-                        <Columns>
-                            <asp:BoundField DataField="Id" HeaderText="Version" SortExpression="version" ItemStyle-Width="10%" />
-                            <asp:BoundField DataField="VersionDescription" HeaderText="Beschreibung" SortExpression="description"/>
-                            <asp:BoundField DataField="ModificationDate" HeaderText="Datum" SortExpression="date" ItemStyle-Width="18%"/>
-                            <asp:BoundField DataField="StateAsString" HeaderText="Status" SortExpression="state"/>
-                    <asp:TemplateField ItemStyle-Wrap="false">
-                        <ItemTemplate>
-                            <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="<%# Item.Id %>" CommandName="showChanges">Änderungen zeigen</asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                            <asp:TemplateField ItemStyle-Wrap="false">
-                        <ItemTemplate>
-                            <asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="<%# Item.Id %>" CommandName="revertProject">Projekt zurücksetzen</asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateField>  
-                        <asp:TemplateField ItemStyle-Wrap="false">
-                                <ItemTemplate>
-                                    <asp:Label runat="server" class="glyphicon glyphicon-arrow-left" ID="currentViewedHistory" projectId="<%# Item.Id %>" Visible='<%# checkVisibility(Item.Id) %>'></asp:Label>
-                                </ItemTemplate>    
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
+            <div runat="server" Id="DivHistoryCollapsable">
+            <asp:ListView runat="server" ID="historyListView">
+                <ItemTemplate>
+                    <table>
+                        <div class="list">
+                        <tr>
+                            <div class="row">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2"><asp:Label runat="server"><%#Eval("Name") %></asp:Label></div>
+                            <div class="col-sm-1"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
+                            <div class="col-sm-1"></div> 
+                            <div class="col-sm-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
+                            <div class="col-sm-3"><asp:Label runat="server"></asp:Label></div>
+                            <div class="col-sm-2"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-7"></div>
+                                <div class="col-sm-2"><asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                            </div>
+
+                            <div class="row">            
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-11"><%#Eval("VersionDescription") %></div>
+                            </div>
+                            <hr />
+                        </tr>
+                        </div>
+                    </table>
+                </ItemTemplate>
+            </asp:ListView>
                 </div>
-            </div>
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>
