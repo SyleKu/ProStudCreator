@@ -543,11 +543,11 @@ namespace ProStudCreator
                 return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
             if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
                 return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
+            if (project.Advisor2 != null && !String.IsNullOrEmpty(project.Advisor2.Name) && !project.Advisor2.Name.IsValidName())
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
             if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2?.Mail != "")
+            if (project.Advisor2 == null && !String.IsNullOrEmpty(project.Advisor2?.Mail)) // null check oder "" check
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
 
             var numAssignedTypes = projectType.Count(a => a);
