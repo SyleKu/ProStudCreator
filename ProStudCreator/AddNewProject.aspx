@@ -446,21 +446,21 @@
                             <div class="col-sm-1"></div>
                             <div class="col-sm-2"><asp:Label runat="server"><%#Eval("Name") %></asp:Label></div>
                             <div class="col-sm-1"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                            <div class="col-sm-1"></div> 
                             <div class="col-sm-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
-                            <div class="col-sm-3"><asp:Label runat="server"></asp:Label></div>
-                            <div class="col-sm-2"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                            <div class="col-sm-2"><asp:Label runat="server"></asp:Label></div>
+                            <div class="col-sm-2" style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                            <div class="col-sm-2"><asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-7"></div>
-                                <div class="col-sm-2"><asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                                <div class="col-sm-2"></div>
                             </div>
 
                             <div class="row">            
                                 <div class="col-sm-1"></div>
-                                <div class="col-sm-11"><%#Eval("VersionDescription") %></div>
+                                <div class="col-sm-11" style="margin-top:2em;"><%#Eval("VersionDescription") %></div>
                             </div>
                             <hr />
                         </tr>

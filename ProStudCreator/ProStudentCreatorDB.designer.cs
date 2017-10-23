@@ -1333,7 +1333,7 @@ namespace ProStudCreator
 		
 		private string _VersionDescription;
 		
-		private int _ProjectId;
+		private System.Nullable<int> _ProjectId;
 		
 		private EntitySet<Project> _Projects;
 		
@@ -1507,7 +1507,7 @@ namespace ProStudCreator
     partial void OnIsMainVersionChanged();
     partial void OnVersionDescriptionChanging(string value);
     partial void OnVersionDescriptionChanged();
-    partial void OnProjectIdChanging(int value);
+    partial void OnProjectIdChanging(System.Nullable<int> value);
     partial void OnProjectIdChanged();
     #endregion
 		
@@ -2959,8 +2959,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int NOT NULL")]
-		public int ProjectId
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int")]
+		public System.Nullable<int> ProjectId
 		{
 			get
 			{
