@@ -26,12 +26,6 @@
             <p>
                 <b>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</b>
             </p>
-            <br/>
-            <a href="https://www.fhnw.ch/de/die-fhnw/hochschulen/ht/news-und-events/ausstellung-der-bachelor-abschlussarbeiten-2017/media/ausstellungsbroschuere-2017.pdf">Download Ausstellungsbroschüre</a>
-            <br/>
-            <br/>
-            <a href="FAQ.aspx">Formular um Projekte einzureichen</a>
-
         </div>
     </div>
 </asp:Content>
