@@ -1016,7 +1016,7 @@ where T : Control
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
             project.Reject();
-            db.SubmitChanges();
+            SaveProject("Abgelehnt");
 
 #if !DEBUG
             MailMessage mailMessage = new MailMessage();
@@ -1033,6 +1033,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
 #endif
+            //db.Projects.SingleOrDefault(p => p.Id == id).
             Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
@@ -1444,6 +1445,13 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 cell.BackColor = ColorTranslator.FromHtml(project.StateColor);
             } 
         }
+        public string getGravatar(string email)
+        {
+            var md5 = System.Security.Cryptography.MD5.Create();
+            md5.Initialize();
+            md5.ComputeHash(Encoding.ASCII.GetBytes(email));
+            return BitConverter.ToString(md5.Hash).Replace("-", "") + "&d=identicon";
+         }
     }
 
 }

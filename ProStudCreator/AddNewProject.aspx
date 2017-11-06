@@ -443,25 +443,22 @@
                         <div class="list">
                         <tr>
                             <div class="row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-2"><asp:Label runat="server"><%#Eval("Name") %></asp:Label></div>
-                            <div class="col-sm-1"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                            <div class="col-sm-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
-                            <div class="col-sm-2"><asp:Label runat="server"></asp:Label></div>
-                            <div class="col-sm-2" style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
-                            <div class="col-sm-2"><asp:LinkButton runat="server" ID="revert" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                                <div class="col-sm-12 col-md-1"><%# "<img style='width:50px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar((string)Eval("LastEditedBy"))+"'/>" %></div>
+                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("LastEditedBy") %></asp:Label></div>
+                                <div class="col-sm-12 col-md-1" style="width:4.1515%;"></div>
+                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
+                                <div class="col-sm-12 col-md-1" style="width:4.1515%;"></div>
+                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
+                                <div class="col-sm-12 col-md-2"style="width:11.666%"><asp:LinkButton style="margin-top:5px;" runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                                <div class="col-sm-12 col-md-2"><asp:LinkButton style="margin-top:5px;" runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-2"></div>
-                                <div class="col-sm-7"></div>
-                                <div class="col-sm-2"></div>
-                            </div>
+                            <%# (string)Eval("VersionDescription") == "Abgelehnt" ? 
+                                    "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>":""%>
+                            <%# (string)Eval("VersionDescription")=="Abgelehnt"?
+                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>"+"</div></div>":""%> 
 
-                            <div class="row">            
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-11" style="margin-top:2em;"><%#Eval("VersionDescription") %></div>
-                            </div>
+                       
+
                             <hr />
                         </tr>
                         </div>
