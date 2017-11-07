@@ -661,6 +661,7 @@ where T : Control
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
                 db.SubmitChanges();
+                project.ProjectId = project.Id;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
 
