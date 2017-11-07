@@ -50,7 +50,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            projects = db.Projects.Select(i => i);
+            projects = db.Projects.Where(i => i.IsMainVersion);
 
             if (IsPostBack || Session["SelectedOwner"] == null || Session["SelectedSemester"] == null)
             {
@@ -94,7 +94,7 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail()) &&
-                                                          p.State != ProjectState.Deleted)
+                                                          p.State != ProjectState.Deleted && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     else
@@ -106,20 +106,20 @@ namespace ProStudCreator
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
                                                           && p.State != ProjectState.Deleted
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
-                                                              p.State == ProjectState.Published ||
-                                                              nextSemesterSelected && p.Semester == null ||
+                                                              p.State == ProjectState.Published && p.IsMainVersion ||
+                                                              nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
                                                               p.State != ProjectState.Deleted && p.State !=
                                                               ProjectState.Published &&
-                                                              nextSemesterSelected))
+                                                              nextSemesterSelected && p.IsMainVersion))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published)
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published &&
+                        projects = db.Projects.Where(p =>  p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
@@ -332,7 +332,7 @@ namespace ProStudCreator
             using (var output = new MemoryStream())
             {
                 ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
-                    .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                    .Select(p => db.Projects.Single(pr => pr.Id == p.id && pr.IsMainVersion))
                     .OrderBy(p => p.Reservation1Name != "")
                     .ThenBy(p => p.Department.DepartmentName)
                     .ThenBy(p => p.ProjectNr));
@@ -350,12 +350,12 @@ namespace ProStudCreator
         {
             if (filterText.Value=="")return;
 
-            var searchString =  filterText.Value;
-            projects = db.Projects.Select(i => i);
-            projects = db.Projects.Where(p => searchString == "" || p.LogStudent1Name.Contains(searchString) || p.LogStudent2Name.Contains(searchString))
-                .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
-            AllProjects.DataSource = projects
-                .Select(i => getProjectSingleElement(i));
+            //var searchString =  filterText.Value;
+            //projects = db.Projects.Select(i => i);
+            //projects = db.Projects.Where(p => searchString == "" || p.LogStudent1Name.Contains(searchString) || p.LogStudent2Name.Contains(searchString))
+            //    .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
+            //AllProjects.DataSource = projects
+            //    .Select(i => getProjectSingleElement(i));
             AllProjects.DataBind();
         }
        protected void filterButton_Click(object sender, EventArgs e)

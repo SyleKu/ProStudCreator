@@ -592,8 +592,47 @@ html .demo-container .ruFakeInput {
         top: 0;
     }
 
+span{
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+.ellipsisLabel {
+    text-overflow: ellipsis !important;
+    overflow:hidden;
+}
+ins {
+    background-color: #cfc;
+    text-decoration: none;
+    
+}
 
+del {
+    color: #999;
+    background-color:#FEC8C8;
+}
 
+#historyRow {
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+#fixedupdatepanel {
+    position:initial;
+}
+
+    #historyRow > [class*='col-'] {
+        display: flex !important;
+        flex-direction: row !important;
+        margin: auto 0;
+        padding-top:5px;
+        
+    }
+    .btn-default{
+        margin-top:5px;
+    }
 .ajax__fileupload_fileItemInfo {
     position: relative;
     z-index: 0;

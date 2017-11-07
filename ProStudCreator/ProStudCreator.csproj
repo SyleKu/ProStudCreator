@@ -47,6 +47,9 @@
       <HintPath>..\packages\AspNet.ScriptManager.jQuery.2.1.3\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlDiff, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\htmldiff.net.1.3\lib\net35\HtmlDiff.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\lib\NPOI-OfficeIntegration\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -304,6 +307,7 @@
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="CustomStaticDataSource.cs" />
+    <Compile Include="LinqExtension.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -342,11 +346,6 @@
     <Compile Include="PDF.aspx.designer.cs">
       <DependentUpon>PDF.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ProStudentCreatorDB.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProStudentCreatorDB.dbml</DependentUpon>
-    </Compile>
     <Compile Include="FAQ.aspx.cs">
       <DependentUpon>FAQ.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -367,6 +366,11 @@
     </Compile>
     <Compile Include="ProjectState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProStudentCreatorDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProStudentCreatorDB.dbml</DependentUpon>
+    </Compile>
     <Compile Include="SemesterExtensions.cs" />
     <Compile Include="ShibUser.cs" />
     <Compile Include="Site.Master.cs">
@@ -394,6 +398,7 @@
     <Compile Include="Termine.aspx.designer.cs">
       <DependentUpon>Termine.aspx</DependentUpon>
     </Compile>
+    <Compile Include="VersionExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ProStudentCreatorDB.dbml.layout">
