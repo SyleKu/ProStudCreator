@@ -61,6 +61,7 @@ namespace ProStudCreator
             {
                 id = int.Parse(Request.QueryString["id"]);
                 project = db.Projects.Single(p => (int?) p.Id == id);
+                
                 if (!project.UserCanEdit())
                 {
                     Response.Redirect("error/AccessDenied.aspx");
@@ -158,8 +159,10 @@ namespace ProStudCreator
                 {
                     Page.Title = "Projekt bearbeiten";
                     SiteTitle.Text = "Projekt bearbeiten";
-
-                    RetrieveProjectToEdit();
+                    if (!project.IsMainVersion)
+                        RetrieveProjectComparison(project.Id);
+                    else
+                        RetrieveProjectToEdit();
                     prepareClientForm(project);
                 }
                 else
@@ -264,9 +267,16 @@ where T : Control
             Image1.Visible = false;
             
         }
-        private void RetrieveProjectComparison()
+        private void RetrieveProjectComparison(int projectId = 0)
         {
-            var currentProject = db.Projects.Single(p => p.Id == int.Parse(Request.QueryString["showChanges"]));
+            var pid = 0;
+
+            if(projectId == 0)
+                pid = int.Parse(Request.QueryString["showChanges"]);
+            else
+                pid = projectId;
+
+            var currentProject = db.Projects.Single(p => p.Id == pid);
             showAllControls();
             hideUnwantedControls();
             

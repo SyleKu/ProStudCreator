@@ -119,7 +119,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="80" placeholder="Projektname"></asp:TextBox>
-                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
+                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control dropPreviousProject" Visible="false" style="overflow:visible;"></asp:Label>
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
