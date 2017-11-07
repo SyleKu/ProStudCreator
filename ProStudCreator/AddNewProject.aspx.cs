@@ -11,6 +11,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using HtmlDiff;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace ProStudCreator
 {
@@ -23,6 +24,7 @@ namespace ProStudCreator
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
         private Version version;
+        private enum clientType { INTERN, COMPANY,  PRIVATEPERSON  }
         #region Timer tick
 
         protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
@@ -167,7 +169,7 @@ namespace ProStudCreator
 
                     FillDropPreviousProject(Semester.CurrentSemester(db));
                     dropPreviousProject.SelectedIndex = 0;
-                    radioClientType.SelectedValue = "Intern";
+                    radioClientType.SelectedIndex = (int)clientType.INTERN;
                     divClientForm.Visible = false;
                     FillDropAdvisors();
                 }
@@ -648,7 +650,7 @@ where T : Control
         /// <summary>
         ///     Saves changes to the project in the database.
         /// </summary>
-        private void SaveProject(string versionDescription=null)
+        private void SaveProject()
         {
             if (project == null) // New project
             {
@@ -669,15 +671,29 @@ where T : Control
                 {
                     throw new UnauthorizedAccessException();
                 }
+
                 var currentProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
+                var tempProject = new Project();
+                tempProject.InitNew();
+                tempProject.ModificationDate = DateTime.Now;
+                tempProject.LastEditedBy = ShibUser.GetEmail();
+                Fillproject(tempProject);
+                if (!IsProjectModified(tempProject, currentProject))
+                {
+                    return;
+                }
                 currentProject.IsMainVersion = false;
-                currentProject.VersionDescription = versionDescription;
+                currentProject.ModificationDate = DateTime.Now;
+                currentProject.LastEditedBy = ShibUser.GetEmail();
+                db.Projects.Attach(tempProject); // hack to avoid that the project gets submitted twice
+                db.Projects.DeleteOnSubmit(tempProject);
                 db.SubmitChanges();
 
                 project = new Project();
-                project.InitNew();       
+                project.InitNew();
                 Fillproject(project);
                 project.ProjectId = currentProject.ProjectId;
+                project.State = currentProject.State;
                 db.Projects.InsertOnSubmit(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
@@ -829,7 +845,7 @@ where T : Control
 
         #region Click handlers: Buttons (user)
 
-        protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
+        protected void ProjectRowClick(object sender, ListViewCommandEventArgs e)
         {
 
 
@@ -880,7 +896,7 @@ where T : Control
 
         protected void submitProject_Click(object sender, EventArgs e)
         {
-            SaveProject("Projekt eingereicht");
+            SaveProject();
 
             var validationMessage = generateValidationMessage();
 
@@ -971,7 +987,7 @@ where T : Control
         protected void publishProject_Click(object sender, EventArgs e)
         {
             var versionDescription = Request.QueryString["versionDescription"];
-            SaveProject("Veröffentlicht");
+            SaveProject();
             project.Publish(db);
             db.SubmitChanges();
 
@@ -1016,8 +1032,8 @@ where T : Control
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
             project.Reject();
-            SaveProject("Abgelehnt");
-
+            db.Projects.SingleOrDefault(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
+            SaveProject();
 #if !DEBUG
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
@@ -1033,7 +1049,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var smtpClient = new SmtpClient();
             smtpClient.Send(mailMessage);
 #endif
-            //db.Projects.SingleOrDefault(p => p.Id == id).
             Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
         }
 
@@ -1095,12 +1110,12 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             Console.WriteLine(radioClientType.SelectedIndex);
 
 
-            if (radioClientType.SelectedValue == "Company")
+            if (radioClientType.SelectedIndex == (int)clientType.COMPANY)
             {
                 divClientForm.Visible = true;
                 divClientCompany.Visible = true;
             }
-            else if (radioClientType.SelectedValue == "Intern")
+            else if (radioClientType.SelectedIndex == (int)clientType.INTERN)
             {
                 divClientForm.Visible = false;
                 divClientCompany.Visible = false;
@@ -1135,10 +1150,17 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
 
 
-            if (radioClientType.SelectedValue != "Intern")
+            if (radioClientType.SelectedIndex != (int)clientType.INTERN)
             {
-                if (radioClientType.SelectedValue == "Company")
-                project.ClientCompany = txtClientCompany.Text.FixupParagraph();
+                if (radioClientType.SelectedIndex == (int)clientType.COMPANY)
+                {
+                    project.ClientCompany = txtClientCompany.Text.FixupParagraph();
+                    project.ClientType = (int)clientType.COMPANY;
+                }
+                else
+                {
+                    project.ClientType = (int)clientType.PRIVATEPERSON;
+                }
                 project.ClientAddressTitle = drpClientTitle.SelectedItem.Text;
                 project.ClientPerson = txtClientName.Text.FixupParagraph();
                 project.ClientAddressDepartment = txtClientDepartment.Text.FixupParagraph();
@@ -1150,6 +1172,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
             else
             {
+                project.ClientType = (int)clientType.INTERN;
                 project.ClientAddressTitle = "Herr";
 
                 project.ClientCompany =
@@ -1330,7 +1353,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                                             txtClientEmail.Text = "";
 
                 divClientForm.Visible = false;
-                radioClientType.SelectedValue = "Intern";
+                radioClientType.SelectedIndex = (int)clientType.INTERN;
             }
             else
             {
@@ -1397,37 +1420,23 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         private void prepareClientForm(Project project)
         {
-            var hasClient = false;
+            switch (project.ClientType) {
 
-            string[] clientInformationStrings =
-            {
-                project.ClientAddressPostcode, project.ClientAddressCity, project.ClientAddressDepartment,
-                project.ClientAddressStreet, project.ClientAddressTitle, project.ClientCompany, project.ClientMail,
-                project.ClientPerson, project.ClientReferenceNumber
-            };
-
-            foreach (var clientInformationstirng in clientInformationStrings)
-                if (!string.IsNullOrEmpty(clientInformationstirng))
-                    hasClient = true;
-
-            if (hasClient)
-            {
-                if (!string.IsNullOrEmpty(project?.ClientCompany))
-                {
+                case (int)clientType.COMPANY: 
                     divClientCompany.Visible = divClientForm.Visible = true;
-                    radioClientType.SelectedValue = "Company";
-                }
-                else
-                {
+                    radioClientType.SelectedIndex = (int)clientType.COMPANY;
+                    break;
+                    
+                case (int)clientType.PRIVATEPERSON: 
                     divClientCompany.Visible = false;
                     divClientForm.Visible = true;
-                    radioClientType.SelectedValue = "PrivatePerson";
-                }
-            }
-            else
-            {
-                divClientCompany.Visible = divClientForm.Visible = false;
-                radioClientType.SelectedValue = "Intern";
+                    radioClientType.SelectedIndex = (int)clientType.PRIVATEPERSON;
+                    break;
+                
+                case (int)clientType.INTERN:
+                    divClientCompany.Visible = divClientForm.Visible = false;
+                    radioClientType.SelectedIndex = (int)clientType.INTERN;
+                    break;
             }
         }
         private void CollapseHistory(bool collapse)
@@ -1452,6 +1461,57 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             md5.ComputeHash(Encoding.ASCII.GetBytes(email));
             return BitConverter.ToString(md5.Hash).Replace("-", "") + "&d=identicon";
          }
+
+        private bool IsProjectModified(Project p1, Project p2)
+        {
+            List<string> props = new List<string>();
+            var projectType = typeof(Project);
+            var pid = nameof(Project.Id);
+            var modDate = nameof(Project.ModificationDate);
+            var pubDate = nameof(Project.PublishedDate);
+            var lastEditedBy = nameof(Project.LastEditedBy);
+            var state = nameof(Project.State);
+            var projectNr = nameof(Project.ProjectNr);
+            var isMainVers = nameof(Project.IsMainVersion);
+            var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
+            var projId = nameof(Project.ProjectId);
+            var img = nameof(Project.Picture);
+            var credate = nameof(Project.CreateDate);
+            var prs = nameof(Project.Projects);
+            var attch = nameof(Project.Attachements);
+            var tsk = nameof(Project.Tasks);
+
+            props.Add(pid);
+            props.Add(modDate);
+            props.Add(pubDate);
+            props.Add(lastEditedBy);
+            props.Add(state);
+            props.Add(projId);
+            props.Add(projectNr);
+            props.Add(isMainVers);
+            props.Add(ablehnungsgrund);
+            props.Add(img);
+            props.Add(credate);
+            props.Add(prs);
+            props.Add(attch);
+            props.Add(tsk);
+
+                foreach (PropertyInfo pi in typeof(Project).GetProperties())
+                {
+                    if (!props.Contains(pi.Name))
+                    {
+                        var value1 = pi.GetValue(p1);
+                        var value2 = pi.GetValue(p2);
+                        if(value1 != null && value2 != null)
+                        {
+                            if (!value1.Equals(value2))
+                                return true;
+                        }
+                    }
+                }
+
+            return false;
+        }
     }
 
 }

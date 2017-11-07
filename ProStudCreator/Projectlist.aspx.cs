@@ -106,8 +106,8 @@ namespace ProStudCreator
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
                                                           && p.State != ProjectState.Deleted
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
-                                                              p.State == ProjectState.Published ||
-                                                              nextSemesterSelected && p.Semester == null ||
+                                                              p.State == ProjectState.Published && p.IsMainVersion ||
+                                                              nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
                                                               p.State != ProjectState.Deleted && p.State !=
                                                               ProjectState.Published &&
                                                               nextSemesterSelected && p.IsMainVersion))
@@ -119,7 +119,7 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
+                        projects = db.Projects.Where(p =>  p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;

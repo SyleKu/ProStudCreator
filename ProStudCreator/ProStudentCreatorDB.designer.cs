@@ -1331,9 +1331,11 @@ namespace ProStudCreator
 		
 		private bool _IsMainVersion;
 		
-		private string _VersionDescription;
-		
 		private System.Nullable<int> _ProjectId;
+		
+		private string _Ablehnungsgrund;
+		
+		private int _ClientType;
 		
 		private EntitySet<Project> _Projects;
 		
@@ -1505,10 +1507,12 @@ namespace ProStudCreator
     partial void OnAdvisor2IdChanged();
     partial void OnIsMainVersionChanging(bool value);
     partial void OnIsMainVersionChanged();
-    partial void OnVersionDescriptionChanging(string value);
-    partial void OnVersionDescriptionChanged();
     partial void OnProjectIdChanging(System.Nullable<int> value);
     partial void OnProjectIdChanged();
+    partial void OnAblehnungsgrundChanging(string value);
+    partial void OnAblehnungsgrundChanged();
+    partial void OnClientTypeChanging(int value);
+    partial void OnClientTypeChanged();
     #endregion
 		
 		public Project()
@@ -2939,26 +2943,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VersionDescription", DbType="NVarChar(255)")]
-		public string VersionDescription
-		{
-			get
-			{
-				return this._VersionDescription;
-			}
-			set
-			{
-				if ((this._VersionDescription != value))
-				{
-					this.OnVersionDescriptionChanging(value);
-					this.SendPropertyChanging();
-					this._VersionDescription = value;
-					this.SendPropertyChanged("VersionDescription");
-					this.OnVersionDescriptionChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int")]
 		public System.Nullable<int> ProjectId
 		{
@@ -2975,6 +2959,46 @@ namespace ProStudCreator
 					this._ProjectId = value;
 					this.SendPropertyChanged("ProjectId");
 					this.OnProjectIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ablehnungsgrund", DbType="nvarchar(MAX)")]
+		public string Ablehnungsgrund
+		{
+			get
+			{
+				return this._Ablehnungsgrund;
+			}
+			set
+			{
+				if ((this._Ablehnungsgrund != value))
+				{
+					this.OnAblehnungsgrundChanging(value);
+					this.SendPropertyChanging();
+					this._Ablehnungsgrund = value;
+					this.SendPropertyChanged("Ablehnungsgrund");
+					this.OnAblehnungsgrundChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientType", DbType="int")]
+		public int ClientType
+		{
+			get
+			{
+				return this._ClientType;
+			}
+			set
+			{
+				if ((this._ClientType != value))
+				{
+					this.OnClientTypeChanging(value);
+					this.SendPropertyChanging();
+					this._ClientType = value;
+					this.SendPropertyChanged("ClientType");
+					this.OnClientTypeChanged();
 				}
 			}
 		}

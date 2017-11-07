@@ -87,7 +87,6 @@ namespace ProStudCreator
         {
             _p.ModificationDate = DateTime.Now;
             _p.State = ProjectState.Deleted;
-            _p.VersionDescription = "Gelöscht";
         }
 
         /// <summary>

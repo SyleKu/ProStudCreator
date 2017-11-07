@@ -414,15 +414,15 @@
                 <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                     <ContentTemplate>
                         <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
-                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick" Enabled="false">
+                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="10000" OnTick="Pdfupdatetimer_Tick" Enabled="true">
                         </asp:Timer>
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
             <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="publishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
-            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
-            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 32px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
+            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
+            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
             <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
             <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
             <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
@@ -437,27 +437,24 @@
             </div>
             <br />
             <div runat="server" Id="DivHistoryCollapsable">
-            <asp:ListView runat="server" ID="historyListView">
+            <asp:ListView runat="server" ID="historyListView" OnItemCommand="ProjectRowClick">
                 <ItemTemplate>
                     <table>
                         <div class="list">
                         <tr>
-                            <div class="row">
-                                <div class="col-sm-12 col-md-1"><%# "<img style='width:50px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar((string)Eval("LastEditedBy"))+"'/>" %></div>
-                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("LastEditedBy") %></asp:Label></div>
-                                <div class="col-sm-12 col-md-1" style="width:4.1515%;"></div>
-                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                                <div class="col-sm-12 col-md-1" style="width:4.1515%;"></div>
-                                <div class="col-sm-12 col-md-2"><br /><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
-                                <div class="col-sm-12 col-md-2"style="width:11.666%"><asp:LinkButton style="margin-top:5px;" runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight"   CommandArgument="-" CommandName="showChanges">Vergleichen</asp:LinkButton></div>
-                                <div class="col-sm-12 col-md-2"><asp:LinkButton style="margin-top:5px;" runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument="-" CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                            <div class="row" id="historyRow">
+                                <dîv class="col-xs-12 col-md-1"></dîv> 
+                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar((string)Eval("LastEditedBy"))+"'/> " + Eval("LastEditedBy") %></asp:Label></div>
+                                <div class="col-xs-12 col-md-2" style="height:100%;"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
+                                <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
+                                <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Eval("Id") %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                                <div class="col-xs-12 col-md-2"><asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Eval("Id") %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
                             </div>
-                            <%# (string)Eval("VersionDescription") == "Abgelehnt" ? 
-                                    "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>":""%>
-                            <%# (string)Eval("VersionDescription")=="Abgelehnt"?
-                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>"+"</div></div>":""%> 
 
-                       
+                            <%# (string)Eval("Ablehnungsgrund") != null? 
+                                    "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
+                            <%# (string)Eval("Ablehnungsgrund")!=null?
+                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + (string) Eval("Ablehnungsgrund") + "</div></div>" : ""%> 
 
                             <hr />
                         </tr>
