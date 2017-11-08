@@ -401,7 +401,7 @@ namespace ProStudCreator
             }
             return projectType;
         }
-        private string generateValidationMessage(Project project)
+        private string GenerateValidationMessage(Project project)
         {
             var projectType = getProjectTypeBools(project);
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
@@ -417,7 +417,7 @@ namespace ProStudCreator
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
             if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2.Mail != "")
+            if (project.Advisor2 == null && project.Advisor2?.Mail != "")
                 return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
 
             var numAssignedTypes = projectType.Count(a => a);
@@ -453,7 +453,7 @@ namespace ProStudCreator
         protected void einreichenButton_Click(int id)
         {
             Project project = db.Projects.Single(p => p.Id == id);
-            var validationMessage = generateValidationMessage(project);
+            var validationMessage = GenerateValidationMessage(project);
             if (validationMessage != null)
             {
                 var sb = new StringBuilder();
