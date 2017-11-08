@@ -343,11 +343,14 @@
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
-                    <asp:RegularExpressionValidator ID="regexValidator" runat="server"
-                         ControlToValidate="AddPicture"
-                         ErrorMessage="<br /><a style='color:red;'>Es werden nur JPEGs und PNGs als Bildformat unterstützt.</a>" 
-                         ValidationExpression="(.*\.([Jj][Pp][Gg])|.*\.([Jj][Pp][Ee][Gg])|.*\.([Pp][Nn][Gg])$)">
-                    </asp:RegularExpressionValidator>
+                    <br />
+                    <a style="color:red">
+                        <asp:RegularExpressionValidator ID="regexValidator" runat="server"
+                             ControlToValidate="AddPicture"
+                             ErrorMessage="Es werden nur JPEGs und PNGs als Bildformat unterstützt." 
+                             ValidationExpression="(.*\.([Jj][Pp][Gg])|.*\.([Jj][Pp][Ee][Gg])|.*\.([Pp][Nn][Gg])$)">
+                        </asp:RegularExpressionValidator>
+                    </a>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>

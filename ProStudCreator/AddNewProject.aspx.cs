@@ -1296,7 +1296,9 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             {
                 var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
                 if (!fileExtension.Contains("jpg"))
+                {
                     return;
+                }
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
