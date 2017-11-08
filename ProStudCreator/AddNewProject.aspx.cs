@@ -159,7 +159,7 @@ namespace ProStudCreator
                 {
                     Page.Title = "Projekt bearbeiten";
                     SiteTitle.Text = "Projekt bearbeiten";
-                    if (!project.IsMainVersion)
+                    if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
                         RetrieveProjectComparison(project.Id);
                     else
                         RetrieveProjectToEdit();

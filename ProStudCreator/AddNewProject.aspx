@@ -119,7 +119,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="80" placeholder="Projektname"></asp:TextBox>
-                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control dropPreviousProject" Visible="false" style="overflow:visible;"></asp:Label>
+                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control" Visible="false" style="overflow:auto;width:75%;"></asp:Label>
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
-                     <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
+                     <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control" style="width:75%;" Visible="false"></asp:Label>
                 </div>
             </div>
             <hr />
@@ -454,7 +454,7 @@
                             <%# (string)Eval("Ablehnungsgrund") != null? 
                                     "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
                             <%# (string)Eval("Ablehnungsgrund")!=null?
-                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + (string) Eval("Ablehnungsgrund") + "</div></div>" : ""%> 
+                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + ((string) Eval("Ablehnungsgrund")).Replace(Environment.NewLine,"<br />") + "</div></div>" : ""%> 
 
                             <hr />
                         </tr>
