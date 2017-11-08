@@ -97,6 +97,7 @@ namespace ProStudCreator
                                                           p.State != ProjectState.Deleted && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
+
                     else
                     {
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
@@ -104,22 +105,22 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
-                                                          && p.State != ProjectState.Deleted
+                                                          && p.State != ProjectState.Deleted && p.IsMainVersion
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
-                                                              p.State == ProjectState.Published && p.IsMainVersion ||
-                                                              nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
-                                                              p.State != ProjectState.Deleted && p.State !=
+                                                              p.State == ProjectState.Published ||
+                                                              nextSemesterSelected && p.Semester == null ||
+                                                              p.State != ProjectState.Deleted && p.IsMainVersion && p.State !=
                                                               ProjectState.Published &&
-                                                              nextSemesterSelected && p.IsMainVersion))
+                                                              nextSemesterSelected))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && p.State != ProjectState.Deleted)
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.State != ProjectState.Deleted && p.IsMainVersion &&
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
