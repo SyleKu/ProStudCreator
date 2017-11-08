@@ -958,14 +958,7 @@ where T : Control
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
-            //if (! (project.LanguageGerman || project.LanguageEnglish))
-            //    return "Bitte wählen Sie mindestens eine Sprache aus.";
-
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
-                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";
-
-            if (project.OverOnePage)
+           if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
             if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
@@ -1300,6 +1293,10 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             project.ImgDescription = imgdescription.Text.FixupParagraph();
 
             if (AddPicture.HasFile)
+            {
+                var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
+                if (!fileExtension.Contains("jpg"))
+                    return;
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
@@ -1314,7 +1311,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                     }
                     project.Picture = new Binary(data);
                 }
-
+            }
 
             //Previous Project
 
