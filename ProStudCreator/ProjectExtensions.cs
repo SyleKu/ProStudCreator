@@ -211,6 +211,29 @@ namespace ProStudCreator
             return false;
         }
 
+        public static string stateColor(this Project p)
+        {
+            switch (p.State)
+            {
+                case ProjectState.InProgress:
+                    return "#EFF3FB";
+
+                case ProjectState.Published:
+                    return "#A9F5A9";
+
+                case ProjectState.Rejected:
+                    return "#F5A9A9";
+
+                case ProjectState.Submitted:
+                    return "#ffcc99";
+
+                default:
+                    return "";
+
+            }
+        
+        }
+
         #endregion
 
         #region Permissions

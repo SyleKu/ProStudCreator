@@ -13,7 +13,7 @@ namespace ProStudCreator
         public const float LINE_HEIGHT = 1.1f;
         public const float SPACING_BEFORE_TITLE = 16f;
 
-        private static readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private static ProStudentCreatorDBDataContext db;
 
         public Font fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
         public Font fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -23,6 +23,10 @@ namespace ProStudCreator
         public float SPACING_BEFORE_IMAGE = 16f;
 
 
+        public PdfCreator(ProStudentCreatorDBDataContext db) : base()
+        {
+            PdfCreator.db = db;
+        }
         public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
             var writer = PdfWriter.GetInstance(document, output);

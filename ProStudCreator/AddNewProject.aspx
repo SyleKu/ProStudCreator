@@ -445,28 +445,23 @@
             </div>
             <br />
             <div runat="server" Id="DivHistoryCollapsable">
-            <asp:ListView runat="server" ID="historyListView" OnItemCommand="ProjectRowClick">
+            <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick">
                 <ItemTemplate>
                     <table>
-                        <div class="list">
-                        <tr>
                             <div class="row" id="historyRow">
                                 <dîv class="col-xs-12 col-md-1"></dîv> 
-                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar((string)Eval("LastEditedBy"))+"'/> " + Eval("LastEditedBy") %></asp:Label></div>
+                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>
                                 <div class="col-xs-12 col-md-2" style="height:100%;"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                                <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
-                                <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Eval("Id") %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
-                                <div class="col-xs-12 col-md-2"><asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Eval("Id") %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                                <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Item.StateAsString %></asp:Label></div>
+                                <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Item.Id %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                                <div class="col-xs-12 col-md-2"><asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Item.Id %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
                             </div>
 
-                            <%# (string)Eval("Ablehnungsgrund") != null? 
+                            <%# Item.Ablehnungsgrund != null? 
                                     "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
-                            <%# (string)Eval("Ablehnungsgrund")!=null?
-                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + ((string) Eval("Ablehnungsgrund")).Replace(Environment.NewLine,"<br />") + "</div></div>" : ""%> 
-
+                            <%# Item.Ablehnungsgrund != null?
+                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + Item.Ablehnungsgrund.Replace(Environment.NewLine,"<br />") + "</div></div>" : ""%> 
                             <hr />
-                        </tr>
-                        </div>
                     </table>
                 </ItemTemplate>
             </asp:ListView>

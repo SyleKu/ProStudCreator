@@ -30,7 +30,7 @@ namespace ProStudCreator
                 var document = PdfCreator.CreateDocument();
                 try
                 {
-                    var pdfCreator = new PdfCreator();
+                    var pdfCreator = new PdfCreator(db);
                     pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
                     document.Dispose();
                 }

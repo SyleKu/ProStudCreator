@@ -31,7 +31,7 @@ namespace ProStudCreator
         {
             if (project != null)
             {
-                var pdfc = new PdfCreator();
+                var pdfc = new PdfCreator(db);
 
                 Fillproject(project);
 
@@ -186,6 +186,7 @@ namespace ProStudCreator
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.DataSource = db.UserDepartmentMap;
             dropAdvisor2.DataBind();
             dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
@@ -670,9 +671,8 @@ where T : Control
                 Fillproject(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
-                db.SubmitChanges();
                 project.ProjectId = project.Id;
-                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+                project.OverOnePage = new PdfCreator(db).CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
 
             }
@@ -683,16 +683,18 @@ where T : Control
                     throw new UnauthorizedAccessException();
                 }
 
-                var currentProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
+                var currentProject = db.Projects.Single(p => p.Id == project.Id);
                 var tempProject = new Project();
                 tempProject.InitNew();
                 tempProject.ModificationDate = DateTime.Now;
                 tempProject.LastEditedBy = ShibUser.GetEmail();
                 Fillproject(tempProject);
+
                 if (!IsProjectModified(tempProject, currentProject))
                 {
                     return;
                 }
+
                 currentProject.IsMainVersion = false;
                 currentProject.ModificationDate = DateTime.Now;
                 currentProject.LastEditedBy = ShibUser.GetEmail();
@@ -709,7 +711,7 @@ where T : Control
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
                 db.SubmitChanges();
-                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+                project.OverOnePage = new PdfCreator(db).CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
             }
         }
@@ -867,7 +869,7 @@ where T : Control
                     var currentProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted);
                     currentProject.IsMainVersion = false;
                     db.SubmitChanges();
-                    var revertedProject = db.Projects.SingleOrDefault(p => p.Id == pid);
+                    var revertedProject = db.Projects.Single(p => p.Id == pid);
                     revertedProject.IsMainVersion = true;
                     db.SubmitChanges();
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid);
@@ -1036,7 +1038,7 @@ where T : Control
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
             project.Reject();
-            db.Projects.SingleOrDefault(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
+            db.Projects.Single(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
             SaveProject();
 #if !DEBUG
             MailMessage mailMessage = new MailMessage();
