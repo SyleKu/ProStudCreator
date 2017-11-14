@@ -180,7 +180,7 @@
                             <br />
                             <div class="col-sm-3"></div>
                             <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
-                            <a href="mailto:flavio.mueller@fhnw.ch" target="_blank">Flavio Müller</a>
+                            <a href="mailto:jonas.suter@fhnw.ch" target="_blank">Jonas Suter</a>
                             </asp:Label>
                             <br />
                             <br />
