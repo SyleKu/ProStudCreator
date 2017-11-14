@@ -182,12 +182,12 @@ namespace ProStudCreator
         }
         private void FillDropAdvisors()
         {
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
             dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
-            dropAdvisor2.DataSource = db.UserDepartmentMap;
+            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
             dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
         }
@@ -710,7 +710,6 @@ where T : Control
                 db.Projects.InsertOnSubmit(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
-                db.SubmitChanges();
                 project.OverOnePage = new PdfCreator(db).CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
             }
