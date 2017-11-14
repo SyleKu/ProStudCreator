@@ -108,7 +108,7 @@ namespace ProStudCreator
                                                           && p.State != ProjectState.Deleted && p.IsMainVersion
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
                                                               p.State == ProjectState.Published ||
-                                                              nextSemesterSelected && p.Semester == null ||
+                                                              nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
                                                               p.State != ProjectState.Deleted && p.IsMainVersion && p.State !=
                                                               ProjectState.Published &&
                                                               nextSemesterSelected))

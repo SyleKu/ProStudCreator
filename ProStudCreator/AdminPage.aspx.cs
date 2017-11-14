@@ -153,7 +153,7 @@ namespace ProStudCreator
             {
                 var lastSemStartDate = Semester.LastSemester(db).StartDate;
                 return db.Projects.Where(p =>
-                    p.DepartmentId == depId &&
+                    p.DepartmentId == depId && p.IsMainVersion &&
                     p.ModificationDate > lastSemStartDate &&
                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected))
                     .OrderBy(i => i.Department.DepartmentName)
@@ -163,7 +163,7 @@ namespace ProStudCreator
             else
             {
                 return db.Projects
-                    .Where(item => item.State == ProjectState.Submitted && (int?)item.DepartmentId == depId)
+                    .Where(item => item.State == ProjectState.Submitted && item.IsMainVersion && (int?)item.DepartmentId == depId)
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
                     .Select(i => getProjectSingleElement(i));
