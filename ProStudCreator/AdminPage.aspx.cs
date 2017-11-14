@@ -229,7 +229,7 @@ namespace ProStudCreator
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -239,7 +239,7 @@ namespace ProStudCreator
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
                     projectsToExport = db.Projects
-                        .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published &&
+                        .Where(i => i.SemesterId == semesterId && i.IsMainVersion && i.State == ProjectState.Published &&
                                     i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -249,7 +249,7 @@ namespace ProStudCreator
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -261,7 +261,7 @@ namespace ProStudCreator
                     var previousSemester = db.Semester.OrderByDescending(s => s.StartDate)
                         .FirstOrDefault(s => s.StartDate < selectedSemester.StartDate);
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != ""
                                     && (i.LogProjectDuration == 1 && i.Semester == selectedSemester ||
                                         i.LogProjectDuration == 2 && i.Semester == previousSemester))
@@ -389,10 +389,6 @@ namespace ProStudCreator
             var numAssignedTypes = projectType.Count(a => a);
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
-            /*
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
-                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";*/
 
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
