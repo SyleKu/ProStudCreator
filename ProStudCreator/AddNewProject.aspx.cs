@@ -532,7 +532,14 @@ where T : Control
 
             ProjectName.Text = project.Name;
 
-            FillDropAdvisors();
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
+            dropAdvisor1.DataBind();
+            dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor1.SelectedValue = project.Advisor1?.Name ?? "ImpossibleValue";
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
+            dropAdvisor2.DataBind();
+            dropAdvisor2.SelectedValue = project.Advisor2?.Name ?? "ImpossibleValue";
 
             if (project.TypeDesignUX)
             {
