@@ -7,7 +7,7 @@ namespace ProStudCreator
 {
     public partial class PDF : Page
     {
-        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -30,7 +30,7 @@ namespace ProStudCreator
                 var document = PdfCreator.CreateDocument();
                 try
                 {
-                    var pdfCreator = new PdfCreator(db);
+                    var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output, Enumerable.Repeat(idPDF, 1));
                     document.Dispose();
                 }

@@ -280,7 +280,7 @@ namespace ProStudCreator
                 var document = PdfCreator.CreateDocument();
                 try
                 {
-                    var pdfCreator = new PdfCreator(db);
+                    var pdfCreator = new PdfCreator();
                     pdfCreator.AppendToPDF(document, output,
                         ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
                         .Select(p => db.Projects.Single(pr => pr.Id == p.id))

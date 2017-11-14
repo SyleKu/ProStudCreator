@@ -13,7 +13,7 @@ namespace ProStudCreator
         public const float LINE_HEIGHT = 1.1f;
         public const float SPACING_BEFORE_TITLE = 16f;
 
-        private static ProStudentCreatorDBDataContext db;
+        private static readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         public Font fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
         public Font fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -22,11 +22,6 @@ namespace ProStudCreator
         public float SPACING_AFTER_TITLE = 2f;
         public float SPACING_BEFORE_IMAGE = 16f;
 
-
-        public PdfCreator(ProStudentCreatorDBDataContext db) : base()
-        {
-            PdfCreator.db = db;
-        }
         public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
             var writer = PdfWriter.GetInstance(document, output);
@@ -124,11 +119,11 @@ namespace ProStudCreator
             title.SetLeading(0.0f, LINE_HEIGHT);
             document.Add(title);
 
-            var projectTable = new PdfPTable(5) {SpacingAfter = 6f};
+            var projectTable = new PdfPTable(5) { SpacingAfter = 6f };
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
-            projectTable.SetWidths(new float[] {22, 50, 25, 25, 25});
+            projectTable.SetWidths(new float[] { 22, 50, 25, 25, 25 });
 
             //  Row 1
             projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
@@ -580,7 +575,7 @@ namespace ProStudCreator
                 head.WriteSelectedRows(
                     0, -1, // first/last row; -1 flags all write all rows
                     -1, // left offset
-                    // ** bottom** yPos of the table
+                        // ** bottom** yPos of the table
                     page.Height - cellHeight + head.TotalHeight,
                     writer.DirectContent
                 );
@@ -595,10 +590,13 @@ namespace ProStudCreator
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                var cell = new PdfPCell(new Phrase(
-                    "Studiengang Informatik/" + CurrentProject.Department.DepartmentName + "/Studierendenprojekte " +
-                    CurrentProject?.Semester?.Name ?? Semester.NextSemester(db).Name,
-                    new Font(Font.FontFamily.HELVETICA, 8)));
+                var font = new Font(Font.FontFamily.HELVETICA, 8);
+                var department = CurrentProject?.Department?.DepartmentName;
+                var semester = CurrentProject?.Semester?.Name ?? Semester.NextSemester(db).Name;
+                var phrase = new Phrase(
+                    "Studiengang Informatik/" + department + "/Studierendenprojekte " + semester,
+                    font);
+                var cell = new PdfPCell(phrase);
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;

@@ -31,7 +31,7 @@ namespace ProStudCreator
         {
             if (project != null)
             {
-                var pdfc = new PdfCreator(db);
+                var pdfc = new PdfCreator();
 
                 Fillproject(project);
 
@@ -673,7 +673,7 @@ where T : Control
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
                 project.ProjectId = project.Id;
-                project.OverOnePage = new PdfCreator(db).CalcNumberOfPages(project) > 1;
+                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
 
             }
@@ -711,7 +711,8 @@ where T : Control
                 db.Projects.InsertOnSubmit(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
-                project.OverOnePage = new PdfCreator(db).CalcNumberOfPages(project) > 1;
+                db.SubmitChanges();
+                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
             }
         }
@@ -1285,7 +1286,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
             {
                 project.ProjectNr = 0; // 'Remove' project number to allow finding a new one.
-                project.GenerateProjectNr();
+                project.GenerateProjectNr(db);
             }
 
             if (project.Semester == null)
