@@ -186,9 +186,9 @@ namespace ProStudCreator
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
-            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
         }
 
@@ -536,9 +536,9 @@ where T : Control
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedValue = project.Advisor1?.Name ?? "ImpossibleValue";
-            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.SelectedValue = project.Advisor2?.Name ?? "ImpossibleValue";
 
             if (project.TypeDesignUX)
