@@ -41,7 +41,7 @@ namespace ProStudCreator
             }
             
             gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
-                .Select(i => getProjectSingleAttachment(i));
+                .Select(i => GetProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
             if (Page.IsPostBack)
@@ -213,7 +213,7 @@ namespace ProStudCreator
                                     ShibUser.GetEmail() == project.Advisor2?.Mail || ShibUser.CanEditAllProjects();
         }
 
-        private ProjectSingleAttachment getProjectSingleAttachment(Attachements attach)
+        private ProjectSingleAttachment GetProjectSingleAttachment(Attachements attach)
         {
             return new ProjectSingleAttachment
             {
@@ -221,11 +221,11 @@ namespace ProStudCreator
                 ProjectId = attach.ProjectId,
                 Name = attach.FileName,
                 Size = FixupSize((long)(attach.UploadSize ?? 0)),
-                FileType = getFileTypeImgPath(attach.FileName)
+                FileType = GetFileTypeImgPath(attach.FileName)
             };
         }
 
-        private string getFileTypeImgPath(string filename)
+        private string GetFileTypeImgPath(string filename)
         {
             switch (filename.Split('.').Last())
             {
@@ -445,7 +445,7 @@ namespace ProStudCreator
             }
         }
 
-        protected void radioClientType_SelectedIndexChanged(object sender, EventArgs e)
+        protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
             divClientCompany.Visible = radioClientType.SelectedValue == "Company";
         }
@@ -537,7 +537,7 @@ namespace ProStudCreator
             }
         }
 
-        protected void gridProjectAttachs_OnRowDataBound(object sender, GridViewRowEventArgs e)
+        protected void GridProjectAttachs_OnRowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType != DataControlRowType.DataRow) return;
             var project =
@@ -565,7 +565,7 @@ namespace ProStudCreator
             updateDownloadButton.Update();
         }
 
-        protected void gridProjectAttachs_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        protected void GridProjectAttachs_OnRowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName != "deleteProjectAttach") return;
             var guid = new Guid(e.CommandArgument.ToString());
@@ -577,7 +577,7 @@ namespace ProStudCreator
 
 
             gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
-                .Select(i => getProjectSingleAttachment(i));
+                .Select(i => GetProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
 
             updateProjectAttachements.Update();
@@ -585,7 +585,7 @@ namespace ProStudCreator
             updateDownloadButton.Update();
         }
 
-        protected void gridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void GridProjectAttachs_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             Response.Redirect("ProjectFilesDownload?guid=" + (Guid)gridProjectAttachs.SelectedValue);
         }
@@ -596,7 +596,7 @@ namespace ProStudCreator
             IP6,
             NotDefined
         }
-        protected void downloadFiles_OnClick(object sender, EventArgs e)
+        protected void DownloadFiles_OnClick(object sender, EventArgs e)
         {
             var attachments = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).ToList();
 

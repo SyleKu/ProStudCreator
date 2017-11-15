@@ -106,8 +106,8 @@
             <asp:Label runat="server" CssClass="control-label" Text="Weshalb wird dieses Projekt abgelehnt? Der Text wird dem Projektersteller via E-Mail zugestellt."></asp:Label>
             <asp:TextBox runat="server" ID="refusedReasonText" CssClass="form-control contentRefuseDesign" TextMode="MultiLine"></asp:TextBox>
         </div>
-        <asp:Button runat="server" ID="refuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="refuseDefinitiveNewProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="cancelRefusion_Click" CausesValidation="false"></asp:Button>
+        <asp:Button runat="server" ID="RefuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="RefuseDefinitiveNewProject_Click"></asp:Button>
+        <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="CancelRefusion_Click" CausesValidation="false"></asp:Button>
     </div>
     <div class="well newProjectSettings ">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
@@ -126,7 +126,7 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
+                    <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="DropPreviousProject_SelectedIndexChanged" />
                      <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control" style="width:75%;" Visible="false"></asp:Label>
                 </div>
             </div>
@@ -164,7 +164,7 @@
                     <div class="form-group" style="text-align: left">
                         <asp:Label runat="server" Text="Kundentyp:" CssClass="control-label col-sm-3"></asp:Label>
                         <div class="col-sm-7 radioButtonSettings">
-                            <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="radioClientType_SelectedIndexChanged">
+                            <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="RadioClientType_SelectedIndexChanged">
                                 <asp:ListItem Text="FHNW intern" Selected="True" Value="Intern" />
                                 <asp:ListItem Text="Unternehmen" Value="Company" />
                                 <asp:ListItem Text="Privatperson" Value="PrivatePerson" />
@@ -353,7 +353,7 @@
                     </a>
                 </div>
                 <div class="col-sm-1">
-                    <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
+                    <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="DeleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
                 </div>
             </div>
             <div class="form-group">
@@ -427,13 +427,13 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="publishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="refuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
-            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="rollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
-            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="submitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
-            <asp:Button runat="server" ID="saveCloseProject" OnClick="saveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-            <asp:Button runat="server" ID="saveProject" OnClick="saveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-            <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="cancelNewProject_Click" CausesValidation="false"></asp:Button>
+            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
+            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
+            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
+            <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+            <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+            <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
         </div>
     </div>
 <div runat="server" class="well newProjectSettings" ID="divHistory">
@@ -441,7 +441,7 @@
         <ContentTemplate>
             <asp:Label runat="server" Font-Size="24px" Height="50px" Text="History" CssClass="col-sm-5"></asp:Label>
             <div style="text-align: right;">
-                <asp:Button runat="server" ID="btnHistoryCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="btnHistoryCollapse_OnClick" />
+                <asp:Button runat="server" ID="btnHistoryCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="BtnHistoryCollapse_OnClick" />
             </div>
             <br />
             <div runat="server" Id="DivHistoryCollapsable">
@@ -450,7 +450,7 @@
                     <table>
                             <div class="row" id="historyRow">
                                 <dîv class="col-xs-12 col-md-1"></dîv> 
-                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>
+                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+GetGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>
                                 <div class="col-xs-12 col-md-2" style="height:100%;"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
                                 <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Item.StateAsString %></asp:Label></div>
                                 <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Item.Id %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>

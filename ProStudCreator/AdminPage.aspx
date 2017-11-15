@@ -42,13 +42,13 @@
                 </Triggers>
                 <ContentTemplate>
                     <div class="radioButtonSettingsAdmin" runat="server" id="divRadioProjects">
-                        <asp:RadioButtonList runat="server" ID="radioSelectedProjects" RepeatDirection="Horizontal" OnSelectedIndexChanged="radioSelectedProjects_OnSelectedIndexChanged" AutoPostBack="True" CssClass="col-sm-5" TextAlign="Right">
+                        <asp:RadioButtonList runat="server" ID="radioSelectedProjects" RepeatDirection="Horizontal" OnSelectedIndexChanged="RadioSelectedProjects_OnSelectedIndexChanged" AutoPostBack="True" CssClass="col-sm-5" TextAlign="Right">
                             <asp:ListItem Value="toPublish">Projekte zur Freigabe</asp:ListItem>
                             <asp:ListItem Value="inProgress">Projekte in Bearbeitung</asp:ListItem>
                         </asp:RadioButtonList>
                     </div>
                     <div style="text-align: right;">
-                        <asp:Button runat="server" ID="btnAdminProjectsCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="btnAdminProjectsCollapse_OnClick" />
+                        <asp:Button runat="server" ID="btnAdminProjectsCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="BtnAdminProjectsCollapse_OnClick" />
                     </div>
                     <br />
                     <div id="DivAdminProjectsCollapsable" runat="server" visible="False">
@@ -115,7 +115,7 @@
             <ContentTemplate>
                 <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Excel-Export" CssClass="col-sm-4"></asp:Label>
                 <div style="text-align: right;">
-                    <asp:Button runat="server" ID="btnExcelExportCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="btnExcelExportCollapse_OnClick" />
+                    <asp:Button runat="server" ID="btnExcelExportCollapse" CssClass="btn btn-default btnHeight" Text="◄" OnClick="BtnExcelExportCollapse_OnClick" />
                 </div>
                 <br />
                 <div class="form-group" runat="server" id="DivExcelExportCollapsable" visible="False">
@@ -136,7 +136,7 @@
                     </div>
                     
                     <div style="text-align: right;">
-                        <asp:Button runat="server" ID="btnMarketingExport" OnClick="btnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
+                        <asp:Button runat="server" ID="btnMarketingExport" OnClick="BtnMarketingExport_OnClick" CssClass="btn btn-default" Text="Export"></asp:Button>
                     </div>
                 </div>
             </ContentTemplate>
@@ -148,7 +148,7 @@
             <ContentTemplate>
                 <asp:Label runat="server" Font-Size="24px" Height="50px" Text="Zusätzliche Informationen" CssClass="col-sm-5"></asp:Label>
                 <div style="text-align: right;">
-                    <asp:Button runat="server" ID="btnAddInfoCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="btnAddInfoCollapse_OnClick" />
+                    <asp:Button runat="server" ID="btnAddInfoCollapse" CssClass="btn btn-default btnHeight" Text="▼" OnClick="BtnAddInfoCollapse_OnClick" />
                 </div>
                 <br />
                 <div runat="server" id="DivAddInfoCollapsable" visible="true">

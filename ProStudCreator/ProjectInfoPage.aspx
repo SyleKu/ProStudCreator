@@ -100,7 +100,7 @@
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Kundentyp:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-7 radioButtonSettings">
-                                <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="radioClientType_SelectedIndexChanged">
+                                <asp:RadioButtonList runat="server" RepeatDirection="Horizontal" TextAlign="Right" BorderStyle="None" ID="radioClientType" AutoPostBack="true" OnSelectedIndexChanged="RadioClientType_SelectedIndexChanged">
                                     <asp:ListItem Text=" Unternehmen" Value="Company" />
                                     <asp:ListItem Text=" Privatperson" Value="PrivatePerson" />
                                 </asp:RadioButtonList>
@@ -192,7 +192,7 @@
                 <ContentTemplate>
                     <asp:Label runat="server" Text="Projekt Artefakte (Dokumentation, Präsentation, Code):" CssClass="control-label col-sm-3"></asp:Label>
                     <div class="form-group col-sm-9">
-                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" EmptyDataText="Noch keine Dokumente hochgeladen." ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="gridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="gridProjectAttachs_OnRowCommand" OnRowDataBound="gridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
+                        <asp:GridView runat="server" Width="100%" ID="gridProjectAttachs" EmptyDataText="Noch keine Dokumente hochgeladen." ItemType="ProStudCreator.ProjectSingleAttachment" EnableModelValidation="False" ValidateRequestMode="Disabled" OnSelectedIndexChanged="GridProjectAttachs_OnSelectedIndexChanged" CellPadding="4" EnableViewState="False" GridLines="None" AutoGenerateColumns="False" ForeColor="#333333" AllowSorting="False" OnRowCommand="GridProjectAttachs_OnRowCommand" OnRowDataBound="GridProjectAttachs_OnRowDataBound" DataKeyNames="Guid">
                             <Columns>
                                 <asp:ImageField ItemStyle-Width="20px" DataImageUrlField="FileType" ControlStyle-Height="30px" />
                                 <asp:BoundField DataField="Name" HeaderText="Dokumentname" ItemStyle-Wrap="False" />
@@ -222,11 +222,11 @@
         <asp:UpdatePanel ID="updateDownloadButton" runat="server" UpdateMode="Conditional">
             <Triggers>
                 <%--<asp:AsyncPostBackTrigger runat="server" ControlID="gridProjectAttachs" EventName="DataBound"/>--%>
-                <asp:PostBackTrigger ControlID="btnDownloadAllFiles"/>
+                <asp:PostBackTrigger ControlID="BtnDownloadAllFiles"/>
             </Triggers>
             <ContentTemplate>
                 <div runat="server" ID="divDownloadBtn" style="text-align: right;">
-                <button runat="server" ID="btnDownloadAllFiles" class="btn btn-default" OnServerClick="downloadFiles_OnClick"><img src="Content/zip.png" style="height: 30px;" alt="download"/>  Download ZIP </button>
+                <button runat="server" ID="btnDownloadAllFiles" class="btn btn-default" OnServerClick="DownloadFiles_OnClick"><img src="Content/zip.png" style="height: 30px;" alt="download"/>  Download ZIP </button>
             </div>
           </ContentTemplate>
         </asp:UpdatePanel>

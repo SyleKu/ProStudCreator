@@ -12,10 +12,10 @@ namespace ProStudCreator
     public class ProjectSingleTask
     {
         public string project { get; set; }
-        public string taskOrganiseExpert { get; set; }
-        public string taskOrganiseRoom { get; set; }
-        public string taskOrganiseDate { get; set; }
-        public string taskPayExpert { get; set; }
+        public string TaskOrganiseExpert { get; set; }
+        public string TaskOrganiseRoom { get; set; }
+        public string TaskOrganiseDate { get; set; }
+        public string TaskPayExpert { get; set; }
     }
 
     public partial class AdminPage : Page
@@ -85,7 +85,7 @@ namespace ProStudCreator
             Session["LastPage"] = "adminpage";
         }
 
-        private ProjectSingleElement getProjectSingleElement(Project i)
+        private ProjectSingleElement GetProjectSingleElement(Project i)
         {
             return new ProjectSingleElement
             {
@@ -158,7 +158,7 @@ namespace ProStudCreator
                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected))
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
-                    .Select(i => getProjectSingleElement(i));
+                    .Select(i => GetProjectSingleElement(i));
             }
             else
             {
@@ -166,7 +166,7 @@ namespace ProStudCreator
                     .Where(item => item.State == ProjectState.Submitted && item.IsMainVersion && (int?)item.DepartmentId == depId)
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
-                    .Select(i => getProjectSingleElement(i));
+                    .Select(i => GetProjectSingleElement(i));
             }
         }
 
@@ -194,7 +194,7 @@ namespace ProStudCreator
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
                 case "submitProject":
-                    einreichenButton_Click(id);
+                    EinreichenButton_Click(id);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -222,7 +222,7 @@ namespace ProStudCreator
             btnAddInfoCollapse.Text = collapse ? "◄" : "▼";
         }
 
-        protected void btnMarketingExport_OnClick(object sender, EventArgs e)
+        protected void BtnMarketingExport_OnClick(object sender, EventArgs e)
         {
             IEnumerable<Project> projectsToExport = null;
             if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
@@ -282,7 +282,7 @@ namespace ProStudCreator
             Response.End();
         }
 
-        protected void radioSelectedProjects_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void RadioSelectedProjects_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             Session["SelectedAdminProjects"] = radioSelectedProjects.SelectedIndex;
             CheckProjects.DataSource = GetSelectedProjects();
@@ -314,22 +314,22 @@ namespace ProStudCreator
                 cell.BackColor = col.Value;
         }
 
-        protected void btnAdminProjectsCollapse_OnClick(object sender, EventArgs e)
+        protected void BtnAdminProjectsCollapse_OnClick(object sender, EventArgs e)
         {
             CollapseAdminProjects(!(bool)Session["AdminProjectCollapsed"]);
         }
 
-        protected void btnExcelExportCollapse_OnClick(object sender, EventArgs e)
+        protected void BtnExcelExportCollapse_OnClick(object sender, EventArgs e)
         {
             CollapseExcelExport(!(bool)Session["ExcelExportCollapsed"]);
         }
 
-        protected void btnAddInfoCollapse_OnClick(object sender, EventArgs e)
+        protected void BtnAddInfoCollapse_OnClick(object sender, EventArgs e)
         {
             CollapseAddInfo(!(bool)Session["AddInfoCollapsed"]);
         }
 
-        private bool[] getProjectTypeBools(Project project)
+        private bool[] GetProjectTypeBools(Project project)
         {
             bool[] projectType = new bool[8];
             if (project.TypeDesignUX)
@@ -367,9 +367,9 @@ namespace ProStudCreator
             return projectType;
         }
 
-        private string generateValidationMessage(Project project)
+        private string GenerateValidationMessage(Project project)
         {
-            var projectType = getProjectTypeBools(project);
+            var projectType = GetProjectTypeBools(project);
 
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
@@ -408,10 +408,10 @@ namespace ProStudCreator
             return null;
         }
 
-        protected void einreichenButton_Click(int id)
+        protected void EinreichenButton_Click(int id)
         {
             Project project = db.Projects.Single(p => p.Id == id);
-            var validationMessage = generateValidationMessage(project);
+            var validationMessage = GenerateValidationMessage(project);
 
             if (validationMessage != null)
             {

@@ -71,7 +71,7 @@ namespace ProStudCreator
                 client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
 #endif
             }
-            catch (Exception e)
+            catch
             {
                 throw new RuntimeException(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
             }
