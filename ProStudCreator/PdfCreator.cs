@@ -22,6 +22,7 @@ namespace ProStudCreator
         public float SPACING_AFTER_TITLE = 2f;
         public float SPACING_BEFORE_IMAGE = 16f;
 
+
         public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
             var writer = PdfWriter.GetInstance(document, output);
@@ -590,13 +591,10 @@ namespace ProStudCreator
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                var font = new Font(Font.FontFamily.HELVETICA, 8);
-                var department = CurrentProject?.Department?.DepartmentName;
-                var semester = CurrentProject?.Semester?.Name ?? Semester.NextSemester(db).Name;
-                var phrase = new Phrase(
-                    "Studiengang Informatik/" + department + "/Studierendenprojekte " + semester,
-                    font);
-                var cell = new PdfPCell(phrase);
+                var cell = new PdfPCell(new Phrase(
+                    "Studiengang Informatik/" + CurrentProject.Department.DepartmentName + "/Studierendenprojekte " +
+                    CurrentProject?.Semester?.Name ?? Semester.NextSemester(db).Name,
+                    new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;
