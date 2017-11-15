@@ -24,6 +24,7 @@ namespace ProStudCreator
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
         private Version version;
+        private bool changed = false;
         private enum clientType { INTERN, COMPANY,  PRIVATEPERSON  }
         #region Timer tick
 
@@ -686,13 +687,19 @@ where T : Control
                 }
 
                 var currentProject = db.Projects.Single(p => p.Id == project.Id);
-                var tempProject = new Project();
-                tempProject.InitNew();
-                tempProject.ModificationDate = DateTime.Now;
-                tempProject.LastEditedBy = ShibUser.GetEmail();
-                Fillproject(tempProject);
-
-                if (!IsProjectModified(tempProject, currentProject))
+                //var tempProject = new Project();
+                //tempProject.InitNew();
+                //tempProject.ModificationDate = DateTime.Now;
+                //tempProject.LastEditedBy = ShibUser.GetEmail();
+                //Fillproject(tempProject);
+                project = new Project();
+                project.InitNew();
+                Fillproject(project);
+                project.ProjectId = currentProject.ProjectId;
+                project.State = currentProject.State;
+                project.ModificationDate = DateTime.Now;
+                project.LastEditedBy = ShibUser.GetEmail();
+                if (!IsProjectModified(project, currentProject) && !changed)
                 {
                     return;
                 }
@@ -700,19 +707,10 @@ where T : Control
                 currentProject.IsMainVersion = false;
                 currentProject.ModificationDate = DateTime.Now;
                 currentProject.LastEditedBy = ShibUser.GetEmail();
-                db.Projects.Attach(tempProject); // hack to avoid that the project gets submitted twice
-                db.Projects.DeleteOnSubmit(tempProject);
-                db.SubmitChanges();
-
-                project = new Project();
-                project.InitNew();
-                Fillproject(project);
-                project.ProjectId = currentProject.ProjectId;
-                project.State = currentProject.State;
                 db.Projects.InsertOnSubmit(project);
-                project.ModificationDate = DateTime.Now;
-                project.LastEditedBy = ShibUser.GetEmail();
                 db.SubmitChanges();
+                if (currentProject.Picture != null && project.Picture == null)
+                    project.Picture = currentProject.Picture;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
             }
@@ -1298,11 +1296,13 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
             if (AddPicture.HasFile)
             {
+                
                 var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
-                if (!fileExtension.Contains("jpg"))
+                if (!fileExtension.Contains("jpg") && !fileExtension.Contains("png"))
                 {
                     return;
                 }
+                changed = true;
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
@@ -1489,7 +1489,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var isMainVers = nameof(Project.IsMainVersion);
             var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
             var projId = nameof(Project.ProjectId);
-            var img = nameof(Project.Picture);
             var credate = nameof(Project.CreateDate);
             var prs = nameof(Project.Projects);
             var attch = nameof(Project.Attachements);
@@ -1504,7 +1503,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             props.Add(projectNr);
             props.Add(isMainVers);
             props.Add(ablehnungsgrund);
-            props.Add(img);
             props.Add(credate);
             props.Add(prs);
             props.Add(attch);
@@ -1520,7 +1518,11 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                         {
                             if (!value1.Equals(value2))
                                 return true;
-                        }
+                    }
+                    else if(value1 != null && value2 == null)
+                    {
+                        return true;
+                    }
                     }
                 }
 

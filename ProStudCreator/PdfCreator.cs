@@ -31,7 +31,7 @@ namespace ProStudCreator
             var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            var ef = new MyPageEventHandler
+            var ef = new PdfHeaderFooterGenerator
             {
                 ImageHeader = imageHeader
             };
@@ -57,7 +57,7 @@ namespace ProStudCreator
             var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            var ef = new MyPageEventHandler
+            var ef = new PdfHeaderFooterGenerator
             {
                 ImageHeader = imageHeader
             };
@@ -533,7 +533,7 @@ namespace ProStudCreator
             Small
         }
 
-        private class MyPageEventHandler : PdfPageEventHelper
+        private class PdfHeaderFooterGenerator : PdfPageEventHelper
         {
             /*
              * We use a __single__ Image instance that's assigned __once__;
