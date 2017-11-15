@@ -16,7 +16,7 @@ namespace ProStudCreator
                 switch (State)
                 {
                     case ProjectState.InProgress:
-                        StateColor = "#EFF3FB"; 
+                        StateColor = "#EFF3FB";
                         return "In Bearbeitung";
 
                     case ProjectState.Published:

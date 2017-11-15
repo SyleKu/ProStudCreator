@@ -153,7 +153,7 @@ namespace ProStudCreator
             {
                 var lastSemStartDate = Semester.LastSemester(db).StartDate;
                 return db.Projects.Where(p =>
-                    p.DepartmentId == depId &&
+                    p.DepartmentId == depId && p.IsMainVersion &&
                     p.ModificationDate > lastSemStartDate &&
                     (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected))
                     .OrderBy(i => i.Department.DepartmentName)
@@ -163,7 +163,7 @@ namespace ProStudCreator
             else
             {
                 return db.Projects
-                    .Where(item => item.State == ProjectState.Submitted && (int?)item.DepartmentId == depId)
+                    .Where(item => item.State == ProjectState.Submitted && item.IsMainVersion && (int?)item.DepartmentId == depId)
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
                     .Select(i => getProjectSingleElement(i));
@@ -229,7 +229,7 @@ namespace ProStudCreator
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -239,7 +239,7 @@ namespace ProStudCreator
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
                     projectsToExport = db.Projects
-                        .Where(i => i.SemesterId == semesterId && i.State == ProjectState.Published &&
+                        .Where(i => i.SemesterId == semesterId && i.IsMainVersion && i.State == ProjectState.Published &&
                                     i.LogStudent1Mail != null && i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -249,7 +249,7 @@ namespace ProStudCreator
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != "")
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
@@ -261,7 +261,7 @@ namespace ProStudCreator
                     var previousSemester = db.Semester.OrderByDescending(s => s.StartDate)
                         .FirstOrDefault(s => s.StartDate < selectedSemester.StartDate);
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.LogStudent1Mail != null &&
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
                                     i.LogStudent1Mail != ""
                                     && (i.LogProjectDuration == 1 && i.Semester == selectedSemester ||
                                         i.LogProjectDuration == 2 && i.Semester == previousSemester))
@@ -370,29 +370,20 @@ namespace ProStudCreator
         private string generateValidationMessage(Project project)
         {
             var projectType = getProjectTypeBools(project);
+
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+
             if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
             if ((!project.Advisor1?.Name.IsValidName()) ?? true)
-                return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
-                return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
-                return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2.Mail != "")
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
 
             var numAssignedTypes = projectType.Count(a => a);
+
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
-            /*
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
-                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";*/
 
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";

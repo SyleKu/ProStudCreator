@@ -7,7 +7,7 @@ namespace ProStudCreator
 {
     public partial class PDF : Page
     {
-        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
         {

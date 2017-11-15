@@ -119,7 +119,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Projektname:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProjectName" CssClass="form-control" MaxLength="80" placeholder="Projektname"></asp:TextBox>
-                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
+                    <asp:Label runat="server" ID="ProjectNameLabel" CssClass="form-control" Visible="false" style="overflow:auto;width:75%;"></asp:Label>
                     <asp:RequiredFieldValidator ID="ProjectNameValidator" ForeColor="Red" Display="Dynamic" ControlToValidate="ProjectName" runat="server" ErrorMessage="Bitte geben Sie einen Projektnamen an."></asp:RequiredFieldValidator>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Vorgängerprojekt:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:DropDownList runat="server" ID="dropPreviousProject" DataValueField="Id" DataTextField="Name" AutoPostBack="true" CausesValidation="false" CssClass="form-control dropPreviousProject" OnSelectedIndexChanged="dropPreviousProject_SelectedIndexChanged" />
-                     <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control dropPreviousProject" Visible="false"></asp:Label>
+                     <asp:Label runat="server" ID="dropPreviousProjectLabel" CssClass="form-control" style="width:75%;" Visible="false"></asp:Label>
                 </div>
             </div>
             <hr />
@@ -343,6 +343,14 @@
                 <asp:Label runat="server" ID="AddPictureLabel" CssClass="control-label col-sm-3" Text="Bild hinzufügen:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:FileUpload runat="server" ID="AddPicture" accept=".jpeg,.jpg,.png" CssClass="control-label" /><small>(max. 1MB)</small>
+                    <br />
+                    <a style="color:red">
+                        <asp:RegularExpressionValidator ID="regexValidator" runat="server"
+                             ControlToValidate="AddPicture"
+                             ErrorMessage="Es werden nur JPEGs und PNGs als Bildformat unterstützt." 
+                             ValidationExpression="(.*\.([Jj][Pp][Gg])|.*\.([Jj][Pp][Ee][Gg])|.*\.([Pp][Nn][Gg])$)">
+                        </asp:RegularExpressionValidator>
+                    </a>
                 </div>
                 <div class="col-sm-1">
                     <asp:LinkButton runat="server" ID="DeleteImageButton" OnClick="deleteImage_Click" OnClientClick="return confirm('Dieses Bild wirklich entfernen?');" CssClass="btn btn-default btnHeight imageRemoveMargin glyphicon glyphicon-remove" Visible="false"></asp:LinkButton>
@@ -437,28 +445,23 @@
             </div>
             <br />
             <div runat="server" Id="DivHistoryCollapsable">
-            <asp:ListView runat="server" ID="historyListView" OnItemCommand="ProjectRowClick">
+            <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick">
                 <ItemTemplate>
                     <table>
-                        <div class="list">
-                        <tr>
                             <div class="row" id="historyRow">
                                 <dîv class="col-xs-12 col-md-1"></dîv> 
-                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar((string)Eval("LastEditedBy"))+"'/> " + Eval("LastEditedBy") %></asp:Label></div>
+                                <div class="col-xs-12 col-md-3"><asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+getGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>
                                 <div class="col-xs-12 col-md-2" style="height:100%;"><asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                                <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Eval("StateAsString") %></asp:Label></div>
-                                <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Eval("Id") %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
-                                <div class="col-xs-12 col-md-2"><asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Eval("Id") %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                                <div class="col-xs-12 col-md-2"><asp:Label runat="server"><%#Item.StateAsString %></asp:Label></div>
+                                <div class="col-xs-12 col-md-2"style="width:11.666%"><asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Item.Id %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
+                                <div class="col-xs-12 col-md-2"><asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight"  OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Item.Id %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
                             </div>
 
-                            <%# (string)Eval("Ablehnungsgrund") != null? 
+                            <%# Item.Ablehnungsgrund != null? 
                                     "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
-                            <%# (string)Eval("Ablehnungsgrund")!=null?
-                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + (string) Eval("Ablehnungsgrund") + "</div></div>" : ""%> 
-
+                            <%# Item.Ablehnungsgrund != null?
+                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + Item.Ablehnungsgrund.Replace(Environment.NewLine,"<br />") + "</div></div>" : ""%> 
                             <hr />
-                        </tr>
-                        </div>
                     </table>
                 </ItemTemplate>
             </asp:ListView>

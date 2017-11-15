@@ -79,6 +79,29 @@ namespace ProStudCreator
             }
         }
 
+        public static void GenerateProjectNr(this Project _p, ProStudentCreatorDBDataContext dbx)
+        {
+
+            var semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
+            var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
+
+            // Get project numbers from this semester & same department
+            var nrs = (
+                from p in dbx.Projects
+                where p.PublishedDate >= semesterStart && p.PublishedDate <= semesterEnd
+                      && p.Id != _p.Id
+                      && (p.State == ProjectState.Published || p.State == ProjectState.Submitted)
+                      && p.Department == _p.Department
+                select p.ProjectNr).ToArray();
+            if (_p.ProjectNr >= 100 || nrs.Contains(_p.ProjectNr) || _p.ProjectNr < 1)
+            {
+                _p.ProjectNr = 1;
+                while (nrs.Contains(_p.ProjectNr))
+                    _p.ProjectNr++;
+            }
+
+        }
+
         /// <summary>
         ///     Sets project state to deleted so it's no longer listed. Admin only.
         /// </summary>
@@ -209,6 +232,29 @@ namespace ProStudCreator
             }
 
             return false;
+        }
+
+        public static string stateColor(this Project p)
+        {
+            switch (p.State)
+            {
+                case ProjectState.InProgress:
+                    return "#EFF3FB";
+
+                case ProjectState.Published:
+                    return "#A9F5A9";
+
+                case ProjectState.Rejected:
+                    return "#F5A9A9";
+
+                case ProjectState.Submitted:
+                    return "#ffcc99";
+
+                default:
+                    return "";
+
+            }
+        
         }
 
         #endregion

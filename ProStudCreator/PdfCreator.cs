@@ -31,7 +31,7 @@ namespace ProStudCreator
             var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            var ef = new MyPageEventHandler
+            var ef = new PdfHeaderFooterGenerator
             {
                 ImageHeader = imageHeader
             };
@@ -57,7 +57,7 @@ namespace ProStudCreator
             var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            var ef = new MyPageEventHandler
+            var ef = new PdfHeaderFooterGenerator
             {
                 ImageHeader = imageHeader
             };
@@ -120,11 +120,11 @@ namespace ProStudCreator
             title.SetLeading(0.0f, LINE_HEIGHT);
             document.Add(title);
 
-            var projectTable = new PdfPTable(5) {SpacingAfter = 6f};
+            var projectTable = new PdfPTable(5) { SpacingAfter = 6f };
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
-            projectTable.SetWidths(new float[] {22, 50, 25, 25, 25});
+            projectTable.SetWidths(new float[] { 22, 50, 25, 25, 25 });
 
             //  Row 1
             projectTable.AddCell(new Paragraph("Betreuer:", fontHeading));
@@ -533,7 +533,7 @@ namespace ProStudCreator
             Small
         }
 
-        private class MyPageEventHandler : PdfPageEventHelper
+        private class PdfHeaderFooterGenerator : PdfPageEventHelper
         {
             /*
              * We use a __single__ Image instance that's assigned __once__;
@@ -576,7 +576,7 @@ namespace ProStudCreator
                 head.WriteSelectedRows(
                     0, -1, // first/last row; -1 flags all write all rows
                     -1, // left offset
-                    // ** bottom** yPos of the table
+                        // ** bottom** yPos of the table
                     page.Height - cellHeight + head.TotalHeight,
                     writer.DirectContent
                 );

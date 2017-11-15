@@ -97,6 +97,7 @@ namespace ProStudCreator
                                                           p.State != ProjectState.Deleted && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
+
                     else
                     {
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
@@ -104,13 +105,13 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
-                                                          && p.State != ProjectState.Deleted
+                                                          && p.State != ProjectState.Deleted && p.IsMainVersion
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
-                                                              p.State == ProjectState.Published && p.IsMainVersion ||
+                                                              p.State == ProjectState.Published ||
                                                               nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
-                                                              p.State != ProjectState.Deleted && p.State !=
+                                                              p.State != ProjectState.Deleted && p.IsMainVersion && p.State !=
                                                               ProjectState.Published &&
-                                                              nextSemesterSelected && p.IsMainVersion))
+                                                              nextSemesterSelected))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
                     break;
@@ -119,7 +120,7 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p =>  p.IsMainVersion &&
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
@@ -400,33 +401,24 @@ namespace ProStudCreator
             }
             return projectType;
         }
-        private string generateValidationMessage(Project project)
+        private string GenerateValidationMessage(Project project)
         {
             var projectType = getProjectTypeBools(project);
+
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+
             if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
             if ((!project.Advisor1?.Name.IsValidName()) ?? true)
-                return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
-                return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
-                return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2.Mail != "")
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
 
             var numAssignedTypes = projectType.Count(a => a);
+
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
-            /*
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
-                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";*/
-
+            
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
@@ -452,7 +444,7 @@ namespace ProStudCreator
         protected void einreichenButton_Click(int id)
         {
             Project project = db.Projects.Single(p => p.Id == id);
-            var validationMessage = generateValidationMessage(project);
+            var validationMessage = GenerateValidationMessage(project);
             if (validationMessage != null)
             {
                 var sb = new StringBuilder();

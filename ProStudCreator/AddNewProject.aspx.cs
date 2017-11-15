@@ -24,6 +24,7 @@ namespace ProStudCreator
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
         private Version version;
+        private bool changed = false;
         private enum clientType { INTERN, COMPANY,  PRIVATEPERSON  }
         #region Timer tick
 
@@ -61,6 +62,7 @@ namespace ProStudCreator
             {
                 id = int.Parse(Request.QueryString["id"]);
                 project = db.Projects.Single(p => (int?) p.Id == id);
+                
                 if (!project.UserCanEdit())
                 {
                     Response.Redirect("error/AccessDenied.aspx");
@@ -158,8 +160,10 @@ namespace ProStudCreator
                 {
                     Page.Title = "Projekt bearbeiten";
                     SiteTitle.Text = "Projekt bearbeiten";
-
-                    RetrieveProjectToEdit();
+                    if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
+                        RetrieveProjectComparison(project.Id);
+                    else
+                        RetrieveProjectToEdit();
                     prepareClientForm(project);
                 }
                 else
@@ -179,12 +183,13 @@ namespace ProStudCreator
         }
         private void FillDropAdvisors()
         {
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
-            dropAdvisor2.DataSource = db.UserDepartmentMap;
+            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
         }
 
@@ -264,9 +269,16 @@ where T : Control
             Image1.Visible = false;
             
         }
-        private void RetrieveProjectComparison()
+        private void RetrieveProjectComparison(int projectId = 0)
         {
-            var currentProject = db.Projects.Single(p => p.Id == int.Parse(Request.QueryString["showChanges"]));
+            var pid = 0;
+
+            if(projectId == 0)
+                pid = int.Parse(Request.QueryString["showChanges"]);
+            else
+                pid = projectId;
+
+            var currentProject = db.Projects.Single(p => p.Id == pid);
             showAllControls();
             hideUnwantedControls();
             
@@ -520,14 +532,15 @@ where T : Control
             AddPictureLabel.Text = "Bild ändern:";
 
             ProjectName.Text = project.Name;
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1);
+
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
-            dropAdvisor1.SelectedValue = project.Advisor1Id?.ToString() ?? "ImpossibleValue";
-            dropAdvisor2.DataSource = db.UserDepartmentMap;
+            dropAdvisor1.SelectedValue = project.Advisor1?.Id.ToString() ?? "ImpossibleValue";
+            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
             dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
-            dropAdvisor2.SelectedValue = project.Advisor2Id?.ToString() ?? "ImpossibleValue";
+            dropAdvisor2.SelectedValue = project.Advisor2?.Id.ToString() ?? "ImpossibleValue";
 
             if (project.TypeDesignUX)
             {
@@ -660,7 +673,7 @@ where T : Control
                 Fillproject(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
-                db.SubmitChanges();
+                db.SubmitChanges(); // the next few lines depend on this submit
                 project.ProjectId = project.Id;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
@@ -673,32 +686,28 @@ where T : Control
                     throw new UnauthorizedAccessException();
                 }
 
-                var currentProject = db.Projects.SingleOrDefault(p => p.Id == project.Id);
-                var tempProject = new Project();
-                tempProject.InitNew();
-                tempProject.ModificationDate = DateTime.Now;
-                tempProject.LastEditedBy = ShibUser.GetEmail();
-                Fillproject(tempProject);
-                if (!IsProjectModified(tempProject, currentProject))
-                {
-                    return;
-                }
-                currentProject.IsMainVersion = false;
-                currentProject.ModificationDate = DateTime.Now;
-                currentProject.LastEditedBy = ShibUser.GetEmail();
-                db.Projects.Attach(tempProject); // hack to avoid that the project gets submitted twice
-                db.Projects.DeleteOnSubmit(tempProject);
-                db.SubmitChanges();
+                var currentProject = db.Projects.Single(p => p.Id == project.Id);
 
                 project = new Project();
                 project.InitNew();
                 Fillproject(project);
-                project.ProjectId = currentProject.ProjectId;
                 project.State = currentProject.State;
-                db.Projects.InsertOnSubmit(project);
+                project.ProjectId = currentProject.ProjectId;
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
-                db.SubmitChanges();
+
+                if (!IsProjectModified(project, currentProject) && !changed)
+                {
+                    return;
+                }
+
+                currentProject.IsMainVersion = false;
+                currentProject.ModificationDate = DateTime.Now;
+                currentProject.LastEditedBy = ShibUser.GetEmail();
+                db.Projects.InsertOnSubmit(project);
+                db.SubmitChanges(); // the next few lines depend on this submit    
+                if (currentProject.Picture != null && project.Picture == null)
+                    project.Picture = currentProject.Picture;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
             }
@@ -857,7 +866,7 @@ where T : Control
                     var currentProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted);
                     currentProject.IsMainVersion = false;
                     db.SubmitChanges();
-                    var revertedProject = db.Projects.SingleOrDefault(p => p.Id == pid);
+                    var revertedProject = db.Projects.Single(p => p.Id == pid);
                     revertedProject.IsMainVersion = true;
                     db.SubmitChanges();
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid);
@@ -948,14 +957,7 @@ where T : Control
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
-            //if (! (project.LanguageGerman || project.LanguageEnglish))
-            //    return "Bitte wählen Sie mindestens eine Sprache aus.";
-
-            var fileExt = Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt != ".JPEG" && fileExt != ".JPG" && fileExt != ".PNG" && fileExt != "")
-                return "Es werden nur JPEGs und PNGs als Bildformat unterstützt.";
-
-            if (project.OverOnePage)
+           if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
             if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
@@ -1033,7 +1035,7 @@ where T : Control
         protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
         {
             project.Reject();
-            db.Projects.SingleOrDefault(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
+            db.Projects.Single(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
             SaveProject();
 #if !DEBUG
             MailMessage mailMessage = new MailMessage();
@@ -1280,7 +1282,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
             {
                 project.ProjectNr = 0; // 'Remove' project number to allow finding a new one.
-                project.GenerateProjectNr();
+                project.GenerateProjectNr(db);
             }
 
             if (project.Semester == null)
@@ -1290,6 +1292,14 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             project.ImgDescription = imgdescription.Text.FixupParagraph();
 
             if (AddPicture.HasFile)
+            {
+                
+                var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
+                if (!fileExtension.Contains("jpg") && !fileExtension.Contains("png"))
+                {
+                    return;
+                }
+                changed = true;
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
@@ -1304,7 +1314,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                     }
                     project.Picture = new Binary(data);
                 }
-
+            }
 
             //Previous Project
 
@@ -1476,7 +1486,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var isMainVers = nameof(Project.IsMainVersion);
             var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
             var projId = nameof(Project.ProjectId);
-            var img = nameof(Project.Picture);
             var credate = nameof(Project.CreateDate);
             var prs = nameof(Project.Projects);
             var attch = nameof(Project.Attachements);
@@ -1491,7 +1500,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             props.Add(projectNr);
             props.Add(isMainVers);
             props.Add(ablehnungsgrund);
-            props.Add(img);
             props.Add(credate);
             props.Add(prs);
             props.Add(attch);
@@ -1507,7 +1515,11 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                         {
                             if (!value1.Equals(value2))
                                 return true;
-                        }
+                    }
+                    else if(value1 != null && value2 == null)
+                    {
+                        return true;
+                    }
                     }
                 }
 
