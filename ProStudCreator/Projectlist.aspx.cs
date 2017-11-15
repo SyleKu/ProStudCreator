@@ -4,9 +4,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using iTextSharp.text;
+using NPOI.OpenXmlFormats.Vml;
 using ListItem = System.Web.UI.WebControls.ListItem;
 
 namespace ProStudCreator
@@ -30,7 +33,7 @@ namespace ProStudCreator
         protected GridView CheckProjects;
         private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         protected Button NewProject;
-
+        
         // SR test
         private IQueryable<Project> projects;
         //~SR test
@@ -47,7 +50,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            projects = db.Projects.Select(i => i);
+            projects = db.Projects.Where(i => i.IsMainVersion);
 
             if (IsPostBack || Session["SelectedOwner"] == null || Session["SelectedSemester"] == null)
             {
@@ -91,9 +94,10 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail()) &&
-                                                          p.State != ProjectState.Deleted)
+                                                          p.State != ProjectState.Deleted && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     }
+
                     else
                     {
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
@@ -101,11 +105,11 @@ namespace ProStudCreator
                         projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
-                                                          && p.State != ProjectState.Deleted
+                                                          && p.State != ProjectState.Deleted && p.IsMainVersion
                                                           && (p.Semester.Id == int.Parse(dropSemester.SelectedValue) &&
                                                               p.State == ProjectState.Published ||
-                                                              nextSemesterSelected && p.Semester == null ||
-                                                              p.State != ProjectState.Deleted && p.State !=
+                                                              nextSemesterSelected && p.Semester == null && p.IsMainVersion ||
+                                                              p.State != ProjectState.Deleted && p.IsMainVersion && p.State !=
                                                               ProjectState.Published &&
                                                               nextSemesterSelected))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
@@ -113,10 +117,10 @@ namespace ProStudCreator
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published)
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published &&
+                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
@@ -194,23 +198,33 @@ namespace ProStudCreator
                 {
                     if (!ShibUser.CanEditAllProjects())
                     {
-                        e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
-                        e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                        e.Row.Cells[e.Row.Cells.Count - 4].Visible = false; //edit
+                        e.Row.Cells[e.Row.Cells.Count - 2].Visible = false; //delete
                     }
                 }
                 else if (!project.UserCanEdit())
                 {
-                    e.Row.Cells[e.Row.Cells.Count - 3].Visible = false; //edit
-                    e.Row.Cells[e.Row.Cells.Count - 1].Visible = false; //delete
+                    e.Row.Cells[e.Row.Cells.Count - 4].Visible = false; //edit
+                    e.Row.Cells[e.Row.Cells.Count - 2].Visible = false; //delete
                 }
 
                 Color? col = null;
                 if (project.State == ProjectState.Published)
+                {
                     col = ColorTranslator.FromHtml("#A9F5A9");
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
+                }
+                    
+
                 else if (project.State == ProjectState.Rejected)
+                {
                     col = ColorTranslator.FromHtml("#F5A9A9");
+                }
                 else if (project.State == ProjectState.Submitted)
+                {
+                    e.Row.Cells[e.Row.Cells.Count - 1].Controls.OfType<LinkButton>().First().Visible = false; //submit
                     col = ColorTranslator.FromHtml("#ffcc99");
+                }
                 if (col.HasValue)
                     foreach (TableCell cell in e.Row.Cells)
                         cell.BackColor = col.Value;
@@ -244,6 +258,9 @@ namespace ProStudCreator
                     break;
                 case "editProject":
                     Response.Redirect("AddNewProject?id=" + id);
+                    break;
+                case "submitProject":
+                    einreichenButton_Click(id);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -316,7 +333,7 @@ namespace ProStudCreator
             using (var output = new MemoryStream())
             {
                 ExcelCreator.GenerateProjectList(output, ((IEnumerable<ProjectSingleElement>) AllProjects.DataSource)
-                    .Select(p => db.Projects.Single(pr => pr.Id == p.id))
+                    .Select(p => db.Projects.Single(pr => pr.Id == p.id && pr.IsMainVersion))
                     .OrderBy(p => p.Reservation1Name != "")
                     .ThenBy(p => p.Department.DepartmentName)
                     .ThenBy(p => p.ProjectNr));
@@ -330,6 +347,123 @@ namespace ProStudCreator
             Response.End();
         }
 
+        private void updateGridView()
+        {
+            if (filterText.Value=="")return;
+
+            //var searchString =  filterText.Value;
+            //projects = db.Projects.Select(i => i);
+            //projects = db.Projects.Where(p => searchString == "" || p.LogStudent1Name.Contains(searchString) || p.LogStudent2Name.Contains(searchString))
+            //    .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
+            //AllProjects.DataSource = projects
+            //    .Select(i => getProjectSingleElement(i));
+            AllProjects.DataBind();
+        }
+       protected void filterButton_Click(object sender, EventArgs e)
+        {
+            updateGridView();
+        }
+
+        private bool[] getProjectTypeBools(Project project)
+        {
+            bool[] projectType = new bool[8];
+            if (project.TypeDesignUX)
+            {
+                projectType[0] = true;
+            }
+            if (project.TypeHW)
+            {
+                projectType[1] = true;
+            }
+            if (project.TypeCGIP)
+            {
+                projectType[2] = true;
+            }
+            if (project.TypeMathAlg)
+            {
+                projectType[3] = true;
+            }
+            if (project.TypeAppWeb)
+            {
+                projectType[4] = true;
+            }
+            if (project.TypeDBBigData)
+            {
+               projectType[5] = true;
+            }
+            if (project.TypeSysSec)
+            {
+               projectType[6] = true;
+            }
+            if (project.TypeSE)
+            {
+               projectType[7] = true;
+            }
+            return projectType;
+        }
+        private string GenerateValidationMessage(Project project)
+        {
+            var projectType = getProjectTypeBools(project);
+
+            if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+                return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+
+            if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+                return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+
+            if ((!project.Advisor1?.Name.IsValidName()) ?? true)
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
+
+            var numAssignedTypes = projectType.Count(a => a);
+
+            if (numAssignedTypes != 1 && numAssignedTypes != 2)
+                return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+            
+            if (project.OverOnePage)
+                return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
+
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
+                return "Nur Hauptbetreuer können Projekte einreichen.";
+
+            if (project.Reservation1Mail != "" && project.Reservation1Name == "")
+                return
+                    "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+                return
+                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+
+            if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+                return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            return null;
+        }
+        protected void einreichenButton_Click(int id)
+        {
+            Project project = db.Projects.Single(p => p.Id == id);
+            var validationMessage = GenerateValidationMessage(project);
+            if (validationMessage != null)
+            {
+                var sb = new StringBuilder();
+                sb.Append("<script type = 'text/javascript'>");
+                sb.Append("window.onload=function(){");
+                sb.Append("alert('");
+                sb.Append(validationMessage);
+                sb.Append("')};");
+                sb.Append("</script>");
+                ClientScript.RegisterClientScriptBlock(GetType(), "alert", sb.ToString());
+            }
+            else
+            {
+                project.Submit();
+                db.SubmitChanges();
+                Response.Redirect("projectlist");
+            }
+
+        }
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
             //AllProjects.DataSource =

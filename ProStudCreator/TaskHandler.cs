@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web;
+using NPOI.Util;
 
 namespace ProStudCreator
 {
@@ -15,66 +17,30 @@ namespace ProStudCreator
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
-
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
-                Debug.WriteLine("Checking for new Taksks: " + DateTime.Now);
 
 
                 //Write all the Mails
                 WriteAllMails(db);
 
-
-
-                //only run to create users
-                foreach (var project in db.Projects.Select(i => i))
-                {
-
-                    if (project.Advisor1Mail == "simon.felix@fhnw.ch" || project.Advisor2Mail == "simon.felix@fhnw.ch")
-                    {
-                        var a = 5;
-                    }
-
-                    if (project.Advisor1Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor1Mail))
-                    {
-                        db.UserDepartmentMap.InsertOnSubmit(
-                            new UserDepartmentMap() { Mail = project.Advisor1Mail, Name = project.Advisor1Name, CanSubmitAllProjects = true });
-                    }
-
-                    if (project.Advisor2Mail != null && !db.UserDepartmentMap.Select(i => i.Mail).Contains(project.Advisor2Mail))
-                    {
-                        db.UserDepartmentMap.InsertOnSubmit(
-                            new UserDepartmentMap() { Mail = project.Advisor2Mail, Name = project.Advisor2Name});
-                    }
-
-                    db.SubmitChanges();
-
-                    if (project.Advisor1 == null && !string.IsNullOrEmpty(project.Advisor1Mail))
-                    {
-                        project.Advisor1 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor1Mail);
-                    }
-
-                    if (project.Advisor2 == null && !string.IsNullOrEmpty(project.Advisor2Mail))
-                    {
-                        project.Advisor2 = db.UserDepartmentMap.Single(i => i.Mail == project.Advisor2Mail);
-                    }
-
-                    db.SubmitChanges();
-                }
             }
+
         }
 
 
         private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
-            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered).Select(i => i.ProjectId);
+            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered)
+                .Select(i => i.ProjectId);
 
-            var allProjects = db.Projects.ToList();
+            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published).ToList();
 
-            foreach (var project in allProjects.Where(p => p.GetEndSemester(db) == Semester.LastSemester(db)))
+            foreach (var project in allPublishedProjects.Where(p => p.GetProjectRelevantForGradeTasks(db)))
             {
-                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
+                if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) ||
+                    (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
                 {
                     if (!allActiveGradeTasks.Contains(project.Id))
                     {
@@ -162,11 +128,11 @@ namespace ProStudCreator
             {
                 var mailMessage = new StringBuilder();
 
-                if (!task.isAddedToList())
+                if (!task.AlreadyChecked)
                 {
                     var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
                     mail.To.Add(new MailAddress(task.ResponsibleUser.Mail));
-                    mail.Subject = "Offene Aufgaben bei Prostud (DEBUG)";
+                    mail.Subject = "Offene Aufgaben bei Prostud";
                     mail.IsBodyHtml = true;
                     mailMessage.Append("<div style=\"font-family: Arial\">");
                     mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {task.ResponsibleUser.Name.Split(' ')[0]}<p>"
@@ -176,8 +142,12 @@ namespace ProStudCreator
                     {
                         if (underTask.ResponsibleUserId == task.ResponsibleUserId)
                         {
-                            underTask.AddToList();
-                            mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id= {task.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
+                            if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate)
+                            {
+                                mail.CC.Add(underTask.Supervisor?.Mail ?? "");
+                            }
+                            underTask.AlreadyChecked = true;
+                            mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{underTask.Project.Name}</a></li>" : "<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
                         }
                     }
 
@@ -195,7 +165,7 @@ namespace ProStudCreator
             }
             foreach (var task in copyTasksToMail)
             {
-                task.RemoveFromList();
+                task.AlreadyChecked = false;
             }
 
             return mailsToSend.ToArray();
@@ -208,9 +178,12 @@ namespace ProStudCreator
 
             foreach (var mail in mails)
             {
+#if !DEBUG
                 smtpClient.Send(mail);
+#endif
             }
         }
-        #endregion
+#endregion
     }
+
 }

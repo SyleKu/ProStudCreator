@@ -1329,13 +1329,13 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _Advisor2Id;
 		
-		private string _Advisor1Mail;
+		private bool _IsMainVersion;
 		
-		private string _Advisor2Mail;
+		private System.Nullable<int> _ProjectId;
 		
-		private string _Advisor1Name;
+		private string _Ablehnungsgrund;
 		
-		private string _Advisor2Name;
+		private int _ClientType;
 		
 		private EntitySet<Project> _Projects;
 		
@@ -1505,14 +1505,14 @@ namespace ProStudCreator
     partial void OnAdvisor1IdChanged();
     partial void OnAdvisor2IdChanging(System.Nullable<int> value);
     partial void OnAdvisor2IdChanged();
-    partial void OnAdvisor1MailChanging(string value);
-    partial void OnAdvisor1MailChanged();
-    partial void OnAdvisor2MailChanging(string value);
-    partial void OnAdvisor2MailChanged();
-    partial void OnAdvisor1NameChanging(string value);
-    partial void OnAdvisor1NameChanged();
-    partial void OnAdvisor2NameChanging(string value);
-    partial void OnAdvisor2NameChanged();
+    partial void OnIsMainVersionChanging(bool value);
+    partial void OnIsMainVersionChanged();
+    partial void OnProjectIdChanging(System.Nullable<int> value);
+    partial void OnProjectIdChanged();
+    partial void OnAblehnungsgrundChanging(string value);
+    partial void OnAblehnungsgrundChanged();
+    partial void OnClientTypeChanging(int value);
+    partial void OnClientTypeChanged();
     #endregion
 		
 		public Project()
@@ -1535,7 +1535,7 @@ namespace ProStudCreator
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public int Id
 		{
 			get
@@ -1555,7 +1555,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Name
 		{
 			get
@@ -1575,7 +1575,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Creator", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Creator", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Creator
 		{
 			get
@@ -1595,7 +1595,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientCompany", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientCompany", DbType="NVarChar(255) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public string ClientCompany
 		{
 			get
@@ -1615,7 +1615,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientPerson", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientPerson", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string ClientPerson
 		{
 			get
@@ -1635,7 +1635,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientMail", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientMail", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string ClientMail
 		{
 			get
@@ -1655,7 +1655,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDesignUX", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDesignUX", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeDesignUX
 		{
 			get
@@ -1675,7 +1675,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeHW", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeHW", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeHW
 		{
 			get
@@ -1695,7 +1695,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeCGIP", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeCGIP", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeCGIP
 		{
 			get
@@ -1715,7 +1715,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeMathAlg", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeMathAlg", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeMathAlg
 		{
 			get
@@ -1735,7 +1735,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeAppWeb", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeAppWeb", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeAppWeb
 		{
 			get
@@ -1755,7 +1755,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDBBigData", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeDBBigData", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool TypeDBBigData
 		{
 			get
@@ -1775,7 +1775,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P1TypeId", DbType="Int NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P1TypeId", DbType="Int NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public int P1TypeId
 		{
 			get
@@ -1799,7 +1799,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P1TeamSizeId", DbType="Int NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P1TeamSizeId", DbType="Int NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public int P1TeamSizeId
 		{
 			get
@@ -1823,7 +1823,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P2TypeId", DbType="Int")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P2TypeId", DbType="Int", UpdateCheck=UpdateCheck.Never)]
 		public System.Nullable<int> P2TypeId
 		{
 			get
@@ -1847,7 +1847,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P2TeamSizeId", DbType="Int")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_P2TeamSizeId", DbType="Int", UpdateCheck=UpdateCheck.Never)]
 		public System.Nullable<int> P2TeamSizeId
 		{
 			get
@@ -1871,7 +1871,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InitialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InitialPosition", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string InitialPosition
 		{
 			get
@@ -1911,7 +1911,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Objective", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Objective", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Objective
 		{
 			get
@@ -1931,7 +1931,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProblemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProblemStatement", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string ProblemStatement
 		{
 			get
@@ -1951,7 +1951,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[References]", Storage="_References", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[References]", Storage="_References", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string References
 		{
 			get
@@ -1971,7 +1971,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Remarks", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Remarks", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Remarks
 		{
 			get
@@ -1991,7 +1991,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation1Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation1Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Reservation1Name
 		{
 			get
@@ -2011,7 +2011,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation1Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation1Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Reservation1Mail
 		{
 			get
@@ -2031,7 +2031,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation2Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation2Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Reservation2Name
 		{
 			get
@@ -2051,7 +2051,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation2Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Reservation2Mail", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Reservation2Mail
 		{
 			get
@@ -2071,7 +2071,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Important", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Important", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool Important
 		{
 			get
@@ -2091,7 +2091,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="Int NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="Int NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public int State
 		{
 			get
@@ -2111,7 +2111,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public int DepartmentId
 		{
 			get
@@ -2135,7 +2135,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OverOnePage", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OverOnePage", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public bool OverOnePage
 		{
 			get
@@ -2923,82 +2923,82 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Mail")]
-		public string Advisor1Mail
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsMainVersion", DbType="bit NOT NULL")]
+		public bool IsMainVersion
 		{
 			get
 			{
-				return this._Advisor1Mail;
+				return this._IsMainVersion;
 			}
 			set
 			{
-				if ((this._Advisor1Mail != value))
+				if ((this._IsMainVersion != value))
 				{
-					this.OnAdvisor1MailChanging(value);
+					this.OnIsMainVersionChanging(value);
 					this.SendPropertyChanging();
-					this._Advisor1Mail = value;
-					this.SendPropertyChanged("Advisor1Mail");
-					this.OnAdvisor1MailChanged();
+					this._IsMainVersion = value;
+					this.SendPropertyChanged("IsMainVersion");
+					this.OnIsMainVersionChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Mail")]
-		public string Advisor2Mail
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int")]
+		public System.Nullable<int> ProjectId
 		{
 			get
 			{
-				return this._Advisor2Mail;
+				return this._ProjectId;
 			}
 			set
 			{
-				if ((this._Advisor2Mail != value))
+				if ((this._ProjectId != value))
 				{
-					this.OnAdvisor2MailChanging(value);
+					this.OnProjectIdChanging(value);
 					this.SendPropertyChanging();
-					this._Advisor2Mail = value;
-					this.SendPropertyChanged("Advisor2Mail");
-					this.OnAdvisor2MailChanged();
+					this._ProjectId = value;
+					this.SendPropertyChanged("ProjectId");
+					this.OnProjectIdChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor1Name")]
-		public string Advisor1Name
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ablehnungsgrund", DbType="nvarchar(MAX)")]
+		public string Ablehnungsgrund
 		{
 			get
 			{
-				return this._Advisor1Name;
+				return this._Ablehnungsgrund;
 			}
 			set
 			{
-				if ((this._Advisor1Name != value))
+				if ((this._Ablehnungsgrund != value))
 				{
-					this.OnAdvisor1NameChanging(value);
+					this.OnAblehnungsgrundChanging(value);
 					this.SendPropertyChanging();
-					this._Advisor1Name = value;
-					this.SendPropertyChanged("Advisor1Name");
-					this.OnAdvisor1NameChanged();
+					this._Ablehnungsgrund = value;
+					this.SendPropertyChanged("Ablehnungsgrund");
+					this.OnAblehnungsgrundChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Advisor2Name")]
-		public string Advisor2Name
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ClientType", DbType="int")]
+		public int ClientType
 		{
 			get
 			{
-				return this._Advisor2Name;
+				return this._ClientType;
 			}
 			set
 			{
-				if ((this._Advisor2Name != value))
+				if ((this._ClientType != value))
 				{
-					this.OnAdvisor2NameChanging(value);
+					this.OnClientTypeChanging(value);
 					this.SendPropertyChanging();
-					this._Advisor2Name = value;
-					this.SendPropertyChanged("Advisor2Name");
-					this.OnAdvisor2NameChanged();
+					this._ClientType = value;
+					this.SendPropertyChanged("ClientType");
+					this.OnClientTypeChanged();
 				}
 			}
 		}
@@ -4302,17 +4302,19 @@ namespace ProStudCreator
 		
 		private int _Id;
 		
-		private bool _IsSupervisor;
-		
 		private string _Name;
 		
-		private EntitySet<Task> _Tasks;
+		private bool _CanBeAdvisor1;
 		
-		private EntitySet<Task> _Tasks1;
+		private bool _IsSupervisor;
 		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
+		
+		private EntitySet<Task> _Tasks;
+		
+		private EntitySet<Task> _Tasks1;
 		
 		private EntityRef<Department> _Department;
 		
@@ -4340,18 +4342,20 @@ namespace ProStudCreator
     partial void OnCanSeeCreationDetailsChanged();
     partial void OnIdChanging(int value);
     partial void OnIdChanged();
-    partial void OnIsSupervisorChanging(bool value);
-    partial void OnIsSupervisorChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnCanBeAdvisor1Changing(bool value);
+    partial void OnCanBeAdvisor1Changed();
+    partial void OnIsSupervisorChanging(bool value);
+    partial void OnIsSupervisorChanged();
     #endregion
 		
 		public UserDepartmentMap()
 		{
-			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
-			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
 			this._Projects = new EntitySet<Project>(new Action<Project>(this.attach_Projects), new Action<Project>(this.detach_Projects));
 			this._Projects1 = new EntitySet<Project>(new Action<Project>(this.attach_Projects1), new Action<Project>(this.detach_Projects1));
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
+			this._Tasks1 = new EntitySet<Task>(new Action<Task>(this.attach_Tasks1), new Action<Task>(this.detach_Tasks1));
 			this._Department = default(EntityRef<Department>);
 			OnCreated();
 		}
@@ -4560,26 +4564,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor", DbType="bit")]
-		public bool IsSupervisor
-		{
-			get
-			{
-				return this._IsSupervisor;
-			}
-			set
-			{
-				if ((this._IsSupervisor != value))
-				{
-					this.OnIsSupervisorChanging(value);
-					this.SendPropertyChanging();
-					this._IsSupervisor = value;
-					this.SendPropertyChanged("IsSupervisor");
-					this.OnIsSupervisorChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="varchar(50)")]
 		public string Name
 		{
@@ -4600,29 +4584,43 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_Tasks", ThisKey="Id", OtherKey="SupervisorId")]
-		public EntitySet<Task> Tasks
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanBeAdvisor1")]
+		public bool CanBeAdvisor1
 		{
 			get
 			{
-				return this._Tasks;
+				return this._CanBeAdvisor1;
 			}
 			set
 			{
-				this._Tasks.Assign(value);
+				if ((this._CanBeAdvisor1 != value))
+				{
+					this.OnCanBeAdvisor1Changing(value);
+					this.SendPropertyChanging();
+					this._CanBeAdvisor1 = value;
+					this.SendPropertyChanged("CanBeAdvisor1");
+					this.OnCanBeAdvisor1Changed();
+				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_Tasks1", ThisKey="Id", OtherKey="ResponsibleUserId")]
-		public EntitySet<Task> Tasks1
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor")]
+		public bool IsSupervisor
 		{
 			get
 			{
-				return this._Tasks1;
+				return this._IsSupervisor;
 			}
 			set
 			{
-				this._Tasks1.Assign(value);
+				if ((this._IsSupervisor != value))
+				{
+					this.OnIsSupervisorChanging(value);
+					this.SendPropertyChanging();
+					this._IsSupervisor = value;
+					this.SendPropertyChanged("IsSupervisor");
+					this.OnIsSupervisorChanged();
+				}
 			}
 		}
 		
@@ -4649,6 +4647,32 @@ namespace ProStudCreator
 			set
 			{
 				this._Projects1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task", Storage="_Tasks", ThisKey="Id", OtherKey="SupervisorId")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserDepartmentMap_Task1", Storage="_Tasks1", ThisKey="Id", OtherKey="ResponsibleUserId")]
+		public EntitySet<Task> Tasks1
+		{
+			get
+			{
+				return this._Tasks1;
+			}
+			set
+			{
+				this._Tasks1.Assign(value);
 			}
 		}
 		
@@ -4706,30 +4730,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		private void attach_Tasks(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.Supervisor = this;
-		}
-		
-		private void detach_Tasks(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.Supervisor = null;
-		}
-		
-		private void attach_Tasks1(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.ResponsibleUser = this;
-		}
-		
-		private void detach_Tasks1(Task entity)
-		{
-			this.SendPropertyChanging();
-			entity.ResponsibleUser = null;
-		}
-		
 		private void attach_Projects(Project entity)
 		{
 			this.SendPropertyChanging();
@@ -4752,6 +4752,30 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.Advisor2 = null;
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = this;
+		}
+		
+		private void detach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = null;
+		}
+		
+		private void attach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.ResponsibleUser = this;
+		}
+		
+		private void detach_Tasks1(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.ResponsibleUser = null;
 		}
 	}
 	
