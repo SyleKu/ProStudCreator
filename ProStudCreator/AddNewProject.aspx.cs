@@ -673,8 +673,8 @@ where T : Control
                 Fillproject(project);
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
+                db.SubmitChanges(); // the next few lines depend on this submit
                 project.ProjectId = project.Id;
-                db.SubmitChanges();
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
                 db.SubmitChanges();
 
@@ -687,17 +687,15 @@ where T : Control
                 }
 
                 var currentProject = db.Projects.Single(p => p.Id == project.Id);
-                //var tempProject = new Project();
-                //tempProject.InitNew();
-                //tempProject.ModificationDate = DateTime.Now;
-                //tempProject.LastEditedBy = ShibUser.GetEmail();
-                //Fillproject(tempProject);
+
                 project = new Project();
                 project.InitNew();
                 Fillproject(project);
                 project.State = currentProject.State;
+                project.ProjectId = currentProject.ProjectId;
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
+
                 if (!IsProjectModified(project, currentProject) && !changed)
                 {
                     return;
@@ -707,8 +705,7 @@ where T : Control
                 currentProject.ModificationDate = DateTime.Now;
                 currentProject.LastEditedBy = ShibUser.GetEmail();
                 db.Projects.InsertOnSubmit(project);
-                db.SubmitChanges();
-                project.ProjectId = currentProject.ProjectId;
+                db.SubmitChanges(); // the next few lines depend on this submit    
                 if (currentProject.Picture != null && project.Picture == null)
                     project.Picture = currentProject.Picture;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
