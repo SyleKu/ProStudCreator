@@ -695,7 +695,6 @@ where T : Control
                 project = new Project();
                 project.InitNew();
                 Fillproject(project);
-                project.ProjectId = currentProject.ProjectId;
                 project.State = currentProject.State;
                 project.ModificationDate = DateTime.Now;
                 project.LastEditedBy = ShibUser.GetEmail();
@@ -709,6 +708,7 @@ where T : Control
                 currentProject.LastEditedBy = ShibUser.GetEmail();
                 db.Projects.InsertOnSubmit(project);
                 db.SubmitChanges();
+                project.ProjectId = currentProject.ProjectId;
                 if (currentProject.Picture != null && project.Picture == null)
                     project.Picture = currentProject.Picture;
                 project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
