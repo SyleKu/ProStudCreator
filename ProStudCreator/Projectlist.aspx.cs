@@ -64,8 +64,8 @@ namespace ProStudCreator
             }
 
 
-            AllProjects.DataSource = filterRelevantProjects(projects)
-                .Select(i => getProjectSingleElement(i));
+            AllProjects.DataSource = FilterRelevantProjects(projects)
+                .Select(i => GetProjectSingleElement(i));
             AllProjects.DataBind();
 
             //Disabling the "-----" element in the Dropdownlist. So the item "Alle Semester" is separated from the rest
@@ -83,7 +83,7 @@ namespace ProStudCreator
         }
 
 
-        private IQueryable<Project> filterRelevantProjects(IQueryable<Project> allProjects)
+        private IQueryable<Project> FilterRelevantProjects(IQueryable<Project> allProjects)
         {
             var projects = allProjects;
             switch (Session["SelectedOwner"])
@@ -128,7 +128,7 @@ namespace ProStudCreator
             return projects;
         }
 
-        private ProjectSingleElement getProjectSingleElement(Project i)
+        private ProjectSingleElement GetProjectSingleElement(Project i)
         {
             return new ProjectSingleElement
             {
@@ -231,7 +231,7 @@ namespace ProStudCreator
             }
         }
 
-        protected void newProject_Click(object sender, EventArgs e)
+        protected void NewProject_Click(object sender, EventArgs e)
         {
             Response.Redirect("AddNewProject");
         }
@@ -260,7 +260,7 @@ namespace ProStudCreator
                     Response.Redirect("AddNewProject?id=" + id);
                     break;
                 case "submitProject":
-                    einreichenButton_Click(id);
+                    EinreichenButton_Click(id);
                     break;
                 default:
                     throw new Exception("Unknown command " + e.CommandName);
@@ -347,7 +347,7 @@ namespace ProStudCreator
             Response.End();
         }
 
-        private void updateGridView()
+        private void UpdateGridView()
         {
             if (filterText.Value=="")return;
 
@@ -359,12 +359,12 @@ namespace ProStudCreator
             //    .Select(i => getProjectSingleElement(i));
             AllProjects.DataBind();
         }
-       protected void filterButton_Click(object sender, EventArgs e)
+       protected void FilterButton_Click(object sender, EventArgs e)
         {
-            updateGridView();
+            UpdateGridView();
         }
 
-        private bool[] getProjectTypeBools(Project project)
+        private bool[] GetProjectTypeBools(Project project)
         {
             bool[] projectType = new bool[8];
             if (project.TypeDesignUX)
@@ -403,7 +403,10 @@ namespace ProStudCreator
         }
         private string GenerateValidationMessage(Project project)
         {
-            var projectType = getProjectTypeBools(project);
+            if (project.Advisor1 == null)
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
+
+            var projectType = GetProjectTypeBools(project);
 
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
@@ -418,7 +421,7 @@ namespace ProStudCreator
 
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
-            
+
             if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
@@ -441,7 +444,7 @@ namespace ProStudCreator
 
             return null;
         }
-        protected void einreichenButton_Click(int id)
+        protected void EinreichenButton_Click(int id)
         {
             Project project = db.Projects.Single(p => p.Id == id);
             var validationMessage = GenerateValidationMessage(project);

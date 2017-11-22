@@ -369,6 +369,10 @@ namespace ProStudCreator
 
         private string GenerateValidationMessage(Project project)
         {
+
+            if (project.Advisor1 == null)
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
+
             var projectType = GetProjectTypeBools(project);
 
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())

@@ -936,27 +936,24 @@ where T : Control
         /// <returns>First applicable error message from the validation.</returns>
         private string GenerateValidationMessage()
         {
+            if (project.Advisor1 == null)
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
+
             if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+
             if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
             if ((!project.Advisor1?.Name.IsValidName()) ?? true)
-                return "Bitte geben Sie den Namen des Hauptbetreuers an (Vorname Nachname).";
-            if (!project.Advisor1?.Mail.IsValidEmail() ?? true)
-                return "Bitte geben Sie die E-Mail-Adresse des Hauptbetreuers an.";
-            if (project.Advisor2 != null && !project.Advisor2.Name.IsValidName())
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
-            if (project.Advisor2 != null && !project.Advisor2.Mail.IsValidEmail())
-                return "Bitte geben Sie die E-Mail-Adresse des Zweitbetreuers an.";
-            if (project.Advisor2 == null && project.Advisor2.Mail != "")
-                return "Bitte geben Sie den Namen des Zweitbetreuers an (Vorname Nachname).";
+                return "Bitte wählen Sie einen Hauptbetreuer aus.";
 
             var numAssignedTypes = projectType.Count(a => a);
+
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
                 return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
-           if (project.OverOnePage)
+            if (project.OverOnePage)
                 return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
             if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
@@ -976,9 +973,6 @@ where T : Control
             if (project.Reservation2Name != "" && project.Reservation2Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
 
-            /*if (project.Picture != null && project.ImgDescription == "")
-                return "Bitte beschriften Sie ihr Bild";
-                */
             return null;
         }
 

@@ -20,7 +20,7 @@
         <div class="col-sm-3 input-group">
             <input type="text" placeholder="Student..." runat="server" class="form-control" ClientIDMode="Static" id="filterText" name="filterText"></input>
             <span class="input-group-btn">
-            <asp:Button runat="server" OnClick="filterButton_Click" class="btn" id="filterBtn" Text="Suchen"/>
+            <asp:Button runat="server" OnClick="FilterButton_Click" class="btn" id="filterBtn" Text="Suchen"/>
             </span>
         </div>
         <br/>
@@ -86,7 +86,7 @@
             = Eingereicht&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <div style="margin-top: 16px;">
-            <asp:Button runat="server" ID="NewProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="newProject_Click"/>
+            <asp:Button runat="server" ID="NewProject" CssClass="btn btn-default buttonFont" Text="Neues Projekt" OnClick="NewProject_Click"/>
             <asp:Button runat="server" ID="AllProjectsAsPDF" CssClass="btn btn-default buttonFont pdf" Text="Projekte als PDF" OnClick="AllProjectsAsPDF_Click"/>
             <asp:Button runat="server" ID="AllProjectsAsExcel" CssClass="btn btn-default buttonFont" Text="Projektliste in Excel" OnClick="AllProjectsAsExcel_Click"/>
         </div>
