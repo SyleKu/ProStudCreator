@@ -666,47 +666,66 @@ where T : Control
         {
             if (project == null) // New project
             {
-                project = new Project();               
-                project.InitNew();
-                db.Projects.InsertOnSubmit(project);
-                Fillproject(project);
-                project.ModificationDate = DateTime.Now;
-                project.LastEditedBy = ShibUser.GetEmail();
-                db.SubmitChanges(); // the next few lines depend on this submit
-                project.ProjectId = project.Id;
-                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
-                db.SubmitChanges();
+                CreateNewProject();
 
             }
-            else
+            else if(HasProjectChanged(project))
             {
-                if (!project.UserCanEdit())
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                
+                SaveProjectAsNewVersion(project);
 
-                var currentProject = db.Projects.Single(p => p.Id == project.Id);
-
-                project = new Project();
-                project.InitNewVersion(currentProject);
-                Fillproject(project);
-
-                if (!IsProjectModified(project, currentProject) && !changed)
-                {
-                    project = currentProject;
-                    return;
-                }
-
-                currentProject.IsMainVersion = false;
-                currentProject.ModificationDate = DateTime.Now;
-                currentProject.LastEditedBy = ShibUser.GetEmail();
-                db.Projects.InsertOnSubmit(project);
-                db.SubmitChanges(); // the next few lines depend on this submit    
-                if (currentProject.Picture != null && project.Picture == null)
-                    project.Picture = currentProject.Picture;
-                project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
-                db.SubmitChanges();
             }
+        }
+        private void ChangeProjectForComparison()
+        {
+            Project oldProject = project;
+
+            project = new Project();
+            project.InitNewVersion(oldProject);
+            Fillproject(project);
+        }
+        private bool HasProjectChanged(Project oldProject)
+        {
+            ChangeProjectForComparison();
+            if (!IsProjectModified(project, oldProject) && !changed)
+            {
+                project = oldProject;
+                return false;
+            }
+            db.SubmitChanges();
+            return true;
+        }
+
+        private void CreateNewProject()
+        {
+            project = new Project();
+            project.InitNew();
+            db.Projects.InsertOnSubmit(project);
+            Fillproject(project);
+            project.ModificationDate = DateTime.Now;
+            project.LastEditedBy = ShibUser.GetEmail();
+            db.SubmitChanges(); // the next few lines depend on this submit
+            project.ProjectId = project.Id;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
+        }
+
+        private void SaveProjectAsNewVersion(Project oldProject)
+        {
+            if (!project.UserCanEdit())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            ChangeProjectForComparison();
+            oldProject.IsMainVersion = false;
+            oldProject.ModificationDate = DateTime.Now;
+            oldProject.LastEditedBy = ShibUser.GetEmail();
+            db.Projects.InsertOnSubmit(project);
+            db.SubmitChanges(); // the next few lines depend on this submit    
+            if (oldProject.Picture != null && project.Picture == null)
+                project.Picture = oldProject.Picture;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
         }
 
         private void ToggleReservationTwoVisible()
@@ -979,10 +998,8 @@ where T : Control
 
         protected void PublishProject_Click(object sender, EventArgs e)
         {
-            var versionDescription = Request.QueryString["versionDescription"];
-            SaveProject();
+            SaveProjectAsNewVersion(project);
             project.Publish(db);
-            db.SubmitChanges();
 
 #if !DEBUG // Notification e-mail
             var mailMessage = new MailMessage();

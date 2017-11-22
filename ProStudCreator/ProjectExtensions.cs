@@ -50,6 +50,7 @@ namespace ProStudCreator
             _p.ModificationDate = DateTime.Now;
             _p.State = ProjectState.Published;
             _p.Semester = _dbx.Semester.OrderBy(x => x.StartDate).First(x => x.StartDate > DateTime.Now);
+            _dbx.SubmitChanges();
         }
 
         /// <summary>
