@@ -688,15 +688,12 @@ where T : Control
                 var currentProject = db.Projects.Single(p => p.Id == project.Id);
 
                 project = new Project();
-                project.InitNew();
+                project.InitNewVersion(currentProject);
                 Fillproject(project);
-                project.State = currentProject.State;
-                project.ProjectId = currentProject.ProjectId;
-                project.ModificationDate = DateTime.Now;
-                project.LastEditedBy = ShibUser.GetEmail();
 
                 if (!IsProjectModified(project, currentProject) && !changed)
                 {
+                    project = currentProject;
                     return;
                 }
 

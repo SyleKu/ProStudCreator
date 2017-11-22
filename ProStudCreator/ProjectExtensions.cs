@@ -16,6 +16,17 @@ namespace ProStudCreator
             _p.State = ProjectState.InProgress;
             _p.IsMainVersion = true;
         }
+        public static void InitNewVersion(this Project _p, Project previousProject)
+        {
+            _p.Creator = previousProject.Creator;
+            _p.CreateDate = previousProject.CreateDate;
+            _p.PublishedDate = previousProject.PublishedDate;
+            _p.State = previousProject.State;
+            _p.ProjectId = previousProject.ProjectId;
+            _p.ModificationDate = DateTime.Now;
+            _p.LastEditedBy = ShibUser.GetEmail();
+            _p.IsMainVersion = true;
+        }
 
         /// <summary>
         ///     Submits user's project for approval by an admin.
