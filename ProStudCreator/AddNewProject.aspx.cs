@@ -24,6 +24,7 @@ namespace ProStudCreator
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
         private bool changed = false;
+        private Binary picture;
         private enum ClientType { INTERN, COMPANY,  PRIVATEPERSON  }
         #region Timer tick
 
@@ -669,27 +670,63 @@ where T : Control
                 CreateNewProject();
 
             }
-            else if(HasProjectChanged(project))
+            else if(HasProjectChanged())
             {
                 
-                SaveProjectAsNewVersion(project);
+                SaveProjectFromEditView();
 
             }
         }
-        private void ChangeProjectForComparison()
+        
+        private void SaveProjectFromEditView()
         {
+            if (!project.UserCanEdit())
+            {
+                throw new UnauthorizedAccessException();
+            }
+
             Project oldProject = project;
 
             project = new Project();
             project.InitNewVersion(oldProject);
+
+            oldProject.IsMainVersion = false;
+            oldProject.ModificationDate = DateTime.Now;
+            oldProject.LastEditedBy = ShibUser.GetEmail();
+            db.Projects.InsertOnSubmit(project);
             Fillproject(project);
-        }
-        private bool HasProjectChanged(Project oldProject)
-        {
-            ChangeProjectForComparison();
-            if (!IsProjectModified(project, oldProject) && !changed)
+            if (changed)
             {
-                project = oldProject;
+                project.Picture = picture;
+            }
+            db.SubmitChanges(); // the next few lines depend on this submit    
+            if (oldProject.Picture != null && project.Picture == null)
+                project.Picture = oldProject.Picture;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
+
+        }
+
+        private bool HasProjectChanged()
+        {
+            var comparisonProject = new Project();
+            Fillproject(comparisonProject);
+            comparisonProject.Id = -1;
+
+            ///////////////////////////////////////
+            if (comparisonProject.Picture != null)
+            {
+                picture = comparisonProject.Picture; //Hack because the picture data will be lost after the first read 
+            }                                        //so this will save it for later use
+            ///////////////////////////////////////
+
+            ///////////////////////////////////////////////
+            db.Projects.InsertOnSubmit(comparisonProject); //Hack so that the project is not submitted
+            db.Projects.DeleteOnSubmit(comparisonProject);
+            ///////////////////////////////////////////////
+
+            if (!IsProjectModified(comparisonProject, project) && !changed)
+            {
                 return false;
             }
             db.SubmitChanges();
@@ -706,24 +743,6 @@ where T : Control
             project.LastEditedBy = ShibUser.GetEmail();
             db.SubmitChanges(); // the next few lines depend on this submit
             project.ProjectId = project.Id;
-            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
-            db.SubmitChanges();
-        }
-
-        private void SaveProjectAsNewVersion(Project oldProject)
-        {
-            if (!project.UserCanEdit())
-            {
-                throw new UnauthorizedAccessException();
-            }
-            ChangeProjectForComparison();
-            oldProject.IsMainVersion = false;
-            oldProject.ModificationDate = DateTime.Now;
-            oldProject.LastEditedBy = ShibUser.GetEmail();
-            db.Projects.InsertOnSubmit(project);
-            db.SubmitChanges(); // the next few lines depend on this submit    
-            if (oldProject.Picture != null && project.Picture == null)
-                project.Picture = oldProject.Picture;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             db.SubmitChanges();
         }
@@ -921,11 +940,8 @@ where T : Control
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-            SaveProject();
-
             var validationMessage = GenerateValidationMessage();
-
-            // Generate JavaScript alert with error message
+                // Generate JavaScript alert with error message
             if (validationMessage != null)
             {
                 var sb = new StringBuilder();
@@ -939,6 +955,7 @@ where T : Control
             }
             else
             {
+                SaveProject();
                 project.Submit();
                 db.SubmitChanges();
                 Response.Redirect("projectlist");
@@ -998,7 +1015,7 @@ where T : Control
 
         protected void PublishProject_Click(object sender, EventArgs e)
         {
-            SaveProjectAsNewVersion(project);
+            SaveProject();
             project.Publish(db);
 
 #if !DEBUG // Notification e-mail
@@ -1145,7 +1162,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #region private methods
 
-        private void Fillproject(Project project)
+        private void Fillproject(Project project)    
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
