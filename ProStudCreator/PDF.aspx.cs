@@ -23,6 +23,12 @@ namespace ProStudCreator
                 Response.End();
                 return;
             }
+            if (!idPDF.IsMainVersion)
+            {
+                var mainProject = db.Projects.Single(p => p.ProjectId == idPDF.ProjectId && p.IsMainVersion);
+                Response.Redirect(@"~/PDF?dl=" + forceDl.ToString() + "&id=" + mainProject.Id.ToString());
+            }
+            
 
             byte[] bytesInStream;
             using (var output = new MemoryStream())
