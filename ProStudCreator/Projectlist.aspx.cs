@@ -350,14 +350,14 @@ namespace ProStudCreator
 
         private void UpdateGridView()
         {
-            if (filterText.Value=="")return;
+            if (filterText.Text =="")return;
 
-            //var searchString =  filterText.Value;
-            //projects = db.Projects.Select(i => i);
-            //projects = db.Projects.Where(p => searchString == "" || p.LogStudent1Name.Contains(searchString) || p.LogStudent2Name.Contains(searchString))
-            //    .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
-            //AllProjects.DataSource = projects
-            //    .Select(i => getProjectSingleElement(i));
+            var searchString =  filterText.Text;
+            projects = db.Projects.Select(i => i);
+            projects = db.Projects.Where(p => p.LogStudent1Name.Contains(searchString) && p.IsMainVersion || p.LogStudent2Name.Contains(searchString) && p.IsMainVersion)
+                .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
+            AllProjects.DataSource = projects
+               .Select(i => GetProjectSingleElement(i));
             AllProjects.DataBind();
         }
        protected void FilterButton_Click(object sender, EventArgs e)
@@ -480,11 +480,11 @@ namespace ProStudCreator
         }
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            //AllProjects.DataSource =
-            //    from i in filterRelevantProjects(projects)
-            //    orderby "department desc" // Doesn't allow sorting based on string param
-            //    select getProjectSingleElement(i);
-            //AllProjects.DataBind();
+            UpdateGridView();
+            var sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+            AllProjects.DataSource = sortedProjects.OrderBy(p => p.projectName);
+            AllProjects.DataBind();
         }
+
     }
 }
