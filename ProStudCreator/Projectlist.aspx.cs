@@ -92,7 +92,7 @@ namespace ProStudCreator
                 case "OwnProjects":
                     if (dropSemester.SelectedValue == "allSemester")
                     {
-                        projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
+                        projects = projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail()) &&
                                                           p.State != ProjectState.Deleted && p.IsMainVersion)
@@ -103,7 +103,7 @@ namespace ProStudCreator
                     {
                         var nextSemesterSelected = int.Parse(dropSemester.SelectedValue) ==
                                                    Semester.NextSemester(db).Id;
-                        projects = db.Projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
+                        projects = projects.Where(p => (p.Creator == ShibUser.GetEmail() ||
                                                            p.Advisor1.Mail == ShibUser.GetEmail() ||
                                                            p.Advisor2.Mail == ShibUser.GetEmail())
                                                           && p.State != ProjectState.Deleted && p.IsMainVersion
@@ -118,10 +118,10 @@ namespace ProStudCreator
                     break;
                 case "AllProjects":
                     if (dropSemester.SelectedValue == "allSemester")
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
+                        projects = projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion)
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     else
-                        projects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
+                        projects = projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion &&
                                                           p.Semester.Id == int.Parse(dropSemester.SelectedValue))
                             .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
                     break;
@@ -240,6 +240,49 @@ namespace ProStudCreator
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Sort")
+
+                switch (e.CommandArgument)
+                {
+
+                    case "Advisor":
+                        List<ProjectSingleElement> sortedProjects;
+                        if (filterText.Text != "")
+                            sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
+                        else
+                            sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+                        AllProjects.DataSource = sortedProjects.OrderBy(p => p.advisorName.Contains("?")).ThenBy(p=> p.advisorName);
+                        break;
+                    case "Institute":
+                        if (filterText.Text != "")
+                            sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
+                        else
+                            sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+                        AllProjects.DataSource = sortedProjects.OrderBy(p => p.Institute);
+                        break;
+                    case "projectName":
+                        if (filterText.Text != "")
+                            sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
+                        else
+                            sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+                        AllProjects.DataSource = sortedProjects.OrderBy(p => p.projectName);
+                        break;
+                    case "P5":
+                        if (filterText.Text != "")
+                            sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
+                        else
+                            sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+                        AllProjects.DataSource = sortedProjects.OrderByDescending(p => p.p5);
+                        break;
+                    case "P6":
+                        if (filterText.Text != "")
+                            sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
+                        else
+                            sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
+                        AllProjects.DataSource = sortedProjects.OrderByDescending(p => p.p6);
+                        break;
+                        
+                }
+
                 return;
 
             var id = Convert.ToInt32(e.CommandArgument);
@@ -348,21 +391,21 @@ namespace ProStudCreator
             Response.End();
         }
 
-        private void UpdateGridView()
+        private IQueryable<Project> UpdateGridView()
         {
-            if (filterText.Text =="")return;
-
+            if (filterText.Text =="")return FilterRelevantProjects(projects);
+            
             var searchString =  filterText.Text;
-            projects = db.Projects.Select(i => i);
-            projects = db.Projects.Where(p => p.LogStudent1Name.Contains(searchString) && p.IsMainVersion || p.LogStudent2Name.Contains(searchString) && p.IsMainVersion)
+            var filteredProjects = FilterRelevantProjects(projects.Where(p => p.Reservation1Name.Contains(searchString) && p.IsMainVersion || p.Reservation2Name.Contains(searchString) && p.IsMainVersion))
                 .OrderBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr);
-            AllProjects.DataSource = projects
-               .Select(i => GetProjectSingleElement(i));
-            AllProjects.DataBind();
+            return filteredProjects;
         }
        protected void FilterButton_Click(object sender, EventArgs e)
         {
-            UpdateGridView();
+            projects = UpdateGridView();
+            AllProjects.DataSource = projects
+               .Select(i => GetProjectSingleElement(i));
+            AllProjects.DataBind();
         }
 
         private bool[] GetProjectTypeBools(Project project)
@@ -480,9 +523,6 @@ namespace ProStudCreator
         }
         protected void AllProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            UpdateGridView();
-            var sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
-            AllProjects.DataSource = sortedProjects.OrderBy(p => p.projectName);
             AllProjects.DataBind();
         }
 
