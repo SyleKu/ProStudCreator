@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -408,6 +409,16 @@ namespace ProStudCreator
 
             if (project.Reservation2Name != "" && project.Reservation2Mail == "")
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
+            Match match = regex.Match(project.Reservation1Mail);
+
+            if (!match.Success)
+                return "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
+
+            match = regex.Match(project.Reservation2Mail);
+            if (!match.Success)
+                return "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
 
             return null;
         }
