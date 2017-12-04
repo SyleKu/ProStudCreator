@@ -22,6 +22,7 @@ namespace ProStudCreator
             _p.CreateDate = previousProject.CreateDate;
             _p.PublishedDate = previousProject.PublishedDate;
             _p.State = previousProject.State;
+            _p.ProjectNr = previousProject.ProjectNr;
             _p.ProjectId = previousProject.ProjectId;
             _p.ModificationDate = DateTime.Now;
             _p.LastEditedBy = ShibUser.GetEmail();
@@ -212,8 +213,8 @@ namespace ProStudCreator
 
         public static bool GetProjectRelevantForGradeTasks(this Project p, ProStudentCreatorDBDataContext db)
         {
-
-            if (p.Semester.EndDate >= Semester.ActiveSemester(new DateTime(2017, 4, 1), db).EndDate)
+            var date = Semester.ActiveSemester(new DateTime(2017, 4, 1), db).EndDate;
+            if (p.Semester.EndDate >= date)
             {
                 if (p.LogProjectType?.P5 == true)
                 {
