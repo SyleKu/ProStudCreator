@@ -1316,9 +1316,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.Reservation2Name = "";
             }
 
-
             var oldDepartmentId = project.DepartmentId;
-            project.DepartmentId = int.Parse(Department.SelectedValue);
+            project.Department = db.Departments.Single(d => d.Id== int.Parse(Department.SelectedValue));
 
             // If project changed departments & already has a ProjectNr, generate a new one
             if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
