@@ -1318,7 +1318,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
 
             var oldDepartmentId = project.DepartmentId;
-            project.DepartmentId = int.Parse(Department.SelectedValue);
+            project.Department = db.Departments.Single(d => d.Id == Int16.Parse(Department.SelectedValue));
 
             // If project changed departments & already has a ProjectNr, generate a new one
             if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
@@ -1563,7 +1563,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                         return true;
                     }
                     else if (value1 == null && value2 != null)
-                    {
+ {
                         return true;
                     }
                     }
