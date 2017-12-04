@@ -1553,12 +1553,16 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                     {
                         var value1 = pi.GetValue(p1);
                         var value2 = pi.GetValue(p2);
-                        if(value1 != null && value2 != null)
-                        {
-                            if (!value1.Equals(value2))
-                                return true;
+                    if (value1 != null && value2 != null)
+                    {
+                        if (!value1.Equals(value2))
+                            return true;
                     }
-                    else if(value1 != null && value2 == null)
+                    else if (value1 != null && value2 == null)
+                    {
+                        return true;
+                    }
+                    else if (value1 == null && value2 != null)
                     {
                         return true;
                     }

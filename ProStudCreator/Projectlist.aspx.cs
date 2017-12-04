@@ -240,7 +240,7 @@ namespace ProStudCreator
         protected void ProjectRowClick(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Sort")
-
+            {
                 switch (e.CommandArgument)
                 {
 
@@ -250,7 +250,7 @@ namespace ProStudCreator
                             sortedProjects = FilterRelevantProjects(UpdateGridView()).Select(i => GetProjectSingleElement(i)).ToList();
                         else
                             sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
-                        AllProjects.DataSource = sortedProjects.OrderBy(p => p.advisorName.Contains("?")).ThenBy(p=> p.advisorName);
+                        AllProjects.DataSource = sortedProjects.OrderBy(p => p.advisorName.Contains("?")).ThenBy(p => p.advisorName);
                         break;
                     case "Institute":
                         if (filterText.Text != "")
@@ -280,32 +280,35 @@ namespace ProStudCreator
                             sortedProjects = FilterRelevantProjects(projects).Select(i => GetProjectSingleElement(i)).ToList();
                         AllProjects.DataSource = sortedProjects.OrderByDescending(p => p.p6);
                         break;
-                        
-                }
 
-            var id = Convert.ToInt32(e.CommandArgument);
-            switch (e.CommandName)
+                }
+            }
+            else
             {
-                case "revokeSubmission":
-                    var projectr = db.Projects.Single(i => i.Id == id);
-                    projectr.State = ProjectState.InProgress;
-                    db.SubmitChanges();
-                    Response.Redirect(Request.RawUrl);
-                    break;
-                case "deleteProject":
-                    var project = db.Projects.Single(i => i.Id == id);
-                    project.Delete();
-                    db.SubmitChanges();
-                    Response.Redirect(Request.RawUrl);
-                    break;
-                case "editProject":
-                    Response.Redirect("AddNewProject?id=" + id);
-                    break;
-                case "submitProject":
-                    EinreichenButton_Click(id);
-                    break;
-                default:
-                    throw new Exception("Unknown command " + e.CommandName);
+                var id = Convert.ToInt32(e.CommandArgument);
+                switch (e.CommandName)
+                {
+                    case "revokeSubmission":
+                        var projectr = db.Projects.Single(i => i.Id == id);
+                        projectr.State = ProjectState.InProgress;
+                        db.SubmitChanges();
+                        Response.Redirect(Request.RawUrl);
+                        break;
+                    case "deleteProject":
+                        var project = db.Projects.Single(i => i.Id == id);
+                        project.Delete();
+                        db.SubmitChanges();
+                        Response.Redirect(Request.RawUrl);
+                        break;
+                    case "editProject":
+                        Response.Redirect("AddNewProject?id=" + id);
+                        break;
+                    case "submitProject":
+                        EinreichenButton_Click(id);
+                        break;
+                    default:
+                        throw new Exception("Unknown command " + e.CommandName);
+                }
             }
 
         }
