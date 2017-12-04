@@ -370,16 +370,15 @@ namespace ProStudCreator
 
         private string GenerateValidationMessage(Project project)
         {
+            var projectType = GetProjectTypeBools(project);
 
             if (project.Advisor1 == null)
                 return "Bitte wählen Sie einen Hauptbetreuer aus.";
 
-            var projectType = GetProjectTypeBools(project);
-
-            if (project.ClientPerson != "" && !project.ClientPerson.IsValidName())
+            if (project.ClientPerson.Trim().Length != 0 && !project.ClientPerson.IsValidName())
                 return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
 
-            if (project.ClientMail != "" && !project.ClientMail.IsValidEmail())
+            if (project.ClientMail.Trim().Length != 0 && !project.ClientMail.IsValidEmail())
                 return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
             if ((!project.Advisor1?.Name.IsValidName()) ?? true)
@@ -396,29 +395,35 @@ namespace ProStudCreator
             if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
                 return "Nur Hauptbetreuer können Projekte einreichen.";
 
-            if (project.Reservation1Mail != "" && project.Reservation1Name == "")
-                return
-                    "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+            if (project.Reservation1Mail.Trim().Length != 0 && project.Reservation1Name.Trim().Length == 0)
+                return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
-            if (project.Reservation2Mail != "" && project.Reservation2Name == "")
+            if (project.Reservation1Mail.Trim().Length != 0 && project.Reservation1Name.Trim().Length != 0)
+            {
+                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
+                System.Text.RegularExpressions.Match match = regex.Match(project.Reservation1Mail);
+                if (!match.Success)
+                    return "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
+            }
+
+            if (project.Reservation2Mail.Trim().Length != 0 && project.Reservation2Name.Trim().Length == 0)
                 return
                     "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
-            if (project.Reservation1Name != "" && project.Reservation1Mail == "")
+            if (project.Reservation2Mail.Trim().Length != 0 && project.Reservation2Name.Trim().Length != 0)
+            {
+                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
+                System.Text.RegularExpressions.Match match = regex.Match(project.Reservation1Mail);
+                match = regex.Match(project.Reservation2Mail);
+                if (!match.Success)
+                    return "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
+            }
+
+            if (project.Reservation1Name.Trim().Length != 0 && project.Reservation1Mail.Trim().Length == 0)
                 return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
 
-            if (project.Reservation2Name != "" && project.Reservation2Mail == "")
+            if (project.Reservation2Name.Trim().Length != 0 && project.Reservation2Mail.Trim().Length == 0)
                 return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
-
-            Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
-            Match match = regex.Match(project.Reservation1Mail);
-
-            if (!match.Success)
-                return "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
-
-            match = regex.Match(project.Reservation2Mail);
-            if (!match.Success)
-                return "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
 
             return null;
         }
