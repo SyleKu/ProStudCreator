@@ -21,11 +21,15 @@ namespace ProStudCreator
             {
                 i4ds1.Visible = true;
                 i4ds2.Visible = true;
+            }else if (department.IIT)
+            {
+                iit1.Visible = true;
+                iit2.Visible = true;
             }
             else
             {
                 throw new UnauthorizedAccessException(
-                    "Sie sind nicht mit einem der beiden Informatikinstitute angemeldet!");
+                    "Sie sind nicht mit einem der drei Informatikinstitute angemeldet!");
             }
         }
     }

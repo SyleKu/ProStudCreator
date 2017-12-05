@@ -44,6 +44,9 @@
         <p id="i4ds2" visible="false" runat="server">
             <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
         </p>
+        <p id="iit2" visible="false" runat="server">
+            <a href="mailto:simon.schubiger@fhnw.ch">Simon Schubiger</a> für Projekte am IIT. 
+        </p>
         <h4>Wie können externe Auftraggeber Projekte einreichen?</h4>
         <p>
             Externe Auftraggeber schicken <a href="Content/Externe_Projekteingabe.pdf" class="pdf">dieses Formular</a> an Markus Oehninger. Informiert
@@ -57,7 +60,7 @@
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
-            Als Betreuer kommen alle gewählten Dozierenden am i4Ds/IMVS in Frage. Es besteht häufig auch die Möglichkeit in einem Zweier-Team (z.B. gewählter
+            Als Betreuer kommen alle gewählten Dozierenden am i4Ds/IMVS/IIT in Frage. Es besteht häufig auch die Möglichkeit in einem Zweier-Team (z.B. gewählter
             Dozierender + WiMi) zu arbeiten. Wer also kein gewählter Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach
             Absprache tun. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
         </p>
@@ -101,6 +104,9 @@
         </p>
         <p id="imvs1" visible="false" runat="server">
             Du bist für die Organisation des Experten und der Verteidigung verantwortlich.
+        </p>
+        <p id="iit1" visible="false" runat="server">
+            Der Experte und die Verteidigung wird organisiert. Falls Du aber bereits einen Experten im Hinterkopf hast den Du gerne beiziehen möchtest oder der gut passen würde, dann informiere doch <a href="mailto:simon.schubiger@fhnw.ch">Simon Schubiger</a>.
         </p>
         <h4>Wo sollen die Studierenden Ihren Code ablegen? Woher kriegen meine Studierenden eine VM?</h4>
         <p>

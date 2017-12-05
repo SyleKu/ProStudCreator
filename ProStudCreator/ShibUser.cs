@@ -89,7 +89,7 @@ namespace ProStudCreator
         public static int? GetDepartmentId(ProStudentCreatorDBDataContext db)
         {
 #if DEBUG
-            return 0; // Department 0 = i4Ds
+            return 2; // Department 2 = IIT
 
 #else
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];
@@ -103,7 +103,7 @@ namespace ProStudCreator
         public static string GetDepartmentName(ProStudentCreatorDBDataContext db)
         {
 #if DEBUG
-            return "i4Ds";
+            return "IIT";
 #else
 
             string orgUnitDn = HttpContext.Current.Request.Headers["orgunit-dn"];

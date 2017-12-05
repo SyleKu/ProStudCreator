@@ -213,6 +213,8 @@ namespace ProStudCreator
 		
 		private bool _i4DS;
 		
+		private bool _IIT;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<UserDepartmentMap> _UserDepartmentMap;
@@ -233,6 +235,8 @@ namespace ProStudCreator
     partial void OnIMVSChanged();
     partial void Oni4DSChanging(bool value);
     partial void Oni4DSChanged();
+    partial void OnIITChanging(bool value);
+    partial void OnIITChanged();
     #endregion
 		
 		public Department()
@@ -358,6 +362,26 @@ namespace ProStudCreator
 					this._i4DS = value;
 					this.SendPropertyChanged("i4DS");
 					this.Oni4DSChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IIT", DbType="bit")]
+		public bool IIT
+		{
+			get
+			{
+				return this._IIT;
+			}
+			set
+			{
+				if ((this._IIT != value))
+				{
+					this.OnIITChanging(value);
+					this.SendPropertyChanging();
+					this._IIT = value;
+					this.SendPropertyChanged("IIT");
+					this.OnIITChanged();
 				}
 			}
 		}

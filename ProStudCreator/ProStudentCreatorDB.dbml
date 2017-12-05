@@ -8,6 +8,7 @@
       <Column Name="ShowDefenseOnInfoPage" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="IMVS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Column Name="i4DS" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="IIT" Type="System.Boolean" DbType="bit" CanBeNull="false" />
       <Association Name="Department_Project" Member="Projects" ThisKey="Id" OtherKey="DepartmentId" Type="Project" />
       <Association Name="Department_UserDepartmentMap" Member="UserDepartmentMap" ThisKey="Id" OtherKey="DepartmentId" Type="UserDepartmentMap" />
     </Type>
