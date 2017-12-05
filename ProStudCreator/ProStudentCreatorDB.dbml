@@ -63,7 +63,7 @@
       <Column Name="TypeDesignUX" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="TypeHW" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="TypeCGIP" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="TypeMathAlg" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="TypeMlAlg" Storage="_TypeMathAlg" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="TypeAppWeb" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="TypeDBBigData" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="P1TypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
@@ -124,7 +124,7 @@
       <Column Name="IsMainVersion" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Column Name="ProjectId" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="Ablehnungsgrund" Type="System.String" DbType="nvarchar(MAX)" CanBeNull="true" />
-      <Column Member="ClientType" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="ClientType" Type="System.Int32" DbType="int" CanBeNull="false" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />

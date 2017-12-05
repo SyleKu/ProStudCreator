@@ -318,8 +318,8 @@ namespace ProStudCreator
                 return "projectTypHW.png";
             if (proj.TypeCGIP)
                 return "projectTypCGIP.png";
-            if (proj.TypeMathAlg)
-                return "projectTypMathAlg.png";
+            if (proj.TypeMlAlg)
+                return "projectTypMlAlg.png";
             if (proj.TypeAppWeb)
                 return "projectTypAppWeb.png";
             if (proj.TypeDBBigData)
@@ -338,17 +338,17 @@ namespace ProStudCreator
                 return "projectTypHW.png";
             if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
                 return "projectTypCGIP.png";
-            if (proj.TypeMathAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
-                return "projectTypMathAlg.png";
-            if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg))
+            if (proj.TypeMlAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
+                return "projectTypMlAlg.png";
+            if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg))
                 return "projectTypAppWeb.png";
-            if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg ||
+            if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
                                        proj.TypeAppWeb))
                 return "projectTypDBBigData.png";
-            if (proj.TypeSysSec && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg ||
+            if (proj.TypeSysSec && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
                                     proj.TypeAppWeb || proj.TypeDBBigData))
                 return "projectTypSysSec.png";
-            if (proj.TypeSE && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg ||
+            if (proj.TypeSE && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
                                 proj.TypeAppWeb || proj.TypeDBBigData || proj.TypeSysSec))
                 return "projectTypSE.png";
             return "projectTypTransparent.png";

@@ -155,8 +155,8 @@ namespace ProStudCreator
                                        ? "HW"
                                        : (i.TypeCGIP
                                            ? "CGIP"
-                                           : (i.TypeMathAlg
-                                               ? "MathAlg"
+                                           : (i.TypeMlAlg
+                                               ? "MlAlg"
                                                : (i.TypeAppWeb
                                                    ? "AppWeb"
                                                    : (i.TypeDBBigData
@@ -168,21 +168,21 @@ namespace ProStudCreator
                                    ? "HW"
                                    : (i.TypeCGIP && (i.TypeDesignUX || i.TypeHW)
                                        ? "CGIP"
-                                       : (i.TypeMathAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)
-                                           ? "MathAlg"
+                                       : (i.TypeMlAlg && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP)
+                                           ? "MlAlg"
                                            : (i.TypeAppWeb &&
-                                              (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg)
+                                              (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMlAlg)
                                                ? "AppWeb"
                                                : (i.TypeDBBigData &&
-                                                  (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                  (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMlAlg ||
                                                    i.TypeAppWeb)
                                                    ? "DBBigData"
                                                    : (i.TypeSysSec &&
-                                                      (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMathAlg ||
+                                                      (i.TypeDesignUX || i.TypeHW || i.TypeCGIP || i.TypeMlAlg ||
                                                        i.TypeAppWeb || i.TypeDBBigData)
                                                        ? "SysSec"
                                                        : (i.TypeSE && (i.TypeDesignUX || i.TypeHW || i.TypeCGIP ||
-                                                                       i.TypeMathAlg || i.TypeAppWeb ||
+                                                                       i.TypeMlAlg || i.TypeAppWeb ||
                                                                        i.TypeDBBigData || i.TypeSysSec)
                                                            ? "SE"
                                                            : "Transparent"))))))) + ".png"
@@ -425,7 +425,7 @@ namespace ProStudCreator
             {
                 projectType[2] = true;
             }
-            if (project.TypeMathAlg)
+            if (project.TypeMlAlg)
             {
                 projectType[3] = true;
             }

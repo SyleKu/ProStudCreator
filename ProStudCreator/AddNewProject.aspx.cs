@@ -348,22 +348,22 @@ where T : Control
                 }
             }
 
-            if (currentProject.TypeMathAlg)
+            if (currentProject.TypeMlAlg)
             {
-                MathAlg.ImageUrl = "pictures/projectTypMathAlg.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
                 projectType[3] = true;
-                if (!project.TypeMathAlg)
+                if (!project.TypeMlAlg)
                 {
-                    MathAlg.BorderStyle = BorderStyle.Solid;
-                    MathAlg.BorderColor = Color.Green;
+                    MlAlg.BorderStyle = BorderStyle.Solid;
+                    MlAlg.BorderColor = Color.Green;
                 }
             }
             else
             {
-                if (project.TypeMathAlg)
+                if (project.TypeMlAlg)
                 {
-                    MathAlg.BorderStyle = BorderStyle.Solid;
-                    MathAlg.BorderColor = Color.Red;
+                    MlAlg.BorderStyle = BorderStyle.Solid;
+                    MlAlg.BorderColor = Color.Red;
                 }
             }
 
@@ -558,9 +558,9 @@ where T : Control
                 CGIP.ImageUrl = "pictures/projectTypCGIP.png";
                 projectType[2] = true;
             }
-            if (project.TypeMathAlg)
+            if (project.TypeMlAlg)
             {
-                MathAlg.ImageUrl = "pictures/projectTypMathAlg.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
                 projectType[3] = true;
             }
             if (project.TypeAppWeb)
@@ -805,16 +805,16 @@ where T : Control
             ViewState["Types"] = projectType;
         }
 
-        protected void MathAlg_Click(object sender, ImageClickEventArgs e)
+        protected void MlAlg_Click(object sender, ImageClickEventArgs e)
         {
-            if (MathAlg.ImageUrl == "pictures/projectTypMathAlgUnchecked.png")
+            if (MlAlg.ImageUrl == "pictures/projectTypMlAlgUnchecked.png")
             {
-                MathAlg.ImageUrl = "pictures/projectTypMathAlg.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
                 projectType[3] = true;
             }
             else
             {
-                MathAlg.ImageUrl = "pictures/projectTypMathAlgUnchecked.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlgUnchecked.png";
                 projectType[3] = false;
             }
             ViewState["Types"] = projectType;
@@ -1234,7 +1234,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             project.TypeDesignUX = projectType[0];
             project.TypeHW = projectType[1];
             project.TypeCGIP = projectType[2];
-            project.TypeMathAlg = projectType[3];
+            project.TypeMlAlg = projectType[3];
             project.TypeAppWeb = projectType[4];
             project.TypeDBBigData = projectType[5];
             project.TypeSysSec = projectType[6];

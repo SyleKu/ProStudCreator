@@ -1389,8 +1389,8 @@ namespace ProStudCreator
     partial void OnTypeHWChanged();
     partial void OnTypeCGIPChanging(bool value);
     partial void OnTypeCGIPChanged();
-    partial void OnTypeMathAlgChanging(bool value);
-    partial void OnTypeMathAlgChanged();
+    partial void OnTypeMlAlgChanging(bool value);
+    partial void OnTypeMlAlgChanged();
     partial void OnTypeAppWebChanging(bool value);
     partial void OnTypeAppWebChanged();
     partial void OnTypeDBBigDataChanging(bool value);
@@ -1716,7 +1716,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TypeMathAlg", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public bool TypeMathAlg
+		public bool TypeMlAlg
 		{
 			get
 			{
@@ -1726,11 +1726,11 @@ namespace ProStudCreator
 			{
 				if ((this._TypeMathAlg != value))
 				{
-					this.OnTypeMathAlgChanging(value);
+					this.OnTypeMlAlgChanging(value);
 					this.SendPropertyChanging();
 					this._TypeMathAlg = value;
-					this.SendPropertyChanged("TypeMathAlg");
-					this.OnTypeMathAlgChanged();
+					this.SendPropertyChanged("TypeMlAlg");
+					this.OnTypeMlAlgChanged();
 				}
 			}
 		}
