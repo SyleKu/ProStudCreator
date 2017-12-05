@@ -69,7 +69,7 @@ namespace ProStudCreator
                     Response.Redirect("error/AccessDenied.aspx");
                     Response.End();
                 }
-                var history = db.Projects.Where(p => p.ProjectId == project.ProjectId && !p.IsMainVersion);
+                var history = db.Projects.Where(p => p.BaseVersion == project.BaseVersion && !p.IsMainVersion);
                 if (history.ToList().Count>0)
                 {
                     historyListView.DataSource = history;
@@ -270,14 +270,14 @@ where T : Control
             Image1.Visible = false;
             
         }
-        private void RetrieveProjectComparison(int projectId = 0)
+        private void RetrieveProjectComparison(int BaseVersion = 0)
         {
             var pid = 0;
 
-            if(projectId == 0)
+            if(BaseVersion == 0)
                 pid = int.Parse(Request.QueryString["showChanges"]);
             else
-                pid = projectId;
+                pid = BaseVersion;
 
             var currentProject = db.Projects.Single(p => p.Id == pid);
             ShowAllControls();
@@ -743,7 +743,7 @@ where T : Control
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
             db.SubmitChanges(); // the next few lines depend on this submit
-            project.ProjectId = project.Id;
+            project.BaseVersion = project.Id;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             db.SubmitChanges();
         }
@@ -898,7 +898,7 @@ where T : Control
             switch (e.CommandName)
             {
                 case "revertProject":
-                    var currentProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted);
+                    var currentProject = db.Projects.Single(p => p.BaseVersion == project.BaseVersion && p.IsMainVersion && p.State != ProjectState.Deleted);
                     currentProject.IsMainVersion = false;
                     db.SubmitChanges();
                     var revertedProject = db.Projects.Single(p => p.Id == pid);
@@ -907,7 +907,7 @@ where T : Control
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid);
                     break;
                 case "showChanges":
-                    var mainProject = db.Projects.Single(p => p.ProjectId == project.ProjectId && p.IsMainVersion && p.State != ProjectState.Deleted).Id;
+                    var mainProject = db.Projects.Single(p => p.BaseVersion == project.BaseVersion && p.IsMainVersion && p.State != ProjectState.Deleted).Id;
                     Response.Redirect("~/AddNewProject.aspx?id=" + pid + "&showChanges=" + mainProject);
                     break;
                 default:
@@ -1365,8 +1365,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
             else
             {
-                var previousProjectId = int.Parse(dropPreviousProject.SelectedValue);
-                project.Project1 = db.Projects.Single(p => p.Id == previousProjectId);
+                var PreviousProjectID = int.Parse(dropPreviousProject.SelectedValue);
+                project.Project1 = db.Projects.Single(p => p.Id == PreviousProjectID);
             }
         }
 
@@ -1526,7 +1526,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var projectNr = nameof(Project.ProjectNr);
             var isMainVers = nameof(Project.IsMainVersion);
             var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
-            var projId = nameof(Project.ProjectId);
+            var projId = nameof(Project.BaseVersion);
             var credate = nameof(Project.CreateDate);
             var prs = nameof(Project.Projects);
             var attch = nameof(Project.Attachements);

@@ -218,7 +218,7 @@ namespace ProStudCreator
             return new ProjectSingleAttachment
             {
                 Guid = attach.ROWGUID,
-                ProjectId = attach.ProjectId,
+                BaseVersion = attach.ProjectId,
                 Name = attach.FileName,
                 Size = FixupSize((long)(attach.UploadSize ?? 0)),
                 FileType = GetFileTypeImgPath(attach.FileName)
@@ -541,7 +541,7 @@ namespace ProStudCreator
         {
             if (e.Row.RowType != DataControlRowType.DataRow) return;
             var project =
-                db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).ProjectId);
+                db.Projects.Single(item => item.Id == ((ProjectSingleAttachment)e.Row.DataItem).BaseVersion);
 
             if (!(ShibUser.GetEmail() == project.Advisor1?.Mail || ShibUser.GetEmail() == project.Advisor2?.Mail ||
                   !ShibUser.CanEditAllProjects()))
@@ -678,7 +678,7 @@ namespace ProStudCreator
         public Guid Guid { get; set; }
         public string Name { get; set; }
         public string Size { get; set; }
-        public int ProjectId { get; set; }
+        public int BaseVersion { get; set; }
         public string FileType { get; set; }
     }
 }

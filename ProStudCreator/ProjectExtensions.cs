@@ -23,7 +23,7 @@ namespace ProStudCreator
             _p.PublishedDate = previousProject.PublishedDate;
             _p.State = previousProject.State;
             _p.ProjectNr = previousProject.ProjectNr;
-            _p.ProjectId = previousProject.ProjectId;
+            _p.BaseVersion = previousProject.BaseVersion;
             _p.ModificationDate = DateTime.Now;
             _p.LastEditedBy = ShibUser.GetEmail();
             _p.IsMainVersion = true;
