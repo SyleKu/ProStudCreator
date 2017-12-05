@@ -176,6 +176,8 @@
     <Content Include="pictures\experte_grau.png" />
     <Content Include="pictures\experte_zahlen.png" />
     <Content Include="pictures\experte_zahlen_grau.png" />
+    <Content Include="pictures\projectTypMlAlg.png" />
+    <Content Include="pictures\projectTypMlAlgUnchecked.png" />
     <Content Include="pictures\raum.png" />
     <Content Include="pictures\raum_grau.png" />
     <Content Include="ProjectFilesDownload.aspx" />
@@ -236,8 +238,6 @@
     <Content Include="pictures\projectTypDesignUXUnchecked.png" />
     <Content Include="pictures\projectTypHW.png" />
     <Content Include="pictures\projectTypHWUnchecked.png" />
-    <Content Include="pictures\projectTypMathAlg.png" />
-    <Content Include="pictures\projectTypMathAlgUnchecked.png" />
     <Content Include="Projectlist.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
