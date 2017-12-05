@@ -1531,8 +1531,8 @@ namespace ProStudCreator
     partial void OnAdvisor2IdChanged();
     partial void OnIsMainVersionChanging(bool value);
     partial void OnIsMainVersionChanged();
-    partial void OnBaseVersionChanging(System.Nullable<int> value);
-    partial void OnBaseVersionChanged();
+    partial void OnBaseVersionIdChanging(System.Nullable<int> value);
+    partial void OnBaseVersionIdChanged();
     partial void OnAblehnungsgrundChanging(string value);
     partial void OnAblehnungsgrundChanged();
     partial void OnClientTypeChanging(int value);
@@ -2968,7 +2968,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProjectId", DbType="int")]
-		public System.Nullable<int> BaseVersion
+		public System.Nullable<int> BaseVersionId
 		{
 			get
 			{
@@ -2978,11 +2978,11 @@ namespace ProStudCreator
 			{
 				if ((this._ProjectId != value))
 				{
-					this.OnBaseVersionChanging(value);
+					this.OnBaseVersionIdChanging(value);
 					this.SendPropertyChanging();
 					this._ProjectId = value;
-					this.SendPropertyChanged("BaseVersion");
-					this.OnBaseVersionChanged();
+					this.SendPropertyChanged("BaseVersionId");
+					this.OnBaseVersionIdChanged();
 				}
 			}
 		}
