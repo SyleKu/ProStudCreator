@@ -58,14 +58,11 @@
                 <hr/>
                 <p>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</p>
                 <br/>
-                <a href="https://www.fhnw.ch/de/die-fhnw/hochschulen/ht/news-und-events/ausstellung-der-bachelor-abschlussarbeiten-2017/media/ausstellungsbroschuere-2017.pdf">Download Ausstellungsbroschüre</a>
-                <br/>
-                <br/>
                 <p>
                     <a href="../Content/Externe_Projekteingabe.pdf" class="pdf">Formular für Projekte von externen Auftraggebern.</a>
                 </p>
                 <p>
-                    <a href="../Content/IP56_Handbuch_Studierende_V170913.pdf" class="pdf">Handbuch für Studierende</a>
+                    Handbuch für Studierende : <a class="pdf"> //fsemu18.edu.ds.fhnw.ch/e_18_data11$/E1811_Info/E1811_Info_I/Projektschiene/IP56_Handbuch_Studierende_V170913.pdf </a>
                 </p>
             </div>
         </div>

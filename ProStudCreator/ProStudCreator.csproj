@@ -308,7 +308,6 @@
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="CustomStaticDataSource.cs" />
-    <Compile Include="Integer.cs" />
     <Compile Include="LinqExtension.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
