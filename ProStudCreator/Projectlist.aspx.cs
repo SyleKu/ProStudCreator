@@ -19,6 +19,7 @@ namespace ProStudCreator
     {
         public int id { get; set; }
         public string Institute { get; set; }
+        public string ProjectNr { get; set; }
         public string advisorName { get; set; }
         public string projectName { get; set; }
         public string projectType1 { get; set; }
@@ -145,7 +146,7 @@ namespace ProStudCreator
                           Server.HtmlEncode(i.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
                         : ""
                 }),
-                projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
+                projectName = i.Name,
                 Institute = i.Department.DepartmentName,
                 p5 = i.POneType.P5 || i.PTwoType != null && i.PTwoType.P5,
                 p6 = i.POneType.P6 || i.PTwoType != null && i.PTwoType.P6,
@@ -185,7 +186,8 @@ namespace ProStudCreator
                                                                        i.TypeMlAlg || i.TypeAppWeb ||
                                                                        i.TypeDBBigData || i.TypeSysSec)
                                                            ? "SE"
-                                                           : "Transparent"))))))) + ".png"
+                                                           : "Transparent"))))))) + ".png",
+                ProjectNr = i.ProjectNr != 0 ? i.ProjectNr.ToString("D2"):" "
             };
         }
 
