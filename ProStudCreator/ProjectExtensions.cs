@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 
 namespace ProStudCreator
 {
@@ -337,80 +335,7 @@ namespace ProStudCreator
             if (!pts.Size1 && pts.Size2) return "2";
             return "1;2";
         }
-        public static Project duplicate(this Project origin)
-        {
-            Project target = new Project();
-            List<string> props = new List<string>();
-            var pid = nameof(Project.Id);
-            props.Add(pid);
 
-            foreach (PropertyInfo pi in typeof(Project).GetProperties())
-            {
-                if (!props.Contains(pi.Name))
-                {
-                    var value1 = pi.GetValue(origin);
-                    var value2 = pi.GetValue(target);
-                    pi.SetValue(target, value1);
-                }
-            }
-            return target;
-        }
-        public static bool IsModified(this Project p1, Project p2)
-        {
-            List<string> props = new List<string>();
-            var projectType = typeof(Project);
-            var pid = nameof(Project.Id);
-            var modDate = nameof(Project.ModificationDate);
-            var pubDate = nameof(Project.PublishedDate);
-            var lastEditedBy = nameof(Project.LastEditedBy);
-            var state = nameof(Project.State);
-            var projectNr = nameof(Project.ProjectNr);
-            var isMainVers = nameof(Project.IsMainVersion);
-            var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
-            var projId = nameof(Project.BaseVersionId);
-            var credate = nameof(Project.CreateDate);
-            var prs = nameof(Project.Projects);
-            var attch = nameof(Project.Attachements);
-            var tsk = nameof(Project.Tasks);
-
-            props.Add(pid);
-            props.Add(modDate);
-            props.Add(pubDate);
-            props.Add(lastEditedBy);
-            props.Add(state);
-            props.Add(projId);
-            props.Add(projectNr);
-            props.Add(isMainVers);
-            props.Add(ablehnungsgrund);
-            props.Add(credate);
-            props.Add(prs);
-            props.Add(attch);
-            props.Add(tsk);
-
-            foreach (PropertyInfo pi in typeof(Project).GetProperties())
-            {
-                if (!props.Contains(pi.Name))
-                {
-                    var value1 = pi.GetValue(p1);
-                    var value2 = pi.GetValue(p2);
-                    if (value1 != null && value2 != null)
-                    {
-                        if (!value1.Equals(value2))
-                            return true;
-                    }
-                    else if (value1 != null && value2 == null)
-                    {
-                        return true;
-                    }
-                    else if (value1 == null && value2 != null)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
         #endregion
     }
 }
