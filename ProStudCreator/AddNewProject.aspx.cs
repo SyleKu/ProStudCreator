@@ -35,7 +35,7 @@ namespace ProStudCreator
             {
                 var pdfc = new PdfCreator();
 
-                Fillproject(project);
+                Fillproject(project, null);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -695,7 +695,7 @@ where T : Control
             oldProject.ModificationDate = DateTime.Now;
             oldProject.LastEditedBy = ShibUser.GetEmail();
             db.Projects.InsertOnSubmit(project);
-            Fillproject(project);
+            Fillproject(project, oldProject);
             if (changed)
             {
                 project.Picture = picture;
@@ -711,7 +711,7 @@ where T : Control
         private bool HasProjectChanged()
         {
             var comparisonProject = new Project();
-            Fillproject(comparisonProject);
+            Fillproject(comparisonProject, null);
             comparisonProject.Id = -1;
 
             ///////////////////////////////////////
@@ -739,7 +739,7 @@ where T : Control
             project = new Project();
             project.InitNew();
             db.Projects.InsertOnSubmit(project);
-            Fillproject(project);
+            Fillproject(project, null);
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
             db.SubmitChanges(); // the next few lines depend on this submit
@@ -1181,7 +1181,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #region private methods
 
-        private void Fillproject(Project project)    
+        private void Fillproject(Project project, Project oldProject)    
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
@@ -1317,7 +1317,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.Reservation2Name = "";
             }
 
-            var oldDepartmentId = project.DepartmentId;
+            int oldDepartmentId = oldProject != null?oldProject.DepartmentId:-1;
             project.Department = db.Departments.Single(d => d.Id== int.Parse(Department.SelectedValue));
 
             // If project changed departments & already has a ProjectNr, generate a new one
