@@ -420,34 +420,70 @@ namespace ProStudCreator
 
                 // Check if line represents a list.
                 // If so, start new list of corresponding type (unordered, alphabetical, numerical)
-                var isList = false;
-                if (listUnordered.IsMatch(currentLine))
-                {
-                    currentLine = currentLine.TrimStart('*', '-', ' ');
+                var isAlphaList = false;
+                var isUnorderedList = false;
+                var isNumericList = false;
 
-                    if (currentList == null)
+                if (lines.Length >= 3)
+                {
+                    if (listUnordered.IsMatch(currentLine))
                     {
-                        currentList = new List(List.UNORDERED, 10f);
-                        currentList.SetListSymbol("\u2022");
-                        currentList.IndentationLeft = 5f;
+                        if (i < lines.Length - 2)
+                        {
+                            if (listUnordered.IsMatch(lines[i + 1]) && listUnordered.IsMatch(lines[i + 2]))
+                                isUnorderedList = true;
+                        }
+                        if (i > 0 && i < lines.Length - 1)
+                        {
+                            if (listUnordered.IsMatch(lines[i - 1]) && listUnordered.IsMatch(lines[i + 1]))
+                                isUnorderedList = true;
+                        }
+                        if (i >= 2)
+                        {
+                            if (listUnordered.IsMatch(lines[i - 1]) && listUnordered.IsMatch(lines[i - 2]))
+                                isUnorderedList = true;
+                        }
+                    }
+                    else if (listAlpha.IsMatch(currentLine))
+                    {
+
+                        if (i < lines.Length - 2)
+                        {
+                            if (listAlpha.IsMatch(lines[i + 1]) && listAlpha.IsMatch(lines[i + 2]))
+                                isAlphaList = true;
+                        }
+                        if (i > 0 && i < lines.Length - 1)
+                        {
+                            if (listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i + 1]))
+                                isAlphaList = true;
+                        }
+                        if (i >= 2)
+                        {
+                            if (listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i - 2]))
+                                isAlphaList = true;
+                        }
+                    }
+                    else if (listNumeric.IsMatch(currentLine))
+                    {
+                        if (i < lines.Length - 2)
+                        {
+                            if (listNumeric.IsMatch(lines[i + 1]) && listNumeric.IsMatch(lines[i + 2]))
+                                isNumericList = true;
+                        }
+                        if (i > 0 && i < lines.Length - 1)
+                        {
+                            if (listNumeric.IsMatch(lines[i - 1]) && listNumeric.IsMatch(lines[i + 1]))
+                                isNumericList = true;
+                        }
+                        if (i >= 2)
+                            {
+                            if (listNumeric.IsMatch(lines[i - 1]) && listNumeric.IsMatch(lines[i - 2]))
+                                isNumericList = true;
+                        }
                     }
                 }
-                else if (lines.Length >= 3) {
-                    if(i < lines.Length - 2)
-                    {
-                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i + 1]) && listAlpha.IsMatch(lines[i + 2]))
-                            isList = true;    
-                    }else if( i > 0 && i < lines.Length - 1)
-                    {
-                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i + 1]))
-                            isList = true;
-                    }else if(i != lines.Length - 2)
-                    {
-                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i - 2]))
-                            isList = true;
-                    }
-                    if(isList)
-                    {
+                if (isAlphaList)
+                {
                     var itemSymbol = listAlpha.Match(currentLine).Groups["index"].Value.ToLower().ToCharArray()[0];
                     listIndexOffset = itemSymbol - 'a';
 
@@ -460,20 +496,29 @@ namespace ProStudCreator
                         currentList.PostSymbol = ")";
                         currentList.IndentationLeft = 5f;
                     }
-                }
-                }
-                else if (listNumeric.IsMatch(currentLine))
+                
+                }else if (isUnorderedList)
                 {
-                    var itemSymbol = int.Parse(listNumeric.Match(currentLine).Groups["index"].Value);
-                    listIndexOffset = itemSymbol - 1;
-
-                    currentLine = listNumeric.Replace(currentLine, "");
+                    currentLine = currentLine.TrimStart('*', '-', ' ');
 
                     if (currentList == null)
                     {
-                        currentList = new List(true, false, 10f);
+                        currentList = new List(List.UNORDERED, 10f);
+                        currentList.SetListSymbol("\u2022");
                         currentList.IndentationLeft = 5f;
                     }
+                } else if (isNumericList)
+                {
+                        var itemSymbol = int.Parse(listNumeric.Match(currentLine).Groups["index"].Value);
+                        listIndexOffset = itemSymbol - 1;
+
+                        currentLine = listNumeric.Replace(currentLine, "");
+
+                        if (currentList == null)
+                        {
+                            currentList = new List(true, false, 10f);
+                            currentList.IndentationLeft = 5f;
+                        }
                 }
                 else
                 {
