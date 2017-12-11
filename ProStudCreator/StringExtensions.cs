@@ -408,8 +408,9 @@ namespace ProStudCreator
             List currentList = null;
             var lines = _paragraph.Split('\n');
 
-            foreach (var line in lines)
+            for(int i = 0;i < lines.Length; i++)
             {
+                var line = lines[i];
                 var para = new Paragraph();
                 para.Font = new Font(_font);
 
@@ -419,6 +420,7 @@ namespace ProStudCreator
 
                 // Check if line represents a list.
                 // If so, start new list of corresponding type (unordered, alphabetical, numerical)
+                var isList = false;
                 if (listUnordered.IsMatch(currentLine))
                 {
                     currentLine = currentLine.TrimStart('*', '-', ' ');
@@ -430,8 +432,22 @@ namespace ProStudCreator
                         currentList.IndentationLeft = 5f;
                     }
                 }
-                else if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine)+1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) + 2]) || listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) -1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) + 1]) || listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) - 1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) - 2]))
-                {
+                else if (lines.Length >= 3) {
+                    if(i < lines.Length - 2)
+                    {
+                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i + 1]) && listAlpha.IsMatch(lines[i + 2]))
+                            isList = true;    
+                    }else if( i > 0 && i < lines.Length - 1)
+                    {
+                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i + 1]))
+                            isList = true;
+                    }else if(i != lines.Length - 2)
+                    {
+                        if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[i - 1]) && listAlpha.IsMatch(lines[i - 2]))
+                            isList = true;
+                    }
+                    if(isList)
+                    {
                     var itemSymbol = listAlpha.Match(currentLine).Groups["index"].Value.ToLower().ToCharArray()[0];
                     listIndexOffset = itemSymbol - 'a';
 
@@ -444,6 +460,7 @@ namespace ProStudCreator
                         currentList.PostSymbol = ")";
                         currentList.IndentationLeft = 5f;
                     }
+                }
                 }
                 else if (listNumeric.IsMatch(currentLine))
                 {

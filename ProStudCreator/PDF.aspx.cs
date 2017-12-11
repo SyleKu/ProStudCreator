@@ -25,7 +25,7 @@ namespace ProStudCreator
             }
             if (!idPDF.IsMainVersion)
             {
-                var mainProject = db.Projects.Single(p => p.BaseVersionId == idPDF.BaseVersionId && p.IsMainVersion);
+                var mainProject = db.Projects.Single(p => p.BaseVersionId == idPDF.BaseVersionId && p.IsMainVersion && p.State != ProjectState.Deleted);
                 Response.Redirect(@"~/PDF?dl=" + forceDl.ToString() + "&id=" + mainProject.Id.ToString());
             }
             
