@@ -1121,9 +1121,10 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         protected void DeleteImage_Click(object sender, EventArgs e)
         {
+            SaveProject();
             project.Picture = null;
             db.SubmitChanges();
-            Response.Redirect("AddNewProject?id=" + project.Id);
+            Response.Redirect("~/AddNewProject?id=" + project.Id);
         }
 
         protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
