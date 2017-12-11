@@ -430,7 +430,7 @@ namespace ProStudCreator
                         currentList.IndentationLeft = 5f;
                     }
                 }
-                else if (listAlpha.IsMatch(currentLine))
+                else if (listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine)+1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) + 2]) || listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) -1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) + 1]) || listAlpha.IsMatch(currentLine) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) - 1]) && listAlpha.IsMatch(lines[lines.ToList<string>().FindIndex(a => a == currentLine) - 2]))
                 {
                     var itemSymbol = listAlpha.Match(currentLine).Groups["index"].Value.ToLower().ToCharArray()[0];
                     listIndexOffset = itemSymbol - 'a';
