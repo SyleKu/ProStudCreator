@@ -286,6 +286,7 @@ namespace ProStudCreator
                     {
                         text.SpacingAfter = 0f;
                         text.SetLeading(0.0f, LINE_HEIGHT);
+                        text.Alignment = Element.ALIGN_JUSTIFIED;
                         document.Add(text);
                     }
                 if (strOneSem.Length > 0)
