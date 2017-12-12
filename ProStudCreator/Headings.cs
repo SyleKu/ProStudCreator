@@ -33,7 +33,7 @@ namespace ProStudCreator
         public static string getHeadingAnnotation(string language)
         {
             if (language == ENGLISCH)
-                return "Annotation";
+                return "Note";
             return "Bemerkung";
         }
         public static string getHeadingTechnology(string language)
