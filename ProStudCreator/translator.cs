@@ -5,51 +5,63 @@ using System.Web;
 
 namespace ProStudCreator
 {
-    public class Headings
+    public class Translator
     {
         public readonly static string ENGLISCH = "Englisch";
         public readonly static string DEUTSCH = "Deutsch";
         public readonly static string DEUTSCHENGLISCH = "Deutsch oder Englisch";
 
-          public static string getHeadingInitialPosition(string language)
+        public string language { get; set; }
+
+        public Translator()
+        {
+            language = DEUTSCH;
+        }
+
+        public Translator(string language)
+        {
+            this.language = language;
+        }
+
+          public string getHeadingInitialPosition()
         {
             if(language == ENGLISCH)
                 return "Initial position";
             return "Ausgangslage";
         }
-        public static string getHeadingObjective(string language)
+        public string getHeadingObjective()
         {
             if (language == ENGLISCH)
                 return "Objective";
             return "Ziel der Arbeit";
         }
-        public static string getHeadingProblemStatement(string language)
+        public string getHeadingProblemStatement()
         {
             if(language == ENGLISCH)
                 return "Problem statement";
             return "Problemstellung";
         }
 
-        public static string getHeadingAnnotation(string language)
+        public string getHeadingAnnotation()
         {
             if (language == ENGLISCH)
                 return "Note";
             return "Bemerkung";
         }
-        public static string getHeadingTechnology(string language)
+        public string getHeadingTechnology()
         {
             if (language == ENGLISCH)
                 return "Technologies/Technical emphasis/References";
             return "Technologien/Fachliche Schwerpunkte/Referenzen";
         }
-        public static string getHeadingOneSemester(string language)
+        public  string getHeadingOneSemester()
         {
             if(language == ENGLISCH)
                 return "This project must be realised in a single semester.\n";
             return "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
         }
 
-        public static string getReservedString(string language, string Reservation1Name, string Reservation2Name)
+        public string getReservedString(string Reservation1Name, string Reservation2Name)
         {
             var strReservations = "";
             if(language == ENGLISCH)
@@ -65,44 +77,44 @@ namespace ProStudCreator
 
             return strReservations;
         }
-        public static string getHeadingAdvisor(string Language)
+        public string getHeadingAdvisor()
         {
-            if(Language == ENGLISCH)
+            if(language == ENGLISCH)
                 return "Advisor";
             return "Betreuer";
         }
-        public static string getHeadingPriority(string language)
+        public string getHeadingPriority()
         {
             if(language == ENGLISCH)
                 return "Priority";
             return "Priorität";
         }
-        public static string getHeadingClient(string language)
+        public string getHeadingClient()
         {
             if(language == ENGLISCH)
                 return "Client";
             return "Auftragsgeber";
         }
-        public static string getHeadingWorkScope(string language)
+        public string getHeadingWorkScope()
         {
             if (language == ENGLISCH)
                 return "Work scope";
             return "Arbeitsumfang";
         }
-        public static string getHeadingTeamSize(string language)
+        public string getHeadingTeamSize()
         {
             if (language == ENGLISCH)
                 return "Team size";
             return "Teamgrösse";
         }
-        public static string getHeadingLangugages(string language)
+        public string getHeadingLangugages()
         {
             if (language == ENGLISCH)
                 return "Languages";
             return "Sprachen";
         }
 
-        public static string getHeadingFooter(Project CurrentProject, ProStudentCreatorDBDataContext db)
+        public string getHeadingFooter(Project CurrentProject, ProStudentCreatorDBDataContext db)
         {
             var foot = "";
             if (CurrentProject.LanguageEnglish)
