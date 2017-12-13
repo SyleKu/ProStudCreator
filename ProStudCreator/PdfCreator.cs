@@ -124,7 +124,7 @@ namespace ProStudCreator
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
             projectTable.WidthPercentage = 100f;
-            projectTable.SetWidths(new float[] { 22, 50, 25, 25, 25 });
+            projectTable.SetWidths(new float[] { 25, 50, 25, 25, 25 });
 
             //  Row 1
             projectTable.AddCell(new Paragraph(Headings.getHeadingAdvisor(strLang) + ":", fontHeading));
