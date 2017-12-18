@@ -9,13 +9,13 @@ namespace ProStudCreator
     {
         public readonly static string ENGLISCH = "Englisch";
         public readonly static string DEUTSCH = "Deutsch";
-        public readonly static string DEUTSCHENGLISCH = "Deutsch oder Englisch";
+        public readonly static string DEUTSCHENGLISCH = "Englisch";
 
         public string language { get; set; }
 
         public Translator()
         {
-            language = DEUTSCH;
+            language = ENGLISCH;
         }
 
         public Translator(string language)

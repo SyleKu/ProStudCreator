@@ -59,7 +59,7 @@
         <classShapeMoniker Id="405e4684-a9d4-4455-b7c5-b5db4ed6d5d0" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.375 : 9.07774983723958); (4.875 : 9.07774983723958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.375 : 9.07774983723958); (4.875 : 9.07774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Department/Department_Project" />
       <nodes>
         <classShapeMoniker Id="a14e2cf8-e6fe-4179-b815-29fb82c0e1e6" />
@@ -133,7 +133,7 @@
         <elementListCompartment Id="d7ed2224-4e5e-4fd9-b18f-1ef519376710" absoluteBounds="1.3900000000000001, 10.835, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.375 : 10.1554996744792); (2.375 : 10.375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.375 : 10.1554996744792); (2.375 : 10.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ProStudentCreatorDBDataContext/Department/Department_UserDepartmentMap" />
       <nodes>
         <classShapeMoniker Id="a14e2cf8-e6fe-4179-b815-29fb82c0e1e6" />

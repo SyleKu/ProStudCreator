@@ -13,16 +13,16 @@ namespace ProStudCreator
 
         public static Semester NextSemester(ProStudentCreatorDBDataContext db)
         {
-            var safeSemesterActiveUntil = CurrentSemester(db).SemesterActiveUntil ?? default(DateTime);
-            var safeDate = safeSemesterActiveUntil.AddDays(7);
+            var safeDayBeforeNextSemester = CurrentSemester(db).DayBeforeNextSemester ?? default(DateTime);
+            var safeDate = safeDayBeforeNextSemester.AddDays(7);
             return ActiveSemester(safeDate, db);
         }
 
         public static Semester AfterNextSemester(ProStudentCreatorDBDataContext db)
         {
             var nextSemester = NextSemester(db);
-            var safeSemesterActiveUntil = nextSemester.SemesterActiveUntil ?? default(DateTime);
-            var safeDate = safeSemesterActiveUntil.AddDays(7);
+            var safeDayBeforeNextSemester = nextSemester.DayBeforeNextSemester ?? default(DateTime);
+            var safeDate = safeDayBeforeNextSemester.AddDays(7);
             return ActiveSemester(safeDate, db);
         }
 
@@ -35,7 +35,7 @@ namespace ProStudCreator
 
         public static Semester NextSemester(Semester semester, ProStudentCreatorDBDataContext db)
         {
-            return ActiveSemester(semester.SemesterActiveUntil.Value.AddDays(7), db);
+            return ActiveSemester(semester.DayBeforeNextSemester.Value.AddDays(7), db);
         }
 
         public static Semester AfterNextSemester(Semester semester, ProStudentCreatorDBDataContext db)
@@ -50,7 +50,7 @@ namespace ProStudCreator
 
         public static Semester ActiveSemester(DateTime date, ProStudentCreatorDBDataContext db)
         {
-            return db.Semester.Single(s => s.StartDate < date && s.SemesterActiveUntil > date);
+            return db.Semester.Single(s => s.StartDate < date && s.DayBeforeNextSemester > date);
         }
 
         public bool IsSpringSemester()

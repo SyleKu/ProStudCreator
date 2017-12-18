@@ -3601,8 +3601,8 @@ namespace ProStudCreator
     partial void OnExhibitionBachelorThesisChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnSemesterActiveUntilChanging(System.Nullable<System.DateTime> value);
-    partial void OnSemesterActiveUntilChanged();
+    partial void OnDayBeforeNextSemesterChanging(System.Nullable<System.DateTime> value);
+    partial void OnDayBeforeNextSemesterChanged();
     partial void OnDefenseIP6BStartChanging(string value);
     partial void OnDefenseIP6BStartChanged();
     partial void OnDefenseIP6BEndChanging(string value);
@@ -3876,7 +3876,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SemesterActiveUntil", DbType="DateTime")]
-		public System.Nullable<System.DateTime> SemesterActiveUntil
+		public System.Nullable<System.DateTime> DayBeforeNextSemester
 		{
 			get
 			{
@@ -3886,11 +3886,11 @@ namespace ProStudCreator
 			{
 				if ((this._SemesterActiveUntil != value))
 				{
-					this.OnSemesterActiveUntilChanging(value);
+					this.OnDayBeforeNextSemesterChanging(value);
 					this.SendPropertyChanging();
 					this._SemesterActiveUntil = value;
-					this.SendPropertyChanged("SemesterActiveUntil");
-					this.OnSemesterActiveUntilChanged();
+					this.SendPropertyChanged("DayBeforeNextSemester");
+					this.OnDayBeforeNextSemesterChanged();
 				}
 			}
 		}

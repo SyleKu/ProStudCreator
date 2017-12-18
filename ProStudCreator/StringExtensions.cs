@@ -116,7 +116,7 @@ namespace ProStudCreator
         private static readonly Regex portExtender = new Regex(@"^:[0-9]{0,5}\z");
         private static readonly Regex portMatcher = new Regex(@"^:[0-9]{1,5}\z");
         private static readonly Regex invalidTLDFollower = new Regex(@"^[\p{L}0-9\-]\z");
-        private static readonly Regex docExtender = new Regex(@"^/[/a-zA-Z0-9#\?%\(\)\~\+\-_\.\,\=\&\;@]*\z");
+        private static readonly Regex docExtender = new Regex(@"^/[/\w#\?%\(\)\~\+\-_\.\,\=\&\;@]*\z");
         private static readonly Regex docShortener = new Regex(@"^[\.\,\!\;\:\?]\z");
         private static readonly Regex domainExtender = new Regex(@"^[A-z0-9\-\.]+\z");
 
