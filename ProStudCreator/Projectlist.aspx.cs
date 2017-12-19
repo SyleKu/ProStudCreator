@@ -527,6 +527,7 @@ namespace ProStudCreator
             {
                 project.Submit();
                 db.SubmitChanges();
+                project.SaveAsNewVersion(db);
                 Response.Redirect("projectlist");
             }
 

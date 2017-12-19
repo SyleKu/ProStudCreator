@@ -56,6 +56,7 @@ namespace ProStudCreator
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ProjectExtensions.IsUpdated();
             AdminView.Visible = ShibUser.CanSeeCreationDetails();
             btnHistoryCollapse.CausesValidation = false;
             // Retrieve the project from DB

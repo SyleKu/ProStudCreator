@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace ProStudCreator
 {
     public static class ProjectExtensions
     {
+        public static readonly int EXPECTEDPROPCOUNT = 88;
+
         #region Actions
 
         public static void InitNew(this Project _p)
@@ -28,6 +31,108 @@ namespace ProStudCreator
             _p.LastEditedBy = ShibUser.GetEmail();
             _p.IsMainVersion = true;
         }
+        public static void IsUpdated()
+        {
+            var actualPropCount = typeof(Project).GetProperties().Count();
+
+            if (actualPropCount != EXPECTEDPROPCOUNT)
+            {
+                throw new OutdatedSaveMethod("The Save-Method is outdated. You have mostlikely edited the DBML. Please Update ProjectExtension.cs AND update the constant 'EXPECTEDPROPCOUNT'. PropertyCount: " + actualPropCount);
+            }
+
+        }
+        public static void SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
+        {
+            IsUpdated();
+            Project project = new Project();
+            project.ModificationDate = DateTime.Now;
+            project.LastEditedBy = ShibUser.GetEmail();
+            project.IsMainVersion = true;
+            _p.IsMainVersion = false;
+
+            _p.MapProject(project);
+            
+            db.Projects.InsertOnSubmit(project);
+            db.SubmitChanges();
+            
+        }
+
+        public static void MapProject(this Project _p, Project target)
+        {
+            target.Ablehnungsgrund = _p.Ablehnungsgrund;
+            target.Advisor1 = _p.Advisor1;
+            target.Advisor2 = _p.Advisor2;
+            target.Attachements = _p.Attachements;
+            target.BaseVersionId = _p.BaseVersionId;
+            target.BillingStatus = _p.BillingStatus;
+            target.ClientAddressCity = _p.ClientAddressCity;
+            target.ClientAddressDepartment = _p.ClientAddressDepartment;
+            target.ClientAddressPostcode = _p.ClientAddressPostcode;
+            target.ClientAddressStreet = _p.ClientAddressStreet;
+            target.ClientAddressTitle = _p.ClientAddressTitle;
+            target.ClientCompany = _p.ClientCompany;
+            target.ClientMail = _p.ClientMail;
+            target.ClientPerson = _p.ClientPerson;
+            target.ClientReferenceNumber = _p.ClientReferenceNumber;
+            target.ClientType = _p.ClientType;
+            target.CreateDate = _p.CreateDate;
+            target.Creator = _p.Creator;
+            target.Department = _p.Department;
+            target.DurationOneSemester = target.DurationOneSemester;
+            target.Expert = _p.Expert;
+            target.ImgDescription = _p.ImgDescription;
+            target.Important = _p.Important;
+            target.InitialPosition = _p.InitialPosition;
+            target.IsContinuation = _p.IsContinuation;
+            target.LanguageEnglish = _p.LanguageEnglish;
+            target.LanguageGerman = _p.LanguageGerman;
+            target.LogDefenceDate = _p.LogDefenceDate;
+            target.LogDefenceRoom = _p.LogDefenceRoom;
+            target.LogExpertID = _p.LogExpertID;
+            target.LogExpertPaid = _p.LogExpertPaid;
+            target.LogGradeStudent1 = _p.LogGradeStudent1;
+            target.LogGradeStudent2 = _p.LogGradeStudent2;
+            target.LogLanguageEnglish = _p.LogLanguageEnglish;
+            target.LogLanguageGerman = _p.LogLanguageGerman;
+            target.LogProjectDuration = _p.LogProjectDuration;
+            target.LogProjectType = _p.LogProjectType;
+            target.LogProjectTypeID = _p.LogProjectTypeID;
+            target.LogStudent1Mail = _p.LogStudent1Mail;
+            target.LogStudent1Name = _p.LogStudent1Name;
+            target.LogStudent2Mail = _p.LogStudent2Mail;
+            target.LogStudent2Name = _p.LogStudent2Name;
+            target.Name = _p.Name;
+            target.Objective = _p.Objective;
+            target.OverOnePage = _p.OverOnePage;
+            target.Picture = _p.Picture;
+            target.POneTeamSize = _p.POneTeamSize;
+            target.POneType = _p.POneType;
+            target.PreviousProjectID = _p.PreviousProjectID;
+            target.ProblemStatement = _p.ProblemStatement;
+            target.Project1 = _p.Project1;
+            target.ProjectNr = _p.ProjectNr;
+            target.Projects = target.Projects;
+            target.PTwoTeamSize = _p.PTwoTeamSize;
+            target.PTwoType = _p.PTwoType;
+            target.PublishedDate = _p.PublishedDate;
+            target.References = _p.References;
+            target.Remarks = _p.Remarks;
+            target.Reservation1Mail = _p.Reservation1Mail;
+            target.Reservation1Name = _p.Reservation1Name;
+            target.Reservation2Mail = _p.Reservation2Mail;
+            target.Reservation2Name = _p.Reservation2Name;
+            target.Semester = _p.Semester;
+            target.State = _p.State;
+            target.Tasks = _p.Tasks;
+            target.TypeAppWeb = _p.TypeAppWeb;
+            target.TypeCGIP = _p.TypeCGIP;
+            target.TypeDBBigData = _p.TypeDBBigData;
+            target.TypeDesignUX = _p.TypeDesignUX;
+            target.TypeHW = _p.TypeHW;
+            target.TypeMlAlg = _p.TypeMlAlg;
+            target.TypeSE = _p.TypeSE;
+            target.TypeSysSec = _p.TypeSysSec;
+        } 
 
         /// <summary>
         ///     Submits user's project for approval by an admin.

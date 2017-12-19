@@ -2,69 +2,87 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using i4Ds.LanguageToolkit;
 
 namespace ProStudCreator
 {
     public class Translator
     {
-        public readonly static string ENGLISCH = "Englisch";
-        public readonly static string DEUTSCH = "Deutsch";
-        public readonly static string DEUTSCHENGLISCH = "Englisch";
+        public Language? language { get;set; }
 
-        public string language { get; set; }
+        public void DetectLanguage(Project p)
+        {
+            var allText = p.InitialPosition + " " + p.Objective + " " + p.ProblemStatement + " " + p.ProblemStatement + " " + p.Remarks;
+            if(allText != "")
+            {
+                language = LanguageDetector.DetectLanguage(allText);
+                if (language != Language.English && language != Language.German)
+                {
+                    language = Language.German;
+                    if (p.LanguageEnglish && !p.LanguageGerman)
+                    {
+                        language = Language.English;
+                    }
+                    else if (p.LanguageGerman && !p.LanguageEnglish)
+                    {
+                        language = Language.German;
+                    }
+                }
+                                
+            }
 
+        } 
         public Translator()
         {
-            language = ENGLISCH;
-        }
 
-        public Translator(string language)
+        }
+        public Translator(Language language)
         {
             this.language = language;
         }
 
-          public string getHeadingInitialPosition()
+          public string GetHeadingInitialPosition()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "Initial position";
             return "Ausgangslage";
         }
-        public string getHeadingObjective()
+        public string GetHeadingObjective()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Objective";
             return "Ziel der Arbeit";
         }
-        public string getHeadingProblemStatement()
+        public string GetHeadingProblemStatement()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "Problem statement";
             return "Problemstellung";
         }
 
-        public string getHeadingAnnotation()
+        public string GetHeadingAnnotation()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Note";
             return "Bemerkung";
         }
-        public string getHeadingTechnology()
+        public string GetHeadingTechnology()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Technologies/Technical emphasis/References";
             return "Technologien/Fachliche Schwerpunkte/Referenzen";
         }
-        public  string getHeadingOneSemester()
+        public  string GetHeadingOneSemester()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "This project must be realised in a single semester.\n";
             return "Dieses Projekt muss in einem einzigen Semester durchgeführt werden.\n";
         }
 
-        public string getReservedString(string Reservation1Name, string Reservation2Name)
+        public string GetReservedString(string Reservation1Name, string Reservation2Name)
         {
             var strReservations = "";
-            if(language == ENGLISCH)
+            if(language == Language.English)
             {
                 strReservations = "This Project is reserved for " + Reservation1Name;
                 if (Reservation2Name != "") strReservations += " and " + Reservation2Name;
@@ -77,47 +95,47 @@ namespace ProStudCreator
 
             return strReservations;
         }
-        public string getHeadingAdvisor()
+        public string GetHeadingAdvisor()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "Advisor";
             return "Betreuer";
         }
-        public string getHeadingPriority()
+        public string GetHeadingPriority()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "Priority";
             return "Priorität";
         }
-        public string getHeadingClient()
+        public string GetHeadingClient()
         {
-            if(language == ENGLISCH)
+            if(language == Language.English)
                 return "Client";
             return "Auftragsgeber";
         }
-        public string getHeadingWorkScope()
+        public string GetHeadingWorkScope()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Work scope";
             return "Arbeitsumfang";
         }
-        public string getHeadingTeamSize()
+        public string GetHeadingTeamSize()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Team size";
             return "Teamgrösse";
         }
-        public string getHeadingLangugages()
+        public string GetHeadingLangugages()
         {
-            if (language == ENGLISCH)
+            if (language == Language.English)
                 return "Languages";
             return "Sprachen";
         }
 
-        public string getHeadingFooter(Project CurrentProject, ProStudentCreatorDBDataContext db)
+        public string GetHeadingFooter(Project CurrentProject, ProStudentCreatorDBDataContext db)
         {
             var foot = "";
-            if (CurrentProject.LanguageEnglish)
+            if (language == Language.English)
             {
                 foot += " Computer Science/" + CurrentProject.Department.DepartmentName + "/Student projects " +
                     CurrentProject?.Semester?.Name ?? Semester.NextSemester(db).Name;

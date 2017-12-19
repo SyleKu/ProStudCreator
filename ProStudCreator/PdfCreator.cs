@@ -22,7 +22,7 @@ namespace ProStudCreator
         public float SPACING_AFTER_TITLE = 2f;
         public float SPACING_BEFORE_IMAGE = 16f;
         private Translator translator = new Translator();
-
+        private string strLang;
 
         public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
@@ -91,14 +91,14 @@ namespace ProStudCreator
             var fontRegularLink = new Font(fontRegular);
             fontRegularLink.Color = BaseColor.BLUE;
             fontRegularLink.SetStyle("underline");
-
+            translator.DetectLanguage(currentProject);
+            
             //
             // Header contents
             //
 
-            var proj = currentProject; 
+            var proj = currentProject;
             var currentProjectType = GetCurrentProjectTypeOne(proj);
-
             var projectTypeImage =
                 Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/" + currentProjectType));
             projectTypeImage.SetAbsolutePosition(388, PageSize.A4.Height - document.TopMargin + 10);
@@ -128,7 +128,7 @@ namespace ProStudCreator
             projectTable.SetWidths(new float[] { 25, 50, 25, 25, 25 });
 
             //  Row 1
-            projectTable.AddCell(new Paragraph(translator.getHeadingAdvisor() + ":", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingAdvisor() + ":", fontHeading));
             if (proj.Advisor1 != null)
                 projectTable.AddCell(new Anchor(proj.Advisor1.Name, fontRegularLink)
                 {
@@ -138,8 +138,8 @@ namespace ProStudCreator
                 projectTable.AddCell(new Paragraph("?", fontRegular));
 
             projectTable.AddCell("");
-            projectTable.AddCell(new Paragraph(translator.getHeadingPriority()+" 1", fontHeading));
-            projectTable.AddCell(new Paragraph(translator.getHeadingPriority()+" 2", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingPriority()+" 1", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingPriority()+" 2", fontHeading));
 
             // Row 2
             if (proj.Advisor2 != null)
@@ -152,7 +152,7 @@ namespace ProStudCreator
             }
             else if (proj.ClientCompany != "")
             {
-                projectTable.AddCell(new Paragraph(translator.getHeadingClient()+":", fontHeading));
+                projectTable.AddCell(new Paragraph(translator.GetHeadingClient()+":", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
             }
             else
@@ -161,14 +161,14 @@ namespace ProStudCreator
                 projectTable.AddCell("");
             }
 
-            projectTable.AddCell(new Paragraph(translator.getHeadingWorkScope()+":", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingWorkScope()+":", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
             projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
             // Row 3
             if (proj.ClientCompany != "" && proj.Advisor2 != null)
             {
-                projectTable.AddCell(new Paragraph(translator.getHeadingClient()+":", fontHeading));
+                projectTable.AddCell(new Paragraph(translator.GetHeadingClient()+":", fontHeading));
                 projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
             }
             else
@@ -177,24 +177,22 @@ namespace ProStudCreator
                 projectTable.AddCell("");
             }
 
-            projectTable.AddCell(new Paragraph(translator.getHeadingTeamSize()+":", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingTeamSize()+":", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
             projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description,
                 fontRegular));
 
             // Row 4
-            translator.language = Translator.DEUTSCHENGLISCH;
-            if (proj.LanguageEnglish && !proj.LanguageGerman)
+            strLang = "Deutsch oder Englisch";
+            if(currentProject.LanguageEnglish && !currentProject.LanguageGerman)
             {
-                translator.language = Translator.ENGLISCH;
-            }
-            if (proj.LanguageGerman && !proj.LanguageEnglish)
+                strLang = "Englisch";
+            }else if(currentProject.LanguageGerman && !currentProject.LanguageEnglish)
             {
-                translator.language = Translator.DEUTSCH;
+                strLang = "Deutsch";
             }
-
-            projectTable.AddCell(new Paragraph(translator.getHeadingLangugages()+":", fontHeading));
-            projectTable.AddCell(new Paragraph(translator.language, fontRegular));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingLangugages()+":", fontHeading));
+            projectTable.AddCell(new Paragraph(strLang, fontRegular));
             projectTable.AddCell("");
             projectTable.AddCell("");
             projectTable.AddCell("");
@@ -241,20 +239,20 @@ namespace ProStudCreator
                     //could not parse the image...
 
                     //pdf without image
-                    AddParagraph(proj.InitialPosition, document, translator.getHeadingInitialPosition(), proj.InitialPosition);
-                    AddParagraph(proj.Objective, document, translator.getHeadingObjective(), proj.Objective);
-                    AddParagraph(proj.ProblemStatement, document, translator.getHeadingProblemStatement(), proj.ProblemStatement);
-                    AddParagraph(proj.References, document, translator.getHeadingTechnology(),
+                    AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+                    AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+                    AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+                    AddParagraph(proj.References, document, translator.GetHeadingTechnology(),
                         proj.References);
                 }
             }
             else
             {
                 //pdf without image
-                AddParagraph(proj.InitialPosition, document, translator.getHeadingInitialPosition(), proj.InitialPosition);
-                AddParagraph(proj.Objective, document, translator.getHeadingObjective(), proj.Objective);
-                AddParagraph(proj.ProblemStatement, document, translator.getHeadingProblemStatement(), proj.ProblemStatement);
-                AddParagraph(proj.References, document, translator.getHeadingTechnology(),
+                AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+                AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+                AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+                AddParagraph(proj.References, document, translator.GetHeadingTechnology(),
                     proj.References);
             }
 
@@ -270,17 +268,17 @@ namespace ProStudCreator
 
             if (proj.Reservation1Name != "")
             {
-                strReservations += translator.getReservedString(proj.Reservation1Name, proj.Reservation2Name);
+                strReservations += translator.GetReservedString(proj.Reservation1Name, proj.Reservation2Name);
             }
 
             if (proj.DurationOneSemester)
             {
-                strOneSem = translator.getHeadingOneSemester();
+                strOneSem = translator.GetHeadingOneSemester();
             }
 
             if (strReservations.Length > 0 || strRemarks.Length > 0 || strOneSem.Length > 0)
             {
-                document.Add(new Paragraph(translator.getHeadingAnnotation(), fontHeading)
+                document.Add(new Paragraph(translator.GetHeadingAnnotation(), fontHeading)
                 {
                     SpacingBefore = SPACING_BEFORE_TITLE,
                     SpacingAfter = SPACING_AFTER_TITLE
@@ -337,7 +335,7 @@ namespace ProStudCreator
 
         private string GetCurrentProjectTypeTwo(Project proj)
         {
-            // Note: Complicated conditional statements relate to the order of returns in getCurrentProjectTypeOne
+            // Note: Complicated conditional statements relate to the order of returns in GetCurrentProjectTypeOne
             // TODO Consider extracting logic to a method that returns two project types. e.g. put in a list and pull out first two relevant types.
 
             if (proj.TypeHW && proj.TypeDesignUX)
@@ -401,10 +399,10 @@ namespace ProStudCreator
                     break;
             }
 
-            AddParagraph(proj.InitialPosition, document, translator.getHeadingInitialPosition(), proj.InitialPosition);
-            AddParagraph(proj.Objective, document, translator.getHeadingObjective(), proj.Objective);
-            AddParagraph(proj.ProblemStatement, document, translator.getHeadingProblemStatement(), proj.ProblemStatement);
-            AddParagraph(proj.References, document, translator.getHeadingTechnology(), proj.References);
+            AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+            AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+            AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+            AddParagraph(proj.References, document, translator.GetHeadingTechnology(), proj.References);
         }
 
         public Image DescribedImage(PdfWriter writer, Image img, string description, float heighttoscale,
@@ -433,7 +431,7 @@ namespace ProStudCreator
                     Element.ALIGN_JUSTIFIED);
                 ct.Go(true);
 
-                //get the lines used to write the comment
+                //Get the lines used to write the comment
                 var lineswriten = ct.LinesWritten;
 
                 template.Height = height + lineswriten * descriptionheight;
@@ -508,10 +506,10 @@ namespace ProStudCreator
 
                 document.Add(p);
             }
-            AddParagraph(proj.InitialPosition, document, translator.getHeadingInitialPosition(), proj.InitialPosition);
-            AddParagraph(proj.Objective, document, translator.getHeadingObjective(), proj.Objective);
-            AddParagraph(proj.ProblemStatement, document, translator.getHeadingProblemStatement(), proj.ProblemStatement);
-            AddParagraph(proj.References, document, translator.getHeadingTechnology(), proj.References);
+            AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+            AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+            AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+            AddParagraph(proj.References, document, translator.GetHeadingTechnology(), proj.References);
         }
 
         public static Document CreateDocument()
@@ -593,13 +591,15 @@ namespace ProStudCreator
                 // FOOTER 
                 //////////////////////////////////////////////////////
 
+                translator.DetectLanguage(CurrentProject);
+
                 // create two column table
                 var foot = new PdfPTable(1);
                 foot.TotalWidth = document.PageSize.Width + 2;
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                var cell = new PdfPCell(new Phrase(translator.getHeadingFooter(CurrentProject,db),new Font(Font.FontFamily.HELVETICA, 8)));
+                var cell = new PdfPCell(new Phrase(translator.GetHeadingFooter(CurrentProject,db),new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;
