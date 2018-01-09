@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ProStudCreator
 {
@@ -41,7 +43,7 @@ namespace ProStudCreator
             }
 
         }
-        public static void SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
+        public static Project SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
         {
             IsUpdated();
             Project project = new Project();
@@ -49,16 +51,127 @@ namespace ProStudCreator
             project.LastEditedBy = ShibUser.GetEmail();
             project.IsMainVersion = true;
             _p.IsMainVersion = false;
-
             _p.MapProject(project);
-            
+                        
             db.Projects.InsertOnSubmit(project);
             db.SubmitChanges();
+
+            return project;
             
+        }
+
+        /// <summary>
+        ///     Validates the user's input and generates an error message for invalid input.
+        ///     One message is returned at a time, processed top to bottom.
+        /// </summary>
+        /// <returns>First applicable error message from the validation.</returns>
+        public static string GenerateValidationMessage(this Project _p, bool[] projectTypes = null)
+        {
+            string validationMessage = "";
+            if (_p.Advisor1 == null)
+                validationMessage =  "Bitte wählen Sie einen Hauptbetreuer aus.";
+
+            if (_p.ClientPerson.Trim().Length != 0 && !_p.ClientPerson.IsValidName())
+                validationMessage =  "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+
+            if (_p.ClientMail.Trim().Length != 0 && !_p.ClientMail.IsValidEmail())
+                validationMessage =  "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+
+            if ((!_p.Advisor1?.Name.IsValidName()) ?? true)
+                validationMessage =  "Bitte wählen Sie einen Hauptbetreuer aus.";
+
+            var numAssignedTypes = 0;
+            if (projectTypes == null)
+            {
+                projectTypes = _p.GetProjectTypeBools();
+            }
+
+            numAssignedTypes = projectTypes.Count(a => a);
+            
+
+            if (numAssignedTypes != 1 && numAssignedTypes != 2)
+                validationMessage =  "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+
+            if (_p.OverOnePage)
+                validationMessage =  "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
+
+            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != _p.Advisor1?.Mail)
+                validationMessage =  "Nur Hauptbetreuer können Projekte einreichen.";
+
+            if (_p.Reservation1Mail.Trim().Length != 0 && _p.Reservation1Name.Trim().Length == 0)
+                validationMessage =  "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (_p.Reservation1Mail.Trim().Length != 0 && _p.Reservation1Name.Trim().Length != 0)
+            {
+                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
+                System.Text.RegularExpressions.Match match = regex.Match(_p.Reservation1Mail);
+                if (!match.Success)
+                    validationMessage =  "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
+            }
+
+            if (_p.Reservation2Mail.Trim().Length != 0 && _p.Reservation2Name.Trim().Length == 0)
+                validationMessage = 
+                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+
+            if (_p.Reservation2Mail.Trim().Length != 0 && _p.Reservation2Name.Trim().Length != 0)
+            {
+                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
+                System.Text.RegularExpressions.Match match = regex.Match(_p.Reservation1Mail);
+                match = regex.Match(_p.Reservation2Mail);
+                if (!match.Success)
+                    validationMessage =  "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
+            }
+
+            if (_p.Reservation1Name.Trim().Length != 0 && _p.Reservation1Mail.Trim().Length == 0)
+                validationMessage =  "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+
+            if (_p.Reservation2Name.Trim().Length != 0 && _p.Reservation2Mail.Trim().Length == 0)
+                validationMessage =  "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+
+            return validationMessage;
+        }
+
+        private static bool[] GetProjectTypeBools(this Project _p)
+        {
+            bool[] projectType = new bool[8];
+            if (_p.TypeDesignUX)
+            {
+                projectType[0] = true;
+            }
+            if (_p.TypeHW)
+            {
+                projectType[1] = true;
+            }
+            if (_p.TypeCGIP)
+            {
+                projectType[2] = true;
+            }
+            if (_p.TypeMlAlg)
+            {
+                projectType[3] = true;
+            }
+            if (_p.TypeAppWeb)
+            {
+                projectType[4] = true;
+            }
+            if (_p.TypeDBBigData)
+            {
+                projectType[5] = true;
+            }
+            if (_p.TypeSysSec)
+            {
+                projectType[6] = true;
+            }
+            if (_p.TypeSE)
+            {
+                projectType[7] = true;
+            }
+            return projectType;
         }
 
         public static void MapProject(this Project _p, Project target)
         {
+            
             target.Ablehnungsgrund = _p.Ablehnungsgrund;
             target.Advisor1 = _p.Advisor1;
             target.Advisor2 = _p.Advisor2;
@@ -442,5 +555,71 @@ namespace ProStudCreator
         }
 
         #endregion
+    }
+    public partial class Project
+    {
+
+        public String StateColor
+        {
+            get
+            {
+                switch (State)
+                {
+                    case ProjectState.InProgress:
+                        return "#EFF3FB";
+
+                    case ProjectState.Published:
+                        return "#A9F5A9";
+
+
+                    case ProjectState.Rejected:
+                        return "#F5A9A9";
+
+
+                    case ProjectState.Submitted:
+                        return "#ffcc99";
+
+
+                    case ProjectState.Deleted:
+                        return "#F5A9A9";
+
+                    default:
+                        return "White";
+
+                }
+            }
+        }
+
+
+        public String StateAsString
+        {
+
+            get
+            {
+                switch (State)
+                {
+                    case ProjectState.InProgress:
+                        return "In Bearbeitung";
+
+                    case ProjectState.Published:
+                        return "Veröffentlicht";
+
+                    case ProjectState.Rejected:
+                        return "Abgelehnt";
+
+                    case ProjectState.Submitted:
+                        return "Eingereicht";
+
+                    case ProjectState.Deleted:
+                        return "Gelöscht";
+
+                    default:
+                        return "Error!";
+
+                }
+
+
+            }
+        }
     }
 }

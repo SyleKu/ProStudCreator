@@ -2,7 +2,6 @@
 
 <%@ Import Namespace="ProStudCreator" %>
 
-
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         var hasUnsavedChanges = false;
@@ -451,10 +450,10 @@
                 </div>
                 <br />
                 <div runat="server" id="DivHistoryCollapsable">
-                    <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick">
+                    <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick" >
                         <ItemTemplate>
                             <table>
-                                <div class="row" id="historyRow">
+                                <div class="row" id="historyRow" <%#"style='background-color:"+Item.StateColor+";'" %>>
                                     <dîv class="col-xs-12 col-md-1"></dîv>
                                     <div class="col-xs-12 col-md-3">
                                         <asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+GetGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>

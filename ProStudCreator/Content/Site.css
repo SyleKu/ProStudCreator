@@ -5,6 +5,13 @@ body {
     padding-bottom: 20px;
     padding-top: 50px;
 }
+hr{
+   margin: 0em 0 !important;
+}
+#historyRow{
+    padding: 1em !important;
+    margin: 0 !important;
+}
 
 a :hover {
     text-decoration: underline !important;

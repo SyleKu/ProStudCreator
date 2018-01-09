@@ -93,8 +93,6 @@ namespace ProStudCreator
                 Image1.Visible = true;
                 Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
-                //imgdescription.Visible = true;
-                //imgdescription.Text = project.ImgDescription;
             }
             else
             {
@@ -218,15 +216,16 @@ where T : Control
                     GetControlList(control.Controls, resultCollection);
             }
         }
-        private void ShowAllControls()
+        private void ShowAllLabels()
         {
             List<Label> labelList = new List<Label>();
             GetControlList<Label>(Controls, labelList);
             foreach (Label l in labelList)
             {
-                if(l.ID != "currentViewedHistory")
-                    l.Visible = true;
+                l.Visible = true;
             }
+
+            //additional controls 
             Image1Previous.Visible = true;
             ReferenceDiv.Visible = true;
             Panel1.Visible = true;
@@ -242,16 +241,16 @@ where T : Control
 
         private string CreateDiffString(string oldText, string newText)
         {
-            string returnString;
+            string diffString;
             try { 
             HtmlDiff.HtmlDiff h = new HtmlDiff.HtmlDiff(oldText, newText);
-            returnString = h.Build();
+            diffString = h.Build();
             }
             catch
             {
                 return " ";
             }
-            return returnString;
+            return diffString;
         }
 
         private void HideUnwantedControls()
@@ -281,7 +280,8 @@ where T : Control
                 pid = BaseVersionId;
 
             var currentProject = db.Projects.Single(p => p.Id == pid);
-            ShowAllControls();
+
+            ShowAllLabels();
             HideUnwantedControls();
             
 
@@ -454,23 +454,20 @@ where T : Control
             else
                 Language.SelectedIndex = 0;
 
-            //LanguageGerman.Checked = project.LanguageGerman;
-            //LanguageEnglish.Checked = project.LanguageEnglish;
-
             DurationOneSemester.Checked = project.DurationOneSemester;
             InitialPositionContentLabel.Text = CreateDiffString(project.InitialPosition, currentProject.InitialPosition);
-            if (project.Picture != null)
-            {
-                Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
-                DeleteImageButton.Visible = false;
+            //if (project.Picture != null)
+            //{
+            //    Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
+            //    DeleteImageButton.Visible = false;
                
-                imgdescription.Text = CreateDiffString(project.ImgDescription, currentProject.ImgDescription);
-            }
-            else
-            {
-                ImageLabel.Visible = false;
-                Image1Previous.Visible = false;
-            }
+            //    imgdescription.Text = CreateDiffString(project.ImgDescription, currentProject.ImgDescription);
+            //}
+            //else
+            //{
+            //    ImageLabel.Visible = false;
+            //    Image1Previous.Visible = false;
+            //}
             ObjectivContentLabel.Text = CreateDiffString(project.Objective, currentProject.Objective);
 
             ProblemStatementContentLabel.Text = CreateDiffString(project.ProblemStatement, currentProject.ProblemStatement);
@@ -646,6 +643,7 @@ where T : Control
             DisplayClient(project);
 
 
+
             FillDropPreviousProject(project.Semester);
 
             if (project.PreviousProjectID == null)
@@ -689,13 +687,7 @@ where T : Control
 
             Project oldProject = project;
 
-            project = new Project();
-            project.InitNewVersion(oldProject);
-
-            oldProject.IsMainVersion = false;
-            oldProject.ModificationDate = DateTime.Now;
-            oldProject.LastEditedBy = ShibUser.GetEmail();
-            db.Projects.InsertOnSubmit(project);
+            project = oldProject.SaveAsNewVersion(db);
             Fillproject(project, oldProject);
             if (changed)
             {
@@ -943,7 +935,7 @@ where T : Control
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
             
-            var validationMessage = GenerateValidationMessage();
+            var validationMessage = project.GenerateValidationMessage(projectType);
                 // Generate JavaScript alert with error message
             if (validationMessage != null)
             {
@@ -954,7 +946,7 @@ where T : Control
                 sb.Append(validationMessage);
                 sb.Append("')};");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(GetType(), "alert", sb.ToString());
+                ClientScript.RegisterClientScriptBlock(GetType(), "alert",sb.ToString());
             }
             else
             {
@@ -963,69 +955,6 @@ where T : Control
                 db.SubmitChanges();
                 Response.Redirect("projectlist");
             }
-        }
-
-        /// <summary>
-        ///     Validates the user's input and generates an error message for invalid input.
-        ///     One message is returned at a time, processed top to bottom.
-        /// </summary>
-        /// <returns>First applicable error message from the validation.</returns>
-        private string GenerateValidationMessage()
-        {
-            if (project.Advisor1 == null)
-                return "Bitte wählen Sie einen Hauptbetreuer aus.";
-
-            if (project.ClientPerson.Trim().Length != 0 && !project.ClientPerson.IsValidName())
-                return "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
-
-            if (project.ClientMail.Trim().Length != 0 && !project.ClientMail.IsValidEmail())
-                return "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
-
-            if ((!project.Advisor1?.Name.IsValidName()) ?? true)
-                return "Bitte wählen Sie einen Hauptbetreuer aus.";
-
-            var numAssignedTypes = projectType.Count(a => a);
-
-            if (numAssignedTypes != 1 && numAssignedTypes != 2)
-                return "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
-
-            if (project.OverOnePage)
-                return "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
-
-            if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != project.Advisor1?.Mail)
-                return "Nur Hauptbetreuer können Projekte einreichen.";
-
-            if (project.Reservation1Mail.Trim().Length != 0 && project.Reservation1Name.Trim().Length == 0)
-                return "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
-
-            if (project.Reservation1Mail.Trim().Length != 0 && project.Reservation1Name.Trim().Length != 0)
-            {
-                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
-                System.Text.RegularExpressions.Match match = regex.Match(project.Reservation1Mail);
-                if (!match.Success)
-                    return "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
-            }
-
-            if (project.Reservation2Mail.Trim().Length != 0 && project.Reservation2Name.Trim().Length == 0)
-                return
-                    "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
-
-            if (project.Reservation2Mail.Trim().Length != 0 && project.Reservation2Name.Trim().Length != 0)
-            {
-                Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
-                System.Text.RegularExpressions.Match match = regex.Match(project.Reservation1Mail);
-                match = regex.Match(project.Reservation2Mail);
-                if (!match.Success)
-                    return "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
-            }
-
-            if (project.Reservation1Name.Trim().Length != 0 && project.Reservation1Mail.Trim().Length == 0)
-                return "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
-
-            if (project.Reservation2Name.Trim().Length != 0 && project.Reservation2Mail.Trim().Length == 0)
-                return "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
-            
-            return null;
         }
 
         #endregion
@@ -1154,10 +1083,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine(radioClientType.SelectedIndex);
-
-
-            if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+           if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
             {
                 divClientForm.Visible = true;
                 divClientCompany.Visible = true;
@@ -1262,10 +1188,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             {
                 throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
             }
-
-            //project.LanguageGerman = LanguageGerman.Checked;
-            //project.LanguageEnglish = LanguageEnglish.Checked;
-
             // Duration
             project.DurationOneSemester = DurationOneSemester.Checked;
 
@@ -1500,14 +1422,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             btnHistoryCollapse.Text = collapse ? "◄" : "▼";
         }
 
-        protected void CompleteHistory_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            
-            foreach(TableCell cell in e.Row.Cells)
-            {
-                cell.BackColor = ColorTranslator.FromHtml(project.StateColor);
-            } 
-        }
+  
         public string GetGravatar(string email)
         {
             var md5 = System.Security.Cryptography.MD5.Create();
@@ -1572,6 +1487,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
             return false;
         }
+
     }
 
 }
