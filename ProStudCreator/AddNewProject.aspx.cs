@@ -85,6 +85,8 @@ namespace ProStudCreator
             else
             {
                 divHistory.Visible = false;
+                if(Request.QueryString["showChanges"]==null)
+                    CopyProject.Visible = false;
             }
 
             // Project picture
@@ -98,6 +100,7 @@ namespace ProStudCreator
             {
                 ImageLabel.Visible = false;
                 Image1.Visible = false;
+       
             }
 
             if (IsPostBack)
@@ -1446,6 +1449,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             var project = db.Projects.Single(p => p.Id == pid);
             var semester = db.Semester.Single(s => s.Id == sid);
             var duplicate = project.CopyToSemester(db, semester);
+            duplicate.BaseVersionId = duplicate.Id;
             db.Connection.Close();
             return "AddNewProject.aspx?id=" + duplicate.Id;
         }
