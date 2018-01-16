@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -21,18 +22,18 @@ namespace ProStudCreator
             _p.State = ProjectState.InProgress;
             _p.IsMainVersion = true;
         }
-        public static void InitNewVersion(this Project _p, Project previousProject)
-        {
-            _p.Creator = previousProject.Creator;
-            _p.CreateDate = previousProject.CreateDate;
-            _p.PublishedDate = previousProject.PublishedDate;
-            _p.State = previousProject.State;
-            _p.ProjectNr = previousProject.ProjectNr;
-            _p.BaseVersionId = previousProject.BaseVersionId;
-            _p.ModificationDate = DateTime.Now;
-            _p.LastEditedBy = ShibUser.GetEmail();
-            _p.IsMainVersion = true;
-        }
+        //public static void InitNewVersion(this Project _p, Project previousProject)
+        //{
+        //    _p.Creator = previousProject.Creator;
+        //    _p.CreateDate = previousProject.CreateDate;
+        //    _p.PublishedDate = previousProject.PublishedDate;
+        //    _p.State = previousProject.State;
+        //    _p.ProjectNr = previousProject.ProjectNr;
+        //    _p.BaseVersionId = previousProject.BaseVersionId;
+        //    _p.ModificationDate = DateTime.Now;
+        //    _p.LastEditedBy = ShibUser.GetEmail();
+        //    _p.IsMainVersion = true;
+        //}
         public static void IsUpdated()
         {
             var actualPropCount = typeof(Project).GetProperties().Count();
@@ -58,6 +59,106 @@ namespace ProStudCreator
 
             return project;
             
+        }
+        public static Project CopyToSemester(this Project _p, ProStudentCreatorDBDataContext db, Semester s)
+        {
+            var duplicate = _p.duplicate(db);
+            duplicate.BaseVersionId = duplicate.Id;
+            duplicate.Reservation1Mail = "";
+            duplicate.Reservation2Mail = "";
+            duplicate.Reservation1Name = "";
+            duplicate.Reservation2Name = "";
+            duplicate.Semester = s;
+            _p.ClearLog(db);
+            db.SubmitChanges();
+            return duplicate;
+        }
+        public static void ClearLog(this Project _p, ProStudentCreatorDBDataContext db)
+        {
+            _p.LogDefenceDate = null;
+            _p.LogDefenceRoom = null;
+            _p.LogExpertID = null;
+            _p.LogExpertPaid = null;
+            _p.LogGradeStudent1 = null;
+            _p.LogGradeStudent2 = null;
+            _p.LogLanguageEnglish = null;
+            _p.LogLanguageGerman = null;
+            _p.LogProjectDuration = null;
+            _p.LogProjectType = null;
+            _p.LogProjectTypeID = null;
+            _p.LogStudent1Mail = null;
+            _p.LogStudent1Name = null;
+            _p.LogStudent2Mail = null;
+            _p.LogStudent2Name = null;
+            db.SubmitChanges();
+        }
+        public static bool IsModified(this Project p1, Project p2)
+        {
+            List<string> props = new List<string>();
+            var projectType = typeof(Project);
+            var pid = nameof(Project.Id);
+            var modDate = nameof(Project.ModificationDate);
+            var pubDate = nameof(Project.PublishedDate);
+            var lastEditedBy = nameof(Project.LastEditedBy);
+            var state = nameof(Project.State);
+            var projectNr = nameof(Project.ProjectNr);
+            var isMainVers = nameof(Project.IsMainVersion);
+            var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
+            var projId = nameof(Project.BaseVersionId);
+            var credate = nameof(Project.CreateDate);
+            var prs = nameof(Project.Projects);
+            var attch = nameof(Project.Attachements);
+            var tsk = nameof(Project.Tasks);
+
+            props.Add(pid);
+            props.Add(modDate);
+            props.Add(pubDate);
+            props.Add(lastEditedBy);
+            props.Add(state);
+            props.Add(projId);
+            props.Add(projectNr);
+            props.Add(isMainVers);
+            props.Add(ablehnungsgrund);
+            props.Add(credate);
+            props.Add(prs);
+            props.Add(attch);
+            props.Add(tsk);
+
+            foreach (PropertyInfo pi in typeof(Project).GetProperties())
+            {
+                if (!props.Contains(pi.Name))
+                {
+                    var value1 = pi.GetValue(p1);
+                    var value2 = pi.GetValue(p2);
+                    if (value1 != null && value2 != null)
+                    {
+                        if (!value1.Equals(value2))
+                            return true;
+                    }
+                    else if (value1 != null && value2 == null)
+                    {
+                        return true;
+                    }
+                    else if (value1 == null && value2 != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static Project duplicate(this Project _p, ProStudentCreatorDBDataContext db)
+        {
+            Project duplicatedProject = new Project();
+            duplicatedProject.ModificationDate = DateTime.Now;
+            duplicatedProject.LastEditedBy = ShibUser.GetEmail();
+            duplicatedProject.InitNew();
+            _p.MapProject(duplicatedProject);
+            db.Projects.InsertOnSubmit(duplicatedProject);
+            db.SubmitChanges();
+            return duplicatedProject;
         }
 
         /// <summary>
@@ -245,7 +346,16 @@ namespace ProStudCreator
             target.TypeMlAlg = _p.TypeMlAlg;
             target.TypeSE = _p.TypeSE;
             target.TypeSysSec = _p.TypeSysSec;
-        } 
+        }
+        public static Project CreateNewProject(ProStudentCreatorDBDataContext db)
+        {
+            Project project = new Project();
+            project.InitNew();
+            db.Projects.InsertOnSubmit(project);
+            project.ModificationDate = DateTime.Now;
+            project.LastEditedBy = ShibUser.GetEmail();
+            return project;
+        }
 
         /// <summary>
         ///     Submits user's project for approval by an admin.

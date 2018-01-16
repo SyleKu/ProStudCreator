@@ -35,7 +35,7 @@ namespace ProStudCreator
             {
                 var pdfc = new PdfCreator();
 
-                Fillproject(project, null);
+                Fillproject(project);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -494,6 +494,7 @@ where T : Control
             refuseProject.Visible = false;
             rollbackProject.Visible = false;
             saveCloseProject.Visible = false;
+            CopyProject.Visible = false;
 
             POneTypeLabel.Text = CreateSimpleDiffString(project.POneType.Description, currentProject.POneType.Description);
             POneTeamSize.SelectedValue = CreateSimpleDiffString(project.POneTeamSize.Description, currentProject.POneTeamSize.Description);
@@ -527,6 +528,13 @@ where T : Control
                 RetrieveProjectComparison();
                 return;
             }
+            var activeStartdate = Semester.ActiveSemester(DateTime.Now, db).StartDate;
+            CopyProject.DataSource = db.Semester.Where(s => s.StartDate >= activeStartdate);
+
+            CopyProject.DataTextField = "Name";
+            CopyProject.DataValueField = "Id";
+            CopyProject.DataBind();
+            CopyProject.Items.Insert(0, new ListItem("Kopieren", "-1"));
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
             AddPictureLabel.Text = "Bild ändern:";
 
@@ -667,8 +675,8 @@ where T : Control
         {
             if (project == null) // New project
             {
-                CreateNewProject();
-
+                project = ProjectExtensions.CreateNewProject(db);
+                updatePDFPageCount(project);
             }
             else if(HasProjectChanged())
             {
@@ -676,6 +684,15 @@ where T : Control
                 SaveProjectFromEditView();
 
             }
+        }
+
+        private void updatePDFPageCount(Project project)
+        {
+            Fillproject(project);
+            db.SubmitChanges(); // the next few lines depend on this submit
+            project.BaseVersionId = project.Id;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
         }
         
         private void SaveProjectFromEditView()
@@ -701,10 +718,11 @@ where T : Control
 
         }
 
+        // TODO: split from UI, find a fix for the hacks
         private bool HasProjectChanged()
         {
             var comparisonProject = new Project();
-            Fillproject(comparisonProject, null);
+            Fillproject(comparisonProject);
             comparisonProject.Id = -1;
 
             ///////////////////////////////////////
@@ -719,7 +737,7 @@ where T : Control
             db.Projects.DeleteOnSubmit(comparisonProject);
             ///////////////////////////////////////////////
 
-            if (!IsProjectModified(comparisonProject, project) && !changed)
+            if (!comparisonProject.IsModified(project) && !changed)
             {
                 return false;
             }
@@ -727,19 +745,7 @@ where T : Control
             return true;
         }
 
-        private void CreateNewProject()
-        {
-            project = new Project();
-            project.InitNew();
-            db.Projects.InsertOnSubmit(project);
-            Fillproject(project, null);
-            project.ModificationDate = DateTime.Now;
-            project.LastEditedBy = ShibUser.GetEmail();
-            db.SubmitChanges(); // the next few lines depend on this submit
-            project.BaseVersionId = project.Id;
-            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
-            db.SubmitChanges();
-        }
+        
 
         private void ToggleReservationTwoVisible()
         {
@@ -993,6 +999,7 @@ where T : Control
             refusedReason.Visible = true;
             refuseProject.Visible = false;
             publishProject.Visible = false;
+            CopyProject.Visible = false;
             saveProject.Visible = false;
             refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
                                      + "\n"
@@ -1033,6 +1040,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             refusedReason.Visible = false;
             refuseProject.Visible = true;
             publishProject.Visible = true;
+            CopyProject.Visible = true;
         }
 
         protected void RollbackProject_Click(object sender, EventArgs e)
@@ -1108,7 +1116,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #region private methods
 
-        private void Fillproject(Project project, Project oldProject)    
+        private void Fillproject(Project project, Project oldProject = null)    
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
@@ -1431,63 +1439,26 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             return BitConverter.ToString(md5.Hash).Replace("-", "") + "&d=identicon";
          }
 
-        private bool IsProjectModified(Project p1, Project p2)
+        
+        protected void CopyProject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<string> props = new List<string>();
-            var projectType = typeof(Project);
-            var pid = nameof(Project.Id);
-            var modDate = nameof(Project.ModificationDate);
-            var pubDate = nameof(Project.PublishedDate);
-            var lastEditedBy = nameof(Project.LastEditedBy);
-            var state = nameof(Project.State);
-            var projectNr = nameof(Project.ProjectNr);
-            var isMainVers = nameof(Project.IsMainVersion);
-            var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
-            var projId = nameof(Project.BaseVersionId);
-            var credate = nameof(Project.CreateDate);
-            var prs = nameof(Project.Projects);
-            var attch = nameof(Project.Attachements);
-            var tsk = nameof(Project.Tasks);
-
-            props.Add(pid);
-            props.Add(modDate);
-            props.Add(pubDate);
-            props.Add(lastEditedBy);
-            props.Add(state);
-            props.Add(projId);
-            props.Add(projectNr);
-            props.Add(isMainVers);
-            props.Add(ablehnungsgrund);
-            props.Add(credate);
-            props.Add(prs);
-            props.Add(attch);
-            props.Add(tsk);
-
-                foreach (PropertyInfo pi in typeof(Project).GetProperties())
-                {
-                    if (!props.Contains(pi.Name))
-                    {
-                        var value1 = pi.GetValue(p1);
-                        var value2 = pi.GetValue(p2);
-                    if (value1 != null && value2 != null)
-                    {
-                        if (!value1.Equals(value2))
-                            return true;
-                    }
-                    else if (value1 != null && value2 == null)
-                    {
-                        return true;
-                    }
-                    else if (value1 == null && value2 != null)
-                    {
-                        return true;
-                    }
-                    }
-                }
-
-            return false;
+            var ddl = (DropDownList)sender;
+            var confirmMessage = "Projekt " + project.Name + " ins Semester " + ddl.SelectedItem + " kopieren?";
+            ScriptManager.RegisterStartupScript(ButtonUpdatePanel, ButtonUpdatePanel.GetType(), "alert", "ConfirmApproval('"+confirmMessage+"','"+project.Id+"','"+ddl.SelectedValue+"');", true);
         }
 
+        [System.Web.Services.WebMethod]
+        public static string DuplicateProject(string projectID, string semesterID)
+        {
+            var pid = Int32.Parse(projectID);
+            var sid = Int32.Parse(semesterID);
+            var db = new ProStudentCreatorDBDataContext();
+            var project = db.Projects.Single(p => p.Id == pid);
+            var semester = db.Semester.Single(s => s.Id == sid);
+            var duplicate = project.CopyToSemester(db, semester);
+            db.Connection.Close();
+            return "AddNewProject.aspx?id=" + duplicate.Id;
+        }
     }
 
 }

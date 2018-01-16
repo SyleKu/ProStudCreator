@@ -18,6 +18,32 @@
             return ok;
         }
 
+        function ConfirmApproval(objMsg, projectID ,semesterID) {
+            if (confirm(objMsg)) {
+                jQuery.ajax({
+                    url: 'AddNewProject.aspx/DuplicateProject',
+                    type: "POST",
+                    data: JSON.stringify({ "projectID": projectID, "semesterID":semesterID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (confirm("Projekt wurde erfolgreich in das ausgewählte Semester kopiert. Jetzt zum neuen Projekt wechseln?")){
+                            window.location = response.d;
+                        }
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        var err =  xhr.responseText;
+                        alert("Error: " + err);
+                    }
+                });
+                return true;
+            }
+            else
+                return false;
+        }
+
+
         function confirmSaving(message) {
             var ok = confirm(message);
             if (ok) {
@@ -44,12 +70,14 @@
 
         // Attach event handlers once page is loaded
         $(document).ready(function () {
-            $(":input").change(function () {
+            $(":input").not(document.getElementsByTagName("select")).change(function () {
                 hasUnsavedChanges = true;
             });
-            $("#projectTypes :input").click(function () {
+            $("#projectTypes :input").not(document.getElementsByTagName("select")).click(function () {
                 hasUnsavedChanges = true;
             });
+
+           
 
             // Textarea max. length checks
             //$("textarea[maxlength]").after(function () {
@@ -179,7 +207,7 @@
                     <div class="form-group" runat="server" id="divClientForm" visible="false">
                         <div class="form-group" style="text-align: left" runat="server" id="divClientCompany">
                             <asp:Label runat="server" Text="Unternehmen:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <asp:TextBox runat="server" ID="txtClientCompany" CssClass="form-control col-sm-3"></asp:TextBox>
                                 <asp:Label runat="server" ID="txtClientCompanyLabel" CssClass="form-control col-sm-3" Visible="false"></asp:Label>
                             </div>
@@ -196,28 +224,28 @@
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Vor- und Nachname:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 col-md-7">
                                 <asp:TextBox runat="server" ID="txtClientName" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                                 <asp:Label runat="server" ID="txtClientNameLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="E-Mail Adresse" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 col-md-7">
                                 <asp:TextBox runat="server" ID="txtClientEmail" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                                 <asp:Label runat="server" ID="txtClientEmailLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Abteilung:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 col-md-7">
                                 <asp:TextBox runat="server" ID="txtClientDepartment" CssClass="form-control maxWidth" Placeholder="Falls vorhanden" MaxLength="50"></asp:TextBox>
                                 <asp:Label runat="server" ID="txtClientDepartmentLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
                         <div class="form-group" style="text-align: left">
                             <asp:Label runat="server" Text="Strasse und Nummer:" CssClass="control-label col-sm-3"></asp:Label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 col-md-7">
                                 <asp:TextBox runat="server" ID="txtClientStreet" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                                 <asp:Label runat="server" ID="txtClientStreetLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
@@ -427,18 +455,26 @@
                 <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                     <ContentTemplate>
                         <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
-                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="10000" OnTick="Pdfupdatetimer_Tick" Enabled="true">
+                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="1000" OnTick="Pdfupdatetimer_Tick" Enabled="true">
                         </asp:Timer>
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-            <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-            <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
-            <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
-            <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
-            <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-            <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-            <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
+            <asp:UpdatePanel runat="server" ID="ButtonUpdatePanel" UpdateMode="Conditional">
+                <Triggers>
+                       <asp:AsyncPostBackTrigger ControlID="CopyProject" />
+                </Triggers>
+                <ContentTemplate>
+                        <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
+                        <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+                        <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
+                        <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
+                        <asp:DropDownList runat="server" ID="CopyProject" OnSelectedIndexChanged="CopyProject_SelectedIndexChanged" Style="margin-right: 0px;" CssClass="btn btn-default" Width="113px" AutoPostBack="true"></asp:DropDownList>
+                        <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+                        <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+                        <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </div>
     <div runat="server" class="well newProjectSettings" id="divHistory">
