@@ -127,6 +127,13 @@ namespace ProStudCreator
 
 #endif
         }
+        public static string GetGravatar(string email)
+        {
+            var md5 = System.Security.Cryptography.MD5.Create();
+            md5.Initialize();
+            md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(email));
+            return System.BitConverter.ToString(md5.Hash).Replace("-", "") + "&d=identicon";
+        }
 
         public static string GetDebugInfo()
         {

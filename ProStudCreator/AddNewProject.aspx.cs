@@ -1429,16 +1429,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             DivHistoryCollapsable.Visible = !collapse;
             btnHistoryCollapse.Text = collapse ? "◄" : "▼";
         }
-
-  
-        public string GetGravatar(string email)
-        {
-            var md5 = System.Security.Cryptography.MD5.Create();
-            md5.Initialize();
-            md5.ComputeHash(Encoding.ASCII.GetBytes(email));
-            return BitConverter.ToString(md5.Hash).Replace("-", "") + "&d=identicon";
-         }
-
         
         protected void CopyProject_SelectedIndexChanged(object sender, EventArgs e)
         {
