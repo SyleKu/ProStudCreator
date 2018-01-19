@@ -60,12 +60,12 @@ namespace ProStudCreator
                 }
             }
 
-            checkForFinishedGradesRegistered(db);
+            CheckForFinishedGradesRegistered(db);
 
             db.SubmitChanges();
         }
 
-        private static void checkForFinishedGradesRegistered(ProStudentCreatorDBDataContext db)
+        private static void CheckForFinishedGradesRegistered(ProStudentCreatorDBDataContext db)
         {
             var openGradeTasks =
                 db.Tasks.Where(i => !i.Done && i.TaskType == db.TaskTypes.Single(t => t.GradesRegistered));
@@ -86,7 +86,7 @@ namespace ProStudCreator
         #region Mailing
         private static void WriteAllMails(ProStudentCreatorDBDataContext db)
         {
-            sendMails(GenerateEmails(GetAllTasksToMail(db)));
+            SendMails(GenerateEmails(GetAllTasksToMail(db)));
         }
 
 
@@ -172,7 +172,7 @@ namespace ProStudCreator
         }
 
 
-        private static void sendMails(MailMessage[] mails) //can be enhanced with buffering all mails for ex. 3 days
+        private static void SendMails(MailMessage[] mails) //can be enhanced with buffering all mails for ex. 3 days
         {
             var smtpClient = new SmtpClient();
 
