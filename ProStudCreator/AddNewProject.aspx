@@ -216,6 +216,7 @@
                             <asp:Label runat="server" Text="Anrede:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-3">
                                 <asp:DropDownList runat="server" DataValueField="Id" DataTextField="DisplayName" ID="drpClientTitle" AutoPostBack="false" CssClass="form-control">
+                                    <asp:ListItem Text="-" Value="0" />
                                     <asp:ListItem Text="Herr" Value="1" />
                                     <asp:ListItem Text="Frau" Value="2" />
                                 </asp:DropDownList>

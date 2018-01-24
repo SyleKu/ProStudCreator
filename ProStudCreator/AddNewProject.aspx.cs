@@ -1262,7 +1262,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
 
             if (project.Semester == null)
-                project.Semester = Semester.NextSemester(db);
+                if(db.Projects.Where(p => p.BaseVersionId == project.BaseVersionId).Count() == 0)
+                    project.Semester = Semester.NextSemester(db);
 
             //picture description
             project.ImgDescription = imgdescription.Text.FixupParagraph();
@@ -1328,7 +1329,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         {
             if (project == null)
             {
-                drpClientTitle.SelectedValue = "1"; //Default
+                drpClientTitle.SelectedIndex = 0; //Default
 
                 txtClientCompany.Text =
                     txtClientName.Text =
@@ -1345,7 +1346,14 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             else
             {
                 txtClientCompany.Text = project?.ClientCompany;
-                drpClientTitle.SelectedValue = project?.ClientAddressTitle == "Herr" ? "1" : "2";
+                if (project?.ClientAddressTitle != null)
+                {
+                    drpClientTitle.SelectedIndex = project?.ClientAddressTitle == "Herr" ? 1 : 2;
+                }
+                else
+                {
+                    drpClientTitle.SelectedIndex = 0;
+                }
                 txtClientName.Text = project?.ClientPerson;
                 txtClientDepartment.Text = project?.ClientAddressDepartment;
                 txtClientStreet.Text = project?.ClientAddressStreet;
