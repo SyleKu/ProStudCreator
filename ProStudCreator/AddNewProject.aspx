@@ -370,7 +370,7 @@
                         <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>
                     </div>
-                    <asp:Timer runat="server" Interval="60000" Enabled="false" />
+                    <asp:Timer runat="server" Interval="60000" Enabled="true" />
                 </ContentTemplate>
             </asp:UpdatePanel>
             <div class="form-group">
@@ -456,7 +456,7 @@
                 <asp:UpdatePanel ID="PdfupdatePanel" runat="server">
                     <ContentTemplate>
                         <asp:Label ID="Pdfupdatelabel" runat="server" Text=""></asp:Label>
-                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="1000" OnTick="Pdfupdatetimer_Tick" Enabled="true">
+                        <asp:Timer ID="Pdfupdatetimer" runat="server" Interval="3000" OnTick="Pdfupdatetimer_Tick" Enabled="true">
                         </asp:Timer>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -467,7 +467,8 @@
                 </Triggers>
                 <ContentTemplate>
                         <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-                        <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+                        <%--<asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>--%>
+                        <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClientClick="alert('Das Ablehnen eines Projektes funktioniert leider zur Zeit nicht richtig und wurde darum deaktiviert.')"></asp:Button>
                         <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
                         <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
                         <asp:DropDownList runat="server" ID="CopyProject" OnSelectedIndexChanged="CopyProject_SelectedIndexChanged" Style="margin-right: 0px;" CssClass="btn btn-default" Width="113px" AutoPostBack="true"></asp:DropDownList>

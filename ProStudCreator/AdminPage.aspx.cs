@@ -337,7 +337,7 @@ namespace ProStudCreator
             Project project = db.Projects.Single(p => p.Id == id);
             var validationMessage = project.GenerateValidationMessage();
 
-            if (validationMessage != null)
+            if (validationMessage != null && validationMessage != "")
             {
                 var sb = new StringBuilder();
                 sb.Append("alert('");
