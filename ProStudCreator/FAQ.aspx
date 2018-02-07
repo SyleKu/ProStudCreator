@@ -42,7 +42,7 @@
             <a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
         </p>
         <p id="i4ds2" visible="false" runat="server">
-            <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am i4Ds.
+            <a href="mailto:francesca.molendini@fhnw.ch">Francesca Molendini</a> für Projekte am i4Ds.
         </p>
         <p id="iit2" visible="false" runat="server">
             <a href="mailto:simon.schubiger@fhnw.ch">Simon Schubiger</a> für Projekte am IIT. 
@@ -77,7 +77,7 @@
         </p>
         <h4>Wie läuft die Zuteilung der Projekte?</h4>
         <p>
-            Einzelne Projekte stellen Dominik Gruntz und Simon Felix den Studierenden vor. Die restlichen Projektbeschriebe werden als PDF abgegeben.
+            Einzelne Projekte stellen die Projektverantwortlichen der Institute den Studierenden vor. Die restlichen Projektbeschriebe werden als PDF abgegeben.
             Studierende bewerben sich auf die Projekte und werden automatisiert zugeteilt. Du kriegst vermutlich nicht Deine Wunschkandidaten.
             Das Reservieren von Arbeiten ist nur in Ausnahmefällen möglich: Bei Folgeprojekten oder wenn Studierende beim Auftraggeber Arbeitnehmer sind.
         </p>
@@ -120,6 +120,18 @@
         <h4>Was mache ich mit allen Unterlagen nach dem Ende der Arbeit?</h4>
         <p>
             <b>Neu: Bitte lade alle Unterlagen auf der Projektinfoseite hoch. Papierunterlagen solltest Du bis 30 Tage nach Notenbekanntgabe aufbewahren, weil erst dann die Rekursfrist abläuft.</b>
+        </p>
+        <h4 id="rekurs">Was tun, wenn sich eine ungenügende Note abzeichnet?</h4>
+        <p>
+            Bitte informiere den Projektverantwortlichen am Institut möglichst früh. Folgende Dinge solltest Du beachten:
+            <ul>
+                <li>Protokolle erstellen: Klar dokumentieren, was zu welchem Zeitpunkt abgemacht und kommuniziert wurde.</li>
+                <li>Die Studierenden sofort informieren, dass das Projekt in kritischem Zustand ist. Vereinbaren, was für eine genügende Bewertung erfüllt sein müsste.</li>
+                <li>Die zu Beginn in der Projektklärung vereinbarten Ziele sind ausschlaggebend für die Bewertung.</li>
+                <li>Sobald Rekurs eingereicht wurde, nicht mehr direkt mit den Studierenden kommunizieren. Die Kommunikation läuft dann über die Ausbildungsleitung.</li>
+                <li>Viele Rekurse beschäftigen sich mit formalen Fehlern, nicht mit inhaltlichen Fragen.</li>
+                <li>Knapp ungenügende Noten sind schwierig zu handhaben.</li>
+            </ul>
         </p>
     </div>
 </asp:Content>
