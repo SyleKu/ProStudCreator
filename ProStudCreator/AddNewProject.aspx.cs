@@ -943,7 +943,7 @@ where T : Control
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-
+            Fillproject(project);
             var validationMessage = project.GenerateValidationMessage(projectType);
                 // Generate JavaScript alert with error message
             if (validationMessage != "")
@@ -959,6 +959,7 @@ where T : Control
             }
             else
             {
+                
                 project.Submit();
                 project.SaveAsNewVersion(db);
                 Response.Redirect("projectlist");
