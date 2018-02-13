@@ -424,7 +424,7 @@ namespace ProStudCreator
             using (var dbx = new ProStudentCreatorDBDataContext())
             {
                 var semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
-                var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
+                var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).DayBeforeNextSemester;
 
                 // Get project numbers from this semester & same department
                 var nrs = (
@@ -447,7 +447,7 @@ namespace ProStudCreator
         {
 
             var semesterStart = Semester.ActiveSemester(_p.PublishedDate, dbx).StartDate;
-            var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).EndDate;
+            var semesterEnd = Semester.ActiveSemester(_p.PublishedDate, dbx).DayBeforeNextSemester;
 
             // Get project numbers from this semester & same department
             var nrs = (
