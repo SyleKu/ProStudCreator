@@ -18,22 +18,22 @@
             return ok;
         }
 
-        function ConfirmApproval(objMsg, projectID ,semesterID) {
+        function ConfirmApproval(objMsg, projectID, semesterID) {
             if (confirm(objMsg)) {
                 jQuery.ajax({
                     url: 'AddNewProject.aspx/DuplicateProject',
                     type: "POST",
-                    data: JSON.stringify({ "projectID": projectID, "semesterID":semesterID }),
+                    data: JSON.stringify({ "projectID": projectID, "semesterID": semesterID }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        if (confirm("Projekt wurde erfolgreich in das ausgewählte Semester kopiert. Jetzt zum neuen Projekt wechseln?")){
+                        if (confirm("Projekt wurde erfolgreich in das ausgewählte Semester kopiert. Jetzt zum neuen Projekt wechseln?")) {
                             window.location = response.d;
                         }
-                        
+
                     },
                     error: function (xhr, status, error) {
-                        var err =  xhr.responseText;
+                        var err = xhr.responseText;
                         alert("Error: " + err);
                     }
                 });
@@ -77,7 +77,7 @@
                 hasUnsavedChanges = true;
             });
 
-           
+
 
             // Textarea max. length checks
             //$("textarea[maxlength]").after(function () {
@@ -133,15 +133,19 @@
                 }
             });
     </script>
-    <div id="refusedReason" class="well newProjectSettings" runat="server" visible="false">
-        <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
-        <div class="form-group">
-            <asp:Label runat="server" CssClass="control-label" Text="Weshalb wird dieses Projekt abgelehnt? Der Text wird dem Projektersteller via E-Mail zugestellt."></asp:Label>
-            <asp:TextBox runat="server" ID="refusedReasonText" CssClass="form-control contentRefuseDesign" TextMode="MultiLine"></asp:TextBox>
-        </div>
-        <asp:Button runat="server" ID="RefuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="RefuseDefinitiveNewProject_Click"></asp:Button>
-        <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="CancelRefusion_Click" CausesValidation="false"></asp:Button>
-    </div>
+    <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="refuseProjectUpdatePanel">
+        <ContentTemplate>
+            <div id="refusedReason" class="well newProjectSettings" runat="server" visible="false">
+                <asp:Label runat="server" ID="refusedReasonTitle" Text="Ablehnungsgrund:" Font-Size="24px" Height="50px"></asp:Label>
+                <div class="form-group">
+                    <asp:Label runat="server" CssClass="control-label" Text="Weshalb wird dieses Projekt abgelehnt? Der Text wird dem Projektersteller via E-Mail zugestellt."></asp:Label>
+                    <asp:TextBox runat="server" ID="refusedReasonText" CssClass="form-control contentRefuseDesign" TextMode="MultiLine"></asp:TextBox>
+                </div>
+                <asp:Button runat="server" ID="RefuseDefinitiveNewProject" CssClass="btn btn-default refuseProject" Width="125px" Text="Ablehnen" OnClientClick="return confirmSaving('Dieses Projekt wirklich ablehnen?');" OnClick="RefuseDefinitiveNewProject_Click"></asp:Button>
+                <asp:Button runat="server" ID="cancelRefusion" CssClass="btn btn-default" Text="Abbrechen" OnClick="CancelRefusion_Click" CausesValidation="false"></asp:Button>
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
     <div class="well newProjectSettings ">
         <asp:Label runat="server" ID="SiteTitle" Font-Size="24px" Height="50px"></asp:Label>
         <asp:PlaceHolder ID="AdminView" runat="server" Visible="True">
@@ -463,18 +467,17 @@
             </div>
             <asp:UpdatePanel runat="server" ID="ButtonUpdatePanel" UpdateMode="Conditional">
                 <Triggers>
-                       <asp:AsyncPostBackTrigger ControlID="CopyProject" />
+                    <asp:AsyncPostBackTrigger ControlID="CopyProject" />
                 </Triggers>
                 <ContentTemplate>
-                        <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-                        <%--<asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>--%>
-                        <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClientClick="alert('Das Ablehnen eines Projektes funktioniert leider zur Zeit nicht richtig und wurde darum deaktiviert.')"></asp:Button>
-                        <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
-                        <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
-                        <asp:DropDownList runat="server" ID="CopyProject" OnSelectedIndexChanged="CopyProject_SelectedIndexChanged" Style="margin-right: 0px;" CssClass="btn btn-default" Width="113px" AutoPostBack="true"></asp:DropDownList>
-                        <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-                        <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
-                        <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
+                    <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
+                    <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+                    <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
+                    <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
+                    <asp:DropDownList runat="server" ID="CopyProject" OnSelectedIndexChanged="CopyProject_SelectedIndexChanged" Style="margin-right: 0px;" CssClass="btn btn-default" Width="113px" AutoPostBack="true"></asp:DropDownList>
+                    <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+                    <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
+                    <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
@@ -488,28 +491,38 @@
                 </div>
                 <br />
                 <div runat="server" id="DivHistoryCollapsable">
-                    <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick" >
+                    <asp:ListView runat="server" ItemType="ProStudCreator.Project" ID="historyListView" OnItemCommand="ProjectRowClick">
                         <ItemTemplate>
                             <table>
-                                <div class="row" id="historyRow" <%#"style='background-color:"+Item.StateColor+";'" %>>
-                                    <dîv class="col-xs-12 col-md-1"></dîv>
-                                    <div class="col-xs-12 col-md-3">
-                                        <asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+ShibUser.GetGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label></div>
-                                    <div class="col-xs-12 col-md-2" style="height: 100%;">
-                                        <asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label></div>
-                                    <div class="col-xs-12 col-md-2">
-                                        <asp:Label runat="server"><%#Item.StateAsString %></asp:Label></div>
-                                    <div class="col-xs-12 col-md-2" style="width: 11.666%">
-                                        <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Item.Id %>' CommandName="showChanges">Vergleichen</asp:LinkButton></div>
-                                    <div class="col-xs-12 col-md-2">
-                                        <asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight" OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Item.Id %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton></div>
+                                <div class="row" <%#"style='background-color:"+Item.StateColor+";'" %>>
+                                    <div class="row" id="historyRow">
+                                        <dîv class="col-xs-12 col-md-1"></dîv>
+                                        <div class="col-xs-12 col-md-3">
+                                            <asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+ShibUser.GetGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label>
+                                        </div>
+                                        <div class="col-xs-12 col-md-2" style="height: 100%;">
+                                            <asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label>
+                                        </div>
+                                        <div class="col-xs-12 col-md-2">
+                                            <asp:Label runat="server"><%#Item.StateAsString %></asp:Label>
+                                        </div>
+                                        <div class="col-xs-12 col-md-2" style="width: 11.666%">
+                                            <asp:LinkButton runat="server" ID="showChanges" title="Änderungen zeigen" class="btn btn-primary btnHeight" CommandArgument='<%# Item.Id %>' CommandName="showChanges">Vergleichen</asp:LinkButton>
+                                        </div>
+                                        <div class="col-xs-12 col-md-2">
+                                            <asp:LinkButton runat="server" ID="LinkButton1" title="Projekt zurücksetzen" class="btn btn-danger btnHeight" OnClientClick="return confirmSaving('Dieses Projekt zurücksetzen?');" CommandArgument='<%# Item.Id %>' CommandName="revertProject">Wiederherstellen</asp:LinkButton>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <dîv class="col-xs-12 col-md-5"></dîv>
+                                        <%# Item.Ablehnungsgrund != null && Item.StateAsString == "Abgelehnt" ? 
+                                    "<div style='margin-top:1em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
+                                        </div>
+                                    <div class="row">
+                                        <%# Item.Ablehnungsgrund != null  && Item.StateAsString == "Abgelehnt" ?
+                                    "<div><div class='col-sm-1'></div><div class='col-sm-11'style='margin-bottom:1em;'>" + Item.Ablehnungsgrund.Replace(Environment.NewLine,"<br />") + "</div></div><hr/>" : ""%>
+                                    </div>
                                 </div>
-
-                                <%# Item.Ablehnungsgrund != null? 
-                                    "<div class='row' style='margin-top:2em;'><div class='col-sm-1'></div><div class='col-sm-2'><b>Ablehnungsgrund</b></div><div class='col-sm-7'></div><div class='col-sm-2'></div></div>" : ""%>
-                                <%# Item.Ablehnungsgrund != null?
-                                    "<div class='row'><div class='col-sm-1'></div><div class='col-sm-11'>" + Item.Ablehnungsgrund.Replace(Environment.NewLine,"<br />") + "</div></div>" : ""%>
-                                <hr />
                             </table>
                         </ItemTemplate>
                     </asp:ListView>

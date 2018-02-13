@@ -94,7 +94,9 @@ namespace ProStudCreator
         }
         public static bool IsModified(this Project p1, Project p2)
         {
-            List<string> props = new List<string>();
+            //Folgende Eîgenschaftene werden ignoriert, da sie entweder vom Benutzer nicht geändert werden können 
+            //  oder nur etwas enthalten, wenn das Objekt aus der Datanbank stammt (Relationen) 
+            List<string> exclusionList = new List<string>();
             var projectType = typeof(Project);
             var pid = nameof(Project.Id);
             var modDate = nameof(Project.ModificationDate);
@@ -109,25 +111,47 @@ namespace ProStudCreator
             var prs = nameof(Project.Projects);
             var attch = nameof(Project.Attachements);
             var tsk = nameof(Project.Tasks);
+            var stateColor = nameof(Project.StateColor);
+            var stateAsString = nameof(Project.StateAsString);
+            var creator = nameof(Project.Creator);
+            var semester = nameof(Project.Semester);
+            var semesterid = nameof(Project.SemesterId);
+            var pOneType = nameof(Project.POneType);
+            var pTwoType = nameof(Project.PTwoType);
+            var pOneTypeTeamSize = nameof(Project.POneTeamSize);
+            var pTwoTypeTeamSize = nameof(Project.PTwoTeamSize);
+            var advisor1 = nameof(Project.Advisor1);
+            var advisor2 = nameof(Project.Advisor2);
+           
 
-            props.Add(pid);
-            props.Add(modDate);
-            props.Add(pubDate);
-            props.Add(lastEditedBy);
-            props.Add(state);
-            props.Add(projId);
-            props.Add(projectNr);
-            props.Add(isMainVers);
-            props.Add(ablehnungsgrund);
-            props.Add(credate);
-            props.Add(prs);
-            props.Add(attch);
-            props.Add(tsk);
+            exclusionList.Add(pid);
+            exclusionList.Add(modDate);
+            exclusionList.Add(pubDate);
+            exclusionList.Add(lastEditedBy);
+            exclusionList.Add(projId);
+            exclusionList.Add(projectNr);
+            exclusionList.Add(isMainVers);
+            exclusionList.Add(credate);
+            exclusionList.Add(prs);
+            exclusionList.Add(attch);
+            exclusionList.Add(tsk);
+            exclusionList.Add(stateColor);
+            exclusionList.Add(stateAsString);
+            exclusionList.Add(creator);
+            exclusionList.Add(semester);
+            exclusionList.Add(semesterid);
+            exclusionList.Add(pOneType);
+            exclusionList.Add(pTwoType);
+            exclusionList.Add(pOneTypeTeamSize);
+            exclusionList.Add(pTwoTypeTeamSize);
+            exclusionList.Add(advisor1);
+            exclusionList.Add(advisor2);
 
             foreach (PropertyInfo pi in typeof(Project).GetProperties())
             {
-                if (!props.Contains(pi.Name))
+                if (!exclusionList.Contains(pi.Name))
                 {
+                    
                     var value1 = pi.GetValue(p1);
                     var value2 = pi.GetValue(p2);
                     if (value1 != null && value2 != null)
@@ -154,7 +178,6 @@ namespace ProStudCreator
             Project duplicatedProject = new Project();
             duplicatedProject.ModificationDate = DateTime.Now;
             duplicatedProject.LastEditedBy = ShibUser.GetEmail();
-            duplicatedProject.InitNew();
             _p.MapProject(duplicatedProject);
             db.Projects.InsertOnSubmit(duplicatedProject);
             db.SubmitChanges();

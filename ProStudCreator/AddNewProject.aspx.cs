@@ -706,9 +706,8 @@ where T : Control
             }
 
             Project oldProject = project;
-
-            project = oldProject.SaveAsNewVersion(db);
             Fillproject(project, oldProject);
+            project = oldProject.SaveAsNewVersion(db);
             if (changed)
             {
                 project.Picture = picture;
@@ -727,6 +726,7 @@ where T : Control
             var comparisonProject = new Project();
             Fillproject(comparisonProject);
             comparisonProject.Id = -1;
+
 
             ///////////////////////////////////////
             if (comparisonProject.Picture != null)
@@ -943,25 +943,24 @@ where T : Control
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-            
+
             var validationMessage = project.GenerateValidationMessage(projectType);
                 // Generate JavaScript alert with error message
-            if (validationMessage != null)
+            if (validationMessage != "")
             {
                 var sb = new StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
                 sb.Append("alert('");
                 sb.Append(validationMessage);
-                sb.Append("')};");
+                sb.Append("');");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(GetType(), "alert",sb.ToString());
+                ScriptManager.RegisterStartupScript(ButtonUpdatePanel, ButtonUpdatePanel.GetType()
+                                                      , "alert", sb.ToString(), false);
             }
             else
             {
-                SaveProject();
                 project.Submit();
-                db.SubmitChanges();
+                project.SaveAsNewVersion(db);
                 Response.Redirect("projectlist");
             }
         }
@@ -972,9 +971,8 @@ where T : Control
 
         protected void PublishProject_Click(object sender, EventArgs e)
         {
-            SaveProject();
             project.Publish(db);
-
+            SaveProject();
 #if !DEBUG // Notification e-mail
             var mailMessage = new MailMessage();
             mailMessage.To.Add(project.Creator);
@@ -1012,6 +1010,8 @@ where T : Control
                                      + "\n"
                                      + "Freundliche Grüsse\n"
                                      + ShibUser.GetFirstName();
+            refuseProjectUpdatePanel.Update();
+            SetFocus(refusedReason);
         }
 
         protected void RefuseDefinitiveNewProject_Click(object sender, EventArgs e)
@@ -1050,7 +1050,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         {
             if (project.UserCanUnpublish())
                 project.Unpublish();
-            else if (project.UserCanUnsubmit())
+            if (project.UserCanUnsubmit())
                 project.Unsubmit();
             db.SubmitChanges();
             Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
@@ -1132,7 +1132,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.Advisor2Id = null;
             else
                 project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
-
 
             if (radioClientType.SelectedIndex != (int)ClientType.INTERN)
             {
@@ -1281,7 +1280,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
                     var offset = 0;
-                    for (; ; )
+                    for (; ;)
                     {
                         var read = input.Read(data, offset, data.Length - offset);
                         if (read == 0)
