@@ -25,6 +25,7 @@
                     </li>
                 </ul>
             </li>
+            <li>Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall <a href="FAQ#rekurs">einige Dinge</a> zu beachten. Melde Dich möglichst früh bei uns.</li>
             <li>Titeländerungen können bis 11 Wochen vor Abgabe auf der jeweiligen Projekt-Infoseite vorgenommen werden.</li>
             <li>Die Studierenden erstellen das obligatorische Websummary (Leitfaden unter <a href="\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene">\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene</a>).</li>
             <li>Nur für Projekte, die im Herbst abschliessen: Die Studierenden stellen Ihr IP6 an der Ausstellung mit einem <a href="Content/Poster_TemplateI_150923.pptx" class="ppt">Poster</a> vor. Poster
@@ -38,13 +39,9 @@
             <li>Lade Kollegen und andere interessierte Gasthörer zur Schlusspräsentation ein.</li>
             <li>Schlusspräsentation mit ca. 30 Minuten Präsentation, und ca. 30 Minuten Fragen von Betreuern, Experten (IP6) und interessierten Gästen.</li>
             <li>Notenbesprechung mit den Experten (IP6), ggf. Anpassung der Bewertung. Pro Student/-in soll eine <i>individuelle</i> Note festgelegt werden. Noten >5.8 müssen an die SGL gemeldet werden.</li>
-            <li><strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen.</strong></li>
+            <li><strong>NEU: Auf der Projekt-Infoseite die Note, Verrechenbarkeit und Sprache des Projekts eintragen. Dort auch alle Projektartefakte (Doku, Code, ...) hochladen.</strong></li>
             <li>Im Idealfall machst Du eine Schlusssitzung mit den Studierenden. Den Bewertungsbogen den Studierenden <b>NICHT</b> zeigen oder abgeben.</li>
         </ol>
-        <p>
-            <i>Hinweis: Falls sich eine ungenügende Note abzeichnet, sind für den Rekursfall einige Regeln zu beachten. Melde Dich bei uns. Je früher, desto besser.
-            </i>
-        </p>
     </div>
 
     <div class="well usernSettings non-selectable">
