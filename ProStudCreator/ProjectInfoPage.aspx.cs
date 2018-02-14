@@ -31,6 +31,12 @@ namespace ProStudCreator
             {
                 id = int.Parse(Request.QueryString["id"]);
                 project = db.Projects.Single(p => (int?)p.Id == id);
+                if (!project.IsMainVersion)
+                {
+                    project = db.Projects.Single(p => p.BaseVersionId == project.BaseVersionId && p.IsMainVersion);
+                    Response.Redirect(@"~/ProjectInfoPage?id="+project.Id);
+                    return;
+                }
                 divDownloadBtn.Visible = false;
                 updateDownloadButton.Update();
             }
