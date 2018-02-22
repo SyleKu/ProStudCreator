@@ -640,7 +640,7 @@ namespace ProStudCreator
                                     var transactionContext = reader.GetSqlBytes(1).Buffer;
 
                                     //used to save a stream to a zipfile
-                                    var customStaticDataSource = new CustomStaticDataSource();
+                                    var streamToZipDataSource = new StreamToZipDataSource();
 
                                     // Create the SqlFileStream  
                                     using (
@@ -650,8 +650,8 @@ namespace ProStudCreator
                                     {
                                         //update zipfile
                                         zip.BeginUpdate();
-                                        customStaticDataSource.SetStream(fileStream);
-                                        zip.Add(customStaticDataSource, attachment.FileName);
+                                        streamToZipDataSource.SetStream(fileStream);
+                                        zip.Add(streamToZipDataSource, attachment.FileName);
                                         zip.CommitUpdate();
                                         zip.IsStreamOwner = false;
                                     }
@@ -676,6 +676,22 @@ namespace ProStudCreator
                 Response.Flush();
                 Response.End();
             }
+        }
+    }
+    public class StreamToZipDataSource : IStaticDataSource
+    {
+        private Stream _stream;
+        
+        public Stream GetSource()
+        {
+            return _stream;
+        }
+
+        
+        public void SetStream(Stream inputStream)
+        {
+            _stream = inputStream;
+            _stream.Position = 0;
         }
     }
 

@@ -24,7 +24,7 @@ namespace ProStudCreator
         private ProjectType projectPriority = new ProjectType();
         private bool[] projectType = new bool[8];
         private DateTime today = DateTime.Now;
-        private bool changed = false;
+        private bool imageChanged = false;
         private Binary picture;
         private enum ClientType { INTERN, COMPANY,  PRIVATEPERSON  }
         #region Timer tick
@@ -35,7 +35,7 @@ namespace ProStudCreator
             {
                 var pdfc = new PdfCreator();
 
-                Fillproject(project);
+                FillprojectwithFormData(project);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -49,14 +49,12 @@ namespace ProStudCreator
                 }
             }
         }
-
         #endregion
 
         #region Application logic
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ProjectExtensions.IsUpdated();
             AdminView.Visible = ShibUser.CanSeeCreationDetails();
             btnHistoryCollapse.CausesValidation = false;
             // Retrieve the project from DB
@@ -77,8 +75,8 @@ namespace ProStudCreator
                     historyListView.DataBind();
                 }
                 else
-                {
-                    divHistory.Visible = false;
+                {  
+                    DivHistoryCollapsable.InnerText = "Keine früheren Versionen vorhanden.";
                 }
                 
             }
@@ -86,7 +84,7 @@ namespace ProStudCreator
             {
                 divHistory.Visible = false;
                 if(Request.QueryString["showChanges"]==null)
-                    CopyProject.Visible = false;
+                    duplicateProject.Visible = false;
             }
 
             // Project picture
@@ -164,9 +162,9 @@ namespace ProStudCreator
                     Page.Title = "Projekt bearbeiten";
                     SiteTitle.Text = "Projekt bearbeiten";
                     if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
-                        RetrieveProjectComparison(project.Id);
+                        PopulateHistoryGUI(project.Id);
                     else
-                        RetrieveProjectToEdit();
+                        PopulateEditGUI();
                     PrepareClientForm(project);
                 }
                 else
@@ -207,33 +205,7 @@ namespace ProStudCreator
             dropPreviousProject.DataBind();
             dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
         }
-        private void GetControlList<T>(ControlCollection controlCollection, List<T> resultCollection)
-where T : Control
-        {
-            foreach (Control control in controlCollection)
-            {
-                if (control is T)
-                    resultCollection.Add((T)control);
-
-                if (control.HasControls())
-                    GetControlList(control.Controls, resultCollection);
-            }
-        }
-        private void ShowAllLabels()
-        {
-            List<Label> labelList = new List<Label>();
-            GetControlList<Label>(Controls, labelList);
-            foreach (Label l in labelList)
-            {
-                l.Visible = true;
-            }
-
-            //additional controls 
-            Image1Previous.Visible = true;
-            ReferenceDiv.Visible = true;
-            Panel1.Visible = true;
-            Panel2.Visible = true;
-        }
+        
         private string CreateSimpleDiffString(string oldText, string newText)
         {
             if (oldText != newText)
@@ -256,24 +228,43 @@ where T : Control
             return diffString;
         }
 
-        private void HideUnwantedControls()
+        private void GetControlList<T>(ControlCollection controlCollection, List<Control> resultCollection)
+where T : Control
         {
-            List<TextBox> textBoxList = new List<TextBox>();
-            List<DropDownList> drpList = new List<DropDownList>();
-            GetControlList<DropDownList>(Controls, drpList);
-            GetControlList<TextBox>(Controls, textBoxList);
-            foreach (var t in textBoxList)
+            foreach (Control control in controlCollection)
             {
-                t.Visible = false;
+                if (control is T)
+                    resultCollection.Add((Control)control);
+
+                if (control.HasControls())
+                    GetControlList<T>(control.Controls, resultCollection);
             }
-            foreach (var drp in drpList)
+        }
+        private void ShowAllLabelsForComparison()
+        {
+            List<Control> labelList = new List<Control>();
+            GetControlList<Label>(Controls, labelList);
+            foreach (Label l in labelList)
             {
-                drp.Visible = false;
+                l.Visible = true;
+            }
+
+            //additional controls 
+            Image1Previous.Visible = true;
+        }
+        private void HideTextboxesAndDropdownsForComparison()
+        {
+            List<Control> controlList = new List<Control>();
+            GetControlList<DropDownList>(Controls, controlList);
+            GetControlList<TextBox>(Controls, controlList);
+            foreach (var control in controlList)
+            {
+                control.Visible = false;
             }
             Image1.Visible = false;
-            
+
         }
-        private void RetrieveProjectComparison(int BaseVersionId = 0)
+        private void PopulateHistoryGUI(int BaseVersionId = 0)
         {
             var pid = 0;
 
@@ -284,8 +275,8 @@ where T : Control
 
             var currentProject = db.Projects.Single(p => p.Id == pid);
 
-            ShowAllLabels();
-            HideUnwantedControls();
+            ShowAllLabelsForComparison();
+            HideTextboxesAndDropdownsForComparison();
             
 
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
@@ -459,18 +450,7 @@ where T : Control
 
             DurationOneSemester.Checked = project.DurationOneSemester;
             InitialPositionContentLabel.Text = CreateDiffString(project.InitialPosition, currentProject.InitialPosition);
-            //if (project.Picture != null)
-            //{
-            //    Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
-            //    DeleteImageButton.Visible = false;
-               
-            //    imgdescription.Text = CreateDiffString(project.ImgDescription, currentProject.ImgDescription);
-            //}
-            //else
-            //{
-            //    ImageLabel.Visible = false;
-            //    Image1Previous.Visible = false;
-            //}
+
             ObjectivContentLabel.Text = CreateDiffString(project.Objective, currentProject.Objective);
 
             ProblemStatementContentLabel.Text = CreateDiffString(project.ProblemStatement, currentProject.ProblemStatement);
@@ -497,7 +477,7 @@ where T : Control
             refuseProject.Visible = false;
             rollbackProject.Visible = false;
             saveCloseProject.Visible = false;
-            CopyProject.Visible = false;
+            duplicateProject.Visible = false;
 
             POneTypeLabel.Text = CreateSimpleDiffString(project.POneType.Description, currentProject.POneType.Description);
             POneTeamSize.SelectedValue = CreateSimpleDiffString(project.POneTeamSize.Description, currentProject.POneTeamSize.Description);
@@ -507,8 +487,9 @@ where T : Control
             Reservation2MailLabel.Text = CreateSimpleDiffString(project.Reservation2Mail, currentProject?.Reservation2Mail); 
             Reservation2NameLabel.Text = CreateSimpleDiffString(project.Reservation2Name, currentProject?.Reservation2Name); 
 
-            CompareClient(project, currentProject);
+            PopulateClientWithDiffStrings(project, currentProject);
 
+            PrepareClientForm(project);
 
             FillDropPreviousProject(project.Semester);
 
@@ -524,20 +505,14 @@ where T : Control
                 PrepareForm(true);
             }
         }
-        private void RetrieveProjectToEdit()
+        private void PopulateEditGUI()
         {
             if (Request.QueryString["showChanges"] != null)
             {
-                RetrieveProjectComparison();
+                PopulateHistoryGUI();
                 return;
             }
             var activeStartdate = Semester.ActiveSemester(DateTime.Now, db).StartDate;
-            CopyProject.DataSource = db.Semester.Where(s => s.StartDate >= activeStartdate);
-
-            CopyProject.DataTextField = "Name";
-            CopyProject.DataValueField = "Id";
-            CopyProject.DataBind();
-            CopyProject.Items.Insert(0, new ListItem("Kopieren", "-1"));
             CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
             AddPictureLabel.Text = "Bild ändern:";
 
@@ -604,9 +579,6 @@ where T : Control
                 Language.SelectedIndex = 1;
             else
                 Language.SelectedIndex = 0;
-
-            //LanguageGerman.Checked = project.LanguageGerman;
-            //LanguageEnglish.Checked = project.LanguageEnglish;
 
             DurationOneSemester.Checked = project.DurationOneSemester;
 
@@ -679,7 +651,8 @@ where T : Control
             if (project == null) // New project
             {
                 project = ProjectExtensions.CreateNewProject(db);
-                updatePDFPageCount(project);
+                project.IsMainVersion = true;
+                UpdatePDFPageCount(project);
             }
             else if(HasProjectChanged())
             {
@@ -689,9 +662,9 @@ where T : Control
             }
         }
 
-        private void updatePDFPageCount(Project project)
+        private void UpdatePDFPageCount(Project project)
         {
-            Fillproject(project);
+            FillprojectwithFormData(project);
             db.SubmitChanges(); // the next few lines depend on this submit
             project.BaseVersionId = project.Id;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
@@ -706,9 +679,9 @@ where T : Control
             }
 
             Project oldProject = project;
-            Fillproject(project, oldProject);
+            FillprojectwithFormData(project, oldProject);
             project = oldProject.SaveAsNewVersion(db);
-            if (changed)
+            if (imageChanged)
             {
                 project.Picture = picture;
             }
@@ -720,11 +693,11 @@ where T : Control
 
         }
 
-        // TODO: split from UI, find a fix for the hacks
+        
         private bool HasProjectChanged()
         {
             var comparisonProject = new Project();
-            Fillproject(comparisonProject);
+            FillprojectwithFormData(comparisonProject);
             comparisonProject.Id = -1;
 
 
@@ -740,7 +713,7 @@ where T : Control
             db.Projects.DeleteOnSubmit(comparisonProject);
             ///////////////////////////////////////////////
 
-            if (!comparisonProject.IsModified(project) && !changed)
+            if (!comparisonProject.IsModified(project) && !imageChanged)
             {
                 return false;
             }
@@ -943,7 +916,7 @@ where T : Control
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-            Fillproject(project);
+            FillprojectwithFormData(project);
             var validationMessage = project.GenerateValidationMessage(projectType);
                 // Generate JavaScript alert with error message
             if (validationMessage != "")
@@ -954,7 +927,7 @@ where T : Control
                 sb.Append(validationMessage);
                 sb.Append("');");
                 sb.Append("</script>");
-                ScriptManager.RegisterStartupScript(ButtonUpdatePanel, ButtonUpdatePanel.GetType()
+                ScriptManager.RegisterStartupScript(Page, Page.GetType()
                                                       , "alert", sb.ToString(), false);
             }
             else
@@ -1001,7 +974,7 @@ where T : Control
             refusedReason.Visible = true;
             refuseProject.Visible = false;
             publishProject.Visible = false;
-            CopyProject.Visible = false;
+            duplicateProject.Visible = false;
             saveProject.Visible = false;
             refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
                                      + "\n"
@@ -1044,7 +1017,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             refusedReason.Visible = false;
             refuseProject.Visible = true;
             publishProject.Visible = true;
-            CopyProject.Visible = true;
+            duplicateProject.Visible = true;
         }
 
         protected void RollbackProject_Click(object sender, EventArgs e)
@@ -1120,7 +1093,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #region private methods
 
-        private void Fillproject(Project project, Project oldProject = null)    
+        private void FillprojectwithFormData(Project project, Project oldProject = null)    
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
@@ -1276,7 +1249,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 {
                     return;
                 }
-                changed = true;
+                imageChanged = true;
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
@@ -1366,7 +1339,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
         }
 
-        private void CompareClient(Project project, Project currentProject)
+        private void PopulateClientWithDiffStrings(Project project, Project currentProject)
         {
             txtClientCompanyLabel.Text = CreateDiffString(project?.ClientCompany, currentProject?.ClientCompany);
             drpClientTitleLabel.Text = CreateDiffString(project?.ClientAddressTitle, currentProject?.ClientAddressTitle);
@@ -1377,8 +1350,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             txtClientCityLabel.Text = CreateDiffString(project?.ClientAddressCity, currentProject?.ClientAddressCity);
             txtClientReferenceLabel.Text = CreateDiffString(project?.ClientReferenceNumber, currentProject?.ClientReferenceNumber);
             txtClientEmailLabel.Text = CreateDiffString(project?.ClientMail, currentProject?.ClientMail);
-
-            PrepareClientForm(project);
         }
 
         private void DisplayPriority(Project project)
@@ -1441,26 +1412,25 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             btnHistoryCollapse.Text = collapse ? "◄" : "▼";
         }
         
-        protected void CopyProject_SelectedIndexChanged(object sender, EventArgs e)
+        protected void DuplicatProject_Click(object sender, EventArgs e)
         {
-            var ddl = (DropDownList)sender;
-            var confirmMessage = "Projekt " + project.Name + " ins Semester " + ddl.SelectedItem + " kopieren?";
-            ScriptManager.RegisterStartupScript(ButtonUpdatePanel, ButtonUpdatePanel.GetType(), "alert", "ConfirmApproval('"+confirmMessage+"','"+project.Id+"','"+ddl.SelectedValue+"');", true);
+            var duplicate = project.DuplicateAndUseAsTemplate(db);
+
+            string confirmValue = Request.Form["confirm_value"];
+            if (confirmValue == "Yes")
+            {
+                Response.Redirect("~/AddNewProject.aspx?id=" + duplicate.Id);
+            }
+            else
+            {
+                this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked NO!')", true);
+            }
+            
+       
         }
 
-        [System.Web.Services.WebMethod]
-        public static string DuplicateProject(string projectID, string semesterID)
-        {
-            var pid = Int32.Parse(projectID);
-            var sid = Int32.Parse(semesterID);
-            var db = new ProStudentCreatorDBDataContext();
-            var project = db.Projects.Single(p => p.Id == pid);
-            var semester = db.Semester.Single(s => s.Id == sid);
-            var duplicate = project.CopyToSemester(db, semester);
-            duplicate.BaseVersionId = duplicate.Id;
-            db.Connection.Close();
-            return "AddNewProject.aspx?id=" + duplicate.Id;
-        }
+      
+            
     }
 
 }

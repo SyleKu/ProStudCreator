@@ -18,29 +18,17 @@
             return ok;
         }
 
-        function ConfirmApproval(objMsg, projectID, semesterID) {
-            if (confirm(objMsg)) {
-                jQuery.ajax({
-                    url: 'AddNewProject.aspx/DuplicateProject',
-                    type: "POST",
-                    data: JSON.stringify({ "projectID": projectID, "semesterID": semesterID }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (confirm("Projekt wurde erfolgreich in das ausgewählte Semester kopiert. Jetzt zum neuen Projekt wechseln?")) {
-                            window.location = response.d;
-                        }
-
-                    },
-                    error: function (xhr, status, error) {
-                        var err = xhr.responseText;
-                        alert("Error: " + err);
-                    }
-                });
-                return true;
+        function Confirm() {
+            var confirm_value = document.createElement("INPUT");
+            confirm_value.type = "hidden";
+            confirm_value.name = "confirm_value";
+            if (confirm("Ein neues Projekt wurde erstellt. Zu neuem Projekt wechseln?")) {
+                confirm_value.value = "Yes";
+            } else {
+                confirm_value.value = "No";
             }
-            else
-                return false;
+            document.forms[0].appendChild(confirm_value);
+            return true;
         }
 
 
@@ -76,32 +64,6 @@
             $("#projectTypes :input").not(document.getElementsByTagName("select")).click(function () {
                 hasUnsavedChanges = true;
             });
-
-
-
-            // Textarea max. length checks
-            //$("textarea[maxlength]").after(function () {
-            //    return '<span class="text-muted text-right"><span id="' + $(this).attr('id') + '_len">' + $(this).val().length + "</span> / " + $(this).attr('maxlength') + "</span>";
-            //});
-            //$("textarea[maxlength]").on("change paste keyup", function () {
-
-            //    var currLen = $(this).val().length;
-            //    var maxLen = $(this).attr('maxlength');
-
-            //    var lengthDisp = $("#" + $(this).attr('id') + "_len");
-            //    if (currLen >= maxLen) {
-            //        lengthDisp.parent().addClass("alert-warning");
-            //    } else {
-            //        lengthDisp.parent().removeClass("alert-warning");
-            //    }
-
-            //    lengthDisp.text(currLen);
-
-            //    // textarea maxlength is supported by all modern browsers. For archaic browsers, uncomment:
-            //    //if (currLen > maxLen) {
-            //    //    $(this).val( $(this).val().substring(0, maxLen) );
-            //    //}                
-            //});
 
         });
         $(document).ready(function () {
@@ -420,7 +382,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Panel runat="server" class="form-control" ID="Panel2" Style="overflow: auto; height: 300px;" Visible="false">
+                    <asp:Panel runat="server" class="form-control" ID="ObjectiveContentPanel" Style="overflow: auto; height: 300px;" Visible="false">
                         <asp:Label runat="server" ID="ObjectivContentLabel" CssClass="col-sm-9" Visible="false"></asp:Label>
                     </asp:Panel>
                 </div>
@@ -429,7 +391,7 @@
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Panel runat="server" class="form-control" ID="Panel1" Style="overflow: auto; height: 300px;" Visible="false">
+                    <asp:Panel runat="server" class="form-control" ID="ProblemStatementContentPanel" Style="overflow: auto; height: 300px;" Visible="false">
                         <asp:Label runat="server" ID="ProblemStatementContentLabel" Visible="false"></asp:Label>
                     </asp:Panel>
                 </div>
@@ -465,21 +427,15 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-            <asp:UpdatePanel runat="server" ID="ButtonUpdatePanel" UpdateMode="Conditional">
-                <Triggers>
-                    <asp:AsyncPostBackTrigger ControlID="CopyProject" />
-                </Triggers>
-                <ContentTemplate>
+           
                     <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
                     <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
                     <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
                     <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
-                    <asp:DropDownList runat="server" ID="CopyProject" OnSelectedIndexChanged="CopyProject_SelectedIndexChanged" Style="margin-right: 0px;" CssClass="btn btn-default" Width="113px" AutoPostBack="true"></asp:DropDownList>
+                    <asp:Button runat="server" AutoPostBack="true" ID="duplicateProject" Style="margin-right: 0px;" CssClass="btn btn-default" Text="Duplizieren" OnClick="DuplicatProject_Click" OnClientClick="return Confirm();" />
                     <asp:Button runat="server" ID="saveCloseProject" OnClick="SaveCloseProjectButton" CssClass="btn btn-default" Text="Speichern & Schliessen" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
                     <asp:Button runat="server" ID="saveProject" OnClick="SaveProjectButton" CssClass="btn btn-default" Text="Zwischenspeichern" OnClientClick="hasUnsavedChanges = false;"></asp:Button>
                     <asp:Button runat="server" ID="cancelProject" CssClass="btn btn-default" TabIndex="5" Text="Abbrechen" OnClick="CancelNewProject_Click" CausesValidation="false"></asp:Button>
-                </ContentTemplate>
-            </asp:UpdatePanel>
         </div>
     </div>
     <div runat="server" class="well newProjectSettings" id="divHistory">

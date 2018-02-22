@@ -10,8 +10,6 @@ namespace ProStudCreator
 {
     public static class ProjectExtensions
     {
-        public static readonly int EXPECTEDPROPCOUNT = 88;
-
         #region Actions
 
         public static void InitNew(this Project _p)
@@ -22,31 +20,9 @@ namespace ProStudCreator
             _p.State = ProjectState.InProgress;
             _p.IsMainVersion = true;
         }
-        //public static void InitNewVersion(this Project _p, Project previousProject)
-        //{
-        //    _p.Creator = previousProject.Creator;
-        //    _p.CreateDate = previousProject.CreateDate;
-        //    _p.PublishedDate = previousProject.PublishedDate;
-        //    _p.State = previousProject.State;
-        //    _p.ProjectNr = previousProject.ProjectNr;
-        //    _p.BaseVersionId = previousProject.BaseVersionId;
-        //    _p.ModificationDate = DateTime.Now;
-        //    _p.LastEditedBy = ShibUser.GetEmail();
-        //    _p.IsMainVersion = true;
-        //}
-        public static void IsUpdated()
-        {
-            var actualPropCount = typeof(Project).GetProperties().Count();
-
-            if (actualPropCount != EXPECTEDPROPCOUNT)
-            {
-                throw new OutdatedSaveMethod("The Save-Method is outdated. You have mostlikely edited the DBML. Please Update ProjectExtension.cs AND update the constant 'EXPECTEDPROPCOUNT'. PropertyCount: " + actualPropCount);
-            }
-
-        }
+       
         public static Project SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            IsUpdated();
             Project project = new Project();
             project.ModificationDate = DateTime.Now;
             project.LastEditedBy = ShibUser.GetEmail();
@@ -60,7 +36,7 @@ namespace ProStudCreator
             return project;
             
         }
-        public static Project CopyToSemester(this Project _p, ProStudentCreatorDBDataContext db, Semester s)
+        public static Project DuplicateAndUseAsTemplate(this Project _p, ProStudentCreatorDBDataContext db)
         {
             var duplicate = _p.duplicate(db);
             duplicate.BaseVersionId = duplicate.Id;
@@ -68,8 +44,9 @@ namespace ProStudCreator
             duplicate.Reservation2Mail = "";
             duplicate.Reservation1Name = "";
             duplicate.Reservation2Name = "";
-            duplicate.Semester = s;
+            duplicate.State = ProjectState.InProgress;
             _p.ClearLog(db);
+            duplicate.IsMainVersion = true;
             db.SubmitChanges();
             return duplicate;
         }
@@ -94,6 +71,7 @@ namespace ProStudCreator
         }
         public static bool IsModified(this Project p1, Project p2)
         {
+
             //Folgende Eîgenschaftene werden ignoriert, da sie entweder vom Benutzer nicht geändert werden können 
             //  oder nur etwas enthalten, wenn das Objekt aus der Datanbank stammt (Relationen) 
             List<string> exclusionList = new List<string>();
@@ -102,10 +80,8 @@ namespace ProStudCreator
             var modDate = nameof(Project.ModificationDate);
             var pubDate = nameof(Project.PublishedDate);
             var lastEditedBy = nameof(Project.LastEditedBy);
-            var state = nameof(Project.State);
             var projectNr = nameof(Project.ProjectNr);
             var isMainVers = nameof(Project.IsMainVersion);
-            var ablehnungsgrund = nameof(Project.Ablehnungsgrund);
             var projId = nameof(Project.BaseVersionId);
             var credate = nameof(Project.CreateDate);
             var prs = nameof(Project.Projects);
@@ -293,9 +269,23 @@ namespace ProStudCreator
             return projectType;
         }
 
+
+        /***
+         * 
+         * MapProject creates a duplicate of a project. This can't be done with reflection as it has some issues when fields are null.
+         * Doing it this way, the problem is if you change the Project you will have to update this method or the field won't get copied.
+         * This is currently solved with a constant which has to be manually updated after the method has been updated
+         * 
+         */
         public static void MapProject(this Project _p, Project target)
         {
-            
+            int EXPECTEDPROPCOUNT = 88; // has to be updated after the project class has changed and the method has been updated 
+
+            var actualPropCount = typeof(Project).GetProperties().Count();
+
+            if (actualPropCount != EXPECTEDPROPCOUNT)
+                throw new Exception("The Save-Method is outdated. You have mostlikely edited the DBML. Please Update ProjectExtension.cs AND update the constant 'EXPECTEDPROPCOUNT'. PropertyCount: " + actualPropCount);
+
             target.Ablehnungsgrund = _p.Ablehnungsgrund;
             target.Advisor1 = _p.Advisor1;
             target.Advisor2 = _p.Advisor2;
@@ -321,6 +311,7 @@ namespace ProStudCreator
             target.Important = _p.Important;
             target.InitialPosition = _p.InitialPosition;
             target.IsContinuation = _p.IsContinuation;
+            //target.IsMainVersion = _p.IsMainVersion;
             target.LanguageEnglish = _p.LanguageEnglish;
             target.LanguageGerman = _p.LanguageGerman;
             target.LogDefenceDate = _p.LogDefenceDate;
@@ -717,7 +708,7 @@ namespace ProStudCreator
                         return "#F5A9A9";
 
                     default:
-                        return "White";
+                        throw new Exception();
 
                 }
             }
@@ -747,7 +738,7 @@ namespace ProStudCreator
                         return "Gelöscht";
 
                     default:
-                        return "Error!";
+                        throw new Exception();
 
                 }
 

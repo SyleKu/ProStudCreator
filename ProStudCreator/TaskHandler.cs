@@ -86,7 +86,7 @@ namespace ProStudCreator
         #region Mailing
         private static void WriteAllMails(ProStudentCreatorDBDataContext db)
         {
-            SendMails(GenerateEmails(GetAllTasksToMail(db)));
+            SendMails(GenerateEmails(GetAllTasksToMail(db)),db);
         }
 
 
@@ -101,26 +101,21 @@ namespace ProStudCreator
                 if (task.TaskType.RemindType.RemindOnce)
                 {
                     tasksToMail.Add(task);
-                    task.Done = true;
                 }
                 else if (DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds || task.LastReminded == null)
                 {
                     tasksToMail.Add(task);
-                    task.LastReminded = DateTime.Now;
                 }
             }
-
-            db.SubmitChanges();
 
             return tasksToMail;
         }
 
 
 
-        private static MailMessage[] GenerateEmails(IEnumerable<Task> taskToMail)
+        private static Tuple<Task,MailMessage>[] GenerateEmails(IEnumerable<Task> taskToMail)
         {
-            var mailsToSend = new List<MailMessage>();
-
+            var emails = new List<Tuple<Task, MailMessage>>();
             Task[] copyTasksToMail = new Task[taskToMail.Count()];
             Array.Copy(taskToMail.ToArray(), copyTasksToMail, taskToMail.Count());
 
@@ -160,7 +155,7 @@ namespace ProStudCreator
 
                     mailMessage.Append("</div>");
                     mail.Body = mailMessage.ToString();
-                    mailsToSend.Add(mail);
+                    emails.Add(Tuple.Create<Task, MailMessage>(task, mail));
                 }
             }
             foreach (var task in copyTasksToMail)
@@ -168,18 +163,30 @@ namespace ProStudCreator
                 task.AlreadyChecked = false;
             }
 
-            return mailsToSend.ToArray();
+            return emails.ToArray();
         }
 
 
-        private static void SendMails(MailMessage[] mails) //can be enhanced with buffering all mails for ex. 3 days
+        private static void SendMails(Tuple<Task, MailMessage>[] taskMails, ProStudentCreatorDBDataContext db) //can be enhanced with buffering all mails for ex. 3 days
         {
             var smtpClient = new SmtpClient();
 
-            foreach (var mail in mails)
+            foreach (var mailTaskTuple in taskMails)
             {
 #if !DEBUG
+                var mail = mailTaskTuple.Item2;
+                var task = mailTaskTuple.Item1;
                 smtpClient.Send(mail);
+
+                if (task.TaskType.RemindType.RemindOnce)
+                {
+                    task.Done = true;
+                }
+                else if(DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds || task.LastReminded == null)
+                {
+                    task.LastReminded = DateTime.Now;
+                }
+                db.SubmitChanges();
 #endif
             }
         }

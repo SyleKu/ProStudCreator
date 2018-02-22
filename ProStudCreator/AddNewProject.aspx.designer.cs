@@ -760,13 +760,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ObjectivContent;
         
         /// <summary>
-        /// Panel2 control.
+        /// ObjectiveContentPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel2;
+        protected global::System.Web.UI.WebControls.Panel ObjectiveContentPanel;
         
         /// <summary>
         /// ObjectivContentLabel control.
@@ -787,13 +787,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ProblemStatementContent;
         
         /// <summary>
-        /// Panel1 control.
+        /// ProblemStatementContentPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
+        protected global::System.Web.UI.WebControls.Panel ProblemStatementContentPanel;
         
         /// <summary>
         /// ProblemStatementContentLabel control.
@@ -886,15 +886,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.Timer Pdfupdatetimer;
         
         /// <summary>
-        /// ButtonUpdatePanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel ButtonUpdatePanel;
-        
-        /// <summary>
         /// publishProject control.
         /// </summary>
         /// <remarks>
@@ -931,13 +922,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button submitProject;
         
         /// <summary>
-        /// CopyProject control.
+        /// duplicateProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList CopyProject;
+        protected global::System.Web.UI.WebControls.Button duplicateProject;
         
         /// <summary>
         /// saveCloseProject control.
