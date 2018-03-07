@@ -11,9 +11,9 @@ The database must contain at least one  and a maximum of one project with IsMain
 ###### Cons
     - changes of the database scheme may require the constraints to be updated.
 
-##### My thoughts on this
+###### My thoughts on this
 
-I think this is a really good and efficient way to avoid errors
+I think this is a really good and efficient way to detect errors quickly
 
 
 
@@ -29,6 +29,9 @@ I think this is a really good and efficient way to avoid errors
     - not everything can be tested
     - doesn't presume that the page / code works in the end
 
+###### My thoughts on this 
+
+I don't like Unittest as they are very time-consuming and even more so if you have to test a GUI.
 
 
 
@@ -41,4 +44,10 @@ If an exception occures, an Email gets sent to the developer with additional inf
     - The developer gets notified instantly and can react very fast.
     
 ###### Cons
-    . The developer might get spammed with emails
+    - The developer might get spammed with emails
+
+###### My thoughts on this
+
+I think this could be very useful as long as there are only very few exceptions occuring.
+    
+  
