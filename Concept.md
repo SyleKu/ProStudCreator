@@ -27,7 +27,7 @@ I think this is a really good and efficient way to detect errors quickly
     - time-consuming
     - alot of work
     - not everything can be tested
-    - doesn't presume that the page / code works in the end
+    - doesn't mean that the page / code works in the end
 
 ###### My thoughts on this 
 
