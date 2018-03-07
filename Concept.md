@@ -3,7 +3,7 @@
 
 ### Database constraints
 
-The database must contain at least one  and a maximum of 1 project with IsMainVersion = true.
+The database must contain at least one  and a maximum of one project with IsMainVersion = true.
 
 ###### Pros
     - throws an exception as soon as there is more or less than one mainversion
