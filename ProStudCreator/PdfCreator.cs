@@ -211,7 +211,7 @@ namespace ProStudCreator
                 {
                     var img = Image.GetInstance(proj.Picture.ToArray());
 
-                    //checks witch layout should be used.
+                    //checks which layout should be used.
                     switch (layout)
                     {
                         case Layout.BigPictureInTheMiddle:
