@@ -27,7 +27,7 @@ namespace ProStudCreator
                 iit2.Visible = true;
             }
             else
-            {http://localhost:8482/FAQ.aspx.cs
+            {
                 throw new UnauthorizedAccessException(
                     "Sie sind nicht mit einem der drei Informatikinstitute angemeldet!");
             }

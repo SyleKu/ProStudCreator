@@ -11,13 +11,18 @@
 
 namespace ProStudCreator
 {
-    using System;
-    using System.ComponentModel;
-    using System.Data.Linq;
-    using System.Data.Linq.Mapping;
-
-
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="aspnet-ProStudCreator-20140818043155")]
+	using System.Data.Linq;
+	using System.Data.Linq.Mapping;
+	using System.Data;
+	using System.Collections.Generic;
+	using System.Reflection;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.ComponentModel;
+	using System;
+	
+	
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="aspnet-ProStudCreator-20140818043155")]
 	public partial class ProStudentCreatorDBDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -3606,7 +3611,7 @@ namespace ProStudCreator
 		
 		public Semester()
 		{
-			this._Project = new EntitySet<Project>(new Action<Project>(this.Attach_Project), new Action<Project>(this.Detach_Project));
+			this._Project = new EntitySet<Project>(new Action<Project>(this.attach_Project), new Action<Project>(this.detach_Project));
 			OnCreated();
 		}
 		
@@ -3963,13 +3968,13 @@ namespace ProStudCreator
 			}
 		}
 		
-		private void Attach_Project(Project entity)
+		private void attach_Project(Project entity)
 		{
 			this.SendPropertyChanging();
 			entity.Semester = this;
 		}
 		
-		private void Detach_Project(Project entity)
+		private void detach_Project(Project entity)
 		{
 			this.SendPropertyChanging();
 			entity.Semester = null;

@@ -55,7 +55,7 @@
         </p>
         <h4>Können Studierende eigene Projekte einreichen?</h4>
         <p>
-            Studierende können ihren Arbeitgeber ermutigen, als Externe ein Projekt einzureichen. Sie können selbst aber keine Projekte einreichen oder
+            Studierende können Externe ermutigen ein Projekt einzureichen. Sie können selbst aber keine Projekte einreichen oder
             Auftraggeber spielen.
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
@@ -124,14 +124,14 @@
         <h4 id="rekurs">Was tun, wenn sich eine ungenügende Note abzeichnet?</h4>
         <p>
             Bitte informiere den Projektverantwortlichen am Institut möglichst früh. Folgende Dinge solltest Du beachten:
-            <ul>
-                <li>Protokolle erstellen: Klar dokumentieren, was zu welchem Zeitpunkt abgemacht und kommuniziert wurde.</li>
-                <li>Die Studierenden sofort informieren, dass das Projekt in kritischem Zustand ist. Vereinbaren, was für eine genügende Bewertung erfüllt sein müsste.</li>
-                <li>Die zu Beginn in der Projektklärung vereinbarten Ziele sind ausschlaggebend für die Bewertung.</li>
-                <li>Sobald Rekurs eingereicht wurde, nicht mehr direkt mit den Studierenden kommunizieren. Die Kommunikation läuft dann über die Ausbildungsleitung.</li>
-                <li>Viele Rekurse beschäftigen sich mit formalen Fehlern, nicht mit inhaltlichen Fragen.</li>
-                <li>Knapp ungenügende Noten sind schwierig zu handhaben.</li>
-            </ul>
         </p>
+        <ul>
+            <li>Protokolle erstellen: Klar dokumentieren, was zu welchem Zeitpunkt abgemacht und kommuniziert wurde.</li>
+            <li>Die Studierenden sofort informieren, dass das Projekt in kritischem Zustand ist. Vereinbaren, was für eine genügende Bewertung erfüllt sein müsste.</li>
+            <li>Die zu Beginn in der Projektklärung vereinbarten Ziele sind ausschlaggebend für die Bewertung.</li>
+            <li>Sobald Rekurs eingereicht wurde, nicht mehr direkt mit den Studierenden kommunizieren. Die Kommunikation läuft dann über die Ausbildungsleitung.</li>
+            <li>Viele Rekurse beschäftigen sich mit formalen Fehlern, nicht mit inhaltlichen Fragen.</li>
+            <li>Knapp ungenügende Noten sind schwierig zu handhaben.</li>
+        </ul>
     </div>
 </asp:Content>

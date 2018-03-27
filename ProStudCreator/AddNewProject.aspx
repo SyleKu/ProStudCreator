@@ -282,13 +282,13 @@
                     </asp:DropDownList>
                 </div>
             </div>
-            <div class="form-group">
+            <%-- <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Dauer:"></asp:Label>
                 <div class="col-sm-6">
                     <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." Checked="true" runat="server" />
-                    <%--<p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>--%>
+                    <!--<p class="text-muted">(Dies schliesst berufsbegleitende Studierenden aus)</p>--!>
                 </div>
-            </div>
+            </div>--%>
             <asp:UpdatePanel ID="updatePriotity" runat="server">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
