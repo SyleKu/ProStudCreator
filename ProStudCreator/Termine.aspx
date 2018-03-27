@@ -23,7 +23,7 @@
             </asp:GridView>
             <hr/>
             <p>
-                <b>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</b>
+                <b>Titeländerungen von Informatikprojekten sind bis <%: ProStudCreator.Global.AllowTitleChangesBeforeSubmission %> Wochen vor Abgabe möglich!</b>
             </p>
         </div>
     </div>

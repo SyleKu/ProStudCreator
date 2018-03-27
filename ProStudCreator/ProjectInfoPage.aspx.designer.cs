@@ -31,6 +31,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ProjectTitle;
         
         /// <summary>
+        /// ChangeTitleDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ChangeTitleDate;
+        
+        /// <summary>
         /// Student1Name control.
         /// </summary>
         /// <remarks>

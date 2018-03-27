@@ -16,9 +16,9 @@ namespace ProStudCreator
 {
     public class Global : HttpApplication
     {
-
         private const string DummyCacheItemKey = "DummyCacheItem";
         private string DummyPage = "CheckAllTasks";
+        public const int AllowTitleChangesBeforeSubmission = 11; //weeks
 
         private void Application_Start(object sender, EventArgs e)
         {
