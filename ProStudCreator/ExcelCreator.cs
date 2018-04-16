@@ -35,7 +35,15 @@ namespace ProStudCreator
             "SingleSemester",
             "Continuation",
             "German",
-            "English"
+            "English",
+            "TypeAppWeb",
+            "TypeCGIP",
+            "TypeDBBigData",
+            "TypeDesignUX",
+            "TypeHW",
+            "TypeMlAlg",
+            "TypeSE",
+            "TypeSysSec"
         };
 
         private static readonly string[] MARKETING_HEADERS =
@@ -137,6 +145,14 @@ namespace ProStudCreator
             row.CreateCell(17).SetCellValue(p.IsContinuation ? 1 : 0);
             row.CreateCell(18).SetCellValue(p.LanguageGerman ? 1 : 0);
             row.CreateCell(19).SetCellValue(p.LanguageEnglish ? 1 : 0);
+            row.CreateCell(20).SetCellValue(p.TypeAppWeb);
+            row.CreateCell(21).SetCellValue(p.TypeCGIP);
+            row.CreateCell(22).SetCellValue(p.TypeDBBigData);
+            row.CreateCell(23).SetCellValue(p.TypeDesignUX);
+            row.CreateCell(24).SetCellValue(p.TypeHW);
+            row.CreateCell(25).SetCellValue(p.TypeMlAlg);
+            row.CreateCell(26).SetCellValue(p.TypeSE);
+            row.CreateCell(27).SetCellValue(p.TypeSysSec);
         }
 
 
