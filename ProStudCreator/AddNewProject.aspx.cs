@@ -448,7 +448,7 @@ where T : Control
             else
                 Language.SelectedIndex = 0;
 
-            DurationOneSemester.Checked = project.DurationOneSemester;
+            //DurationOneSemester.Checked = project.DurationOneSemester;
             InitialPositionContentLabel.Text = CreateDiffString(project.InitialPosition, currentProject.InitialPosition);
 
             ObjectivContentLabel.Text = CreateDiffString(project.Objective, currentProject.Objective);
@@ -580,7 +580,7 @@ where T : Control
             else
                 Language.SelectedIndex = 0;
 
-            DurationOneSemester.Checked = project.DurationOneSemester;
+            //DurationOneSemester.Checked = project.DurationOneSemester;
 
             InitialPositionContent.Text = project.InitialPosition;
             Image1.Visible = true;
@@ -1173,7 +1173,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
             }
             // Duration
-            project.DurationOneSemester = DurationOneSemester.Checked;
+            //project.DurationOneSemester = DurationOneSemester.Checked;
 
             // Team size
             project.P1TypeId = int.Parse(POneType.SelectedValue);

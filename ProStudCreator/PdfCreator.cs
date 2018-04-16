@@ -262,7 +262,7 @@ namespace ProStudCreator
             //
             var strReservations = "";
             var strRemarks = "";
-            var strOneSem = "";
+            //var strOneSem = "";
             if (proj.Remarks != "")
                 strRemarks += proj.Remarks + "\n\n";
 
@@ -271,12 +271,12 @@ namespace ProStudCreator
                 strReservations += translator.GetReservedString(proj.Reservation1Name, proj.Reservation2Name);
             }
 
-            if (proj.DurationOneSemester)
+            /*if (proj.DurationOneSemester)
             {
                 strOneSem = translator.GetHeadingOneSemester();
-            }
+            }*/
 
-            if (strReservations.Length > 0 || strRemarks.Length > 0 || strOneSem.Length > 0)
+            if (strReservations.Length > 0 || strRemarks.Length > 0 /* || strOneSem.Length > 0*/)
             {
                 document.Add(new Paragraph(translator.GetHeadingAnnotation(), fontHeading)
                 {
@@ -292,13 +292,13 @@ namespace ProStudCreator
                         text.Alignment = Element.ALIGN_JUSTIFIED;
                         document.Add(text);
                     }
-                if (strOneSem.Length > 0)
+                /*if (strOneSem.Length > 0)
                 {
                     var oneSem = new Paragraph(strOneSem, fontRegular);
                     oneSem.SpacingAfter = 1f;
                     oneSem.SetLeading(0.0f, LINE_HEIGHT);
                     document.Add(oneSem);
-                }
+                }*/
                 if (strReservations.Length > 0)
                 {
                     var fontRegularRed = new Font(fontRegular);
@@ -515,9 +515,7 @@ namespace ProStudCreator
         public static Document CreateDocument()
         {
             var margin = Utilities.MillimetersToPoints(20f);
-            var document = new Document(PageSize.A4, margin, margin, margin, margin);
-
-            return document;
+            return new Document(PageSize.A4, margin, margin, margin, margin);
         }
 
         private enum Layout
@@ -549,7 +547,7 @@ namespace ProStudCreator
 
             public Project CurrentProject { get; set; }
 
-            private Translator translator = new  Translator(); //Sprache spielt keine Rolle, da die verwendete Methode diese selbst herausfindet.
+            private Translator translator = new Translator(); //Sprache spielt keine Rolle, da die verwendete Methode diese selbst herausfindet.
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {

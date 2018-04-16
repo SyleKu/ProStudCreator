@@ -11,6 +11,10 @@
                     <asp:TextBox runat="server" ID="ProjectTitle" CssClass="form-control maxWidth" MaxLength="100"></asp:TextBox>
                 </div>
             </div>
+            <div class="form-group" style="text-align: left">
+                <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" ID="ChangeTitleDate" CssClass="col-sm-6"></asp:Label>
+            </div>
             <hr />
             <div class="form-group">
                 <asp:Label runat="server" Text="Studierende:" CssClass="control-label col-sm-3"></asp:Label>

@@ -28,9 +28,9 @@ namespace ProStudCreator
                 "Projekteinreichung (extern)",
                 "Projekteinreichung (intern)",
                 "Projektzuteilung",
-                "Abgabe IP5 (1 Sem.)",
-                "Abgabe IP5 (2 Sem.)",
-                "Abgabe IP6 (1 Sem.)<br/>Verteidigung",
+                "Abgabe IP5",
+                "Abgabe IP5 (Lang)",
+                "Abgabe IP6<br/>Verteidigung",
                 "Abgabe IP6 (2 Sem.)<br/>Verteidigung",
                 "Ausstellung Bachelorthesen"
             })

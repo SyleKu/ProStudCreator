@@ -273,39 +273,37 @@ namespace ProStudCreator
         {
             ProjectEndPresentation.Text = "?";
 
-            if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP5) //IP5 1 Semester
+            if (type == ProjectTypes.IP5) //IP5 1/" Semester
             {
-                ProjectDelivery.Text = project.Semester.SubmissionIP5FullPartTime;
-                lblProjectEndPresentation.Text = "Schlusspräsentation:";
-                ProjectEndPresentation.Text =
-                    "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
-            }
-            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP5) //IP5 2 Semester
-            {
-                ProjectDelivery.Text = project.Semester.SubmissionIP5Accompanying;
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
                 ProjectEndPresentation.Text =
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
             }
             else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 1 Semester
             {
-                ProjectDelivery.Text = project.Semester.SubmissionIP6Normal;
                 lblProjectEndPresentation.Text = "Verteidigung:";
                 ProjectEndPresentation.Text = project.Semester.DefenseIP6Start + " - " + project.Semester.DefenseIP6End;
             }
             else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 2 Semester
             {
-                ProjectDelivery.Text = project.Semester.SubmissionIP6Variant2;
                 lblProjectEndPresentation.Text = "Verteidigung:";
-                ProjectEndPresentation.Text = project.Semester.DefenseIP6BStart + " - " +
-                                              project.Semester.DefenseIP6BEnd;
+                ProjectEndPresentation.Text = project.Semester.DefenseIP6BStart + " - " + project.Semester.DefenseIP6BEnd;
             }
             else
             {
-                ProjectDelivery.Text = "?";
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
             }
 
+            var deliveryDate = project?.GetDeliveryDate();
+            ProjectDelivery.Text = deliveryDate?.ToString("dd.MM.yyyy") ?? "?";
+
+            if (deliveryDate.HasValue)
+            {
+                if(project.CanEditTitle())
+                    ChangeTitleDate.Text = $"Titeländerung noch bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+                else
+                    ChangeTitleDate.Text = $"Titeländerung war nur bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+            }
 
             ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") +
                                           (project?.LogDefenceRoom != null ? ", Raum: " + project?.LogDefenceRoom : "");
@@ -602,6 +600,7 @@ namespace ProStudCreator
             IP6,
             NotDefined
         }
+
         protected void DownloadFiles_OnClick(object sender, EventArgs e)
         {
             var attachments = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted).ToList();

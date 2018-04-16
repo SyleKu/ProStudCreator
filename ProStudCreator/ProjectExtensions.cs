@@ -531,7 +531,7 @@ namespace ProStudCreator
         public static bool CanEditTitle(this Project _p)
         {
             return DateTime.Now < _p.GetDeliveryDate().AddDays(
-                       -11 * 7 /* 11 weeks before delivery date */
+                       -ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7 /* 11 weeks before delivery date */
                        + 2 /* give some leeway */);
         }
 

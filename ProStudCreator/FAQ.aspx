@@ -5,7 +5,7 @@
         <h3>FAQ</h3>
         <h4>Welche Projekte eignen sich als IP5? Welche als IP6 (Bachelorthesis)?</h4>
         <p>
-            Idealerweise stammen die Themen aus Industrie- oder Forschungsprojekten der Institute. Für externe Projekte gilt diese Einschränkung nicht.
+            Als Projekte eigenen sich Fragenstellungen von externen Unternehmen, aus Industrie- oder Forschungsprojekten der Institute. 
             Projekte sollten einen Programmier-Teil (>50%) und einen Forschungs-Teil (>0%) enthalten.
         </p>
         <p>
@@ -16,7 +16,7 @@
             und praktisch sowie selbständig lösen“.
         </p>
         <p>
-            Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es soll nicht von vornherein klar sein, wie man ein Aufgabe
+            Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es soll nicht von vornherein klar sein, wie man die Aufgabe
             löst. Nur das Ziel der Arbeit soll klar definiert sein. Achte darauf, dass die Aufgabenstellung eine gewisse intellektuelle Flughöhe
             erreicht, aber gegen oben nicht begrenzt ist. Ideale Arbeiten enthalten einen offenen Teil, wo sich die Studierenden austoben können.
         </p>
@@ -42,7 +42,7 @@
             <a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
         </p>
         <p id="i4ds2" visible="false" runat="server">
-            <a href="mailto:francesca.molendini@fhnw.ch">Francesca Molendini</a> für Projekte am i4Ds.
+            <a href="mailto:francesca.molendini@fhnw.ch">Francesca Molendini</a> für Projekte am I4DS.
         </p>
         <p id="iit2" visible="false" runat="server">
             <a href="mailto:simon.schubiger@fhnw.ch">Simon Schubiger</a> für Projekte am IIT. 
@@ -55,21 +55,21 @@
         </p>
         <h4>Können Studierende eigene Projekte einreichen?</h4>
         <p>
-            Studierende können ihren Arbeitgeber ermutigen, als Externe ein Projekt einzureichen. Sie können selbst aber keine Projekte einreichen oder
+            Studierende können Externe ermutigen ein Projekt einzureichen. Sie können selbst aber keine Projekte einreichen oder
             Auftraggeber spielen.
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
-            Als Betreuer kommen alle gewählten Dozierenden am i4Ds/IMVS/IIT in Frage. Es besteht häufig auch die Möglichkeit in einem Zweier-Team (z.B. gewählter
+            Als Betreuer kommen gewählte Dozierende aus einem Informatikinstitut in Frage. Es besteht häufig auch die Möglichkeit in einem Zweier-Team (z.B. gewählter
             Dozierender + WiMi) zu arbeiten. Wer also kein gewählter Dozierender ist, aber trotzdem ein Projekt betreuen möchte, kann das im Normalfall nach
             Absprache tun. Die Betreuung kann man aufteilen, die Gesamtverantwortung bleibt beim Dozierenden.
         </p>
         <h4>Wie gross ist der Aufwand für die Betreuung? Was muss ich tun?</h4>
         <p>
-            Die Studierenden sollen sich selbst organisieren und Verantwortung übernehmen. Sie sind Projektleiter. Sie sollen selbst mögliche Lösungsansätze
-            erarbeiten, vergleichen, umsetzen und Zeit managen. Du sollt nicht selbst am Projekt mitarbeiten, Protokolle schreiben oder ähnliches! Du sollst die
-            Studierenden aber in Fachfragen unterstützen und Risiken minimieren. Speziell zu Beginn der Arbeit eignen sich dazu kurze, wöchentliche Sitzungen
-            sehr gut. Die Studierenden sollen aber selbstständig arbeiten.
+            Die Studierenden sollen sich selbst organisieren und Verantwortung übernehmen. Die Studierenden sind Projektleiter. Sie sollen selbst mögliche Lösungsansätze
+            erarbeiten, vergleichen, umsetzen und Zeit managen. Du sollt nicht selbst am Projekt mitarbeiten, Protokolle schreiben, etc.! Hingegen solltest Du die
+            Studierenden in Fachfragen unterstützen und Risiken minimieren. Speziell zu Beginn der Arbeit eignen sich dazu kurze, wöchentliche Sitzungen
+            gut. Die Studierenden sollen aber selbstständig arbeiten und Verantwortung übernehmen.
         </p>
         <h4>Kann ich Einzelprojekte einreichen?</h4>
         <p>
@@ -124,14 +124,14 @@
         <h4 id="rekurs">Was tun, wenn sich eine ungenügende Note abzeichnet?</h4>
         <p>
             Bitte informiere den Projektverantwortlichen am Institut möglichst früh. Folgende Dinge solltest Du beachten:
-            <ul>
-                <li>Protokolle erstellen: Klar dokumentieren, was zu welchem Zeitpunkt abgemacht und kommuniziert wurde.</li>
-                <li>Die Studierenden sofort informieren, dass das Projekt in kritischem Zustand ist. Vereinbaren, was für eine genügende Bewertung erfüllt sein müsste.</li>
-                <li>Die zu Beginn in der Projektklärung vereinbarten Ziele sind ausschlaggebend für die Bewertung.</li>
-                <li>Sobald Rekurs eingereicht wurde, nicht mehr direkt mit den Studierenden kommunizieren. Die Kommunikation läuft dann über die Ausbildungsleitung.</li>
-                <li>Viele Rekurse beschäftigen sich mit formalen Fehlern, nicht mit inhaltlichen Fragen.</li>
-                <li>Knapp ungenügende Noten sind schwierig zu handhaben.</li>
-            </ul>
         </p>
+        <ul>
+            <li>Protokolle erstellen: Klar dokumentieren, was zu welchem Zeitpunkt abgemacht und kommuniziert wurde.</li>
+            <li>Die Studierenden sofort informieren, dass das Projekt in kritischem Zustand ist. Vereinbaren, was für eine genügende Bewertung erfüllt sein müsste.</li>
+            <li>Die zu Beginn in der Projektklärung vereinbarten Ziele sind ausschlaggebend für die Bewertung.</li>
+            <li>Sobald Rekurs eingereicht wurde, nicht mehr direkt mit den Studierenden kommunizieren. Die Kommunikation läuft dann über die Ausbildungsleitung.</li>
+            <li>Viele Rekurse beschäftigen sich mit formalen Fehlern, nicht mit inhaltlichen Fragen.</li>
+            <li>Knapp ungenügende Noten sind schwierig zu handhaben.</li>
+        </ul>
     </div>
 </asp:Content>
