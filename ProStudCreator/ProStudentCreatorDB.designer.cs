@@ -1361,6 +1361,8 @@ namespace ProStudCreator
 		
 		private int _ClientType;
 		
+		private bool _UnderNDA;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1537,6 +1539,8 @@ namespace ProStudCreator
     partial void OnAblehnungsgrundChanged();
     partial void OnClientTypeChanging(int value);
     partial void OnClientTypeChanged();
+    partial void OnUnderNDAChanging(bool value);
+    partial void OnUnderNDAChanged();
     #endregion
 		
 		public Project()
@@ -3023,6 +3027,26 @@ namespace ProStudCreator
 					this._ClientType = value;
 					this.SendPropertyChanged("ClientType");
 					this.OnClientTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UnderNDA", DbType="bit NOT NULL")]
+		public bool UnderNDA
+		{
+			get
+			{
+				return this._UnderNDA;
+			}
+			set
+			{
+				if ((this._UnderNDA != value))
+				{
+					this.OnUnderNDAChanging(value);
+					this.SendPropertyChanging();
+					this._UnderNDA = value;
+					this.SendPropertyChanged("UnderNDA");
+					this.OnUnderNDAChanged();
 				}
 			}
 		}

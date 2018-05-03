@@ -279,7 +279,7 @@ namespace ProStudCreator
          */
         public static void MapProject(this Project _p, Project target)
         {
-            int EXPECTEDPROPCOUNT = 88; // has to be updated after the project class has changed and the method has been updated 
+            int EXPECTEDPROPCOUNT = 89; // has to be updated after the project class has changed and the method has been updated 
 
             var actualPropCount = typeof(Project).GetProperties().Count();
 
@@ -360,6 +360,7 @@ namespace ProStudCreator
             target.TypeMlAlg = _p.TypeMlAlg;
             target.TypeSE = _p.TypeSE;
             target.TypeSysSec = _p.TypeSysSec;
+            target.UnderNDA = _p.UnderNDA;
         }
         public static Project CreateNewProject(ProStudentCreatorDBDataContext db)
         {
