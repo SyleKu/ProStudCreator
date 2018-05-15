@@ -332,7 +332,7 @@
                         <% if (ShibUser.IsAdmin() || ShibUser.GetDepartmentName() == "IMVS")
                             { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
-                        <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
+                        <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, Requirements Engineering, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>
                     </div>
                     <asp:Timer runat="server" Interval="60000" Enabled="true" />

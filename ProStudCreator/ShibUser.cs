@@ -11,7 +11,7 @@ namespace ProStudCreator
 #if DEBUG
             return true;
 #else
-            return ShibUser.IsStaff() && ShibUser.GetDepartmentId(db).HasValue;
+            return ShibUser.IsStaff() && ShibUser.GetDepartmentId(db).HasValue && db.UserDepartmentMap.Any(i => i.Mail == ShibUser.GetEmail());
 #endif
         }
 
