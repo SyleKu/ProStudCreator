@@ -184,11 +184,11 @@ namespace ProStudCreator
         }
         private void FillDropAdvisors()
         {
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1 && i.IsActive).OrderBy(a => a.Name);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedIndex = 0;
-            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
+            dropAdvisor2.DataSource = db.UserDepartmentMap.Where(i => i.IsActive).OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
             dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
@@ -197,11 +197,11 @@ namespace ProStudCreator
         private void FillDropPreviousProject(Semester projectSemester)
         {
             var lastSem = Semester.LastSemester(projectSemester, db);
-            var beforeLastSem = Semester.LastSemester(lastSem, db);
+            //var beforeLastSem = Semester.LastSemester(lastSem, db);
             dropPreviousProject.DataSource = db.Projects.Where(p =>
                 p.LogProjectType.P5 && !p.LogProjectType.P6
                 && p.State == ProjectState.Published
-                && (p.SemesterId == lastSem.Id || p.SemesterId == beforeLastSem.Id && p.LogProjectDuration == 2));
+                && (p.SemesterId == projectSemester.Id || p.SemesterId == lastSem.Id && p.LogProjectDuration == 2));
             dropPreviousProject.DataBind();
             dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
         }
@@ -518,11 +518,11 @@ where T : Control
 
             ProjectName.Text = project.Name;
 
-            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1).OrderBy(a => a.Name);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1 && (i.IsActive || i.Id==project.Advisor1Id)).OrderBy(a => a.Name);
             dropAdvisor1.DataBind();
             dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor1.SelectedValue = project.Advisor1?.Id.ToString() ?? "ImpossibleValue";
-            dropAdvisor2.DataSource = db.UserDepartmentMap.OrderBy(a => a.Name);
+            dropAdvisor2.DataSource = db.UserDepartmentMap.Where(i => i.IsActive || i.Id==project.Advisor2Id).OrderBy(a => a.Name);
             dropAdvisor2.DataBind();
             dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
             dropAdvisor2.SelectedValue = project.Advisor2?.Id.ToString() ?? "ImpossibleValue";

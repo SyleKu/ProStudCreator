@@ -4356,6 +4356,8 @@ namespace ProStudCreator
 		
 		private bool _IsSupervisor;
 		
+		private bool _IsActive;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -4396,6 +4398,8 @@ namespace ProStudCreator
     partial void OnCanBeAdvisor1Changed();
     partial void OnIsSupervisorChanging(bool value);
     partial void OnIsSupervisorChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4652,7 +4656,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSupervisor", DbType="Bit NOT NULL")]
 		public bool IsSupervisor
 		{
 			get
@@ -4668,6 +4672,26 @@ namespace ProStudCreator
 					this._IsSupervisor = value;
 					this.SendPropertyChanged("IsSupervisor");
 					this.OnIsSupervisorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
 				}
 			}
 		}

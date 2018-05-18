@@ -332,6 +332,9 @@
                         <% if (ShibUser.IsAdmin() || ShibUser.GetDepartmentName() == "IMVS")
                             { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
+                        <% } %>
+                        <% if (ShibUser.IsAdmin() || ShibUser.GetDepartmentName() == "IMVS" || ShibUser.GetDepartmentName() == "IIT")
+                            { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, Requirements Engineering, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>
                     </div>
