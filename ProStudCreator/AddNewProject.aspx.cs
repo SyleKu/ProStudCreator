@@ -1243,9 +1243,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
             if (AddPicture.HasFile)
             {
-                
                 var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
-                if (!fileExtension.Contains("jpg") && !fileExtension.Contains("png"))
+                if (fileExtension!="jpg" && fileExtension!="jpeg" && fileExtension!="png")
                 {
                     return;
                 }

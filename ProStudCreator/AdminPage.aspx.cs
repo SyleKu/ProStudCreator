@@ -158,7 +158,7 @@ namespace ProStudCreator
                 return db.Projects.Where(p =>
                     /*p.DepartmentId == depId &&*/ p.IsMainVersion &&
                     p.ModificationDate > lastSemStartDate &&
-                    (p.State == ProjectState.InProgress || p.State == ProjectState.Rejected))
+                    (p.State == ProjectState.InProgress || p.State==ProjectState.Submitted || p.State == ProjectState.Rejected))
                     .OrderBy(i => i.Department.DepartmentName)
                     .ThenBy(i => i.ProjectNr)
                     .Select(i => GetProjectSingleElement(i));
