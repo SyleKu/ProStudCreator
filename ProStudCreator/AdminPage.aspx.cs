@@ -104,7 +104,8 @@ namespace ProStudCreator
                           Server.HtmlEncode(i.Advisor2.Name).Replace(" ", "&nbsp;") + "</a>"
                         : ""
                 }),
-                projectName = (i.ProjectNr == 0 ? "" : i.ProjectNr.ToString("D2") + ": ") + i.Name,
+                ProjectNr = (i.ProjectNr==0 ? " " : i.ProjectNr.ToString("D2")),
+                projectName = i.Name,
                 Institute = i.Department.DepartmentName,
                 p5 = i.POneType.P5 || i.PTwoType != null && i.PTwoType.P5,
                 p6 = i.POneType.P6 || i.PTwoType != null && i.PTwoType.P6,
