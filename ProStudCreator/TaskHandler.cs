@@ -14,6 +14,11 @@ namespace ProStudCreator
 {
     public class TaskHandler
     {
+        enum Type : int
+        {
+            RegisterGrades = 0,
+            CheckWebsummary = 1
+        }
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
@@ -28,7 +33,7 @@ namespace ProStudCreator
 
         private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
-            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.GradesRegistered)
+            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.Project != null && t.TaskType.Type==(int)Type.RegisterGrades)
                 .Select(i => i.ProjectId);
 
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published).ToList();
@@ -48,7 +53,7 @@ namespace ProStudCreator
                                     p => p.Mail == (!project.Advisor1Id.HasValue
                                              ? project.Advisor2.Mail
                                              : project.Advisor1.Mail)),
-                            TaskType = db.TaskTypes.Single(t => t.GradesRegistered),
+                            TaskType = db.TaskTypes.Single(t => t.Type==(int)Type.RegisterGrades),
                             Supervisor =
                                 db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                         });
@@ -64,7 +69,7 @@ namespace ProStudCreator
         private static void CheckForFinishedGradesRegistered(ProStudentCreatorDBDataContext db)
         {
             var openGradeTasks =
-                db.Tasks.Where(i => !i.Done && i.TaskType == db.TaskTypes.Single(t => t.GradesRegistered));
+                db.Tasks.Where(i => !i.Done && i.TaskType == db.TaskTypes.Single(t => t.Type==(int)Type.RegisterGrades));
 
             foreach (var openTask in openGradeTasks)
             {
@@ -93,16 +98,8 @@ namespace ProStudCreator
 
 
             foreach (var task in openTasks)
-            {
-                if (task.TaskType.RemindType.RemindOnce)
-                {
+                if ((task.TaskType.TicksBetweenReminds != 0 && DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds) || task.LastReminded == null)
                     tasksToMail.Add(task);
-                }
-                else if (DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds || task.LastReminded == null)
-                {
-                    tasksToMail.Add(task);
-                }
-            }
 
             return tasksToMail;
         }
@@ -174,14 +171,10 @@ namespace ProStudCreator
                 var task = mailTaskTuple.Item1;
                 smtpClient.Send(mail);
 
-                if (task.TaskType.RemindType.RemindOnce)
-                {
+                if (task.TaskType.TicksBetweenReminds==0)
                     task.Done = true;
-                }
                 else if(DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds || task.LastReminded == null)
-                {
                     task.LastReminded = DateTime.Now;
-                }
                 db.SubmitChanges();
 #endif
             }

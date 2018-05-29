@@ -208,19 +208,9 @@
     <Type Name="TaskType">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
-      <Column Name="RemindTypeId" Storage="_RemindType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="GradesRegistered" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="TypeEnum" Member="Type" Storage="_GradesRegistered" Type="int" DbType="int" CanBeNull="false" />
       <Column Name="TicksBetweenReminds" Type="System.Int64" DbType="bigint" CanBeNull="false" />
       <Association Name="TaskType_Task" Member="Tasks" ThisKey="Id" OtherKey="TaskTypeId" Type="Task" />
-      <Association Name="RemindType_TaskType" Member="RemindType" Storage="_RemindType1" ThisKey="RemindTypeId" OtherKey="Id" Type="RemindType" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.RemindTypes" Member="RemindTypes">
-    <Type Name="RemindType">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="RemindOnce" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="RemindTillDone" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
-      <Association Name="RemindType_TaskType" Member="TaskTypes" ThisKey="Id" OtherKey="RemindTypeId" Type="TaskType" />
     </Type>
   </Table>
   <Table Name="dbo.Tasks" Member="Tasks">

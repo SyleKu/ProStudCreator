@@ -60,9 +60,6 @@ namespace ProStudCreator
     partial void InsertTaskType(TaskType instance);
     partial void UpdateTaskType(TaskType instance);
     partial void DeleteTaskType(TaskType instance);
-    partial void InsertRemindType(RemindType instance);
-    partial void UpdateRemindType(RemindType instance);
-    partial void DeleteRemindType(RemindType instance);
     partial void InsertTask(Task instance);
     partial void UpdateTask(Task instance);
     partial void DeleteTask(Task instance);
@@ -175,14 +172,6 @@ namespace ProStudCreator
 			get
 			{
 				return this.GetTable<TaskType>();
-			}
-		}
-		
-		public System.Data.Linq.Table<RemindType> RemindTypes
-		{
-			get
-			{
-				return this.GetTable<RemindType>();
 			}
 		}
 		
@@ -4885,15 +4874,11 @@ namespace ProStudCreator
 		
 		private string _Description;
 		
-		private int _RemindType;
-		
-		private bool _GradesRegistered;
+		private int _GradesRegistered;
 		
 		private long _TicksBetweenReminds;
 		
 		private EntitySet<Task> _Tasks;
-		
-		private EntityRef<RemindType> _RemindType1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -4903,10 +4888,8 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnDescriptionChanging(string value);
     partial void OnDescriptionChanged();
-    partial void OnRemindTypeIdChanging(int value);
-    partial void OnRemindTypeIdChanged();
-    partial void OnGradesRegisteredChanging(bool value);
-    partial void OnGradesRegisteredChanged();
+    partial void OnTypeChanging(int value);
+    partial void OnTypeChanged();
     partial void OnTicksBetweenRemindsChanging(long value);
     partial void OnTicksBetweenRemindsChanged();
     #endregion
@@ -4914,7 +4897,6 @@ namespace ProStudCreator
 		public TaskType()
 		{
 			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
-			this._RemindType1 = default(EntityRef<RemindType>);
 			OnCreated();
 		}
 		
@@ -4958,32 +4940,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindType", DbType="Int NOT NULL")]
-		public int RemindTypeId
-		{
-			get
-			{
-				return this._RemindType;
-			}
-			set
-			{
-				if ((this._RemindType != value))
-				{
-					if (this._RemindType1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnRemindTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._RemindType = value;
-					this.SendPropertyChanged("RemindTypeId");
-					this.OnRemindTypeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GradesRegistered", DbType="bit")]
-		public bool GradesRegistered
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="TypeEnum", Storage="_GradesRegistered", DbType="int")]
+		public int Type
 		{
 			get
 			{
@@ -4993,11 +4951,11 @@ namespace ProStudCreator
 			{
 				if ((this._GradesRegistered != value))
 				{
-					this.OnGradesRegisteredChanging(value);
+					this.OnTypeChanging(value);
 					this.SendPropertyChanging();
 					this._GradesRegistered = value;
-					this.SendPropertyChanged("GradesRegistered");
-					this.OnGradesRegisteredChanged();
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
 				}
 			}
 		}
@@ -5035,40 +4993,6 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="RemindType_TaskType", Storage="_RemindType1", ThisKey="RemindTypeId", OtherKey="Id", IsForeignKey=true)]
-		public RemindType RemindType
-		{
-			get
-			{
-				return this._RemindType1.Entity;
-			}
-			set
-			{
-				RemindType previousValue = this._RemindType1.Entity;
-				if (((previousValue != value) 
-							|| (this._RemindType1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._RemindType1.Entity = null;
-						previousValue.TaskTypes.Remove(this);
-					}
-					this._RemindType1.Entity = value;
-					if ((value != null))
-					{
-						value.TaskTypes.Add(this);
-						this._RemindType = value.Id;
-					}
-					else
-					{
-						this._RemindType = default(int);
-					}
-					this.SendPropertyChanged("RemindType");
-				}
-			}
-		}
-		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -5099,144 +5023,6 @@ namespace ProStudCreator
 		{
 			this.SendPropertyChanging();
 			entity.TaskType = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.RemindTypes")]
-	public partial class RemindType : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private bool _RemindOnce;
-		
-		private string _RemindTillDone;
-		
-		private EntitySet<TaskType> _TaskTypes;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnRemindOnceChanging(bool value);
-    partial void OnRemindOnceChanged();
-    partial void OnRemindTillDoneChanging(string value);
-    partial void OnRemindTillDoneChanged();
-    #endregion
-		
-		public RemindType()
-		{
-			this._TaskTypes = new EntitySet<TaskType>(new Action<TaskType>(this.attach_TaskTypes), new Action<TaskType>(this.detach_TaskTypes));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindOnce", DbType="Bit NOT NULL")]
-		public bool RemindOnce
-		{
-			get
-			{
-				return this._RemindOnce;
-			}
-			set
-			{
-				if ((this._RemindOnce != value))
-				{
-					this.OnRemindOnceChanging(value);
-					this.SendPropertyChanging();
-					this._RemindOnce = value;
-					this.SendPropertyChanged("RemindOnce");
-					this.OnRemindOnceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemindTillDone", DbType="NChar(10) NOT NULL", CanBeNull=false)]
-		public string RemindTillDone
-		{
-			get
-			{
-				return this._RemindTillDone;
-			}
-			set
-			{
-				if ((this._RemindTillDone != value))
-				{
-					this.OnRemindTillDoneChanging(value);
-					this.SendPropertyChanging();
-					this._RemindTillDone = value;
-					this.SendPropertyChanged("RemindTillDone");
-					this.OnRemindTillDoneChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="RemindType_TaskType", Storage="_TaskTypes", ThisKey="Id", OtherKey="RemindTypeId")]
-		public EntitySet<TaskType> TaskTypes
-		{
-			get
-			{
-				return this._TaskTypes;
-			}
-			set
-			{
-				this._TaskTypes.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_TaskTypes(TaskType entity)
-		{
-			this.SendPropertyChanging();
-			entity.RemindType = this;
-		}
-		
-		private void detach_TaskTypes(TaskType entity)
-		{
-			this.SendPropertyChanging();
-			entity.RemindType = null;
 		}
 	}
 	
