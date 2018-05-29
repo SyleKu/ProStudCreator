@@ -157,6 +157,9 @@ namespace ProStudCreator
                 ? ""
                 : project?.LogGradeStudent2.Value.ToString("N1", CultureInfo.InvariantCulture);
 
+            //web summary checked?
+            cbxWebSummaryChecked.Checked = project.WebSummaryChecked;
+
             //set the Labels to the Grades
             lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
             lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student/in 2"}:";
@@ -200,7 +203,8 @@ namespace ProStudCreator
                     nbrGradeStudent2.Enabled =
                         BtnSaveBetween.Enabled =
                             BtnSaveChanges.Enabled =
-                                drpBillingstatus.Enabled = userCanEditAfterStart;
+                                drpBillingstatus.Enabled =
+                                    cbxWebSummaryChecked.Enabled = userCanEditAfterStart;
 
 
             divExpert.Visible = project.Expert != null;
@@ -385,10 +389,16 @@ namespace ProStudCreator
                 if (nbrGradeStudent1.Text != "")
                     project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",", "."),
                         CultureInfo.InvariantCulture);
+                else
+                    project.LogGradeStudent1 = null;
 
                 if (nbrGradeStudent2.Text != "")
                     project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",", "."),
                         CultureInfo.InvariantCulture);
+                else
+                    project.LogGradeStudent2 = null;
+
+                project.WebSummaryChecked = cbxWebSummaryChecked.Checked;
 
                 switch (drpLogLanguage.SelectedValue)
                 {

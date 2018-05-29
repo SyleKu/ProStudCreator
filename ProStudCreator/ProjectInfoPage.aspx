@@ -61,6 +61,7 @@
                 <br />
             </div>
             <hr />
+
             <div class="form-group">
                 <asp:Label runat="server" Text="Durchführungssprache:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
@@ -87,6 +88,16 @@
                 </div>
             </div>
             <br />
+
+
+            <div class="form-group">
+                <asp:Label runat="server" Text="Websummary:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-3">
+                    <asp:CheckBox runat="server" ID="cbxWebSummaryChecked" Text=" Websummary kontrolliert" CssClass="form-control" />
+                </div>
+            </div>
+            <br />
+
             <div class="form-group">
                 <asp:Label runat="server" Text="Verrechnungsstatus:" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">

@@ -21,12 +21,8 @@ namespace ProStudCreator
             {
                 CheckGradesRegistered(db);
 
-
-                //Write all the Mails
-                WriteAllMails(db);
-
+                SendAllMails(db);
             }
-
         }
 
 
@@ -84,7 +80,7 @@ namespace ProStudCreator
 
 
         #region Mailing
-        private static void WriteAllMails(ProStudentCreatorDBDataContext db)
+        private static void SendAllMails(ProStudentCreatorDBDataContext db)
         {
             SendMails(GenerateEmails(GetAllTasksToMail(db)),db);
         }
