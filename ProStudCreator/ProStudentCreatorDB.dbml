@@ -127,6 +127,7 @@
       <Column Name="Ablehnungsgrund" Type="System.String" DbType="nvarchar(MAX)" CanBeNull="true" />
       <Column Name="ClientType" Type="System.Int32" DbType="int" CanBeNull="false" />
       <Column Name="UnderNDA" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+      <Column Name="WebSummaryChecked" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Association Name="Project_Project" Member="Projects" ThisKey="Id" OtherKey="PreviousProjectID" Type="Project" />
       <Association Name="Project_Attachements" Member="Attachements" ThisKey="Id" OtherKey="ProjectId" Type="Attachements" />
       <Association Name="Project_Task" Member="Tasks" ThisKey="Id" OtherKey="ProjectId" Type="Task" />

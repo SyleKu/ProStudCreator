@@ -1363,6 +1363,8 @@ namespace ProStudCreator
 		
 		private bool _UnderNDA;
 		
+		private bool _WebSummaryChecked;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Attachements> _Attachements;
@@ -1541,6 +1543,8 @@ namespace ProStudCreator
     partial void OnClientTypeChanged();
     partial void OnUnderNDAChanging(bool value);
     partial void OnUnderNDAChanged();
+    partial void OnWebSummaryCheckedChanging(bool value);
+    partial void OnWebSummaryCheckedChanged();
     #endregion
 		
 		public Project()
@@ -3047,6 +3051,26 @@ namespace ProStudCreator
 					this._UnderNDA = value;
 					this.SendPropertyChanged("UnderNDA");
 					this.OnUnderNDAChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebSummaryChecked", DbType="bit NOT NULL")]
+		public bool WebSummaryChecked
+		{
+			get
+			{
+				return this._WebSummaryChecked;
+			}
+			set
+			{
+				if ((this._WebSummaryChecked != value))
+				{
+					this.OnWebSummaryCheckedChanging(value);
+					this.SendPropertyChanging();
+					this._WebSummaryChecked = value;
+					this.SendPropertyChanged("WebSummaryChecked");
+					this.OnWebSummaryCheckedChanged();
 				}
 			}
 		}

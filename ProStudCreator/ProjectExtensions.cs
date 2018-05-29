@@ -235,37 +235,21 @@ namespace ProStudCreator
         {
             bool[] projectType = new bool[8];
             if (_p.TypeDesignUX)
-            {
                 projectType[0] = true;
-            }
             if (_p.TypeHW)
-            {
                 projectType[1] = true;
-            }
             if (_p.TypeCGIP)
-            {
                 projectType[2] = true;
-            }
             if (_p.TypeMlAlg)
-            {
                 projectType[3] = true;
-            }
             if (_p.TypeAppWeb)
-            {
                 projectType[4] = true;
-            }
             if (_p.TypeDBBigData)
-            {
                 projectType[5] = true;
-            }
             if (_p.TypeSysSec)
-            {
                 projectType[6] = true;
-            }
             if (_p.TypeSE)
-            {
                 projectType[7] = true;
-            }
             return projectType;
         }
 
@@ -279,12 +263,12 @@ namespace ProStudCreator
          */
         public static void MapProject(this Project _p, Project target)
         {
-            int EXPECTEDPROPCOUNT = 89; // has to be updated after the project class has changed and the method has been updated 
+            int EXPECTEDPROPCOUNT = 90; // has to be updated after the project class has changed and the method has been updated 
 
             var actualPropCount = typeof(Project).GetProperties().Count();
 
             if (actualPropCount != EXPECTEDPROPCOUNT)
-                throw new Exception("The Save-Method is outdated. You have mostlikely edited the DBML. Please Update ProjectExtension.cs AND update the constant 'EXPECTEDPROPCOUNT'. PropertyCount: " + actualPropCount);
+                throw new Exception("The Save-Method is outdated. You have mostlikely edited the DBML. Please update ProjectExtension.cs AND the constant 'EXPECTEDPROPCOUNT'. PropertyCount: " + actualPropCount);
 
             target.Ablehnungsgrund = _p.Ablehnungsgrund;
             target.Advisor1 = _p.Advisor1;
@@ -361,6 +345,7 @@ namespace ProStudCreator
             target.TypeSE = _p.TypeSE;
             target.TypeSysSec = _p.TypeSysSec;
             target.UnderNDA = _p.UnderNDA;
+            target.WebSummaryChecked = _p.WebSummaryChecked;
         }
         public static Project CreateNewProject(ProStudentCreatorDBDataContext db)
         {
