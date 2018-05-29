@@ -688,22 +688,22 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label ImageLabel;
         
         /// <summary>
-        /// Image1 control.
+        /// ProjectPicture control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1;
+        protected global::System.Web.UI.WebControls.Image ProjectPicture;
         
         /// <summary>
-        /// Image1Previous control.
+        /// ProjectPicturePrevious control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1Previous;
+        protected global::System.Web.UI.WebControls.Image ProjectPicturePrevious;
         
         /// <summary>
         /// imgdescription control.
@@ -751,15 +751,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ObjectivContent;
         
         /// <summary>
-        /// ObjectiveContentPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel ObjectiveContentPanel;
-        
-        /// <summary>
         /// ObjectivContentLabel control.
         /// </summary>
         /// <remarks>
@@ -778,15 +769,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox ProblemStatementContent;
         
         /// <summary>
-        /// ProblemStatementContentPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel ProblemStatementContentPanel;
-        
-        /// <summary>
         /// ProblemStatementContentLabel control.
         /// </summary>
         /// <remarks>
@@ -803,15 +785,6 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ReferencesContent;
-        
-        /// <summary>
-        /// ReferenceDiv control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel ReferenceDiv;
         
         /// <summary>
         /// ReferencesContentLabel control.

@@ -361,8 +361,8 @@
             <div class="form-group">
                 <asp:Label runat="server" ID="ImageLabel" CssClass="control-label col-sm-3" Text=""></asp:Label>
                 <div class="col-sm-9">
-                    <asp:Image runat="server" ID="Image1" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
-                    <asp:Image runat="server" ID="Image1Previous" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
+                    <asp:Image runat="server" ID="ProjectPicture" CssClass="maxImageWidth img-rounded" Visible="true" EnableViewState="False" />
+                    <asp:Image runat="server" ID="ProjectPicturePrevious" CssClass="maxImageWidth img-rounded" Visible="false" EnableViewState="False" />
                 </div>
             </div>
             <div class="form-group">
@@ -383,28 +383,22 @@
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Ziel der Arbeit:"></asp:Label>
                 <div class="col-sm-9">
-                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control col-sm-9" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Panel runat="server" class="form-control" ID="ObjectiveContentPanel" Style="overflow: auto; height: 300px;" Visible="false">
-                        <asp:Label runat="server" ID="ObjectivContentLabel" CssClass="col-sm-9" Visible="false"></asp:Label>
-                    </asp:Panel>
+                    <asp:TextBox runat="server" ID="ObjectivContent" CssClass="form-control" placeholder="Ziel der Arbeit" TextMode="MultiLine"></asp:TextBox>
+                    <asp:Label runat="server" ID="ObjectivContentLabel" CssClass="form-control" Style="overflow: auto; height: 300px;" Visible="false"></asp:Label>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Problemstellung:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ProblemStatementContent" CssClass="form-control" placeholder="Problemstellung" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Panel runat="server" class="form-control" ID="ProblemStatementContentPanel" Style="overflow: auto; height: 300px;" Visible="false">
-                        <asp:Label runat="server" ID="ProblemStatementContentLabel" Visible="false"></asp:Label>
-                    </asp:Panel>
+                    <asp:Label runat="server" ID="ProblemStatementContentLabel" CssClass="form-control" Style="overflow: auto; height: 300px;" Visible="false"></asp:Label>
                 </div>
             </div>
             <div class="form-group">
                 <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Technologien:<br/>Schwerpunkte:<br/>Referenzen:"></asp:Label>
                 <div class="col-sm-9">
                     <asp:TextBox runat="server" ID="ReferencesContent" CssClass="form-control" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine"></asp:TextBox>
-                    <asp:Panel runat="server" class="form-control" ID="ReferenceDiv" Style="overflow: auto; height: 300px;" Visible="false">
-                        <asp:Label runat="server" ID="ReferencesContentLabel" placeholder="Technologien/Schwerpunkte/Referenzen" TextMode="MultiLine" Visible="false"></asp:Label>
-                    </asp:Panel>
+                    <asp:Label runat="server" ID="ReferencesContentLabel" class="form-control" Style="overflow: auto; height: 300px;" Visible="false"></asp:Label>
                 </div>
             </div>
             <div class="form-group">
