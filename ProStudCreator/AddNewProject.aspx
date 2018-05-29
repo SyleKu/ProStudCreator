@@ -329,11 +329,11 @@
                         <asp:ImageButton CssClass="img-rounded" ID="MlAlg" Height="60px" runat="server" ToolTip="Mathematik, Algorithmen, Machine Learning, Data Mining, ..." ImageUrl="pictures/projectTypMlAlgUnchecked.png" OnClick="MlAlg_Click" CausesValidation="false" />
                         <asp:ImageButton CssClass="img-rounded" ID="AppWeb" Height="60px" runat="server" ToolTip="Mobile Apps, Webentwicklung, ..." ImageUrl="pictures/projectTypAppWebUnchecked.png" OnClick="AppWeb_Click" CausesValidation="false" />
                         <asp:ImageButton CssClass="img-rounded" ID="DBBigData" Height="60px" runat="server" ToolTip="Datenbanken, Big Data, Data Spaces, ..." ImageUrl="pictures/projectTypDBBigDataUnchecked.png" OnClick="DBBigData_Click" CausesValidation="false" />
-                        <% if (ShibUser.IsAdmin() || ShibUser.GetDepartmentName() == "IMVS")
+                        <% if (ShibUser.IsAdmin() || ShibUser.GetDepartment().IMVS)
                             { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SysSec" Height="60px" runat="server" ToolTip="ITSM, Networks, Security, ..." ImageUrl="pictures/projectTypSysSecUnchecked.png" OnClick="SysSec_Click" CausesValidation="false" />
                         <% } %>
-                        <% if (ShibUser.IsAdmin() || ShibUser.GetDepartmentName() == "IMVS" || ShibUser.GetDepartmentName() == "IIT")
+                        <% if (ShibUser.IsAdmin() || ShibUser.GetDepartment().IMVS || ShibUser.GetDepartment().IIT)
                             { %>
                         <asp:ImageButton CssClass="img-rounded" ID="SE" Height="60px" runat="server" ToolTip="Software Engineering, Testing, Tooling, Architectures, Requirements Engineering, ..." ImageUrl="pictures/projectTypSEUnchecked.png" OnClick="SE_Click" CausesValidation="false" />
                         <% } %>

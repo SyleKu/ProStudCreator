@@ -73,19 +73,18 @@ namespace ProStudCreator
             NavAdmin.Visible = ShibUser.CanVisitAdminPage();
         }
 
+        public readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 #if DEBUG
             inDebugMode = true;
 #endif
-            using (var db = new ProStudentCreatorDBDataContext()) //register new Users
+            //register new Users
+            /*if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(ShibUser.GetEmail()))
             {
-                if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(ShibUser.GetEmail()))
-                {
-                    db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartmentId(db), Mail = ShibUser.GetEmail(), Name = ShibUser.GetFullName()});
-                }
-            }
-
+                db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartment(db).Id, Mail = ShibUser.GetEmail(), Name = ShibUser.GetFullName()});
+            }*/
         }
 
         private void Page_Error(object sender, EventArgs e)

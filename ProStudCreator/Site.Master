@@ -62,7 +62,7 @@
                             <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">Admin</h2>
                         </a>
                         <div runat="server" id="tasksToDo" class="display-inline" Visible="False">
-                            <img src="pictures/danger.png" height="32px" width="32px"/>
+                            <img src="pictures/danger.png" height="32" width="32"/>
                         </div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                 &copy;<%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz
             </div>
             <div class="pull-right">
-                Angemeldet als <%: ShibUser.GetEmail() + " (" + ShibUser.GetDepartmentName() + ")" %> <%: ShibUser.IsAdmin() ? " (Admin)" : "" %>
+                Angemeldet als <%: ShibUser.GetEmail() + " (" + ShibUser.GetDepartment().DepartmentName + ")" %> <%: ShibUser.IsAdmin() ? " (Admin)" : "" %>
                 <% if (inDebugMode)
                    { %>
                     <strong style="color: red">(DEBUG MODE)</strong>

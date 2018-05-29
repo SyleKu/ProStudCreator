@@ -150,7 +150,7 @@ namespace ProStudCreator
 
         private IQueryable<ProjectSingleElement> GetSelectedProjects()
         {
-            var depId = ShibUser.GetDepartmentId(db);
+            var depId = ShibUser.GetDepartment(db).Id;
 
             if (radioSelectedProjects.SelectedValue == "inProgress")
             {

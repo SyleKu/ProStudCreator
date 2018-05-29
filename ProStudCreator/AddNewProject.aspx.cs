@@ -18,7 +18,7 @@ namespace ProStudCreator
 {
     public partial class AddNewProject : Page
     {
-        private readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        public readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
         private int? id;
         private Project project;
         private ProjectType projectPriority = new ProjectType();
@@ -145,9 +145,9 @@ namespace ProStudCreator
                 }, 1).Concat(db.ProjectTeamSizes);
 
                 Department.DataSource = db.Departments;
-                var dep = ShibUser.GetDepartmentId(db);
-                if (dep.HasValue)
-                    Department.SelectedValue = dep.Value.ToString();
+                var dep = ShibUser.GetDepartment(db);
+                if (dep!=null)
+                    Department.SelectedValue = dep.Id.ToString();
 
                 DataBind();
 

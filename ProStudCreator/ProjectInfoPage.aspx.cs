@@ -299,8 +299,13 @@ namespace ProStudCreator
 
             if (deliveryDate.HasValue)
             {
-                if(project.CanEditTitle())
-                    ChangeTitleDate.Text = $"Titeländerung noch bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+                if (project.CanEditTitle())
+                {
+                    if(project.LogProjectType?.P5==true)
+                        ChangeTitleDate.Text = "";
+                    else
+                        ChangeTitleDate.Text = $"Titeländerung noch bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+                }
                 else
                     ChangeTitleDate.Text = $"Titeländerung war nur bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
             }
