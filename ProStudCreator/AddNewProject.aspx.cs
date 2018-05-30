@@ -1268,7 +1268,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             else
             {
                 var PreviousProjectID = int.Parse(dropPreviousProject.SelectedValue);
-                project.Project1 = db.Projects.Single(p => p.Id == PreviousProjectID);
+                project.PreviousProject = db.Projects.Single(p => p.Id == PreviousProjectID);
             }
         }
 

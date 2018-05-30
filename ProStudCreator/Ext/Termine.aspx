@@ -56,7 +56,7 @@
                     <%--<AlternatingRowStyle BackColor="White" />--%>
                 </asp:GridView>
                 <hr/>
-                <p>Titeländerungen von Informatikprojekten sind bis 11 Wochen vor Abgabe möglich!</p>
+                <p>Titeländerungen von Informatikprojekten sind bis <%: (ProStudCreator.Global.AllowTitleChangesBeforeSubmission.Days/7) %> Wochen vor Abgabe möglich!</p>
                 <br/>
                 <p>
                     <a href="../Content/Externe_Projekteingabe.pdf" class="pdf">Formular für Projekte von externen Auftraggebern.</a>

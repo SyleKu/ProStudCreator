@@ -20,25 +20,29 @@ namespace ProStudCreator
             _p.State = ProjectState.InProgress;
             _p.IsMainVersion = true;
         }
-       
+
+        public static string GetFullTitle(this Project _p) => $"{_p.Semester.Name}_{_p.Department.DepartmentName}{_p.ProjectNr:D2}: {_p.Name}";
+
         public static Project SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            Project project = new Project();
-            project.ModificationDate = DateTime.Now;
-            project.LastEditedBy = ShibUser.GetEmail();
-            project.IsMainVersion = true;
+            Project project = new Project
+            {
+                ModificationDate = DateTime.Now,
+                LastEditedBy = ShibUser.GetEmail(),
+                IsMainVersion = true
+            };
             _p.IsMainVersion = false;
             _p.MapProject(project);
-                        
+
             db.Projects.InsertOnSubmit(project);
             db.SubmitChanges();
 
             return project;
-            
+
         }
         public static Project DuplicateAndUseAsTemplate(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            var duplicate = _p.duplicate(db);
+            var duplicate = _p.Duplicate(db);
             duplicate.BaseVersionId = duplicate.Id;
             duplicate.Reservation1Mail = "";
             duplicate.Reservation2Mail = "";
@@ -55,7 +59,7 @@ namespace ProStudCreator
             _p.LogDefenceDate = null;
             _p.LogDefenceRoom = null;
             _p.LogExpertID = null;
-            _p.LogExpertPaid = null;
+            _p.LogExpertPaid = false;
             _p.LogGradeStudent1 = null;
             _p.LogGradeStudent2 = null;
             _p.LogLanguageEnglish = null;
@@ -98,7 +102,7 @@ namespace ProStudCreator
             var pTwoTypeTeamSize = nameof(Project.PTwoTeamSize);
             var advisor1 = nameof(Project.Advisor1);
             var advisor2 = nameof(Project.Advisor2);
-           
+
 
             exclusionList.Add(pid);
             exclusionList.Add(modDate);
@@ -127,7 +131,7 @@ namespace ProStudCreator
             {
                 if (!exclusionList.Contains(pi.Name))
                 {
-                    
+
                     var value1 = pi.GetValue(p1);
                     var value2 = pi.GetValue(p2);
                     if (value1 != null && value2 != null)
@@ -149,11 +153,13 @@ namespace ProStudCreator
             return false;
         }
 
-        public static Project duplicate(this Project _p, ProStudentCreatorDBDataContext db)
+        public static Project Duplicate(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            Project duplicatedProject = new Project();
-            duplicatedProject.ModificationDate = DateTime.Now;
-            duplicatedProject.LastEditedBy = ShibUser.GetEmail();
+            Project duplicatedProject = new Project
+            {
+                ModificationDate = DateTime.Now,
+                LastEditedBy = ShibUser.GetEmail()
+            };
             _p.MapProject(duplicatedProject);
             db.Projects.InsertOnSubmit(duplicatedProject);
             db.SubmitChanges();
@@ -169,16 +175,16 @@ namespace ProStudCreator
         {
             string validationMessage = "";
             if (_p.Advisor1 == null)
-                validationMessage =  "Bitte wählen Sie einen Hauptbetreuer aus.";
+                validationMessage = "Bitte wählen Sie einen Hauptbetreuer aus.";
 
             if (_p.ClientPerson.Trim().Length != 0 && !_p.ClientPerson.IsValidName())
-                validationMessage =  "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
+                validationMessage = "Bitte geben Sie den Namen des Kundenkontakts an (Vorname Nachname).";
 
             if (_p.ClientMail.Trim().Length != 0 && !_p.ClientMail.IsValidEmail())
-                validationMessage =  "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
+                validationMessage = "Bitte geben Sie die E-Mail-Adresse des Kundenkontakts an.";
 
             if ((!_p.Advisor1?.Name.IsValidName()) ?? true)
-                validationMessage =  "Bitte wählen Sie einen Hauptbetreuer aus.";
+                validationMessage = "Bitte wählen Sie einen Hauptbetreuer aus.";
 
             var numAssignedTypes = 0;
             if (projectTypes == null)
@@ -187,30 +193,30 @@ namespace ProStudCreator
             }
 
             numAssignedTypes = projectTypes.Count(a => a);
-            
+
 
             if (numAssignedTypes != 1 && numAssignedTypes != 2)
-                validationMessage =  "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
+                validationMessage = "Bitte wählen Sie genau 1-2 passende Themengebiete aus.";
 
             if (_p.OverOnePage)
-                validationMessage =  "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
+                validationMessage = "Der Projektbeschrieb passt nicht auf eine A4-Seite. Bitte kürzen Sie die Beschreibung.";
 
             if (!ShibUser.CanSubmitAllProjects() && ShibUser.GetEmail() != _p.Advisor1?.Mail)
-                validationMessage =  "Nur Hauptbetreuer können Projekte einreichen.";
+                validationMessage = "Nur Hauptbetreuer können Projekte einreichen.";
 
             if (_p.Reservation1Mail.Trim().Length != 0 && _p.Reservation1Name.Trim().Length == 0)
-                validationMessage =  "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
+                validationMessage = "Bitte geben Sie den Namen der ersten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
             if (_p.Reservation1Mail.Trim().Length != 0 && _p.Reservation1Name.Trim().Length != 0)
             {
                 Regex regex = new Regex(@".*\..*@students\.fhnw\.ch");
                 System.Text.RegularExpressions.Match match = regex.Match(_p.Reservation1Mail);
                 if (!match.Success)
-                    validationMessage =  "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
+                    validationMessage = "Bitte geben Sie eine gültige E-Mail-Adresse der Person an, für die das Projekt reserviert ist. (vorname.nachname@students.fhnw.ch)";
             }
 
             if (_p.Reservation2Mail.Trim().Length != 0 && _p.Reservation2Name.Trim().Length == 0)
-                validationMessage = 
+                validationMessage =
                     "Bitte geben Sie den Namen der zweiten Person an, für die das Projekt reserviert ist (Vorname Nachname).";
 
             if (_p.Reservation2Mail.Trim().Length != 0 && _p.Reservation2Name.Trim().Length != 0)
@@ -219,14 +225,14 @@ namespace ProStudCreator
                 System.Text.RegularExpressions.Match match = regex.Match(_p.Reservation1Mail);
                 match = regex.Match(_p.Reservation2Mail);
                 if (!match.Success)
-                    validationMessage =  "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
+                    validationMessage = "Bitte geben Sie eine gültige E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.(vorname.nachname@students.fhnw.ch)";
             }
 
             if (_p.Reservation1Name.Trim().Length != 0 && _p.Reservation1Mail.Trim().Length == 0)
-                validationMessage =  "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
+                validationMessage = "Bitte geben Sie die E-Mail-Adresse der Person an, für die das Projekt reserviert ist.";
 
             if (_p.Reservation2Name.Trim().Length != 0 && _p.Reservation2Mail.Trim().Length == 0)
-                validationMessage =  "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
+                validationMessage = "Bitte geben Sie die E-Mail-Adresse der zweiten Person an, für die das Projekt reserviert ist.";
 
             return validationMessage;
         }
@@ -263,7 +269,7 @@ namespace ProStudCreator
          */
         public static void MapProject(this Project _p, Project target)
         {
-            int EXPECTEDPROPCOUNT = 90; // has to be updated after the project class has changed and the method has been updated 
+            int EXPECTEDPROPCOUNT = 91; // has to be updated after the project class has changed and the method has been updated 
 
             var actualPropCount = typeof(Project).GetProperties().Count();
 
@@ -321,7 +327,7 @@ namespace ProStudCreator
             target.POneType = _p.POneType;
             target.PreviousProjectID = _p.PreviousProjectID;
             target.ProblemStatement = _p.ProblemStatement;
-            target.Project1 = _p.Project1;
+            target.PreviousProject = _p.PreviousProject;
             target.ProjectNr = _p.ProjectNr;
             target.Projects = target.Projects;
             target.PTwoTeamSize = _p.PTwoTeamSize;
@@ -346,7 +352,9 @@ namespace ProStudCreator
             target.TypeSysSec = _p.TypeSysSec;
             target.UnderNDA = _p.UnderNDA;
             target.WebSummaryChecked = _p.WebSummaryChecked;
+            target.GradeSentToAdmin = _p.GradeSentToAdmin;
         }
+
         public static Project CreateNewProject(ProStudentCreatorDBDataContext db)
         {
             Project project = new Project();
@@ -365,7 +373,7 @@ namespace ProStudCreator
         {
             _p.PublishedDate = DateTime.Now;
             _p.ModificationDate = DateTime.Now;
-            GenerateProjectNr(_p);
+            AssignUniqueProjectNr(_p);
             _p.State = ProjectState.Submitted;
         }
 
@@ -396,7 +404,7 @@ namespace ProStudCreator
         ///     Applies to projects after submission.
         /// </summary>
         /// <param name="_p"></param>
-        public static void GenerateProjectNr(this Project _p)
+        public static void AssignUniqueProjectNr(this Project _p)
         {
             using (var dbx = new ProStudentCreatorDBDataContext())
             {
@@ -483,42 +491,64 @@ namespace ProStudCreator
             return 1;
         }
 
-        public static DateTime GetDeliveryDate(this Project _p)
+        public static DateTime? GetDeliveryDate(this Project _p)
         {
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 DateTime dbDate;
 
-                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Projekt Voll/TeilZeit
+                if (_p.LogProjectDuration == 1 && (_p.LogProjectType?.P5 ?? false)) //IP5 Projekt Voll/TeilZeit
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
-                        ? dbDate
-                        : Semester.NextSemester(db).EndDate;
-                if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
+                        ? dbDate : (DateTime?)null;
+                if (_p.LogProjectDuration == 2 && (_p.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
-                        ? dbDate
-                        : Semester.NextSemester(db).EndDate;
-                if (_p?.LogProjectDuration == 1 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 1 Semester
+                        ? dbDate : (DateTime?)null;
+                if (_p.LogProjectDuration == 1 && (_p.LogProjectType?.P6 ?? false)) //IP6 Variante 1 Semester
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP6Normal, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
-                        ? dbDate
-                        : Semester.NextSemester(db).EndDate;
-                if (_p?.LogProjectDuration == 2 && (_p?.LogProjectType?.P6 ?? false)) //IP6 Variante 2 Semester
+                        ? dbDate : (DateTime?)null;
+                if (_p.LogProjectDuration == 2 && (_p.LogProjectType?.P6 ?? false)) //IP6 Variante 2 Semester
                     return DateTime.TryParseExact(_p.Semester.SubmissionIP6Variant2, "dd.MM.yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
-                        ? dbDate
-                        : Semester.NextSemester(db).EndDate;
-                return Semester.NextSemester(db).EndDate;
+                        ? dbDate : (DateTime?)null;
+
+                return null;
             }
+        }
+
+        public static bool WasDefenseHeld(this Project _p)
+        {
+            var def = _p.GetDefenseDate();
+            if (def == null)
+                return false;
+
+            return _p.BillingStatus!=null && _p.WebSummaryChecked && _p.IsMainVersion && _p.LogGradeStudent1!=null && def.Value.AddDays(1) < DateTime.Now;
+        }
+
+        public static DateTime? GetDefenseDate(this Project _p)
+        {
+            if (_p.LogDefenceDate != null)
+                return _p.LogDefenceDate;
+
+            DateTime dbDate;
+            if (_p.LogProjectDuration == 1 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Projekt Voll/TeilZeit
+                return DateTime.TryParseExact(_p.Semester.SubmissionIP5FullPartTime, "dd.MM.yyyy",
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate + Global.ExpectFinalPresentationAfterSubmissionForIP5 : (DateTime?)null;
+            if (_p.LogProjectDuration == 2 && (_p?.LogProjectType?.P5 ?? false)) //IP5 Berufsbegleitend
+                return DateTime.TryParseExact(_p.Semester.SubmissionIP5Accompanying, "dd.MM.yyyy",
+                    CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dbDate)
+                    ? dbDate + Global.ExpectFinalPresentationAfterSubmissionForIP5 : (DateTime?)null;
+
+            return null;
         }
 
 
         public static bool CanEditTitle(this Project _p)
         {
-            return (_p.LogProjectType?.P5 == true) || DateTime.Now < _p.GetDeliveryDate().AddDays(
-                       -ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7 /* 11 weeks before delivery date */
-                       + 2 /* give some leeway */);
+            return (_p.LogProjectType?.P5 == true) || (DateTime.Now < _p.GetDeliveryDate() - Global.AllowTitleChangesBeforeSubmission);
         }
 
 
@@ -539,43 +569,20 @@ namespace ProStudCreator
         }
 
 
-        public static bool GetProjectRelevantForGradeTasks(this Project p, ProStudentCreatorDBDataContext db)
+        public static bool ShouldBeGradedByNow(this Project p, ProStudentCreatorDBDataContext db, DateTime _cutoffDate)
         {
-            var date = Semester.ActiveSemester(new DateTime(2017, 4, 1), db).EndDate;
-            if (p.Semester.EndDate >= date)
-            {
-                if (p.LogProjectType?.P5 == true)
-                {
-                    if (DateTime.Now > p.GetDeliveryDate().AddDays(21))
-                    {
-                        return true;
-                    }
-                }
-                if (p.LogProjectType?.P6 == true)
-                {
-                    if (p.LogProjectDuration == 2)
-                    {
-                        if (DateTime.ParseExact(p.Semester.DefenseIP6BEnd, "dd.MM.yyyy",
-                                CultureInfo.InvariantCulture) < DateTime.Now)
-                        {
-                            return true;
-                        }
-                    }
-                    if (p.LogProjectDuration == 1)
-                    {
-                        if (DateTime.ParseExact(p.Semester.DefenseIP6End, "dd.MM.yyyy",
-                                CultureInfo.InvariantCulture) < DateTime.Now)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
+            var date = p.GetDefenseDate();
+            if (!date.HasValue)
+                return false;
 
-            return false;
+            var gradeDate = date.Value + Global.GradingDuration;
+            if (gradeDate <= _cutoffDate)
+                return false;
+
+            return gradeDate <= DateTime.Now;
         }
 
-        public static string stateColor(this Project p)
+        public static string StateColor(this Project p)
         {
             switch (p.State)
             {
@@ -593,9 +600,8 @@ namespace ProStudCreator
 
                 default:
                     return "";
-
             }
-        
+
         }
 
         #endregion
@@ -644,24 +650,6 @@ namespace ProStudCreator
         public static bool UserCanUnsubmit(this Project _p)
         {
             return _p.UserCanEdit() && _p.State == ProjectState.Submitted;
-        }
-
-        #endregion
-
-        #region LINQ-derived type extensions
-
-        public static string Export(this ProjectType pt)
-        {
-            if (pt.P5 && !pt.P6) return "P5";
-            if (!pt.P5 && pt.P6) return "P6";
-            return "both";
-        }
-
-        public static string Export(this ProjectTeamSize pts)
-        {
-            if (pts.Size1 && !pts.Size2) return "1";
-            if (!pts.Size1 && pts.Size2) return "2";
-            return "1;2";
         }
 
         #endregion

@@ -127,10 +127,10 @@ namespace ProStudCreator
             row.CreateCell(0).SetCellValue(abbreviation);
             row.CreateCell(1).SetCellValue(p.Name);
             row.CreateCell(2).SetCellValue(dispName);
-            row.CreateCell(3).SetCellValue(p.POneType.Export());
-            row.CreateCell(4).SetCellValue(p.PTwoType != null ? p.PTwoType.Export() : p.POneType.Export());
-            row.CreateCell(5).SetCellValue(p.POneTeamSize.Export());
-            row.CreateCell(6).SetCellValue(p.PTwoTeamSize != null ? p.PTwoTeamSize.Export() : p.POneTeamSize.Export());
+            row.CreateCell(3).SetCellValue(p.POneType.ExportValue);
+            row.CreateCell(4).SetCellValue(p.PTwoType != null ? p.PTwoType.ExportValue : p.POneType.ExportValue);
+            row.CreateCell(5).SetCellValue(p.POneTeamSize.ExportValue);
+            row.CreateCell(6).SetCellValue(p.PTwoTeamSize != null ? p.PTwoTeamSize.ExportValue : p.POneTeamSize.ExportValue);
             row.CreateCell(7).SetCellValue("-"); // Major undefined
             row.CreateCell(8).SetCellValue(0); // Importance undefined
             row.CreateCell(9).SetCellValue(p.Advisor1?.Mail ?? "");
@@ -218,7 +218,8 @@ namespace ProStudCreator
             cell1.SetCellValue(GetStartDate(p, db));
             var cell2 = row.CreateCell(i++);
             cell2.CellStyle = DateStyle;
-            cell2.SetCellValue(p.GetDeliveryDate());
+            if(p.GetDeliveryDate().HasValue)
+                cell2.SetCellValue(p.GetDeliveryDate().Value);
             row.CreateCell(i++).SetCellValue(p.ExhibitionBachelorThesis(db));
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
             row.CreateCell(i++).SetCellValue(p.LogStudent1Mail ?? "");
@@ -297,10 +298,10 @@ namespace ProStudCreator
 
         private static string GetAbbreviationProject(Project p)
         {
-            if (p.Project1 == null)
+            if (p.PreviousProject == null)
                 return "";
-            return p.Project1?.Semester + "_" + p.Project1?.Department.DepartmentName +
-                   p.Project1?.ProjectNr.ToString("D2");
+            return p.PreviousProject.Semester + "_" + p.PreviousProject.Department.DepartmentName +
+                   p.PreviousProject.ProjectNr.ToString("D2");
         }
 
         private static DateTime GetStartDate(Project p, ProStudentCreatorDBDataContext db)

@@ -72,7 +72,7 @@
                     </asp:DropDownList>
                 </div>
             </div>
-            <div runat="server" visible="False" id="divGradeStudent1">
+            <div runat="server" visible="false" id="divGradeStudent1">
                 <br />
                 <div class="form-group">
                     <asp:Label runat="server" Text="Note:" CssClass="control-label col-sm-3" ID="lblGradeStudent1"></asp:Label>
@@ -81,11 +81,15 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group" id="divGradeStudent2" runat="server" visible="False">
+            <div class="form-group" id="divGradeStudent2" runat="server" visible="false">
                 <asp:Label runat="server" Text="Note:" ID="lblGradeStudent2" CssClass="control-label col-sm-3"></asp:Label>
                 <div class="col-sm-3">
                     <asp:TextBox runat="server" TextMode="Number" min="1" max="6" step="0.1" ID="nbrGradeStudent2" CssClass="form-control"></asp:TextBox>
                 </div>
+            </div>
+            <div class="form-group" style="text-align: left" runat="server" visible="false" id="divGradeWarning">
+                <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
+                <asp:Label runat="server" ID="Label1" CssClass="col-sm-6" Text="Hinweis: Noten werden unmittelbar an die Ausbildungsadministration weitergeleitet."></asp:Label>
             </div>
             <br />
 

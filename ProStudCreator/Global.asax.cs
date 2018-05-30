@@ -17,8 +17,15 @@ namespace ProStudCreator
     public class Global : HttpApplication
     {
         private const string DummyCacheItemKey = "DummyCacheItem";
-        private string DummyPage = "CheckAllTasks";
-        public const int AllowTitleChangesBeforeSubmission = 11; //weeks
+        private const string DummyPage = "CheckAllTasks";
+        public static readonly TimeSpan AllowTitleChangesBeforeSubmission = TimeSpan.FromDays(11*7);
+        public static readonly TimeSpan ExpectFinalPresentationAfterSubmissionForIP5 = TimeSpan.FromDays(3*7);
+        public static readonly TimeSpan GradingDuration = TimeSpan.FromDays(2);
+        public static readonly string WebAdmin = "simon.felix@fhnw.ch";
+        public static readonly string GradeAdmin = "simon.felix@fhnw.ch"; // "admin.technik@fhnw.ch";
+        public static readonly string PayExpertAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
+        public static readonly string InvoiceCustomersAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
+        public static readonly string MarKomAdmin = "simon.felix@fhnw.ch"; // "jadwiga.gabrys@fhnw.ch";
 
         private void Application_Start(object sender, EventArgs e)
         {
@@ -37,7 +44,9 @@ namespace ProStudCreator
 
         private void RegisterChacheEntry()
         {
-            if (null != HttpContext.Current.Cache[DummyCacheItemKey]) return;
+            if (null != HttpContext.Current.Cache[DummyCacheItemKey])
+                return;
+
             HttpContext.Current.Cache.Add(DummyCacheItemKey, "DummyTest", null,
                 DateTime.MaxValue, TimeSpan.FromHours(3),
                 CacheItemPriority.Normal,
@@ -46,44 +55,36 @@ namespace ProStudCreator
         }
 
 
-        public void CacheItemRemovedCallback(string key,
-            object value, CacheItemRemovedReason reason)
+        public void CacheItemRemovedCallback(string key, object value, CacheItemRemovedReason reason)
         {
-
-
             HitPage();
 
             // Do the service works
-            CheckAllTasks();
+            TaskHandler.CheckAllTasks();
         }
 
         private void HitPage()
         {
-
-
-            var client = new WebClient();
-            try
-            {
+            using (var client = new WebClient())
+                try
+                {
 #if DEBUG
-                client.DownloadData(Application.Get("dummyRequest").ToString());
+                    client.DownloadData(Application.Get("dummyRequest").ToString());
 #else
 
-                client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
+                    client.DownloadData(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
 #endif
-            }
-            catch
-            {
-                throw new RuntimeException(ConfigurationManager.AppSettings["localhost_remote"] + DummyPage);
-            }
-
-
+                }
+                catch(Exception e)
+                {
+                    throw new RuntimeException($"Request of {ConfigurationManager.AppSettings["localhost_remote"] + DummyPage} failed", e);
+                }
         }
 
 
 
         protected void Application_BeginRequest(Object sender, EventArgs e)
         {
-
 #if DEBUG
             if (Application.Get("dummyRequest").ToString() == "")
             {
@@ -104,18 +105,8 @@ namespace ProStudCreator
             if (HttpContext.Current.Request.Url.ToString() == Application.Get("dummyRequest").ToString())
             {
                 //Add the item in cache and when succesful, do the work.
-
                 RegisterChacheEntry();
             }
-
-
-        }
-
-
-        private void CheckAllTasks() //checks for open tasks And generate Emails to remind users of their open Tasks
-        {
-
-            TaskHandler.CheckAllTasks();
         }
     }
 }

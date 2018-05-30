@@ -1076,6 +1076,8 @@ namespace ProStudCreator
 		
 		private bool _ShowAddressOnInfoPage;
 		
+		private bool _RequiresProjectResults;
+		
 		private EntitySet<Project> _Projects;
 		
     #region Extensibility Method Definitions
@@ -1088,6 +1090,8 @@ namespace ProStudCreator
     partial void OnDisplayNameChanged();
     partial void OnShowAddressOnInfoPageChanging(bool value);
     partial void OnShowAddressOnInfoPageChanged();
+    partial void OnRequiresProjectResultsChanging(bool value);
+    partial void OnRequiresProjectResultsChanged();
     #endregion
 		
 		public BillingStatus()
@@ -1152,6 +1156,26 @@ namespace ProStudCreator
 					this._ShowAddressOnInfoPage = value;
 					this.SendPropertyChanged("ShowAddressOnInfoPage");
 					this.OnShowAddressOnInfoPageChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequiresProjectResults", DbType="bit NOT NULL")]
+		public bool RequiresProjectResults
+		{
+			get
+			{
+				return this._RequiresProjectResults;
+			}
+			set
+			{
+				if ((this._RequiresProjectResults != value))
+				{
+					this.OnRequiresProjectResultsChanging(value);
+					this.SendPropertyChanging();
+					this._RequiresProjectResults = value;
+					this.SendPropertyChanged("RequiresProjectResults");
+					this.OnRequiresProjectResultsChanged();
 				}
 			}
 		}
@@ -1316,7 +1340,7 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _LogExpertID;
 		
-		private System.Nullable<bool> _LogExpertPaid;
+		private bool _LogExpertPaid;
 		
 		private System.Nullable<System.DateTime> _LogDefenceDate;
 		
@@ -1353,6 +1377,8 @@ namespace ProStudCreator
 		private bool _UnderNDA;
 		
 		private bool _WebSummaryChecked;
+		
+		private bool _GradeSentToAdmin;
 		
 		private EntitySet<Project> _Projects;
 		
@@ -1496,7 +1522,7 @@ namespace ProStudCreator
     partial void OnLogStudent2MailChanged();
     partial void OnLogExpertIDChanging(System.Nullable<int> value);
     partial void OnLogExpertIDChanged();
-    partial void OnLogExpertPaidChanging(System.Nullable<bool> value);
+    partial void OnLogExpertPaidChanging(bool value);
     partial void OnLogExpertPaidChanged();
     partial void OnLogDefenceDateChanging(System.Nullable<System.DateTime> value);
     partial void OnLogDefenceDateChanged();
@@ -1534,6 +1560,8 @@ namespace ProStudCreator
     partial void OnUnderNDAChanged();
     partial void OnWebSummaryCheckedChanging(bool value);
     partial void OnWebSummaryCheckedChanged();
+    partial void OnGradeSentToAdminChanging(bool value);
+    partial void OnGradeSentToAdminChanged();
     #endregion
 		
 		public Project()
@@ -2673,7 +2701,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogExpertPaid", DbType="Bit")]
-		public System.Nullable<bool> LogExpertPaid
+		public bool LogExpertPaid
 		{
 			get
 			{
@@ -3064,6 +3092,26 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GradeSentToAdmin", DbType="bit NOT NULL")]
+		public bool GradeSentToAdmin
+		{
+			get
+			{
+				return this._GradeSentToAdmin;
+			}
+			set
+			{
+				if ((this._GradeSentToAdmin != value))
+				{
+					this.OnGradeSentToAdminChanging(value);
+					this.SendPropertyChanging();
+					this._GradeSentToAdmin = value;
+					this.SendPropertyChanged("GradeSentToAdmin");
+					this.OnGradeSentToAdminChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Project", Storage="_Projects", ThisKey="Id", OtherKey="PreviousProjectID")]
 		public EntitySet<Project> Projects
 		{
@@ -3172,7 +3220,7 @@ namespace ProStudCreator
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Project_Project", Storage="_Project1", ThisKey="PreviousProjectID", OtherKey="Id", IsForeignKey=true)]
-		public Project Project1
+		public Project PreviousProject
 		{
 			get
 			{
@@ -3200,7 +3248,7 @@ namespace ProStudCreator
 					{
 						this._PreviousProjectID = default(Nullable<int>);
 					}
-					this.SendPropertyChanged("Project1");
+					this.SendPropertyChanged("PreviousProject");
 				}
 			}
 		}
@@ -3534,13 +3582,13 @@ namespace ProStudCreator
 		private void attach_Projects(Project entity)
 		{
 			this.SendPropertyChanging();
-			entity.Project1 = this;
+			entity.PreviousProject = this;
 		}
 		
 		private void detach_Projects(Project entity)
 		{
 			this.SendPropertyChanging();
-			entity.Project1 = null;
+			entity.PreviousProject = null;
 		}
 		
 		private void attach_Attachements(Attachements entity)
@@ -3608,6 +3656,8 @@ namespace ProStudCreator
 		
 		private EntitySet<Project> _Project;
 		
+		private EntitySet<Task> _Tasks;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -3649,6 +3699,7 @@ namespace ProStudCreator
 		public Semester()
 		{
 			this._Project = new EntitySet<Project>(new Action<Project>(this.attach_Project), new Action<Project>(this.detach_Project));
+			this._Tasks = new EntitySet<Task>(new Action<Task>(this.attach_Tasks), new Action<Task>(this.detach_Tasks));
 			OnCreated();
 		}
 		
@@ -3985,6 +4036,19 @@ namespace ProStudCreator
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Task", Storage="_Tasks", ThisKey="Id", OtherKey="SemesterId")]
+		public EntitySet<Task> Tasks
+		{
+			get
+			{
+				return this._Tasks;
+			}
+			set
+			{
+				this._Tasks.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -4012,6 +4076,18 @@ namespace ProStudCreator
 		}
 		
 		private void detach_Project(Project entity)
+		{
+			this.SendPropertyChanging();
+			entity.Semester = null;
+		}
+		
+		private void attach_Tasks(Task entity)
+		{
+			this.SendPropertyChanging();
+			entity.Semester = this;
+		}
+		
+		private void detach_Tasks(Task entity)
 		{
 			this.SendPropertyChanging();
 			entity.Semester = null;
@@ -4940,7 +5016,7 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="TypeEnum", Storage="_GradesRegistered", DbType="int")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GradesRegistered", DbType="int NOT NULL")]
 		public int Type
 		{
 			get
@@ -5042,11 +5118,13 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _Supervisor;
 		
-		private int _ResponsibleUser;
+		private System.Nullable<int> _ResponsibleUser;
 		
 		private System.Nullable<System.DateTime> _LastReminded;
 		
 		private bool _Done;
+		
+		private System.Nullable<int> _SemesterId;
 		
 		private EntityRef<TaskType> _TaskType1;
 		
@@ -5055,6 +5133,8 @@ namespace ProStudCreator
 		private EntityRef<UserDepartmentMap> _UserDepartmentMap1;
 		
 		private EntityRef<Project> _Project1;
+		
+		private EntityRef<Semester> _Semester;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -5070,12 +5150,14 @@ namespace ProStudCreator
     partial void OnDueDateChanged();
     partial void OnSupervisorIdChanging(System.Nullable<int> value);
     partial void OnSupervisorIdChanged();
-    partial void OnResponsibleUserIdChanging(int value);
+    partial void OnResponsibleUserIdChanging(System.Nullable<int> value);
     partial void OnResponsibleUserIdChanged();
     partial void OnLastRemindedChanging(System.Nullable<System.DateTime> value);
     partial void OnLastRemindedChanged();
     partial void OnDoneChanging(bool value);
     partial void OnDoneChanged();
+    partial void OnSemesterIdChanging(System.Nullable<int> value);
+    partial void OnSemesterIdChanged();
     #endregion
 		
 		public Task()
@@ -5084,6 +5166,7 @@ namespace ProStudCreator
 			this._UserDepartmentMap = default(EntityRef<UserDepartmentMap>);
 			this._UserDepartmentMap1 = default(EntityRef<UserDepartmentMap>);
 			this._Project1 = default(EntityRef<Project>);
+			this._Semester = default(EntityRef<Semester>);
 			OnCreated();
 		}
 		
@@ -5199,8 +5282,8 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ResponsibleUser", DbType="Int NOT NULL")]
-		public int ResponsibleUserId
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ResponsibleUser", DbType="Int")]
+		public System.Nullable<int> ResponsibleUserId
 		{
 			get
 			{
@@ -5259,6 +5342,30 @@ namespace ProStudCreator
 					this._Done = value;
 					this.SendPropertyChanged("Done");
 					this.OnDoneChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SemesterId", DbType="int")]
+		public System.Nullable<int> SemesterId
+		{
+			get
+			{
+				return this._SemesterId;
+			}
+			set
+			{
+				if ((this._SemesterId != value))
+				{
+					if (this._Semester.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSemesterIdChanging(value);
+					this.SendPropertyChanging();
+					this._SemesterId = value;
+					this.SendPropertyChanged("SemesterId");
+					this.OnSemesterIdChanged();
 				}
 			}
 		}
@@ -5358,7 +5465,7 @@ namespace ProStudCreator
 					}
 					else
 					{
-						this._ResponsibleUser = default(int);
+						this._ResponsibleUser = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("ResponsibleUser");
 				}
@@ -5395,6 +5502,40 @@ namespace ProStudCreator
 						this._Project = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Project");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Semester_Task", Storage="_Semester", ThisKey="SemesterId", OtherKey="Id", IsForeignKey=true)]
+		public Semester Semester
+		{
+			get
+			{
+				return this._Semester.Entity;
+			}
+			set
+			{
+				Semester previousValue = this._Semester.Entity;
+				if (((previousValue != value) 
+							|| (this._Semester.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Semester.Entity = null;
+						previousValue.Tasks.Remove(this);
+					}
+					this._Semester.Entity = value;
+					if ((value != null))
+					{
+						value.Tasks.Add(this);
+						this._SemesterId = value.Id;
+					}
+					else
+					{
+						this._SemesterId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Semester");
 				}
 			}
 		}

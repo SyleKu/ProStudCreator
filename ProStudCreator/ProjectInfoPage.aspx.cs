@@ -34,7 +34,7 @@ namespace ProStudCreator
                 if (!project.IsMainVersion)
                 {
                     project = db.Projects.Single(p => p.BaseVersionId == project.BaseVersionId && p.IsMainVersion);
-                    Response.Redirect(@"~/ProjectInfoPage?id="+project.Id);
+                    Response.Redirect(@"~/ProjectInfoPage?id=" + project.Id);
                     return;
                 }
                 divDownloadBtn.Visible = false;
@@ -45,7 +45,7 @@ namespace ProStudCreator
                 Response.Redirect("Projectlist.aspx");
                 Response.End();
             }
-            
+
             gridProjectAttachs.DataSource = db.Attachements.Where(item => item.ProjectId == project.Id && !item.Deleted)
                 .Select(i => GetProjectSingleAttachment(i));
             gridProjectAttachs.DataBind();
@@ -119,10 +119,7 @@ namespace ProStudCreator
                 type = ProjectTypes.IP6;
             }
             else
-            {
-                lblProjectType.Text = "?";
-                type = ProjectTypes.NotDefined;
-            }
+                throw new Exception();
 
             //set the Project duration
             if (project?.LogProjectDuration == 2)
@@ -209,12 +206,13 @@ namespace ProStudCreator
 
             divExpert.Visible = project.Expert != null;
 
-            divPresentation.Visible = project.LogDefenceDate != null;
+            //divPresentation.Visible = project.LogDefenceDate != null;
 
             divBachelor.Visible = project?.LogProjectType?.P6 ?? false;
 
             divGradeStudent1.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name);
             divGradeStudent2.Visible = !string.IsNullOrEmpty(project?.LogStudent2Name);
+            divGradeWarning.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name) || !string.IsNullOrEmpty(project?.LogStudent2Name);
 
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
                                              userCanEditAfterStart;
@@ -283,12 +281,12 @@ namespace ProStudCreator
                 ProjectEndPresentation.Text =
                     "Die Studierenden sollen die Schlusspräsentation (Termin, Ort, Auftraggeber) selbständig organisieren.";
             }
-            else if (project?.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 1 Semester
+            else if (project.LogProjectDuration == 1 && type == ProjectTypes.IP6) //IP6 1 Semester
             {
                 lblProjectEndPresentation.Text = "Verteidigung:";
                 ProjectEndPresentation.Text = project.Semester.DefenseIP6Start + " - " + project.Semester.DefenseIP6End;
             }
-            else if (project?.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 2 Semester
+            else if (project.LogProjectDuration == 2 && type == ProjectTypes.IP6) //IP6 2 Semester
             {
                 lblProjectEndPresentation.Text = "Verteidigung:";
                 ProjectEndPresentation.Text = project.Semester.DefenseIP6BStart + " - " + project.Semester.DefenseIP6BEnd;
@@ -298,24 +296,24 @@ namespace ProStudCreator
                 lblProjectEndPresentation.Text = "Schlusspräsentation:";
             }
 
-            var deliveryDate = project?.GetDeliveryDate();
+            var deliveryDate = project.GetDeliveryDate();
             ProjectDelivery.Text = deliveryDate?.ToString("dd.MM.yyyy") ?? "?";
 
             if (deliveryDate.HasValue)
             {
                 if (project.CanEditTitle())
                 {
-                    if(project.LogProjectType?.P5==true)
+                    if (project.LogProjectType?.P5 == true)
                         ChangeTitleDate.Text = "";
                     else
-                        ChangeTitleDate.Text = $"Titeländerung noch bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+                        ChangeTitleDate.Text = $"Titeländerung noch bis {(deliveryDate.Value - Global.AllowTitleChangesBeforeSubmission).AddDays(-2).ToString("dd.MM.yyyy")} möglich!";
                 }
                 else
-                    ChangeTitleDate.Text = $"Titeländerung war nur bis {deliveryDate.Value.AddDays(-ProStudCreator.Global.AllowTitleChangesBeforeSubmission * 7).ToString("dd.MM.yyyy")} möglich!";
+                    ChangeTitleDate.Text = $"Titeländerung war nur bis {(deliveryDate.Value - Global.AllowTitleChangesBeforeSubmission).AddDays(-2).ToString("dd.MM.yyyy")} möglich!";
             }
 
-            ProjectEndPresentation.Text = (project?.LogDefenceDate?.ToString() ?? "") +
-                                          (project?.LogDefenceRoom != null ? ", Raum: " + project?.LogDefenceRoom : "");
+            ProjectEndPresentation.Text = (project.LogDefenceDate?.ToString() ?? "") +
+                                        (project.LogDefenceRoom != null ? ", Raum: " + project?.LogDefenceRoom : "");
         }
 
         private void ReturnAlert(string message)
@@ -387,16 +385,28 @@ namespace ProStudCreator
                 project.Name = ProjectTitle.Text.FixupParagraph();
 
                 if (nbrGradeStudent1.Text != "")
+                {
+                    var old = project.LogGradeStudent1;
                     project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",", "."),
                         CultureInfo.InvariantCulture);
-                else
-                    project.LogGradeStudent1 = null;
+
+                    if (old != project.LogGradeStudent1)
+                        project.GradeSentToAdmin = false;
+                }
+                //else
+                //    project.LogGradeStudent1 = null;
 
                 if (nbrGradeStudent2.Text != "")
+                {
+                    var old = project.LogGradeStudent2;
                     project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",", "."),
                         CultureInfo.InvariantCulture);
-                else
-                    project.LogGradeStudent2 = null;
+
+                    if (old != project.LogGradeStudent2)
+                        project.GradeSentToAdmin = false;
+                }
+                //else
+                //    project.LogGradeStudent2 = null;
 
                 project.WebSummaryChecked = cbxWebSummaryChecked.Checked;
 
@@ -695,13 +705,13 @@ namespace ProStudCreator
     public class StreamToZipDataSource : IStaticDataSource
     {
         private Stream _stream;
-        
+
         public Stream GetSource()
         {
             return _stream;
         }
 
-        
+
         public void SetStream(Stream inputStream)
         {
             _stream = inputStream;
