@@ -97,7 +97,6 @@
       <Column Name="TypeSysSec" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="TypeSE" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="ImgDescription" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="IsContinuation" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="PreviousProjectID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="ClientAddressStreet" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="ClientAddressPostcode" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />

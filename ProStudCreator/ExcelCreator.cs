@@ -142,7 +142,7 @@ namespace ProStudCreator
             row.CreateCell(15).SetCellValue(p.Id);
 
             row.CreateCell(16).SetCellValue(p.DurationOneSemester ? 1 : 0);
-            row.CreateCell(17).SetCellValue(p.IsContinuation ? 1 : 0);
+            row.CreateCell(17).SetCellValue(p.PreviousProject!=null ? 1 : 0);
             row.CreateCell(18).SetCellValue(p.LanguageGerman ? 1 : 0);
             row.CreateCell(19).SetCellValue(p.LanguageEnglish ? 1 : 0);
             row.CreateCell(20).SetCellValue(p.TypeAppWeb);

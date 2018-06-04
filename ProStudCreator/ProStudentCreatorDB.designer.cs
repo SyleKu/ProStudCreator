@@ -1314,8 +1314,6 @@ namespace ProStudCreator
 		
 		private string _ImgDescription;
 		
-		private bool _IsContinuation;
-		
 		private System.Nullable<int> _PreviousProjectID;
 		
 		private string _ClientAddressStreet;
@@ -1496,8 +1494,6 @@ namespace ProStudCreator
     partial void OnTypeSEChanged();
     partial void OnImgDescriptionChanging(string value);
     partial void OnImgDescriptionChanged();
-    partial void OnIsContinuationChanging(bool value);
-    partial void OnIsContinuationChanged();
     partial void OnPreviousProjectIDChanging(System.Nullable<int> value);
     partial void OnPreviousProjectIDChanged();
     partial void OnClientAddressStreetChanging(string value);
@@ -2420,26 +2416,6 @@ namespace ProStudCreator
 					this._ImgDescription = value;
 					this.SendPropertyChanged("ImgDescription");
 					this.OnImgDescriptionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsContinuation", DbType="Bit NOT NULL")]
-		public bool IsContinuation
-		{
-			get
-			{
-				return this._IsContinuation;
-			}
-			set
-			{
-				if ((this._IsContinuation != value))
-				{
-					this.OnIsContinuationChanging(value);
-					this.SendPropertyChanging();
-					this._IsContinuation = value;
-					this.SendPropertyChanged("IsContinuation");
-					this.OnIsContinuationChanged();
 				}
 			}
 		}
