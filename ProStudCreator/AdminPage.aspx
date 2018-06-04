@@ -127,12 +127,13 @@
                             <asp:DropDownList runat="server" DataValueField="Id" DataTextField="Name" ID="SelectedSemester" AutoPostBack="false" CssClass="form-control col-sm-3 alignbottom "></asp:DropDownList>
                         </div>
                         <br />
+                        <%--<br />
                         <hr />
                         <asp:Label runat="server" Text="Projekt-Spezifikation:" CssClass="control-label col-sm-3"></asp:Label>
                         <asp:RadioButtonList ID="radioProjectStart" runat="server" RepeatDirection="Vertical" AutoPostBack="false" CssClass="col-sm-3, alignbottom" TextAlign="Right">
                             <asp:ListItem Value="StartingProjects">&nbsp;Startende Projekte</asp:ListItem>
                             <asp:ListItem Value="EndingProjects" Selected="True">&nbsp;Endende Projekte</asp:ListItem>
-                        </asp:RadioButtonList>
+                        </asp:RadioButtonList>--%>
                     </div>
                     
                     <div style="text-align: right;">

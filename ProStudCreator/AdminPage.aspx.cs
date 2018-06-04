@@ -243,7 +243,7 @@ namespace ProStudCreator
         protected void BtnMarketingExport_OnClick(object sender, EventArgs e)
         {
             IEnumerable<Project> projectsToExport = null;
-            if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
+            //if (radioProjectStart.SelectedValue == "StartingProjects") //Projects which start in this Sem.
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
@@ -263,7 +263,7 @@ namespace ProStudCreator
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
                 }
-            else if (radioProjectStart.SelectedValue == "EndingProjects") //Projects which end in this Sem.
+            /*else if (radioProjectStart.SelectedValue == "EndingProjects") //Projects which end in this Sem.
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
@@ -288,7 +288,7 @@ namespace ProStudCreator
                         .ThenBy(i => i.ProjectNr);
                 }
             else
-                throw new Exception($"Unexpected selection: {radioProjectStart.SelectedIndex}");
+                throw new Exception($"Unexpected selection: {radioProjectStart.SelectedValue}");*/
 
             //Response
             Response.Clear();

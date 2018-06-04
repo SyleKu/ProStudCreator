@@ -122,7 +122,7 @@ namespace ProStudCreator
                 throw new Exception();
 
             //set the Project duration
-            if (project?.LogProjectDuration == 2)
+            if (project?.LogProjectDuration == 2 && project?.LogProjectType?.P6 == true)
                 lblProjectDuration.Text = "2 Semester";
             else if (project?.LogProjectDuration == 1)
                 lblProjectDuration.Text = "1 Semester";

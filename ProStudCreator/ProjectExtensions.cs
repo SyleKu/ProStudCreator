@@ -554,7 +554,7 @@ namespace ProStudCreator
 
         public static Semester GetEndSemester(this Project _p, ProStudentCreatorDBDataContext db)
         {
-            return _p.LogProjectDuration == 2 ? Semester.NextSemester(_p.Semester, db) : _p.Semester;
+            return _p.LogProjectDuration == 2 && _p.LogProjectType.P6 ? Semester.NextSemester(_p.Semester, db) : _p.Semester;
         }
 
         public static string ExhibitionBachelorThesis(this Project _p, ProStudentCreatorDBDataContext db)

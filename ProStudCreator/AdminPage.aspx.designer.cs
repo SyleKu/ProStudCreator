@@ -139,15 +139,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList SelectedSemester;
         
         /// <summary>
-        /// radioProjectStart control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList radioProjectStart;
-        
-        /// <summary>
         /// btnMarketingExport control.
         /// </summary>
         /// <remarks>

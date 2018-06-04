@@ -282,11 +282,16 @@ namespace ProStudCreator
             return "";
         }
 
-        private static byte GetProjectDuration(Project p)
+        private static string GetProjectDuration(Project p)
         {
             if (p.LogProjectDuration == null)
-                return 0;
-            return p.LogProjectDuration.Value;
+                return "";
+            else if (p.LogProjectDuration == 1)
+                return "Normal";
+            else if (p.LogProjectDuration == 2)
+                return "Lang";
+            else
+                throw new Exception($"Unexpected LogProjectDuration: {p.LogProjectDuration}");
         }
 
         private static double GetStudentGrade(float? grade)
