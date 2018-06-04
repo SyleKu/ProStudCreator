@@ -89,7 +89,7 @@
             </div>
             <div class="form-group" style="text-align: left" runat="server" visible="false" id="divGradeWarning">
                 <asp:Label runat="server" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" ID="Label1" CssClass="col-sm-6" Text="Hinweis: Noten werden unmittelbar an die Ausbildungsadministration weitergeleitet."></asp:Label>
+                <asp:Label runat="server" ID="Label1" CssClass="col-sm-6" Text="Hinweis: Noten werden unmittelbar an die Ausbildungsadministration weitergeleitet. Bitte NUR definitive Noten eintragen!"></asp:Label>
             </div>
             <br />
 
