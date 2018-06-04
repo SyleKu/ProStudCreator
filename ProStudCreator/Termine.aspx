@@ -1,12 +1,13 @@
 ﻿<%@ Page Title="IP5/IP6 Projekte" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="True" CodeBehind="Termine.aspx.cs" Inherits="ProStudCreator.Termine" %>
 
 <%--
-    
-    Projektmodul	Dauer (KW)	    Starttermin	        Abgabetermin	    Aufwand
-   ---------------------------------------------------------------------------------
-    IP5     	    18 resp. 17     KW  8 resp. KW 38	KW 24 resp. KW  3   180 h
-    IP5bb     	    26 resp. 27     KW  8 resp. KW 38	KW 33 resp. KW 12   180 h
-    IP6     	    26 resp. 27     KW  8 resp. KW 38	KW 33 resp. KW 12   360 h
+
+    Projektmodul	FS                  HS                  Aufwand
+   -----------------------------------------------------------------
+    IP5     	    KW  8 - 24          KW 38 - 3           180 h
+    IP5 lang	    KW  8 - 33 	        KW 38 - 12          180 h
+    IP6     	    KW  8 - 33          KW 38 - 12          360 h
+
 
     TODO: konkrete termine automatisch aus KW berechnen
     

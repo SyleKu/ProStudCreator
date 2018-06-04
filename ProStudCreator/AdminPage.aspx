@@ -174,19 +174,9 @@
                         <div class="form-group">
                             <asp:Label runat="server" Text="Ansprechpersonen:" CssClass="control-label col-sm-3"></asp:Label>
                             <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
-                            <a href="mailto:simon.felix@fhnw.ch" target="_blank">Simon Felix</a>
-                            </asp:Label>
-                            <br />
-                            <br />
-                            <div class="col-sm-3"></div>
-                            <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
-                            <a href="mailto:jonas.suter@fhnw.ch" target="_blank">Jonas Suter</a>
-                            </asp:Label>
-                            <br />
-                            <br />
-                            <div class="col-sm-3"></div>
-                            <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
-                            <a href="mailto:stephen.randles@fhnw.ch" target="_blank">Stephen Randles</a>
+                                <a href="mailto:simon.felix@fhnw.ch" target="_blank">Simon Felix</a>,
+                                <a href="mailto:jonas.suter@fhnw.ch" target="_blank">Jonas Suter</a>, 
+                                <a href="mailto:stephen.randles@fhnw.ch" target="_blank">Stephen Randles</a>
                             </asp:Label>
                         </div>
                         <hr />
@@ -195,6 +185,27 @@
                             <asp:Label runat="server" CssClass="col-sm-3 alignbottom">
                             <a href="https://www.fhnw.ch/de/studium/technik/termine" target="_blank">Termine & Stundenpläne</a>
                             </asp:Label>
+                            <div class="col-sm-3"></div>
+                            <asp:GridView ID="gvDates" CssClass="col-sm-3" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="True" Width="100%">
+                                <%--<Columns>
+                                    <asp:BoundField DataField="project" HeaderText="Projekt" SortExpression="Project" ItemStyle-Width="60%" />
+                                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseExpert" HeaderText="Tasks" ItemStyle-Width="20px" />
+                                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseDate" ItemStyle-Width="20px" />
+                                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskOrganiseRoom" ItemStyle-Width="20px" />
+                                    <asp:ImageField ControlStyle-CssClass="img-rounded imageHeight" DataImageUrlField="taskPayExpert" ItemStyle-Width="20px" />
+                                </Columns>--%>
+                                <EditRowStyle BackColor="#2461BF" />
+                                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <RowStyle BackColor="#EFF3FB" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                                <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                                <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                            </asp:GridView>
+
                         </div>
                     </div>
                 </div>
