@@ -16,19 +16,19 @@ namespace ProStudCreator
     {
         enum Type : int
         {
-            RegisterGrades = 0,
-            CheckWebsummary = 1,
-            StartProject = 2,
-            FinishProject = 3,
-            UploadResults = 4,
-            PlanDefenses = 5, //TODO
-            UpdateDefenseDates = 6, //TODO
-            PayExperts = 7,
-            InsertNewSemesters = 8,
-            SendGrades = 9,
-            SendMarKomBrochure = 10,
-            InvoiceCustomers = 11, //TODO
-            EnterAssignedStudents = 12
+            RegisterGrades = 1,
+            CheckWebsummary = 2,
+            StartProject = 4,
+            FinishProject = 5,
+            UploadResults = 6,
+            PlanDefenses = 7, //TODO
+            UpdateDefenseDates = 8, //TODO
+            PayExperts = 9,
+            InsertNewSemesters = 10,
+            SendGrades = 11,
+            SendMarKomBrochure = 12,
+            InvoiceCustomers = 13, //TODO
+            EnterAssignedStudents = 14
         }
 
 
@@ -60,7 +60,7 @@ namespace ProStudCreator
 
         private static void EnterAssignedStudents(ProStudentCreatorDBDataContext db)
         {
-            var type = db.TaskTypes.Single(t => t.Type == (int)Type.EnterAssignedStudents);
+            var type = db.TaskTypes.Single(t => t.Id == (int)Type.EnterAssignedStudents);
 
             var cutoffDate = new DateTime(2018, 1, 1);
 
@@ -170,7 +170,7 @@ namespace ProStudCreator
 
         public static void SendPayExperts(ProStudentCreatorDBDataContext db)
         {
-            var type = db.TaskTypes.Single(t => t.Type == (int)Type.PayExperts);
+            var type = db.TaskTypes.Single(t => t.Id == (int)Type.PayExperts);
             var activeTask = db.Tasks.SingleOrDefault(t => !t.Done && t.TaskType == type);
             if (activeTask == null)
             {
@@ -182,7 +182,7 @@ namespace ProStudCreator
                 db.SubmitChanges();
             }
 
-            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).Ticks > type.TicksBetweenReminds)
+            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).TotalDays > type.DaysBetweenReminds)
             {
                 activeTask.LastReminded = DateTime.Now;
 
@@ -246,7 +246,7 @@ namespace ProStudCreator
 
         public static void SendGradesToAdmin(ProStudentCreatorDBDataContext db)
         {
-            var type = db.TaskTypes.Single(t => t.Type == (int)Type.SendGrades);
+            var type = db.TaskTypes.Single(t => t.Id == (int)Type.SendGrades);
             var activeTask = db.Tasks.SingleOrDefault(t => !t.Done && t.TaskType == type);
             if (activeTask == null)
             {
@@ -258,7 +258,7 @@ namespace ProStudCreator
                 db.SubmitChanges();
             }
 
-            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).Ticks > type.TicksBetweenReminds)
+            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).TotalDays > type.DaysBetweenReminds)
             {
                 activeTask.LastReminded = DateTime.Now;
 
@@ -338,7 +338,7 @@ namespace ProStudCreator
         {
             var targetDate = DateTime.Now.AddMonths(18);
 
-            var activeTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Type == (int)Type.InsertNewSemesters);
+            var activeTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.InsertNewSemesters);
             var semesterMissing = !db.Semester.Any(s => s.StartDate <= targetDate && targetDate <= s.EndDate);
 
             //add new tasks for projects
@@ -346,7 +346,7 @@ namespace ProStudCreator
                 db.Tasks.InsertOnSubmit(new Task
                 {
                     ResponsibleUser = db.UserDepartmentMap.Single(i => i.Mail == Global.WebAdmin),
-                    TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.InsertNewSemesters),
+                    TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.InsertNewSemesters),
                 });
 
             if (!semesterMissing)
@@ -361,14 +361,14 @@ namespace ProStudCreator
             //add new tasks for projects
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion
                 && p.Semester.StartDate <= DateTime.Now.AddDays(7) && p.Semester.StartDate >= new DateTime(2018, 5, 1)
-                && !db.Tasks.Any(t => t.Project == p && t.TaskType.Type == (int)Type.StartProject)).ToList();
+                && !db.Tasks.Any(t => t.Project == p && t.TaskType.Id == (int)Type.StartProject)).ToList();
 
             foreach (var project in allPublishedProjects)
                 db.Tasks.InsertOnSubmit(new Task
                 {
                     ProjectId = project.Id,
                     ResponsibleUser = project.Advisor1,
-                    TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.StartProject),
+                    TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.StartProject),
                     Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                 });
 
@@ -380,7 +380,7 @@ namespace ProStudCreator
             //add new tasks for projects
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion
                 && p.Semester.StartDate <= DateTime.Now.AddDays(7) && p.Semester.StartDate >= new DateTime(2018, 5, 1)
-                && !db.Tasks.Any(t => t.Project == p && t.TaskType.Type == (int)Type.FinishProject)).ToList();
+                && !db.Tasks.Any(t => t.Project == p && t.TaskType.Id == (int)Type.FinishProject)).ToList();
 
             foreach (var project in allPublishedProjects)
             {
@@ -391,7 +391,7 @@ namespace ProStudCreator
                     {
                         ProjectId = project.Id,
                         ResponsibleUser = project.Advisor1,
-                        TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.FinishProject),
+                        TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.FinishProject),
                         Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                     });
             }
@@ -402,7 +402,7 @@ namespace ProStudCreator
         private static void CheckGradesRegistered(ProStudentCreatorDBDataContext db)
         {
             //add new tasks for projects
-            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Type == (int)Type.RegisterGrades).Select(i => i.ProjectId).ToList();
+            var allActiveGradeTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.RegisterGrades).Select(i => i.ProjectId).ToList();
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion).ToList();
             foreach (var project in allPublishedProjects.Where(p => p.ShouldBeGradedByNow(db, new DateTime(2017, 4, 1))))
                 if ((project.LogGradeStudent1 == null && !string.IsNullOrEmpty(project.LogStudent1Mail)) || (!string.IsNullOrEmpty(project.LogStudent2Mail) && project.LogGradeStudent2 == null))
@@ -411,12 +411,12 @@ namespace ProStudCreator
                         {
                             ProjectId = project.Id,
                             ResponsibleUser = project.Advisor1,
-                            TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.RegisterGrades),
+                            TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.RegisterGrades),
                             Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                         });
 
             //mark registered tasks as done
-            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Type == (int)Type.RegisterGrades).ToList();
+            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.RegisterGrades).ToList();
             foreach (var openTask in openGradeTasks)
                 if (openTask.Project.State!=ProjectState.Published || (openTask.Project.LogGradeStudent1.HasValue && (openTask.Project.LogGradeStudent2.HasValue || string.IsNullOrEmpty(openTask.Project.LogStudent2Mail))))
                     openTask.Done = true;
@@ -427,7 +427,7 @@ namespace ProStudCreator
         private static void CheckWebsummaryChecked(ProStudentCreatorDBDataContext db)
         {
             //add new tasks for projects
-            var allActiveWebsummaryTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Type == (int)Type.CheckWebsummary).Select(i => i.ProjectId).ToList();
+            var allActiveWebsummaryTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.CheckWebsummary).Select(i => i.ProjectId).ToList();
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && !p.WebSummaryChecked).ToList();
             foreach (var project in allPublishedProjects.Where(p => p.ShouldBeGradedByNow(db, new DateTime(2017, 4, 1))))
                 if (!allActiveWebsummaryTasks.Contains(project.Id))
@@ -435,12 +435,12 @@ namespace ProStudCreator
                     {
                         ProjectId = project.Id,
                         ResponsibleUser = project.Advisor1,
-                        TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.CheckWebsummary),
+                        TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.CheckWebsummary),
                         Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                     });
 
             //mark registered tasks as done
-            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Type == (int)Type.CheckWebsummary && (i.Project.WebSummaryChecked || i.Project.State!=ProjectState.Published)).ToList();
+            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.CheckWebsummary && (i.Project.WebSummaryChecked || i.Project.State!=ProjectState.Published)).ToList();
             foreach (var openTask in openGradeTasks)
                 openTask.Done = true;
 
@@ -452,7 +452,7 @@ namespace ProStudCreator
         private static void CheckUploadResults(ProStudentCreatorDBDataContext db)
         {
             //add new tasks for projects
-            var activeUploadTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Type == (int)Type.UploadResults).Select(i => i.ProjectId).ToList();
+            var activeUploadTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.UploadResults).Select(i => i.ProjectId).ToList();
             var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && !p.Attachements.Any(a => !a.Deleted) && p.BillingStatus.RequiresProjectResults).ToList();
             foreach (var project in allPublishedProjects.Where(p => p.ShouldBeGradedByNow(db, new DateTime(2018, 4, 1))))
                 if (!activeUploadTasks.Contains(project.Id))
@@ -460,12 +460,12 @@ namespace ProStudCreator
                     {
                         ProjectId = project.Id,
                         ResponsibleUser = project.Advisor1,
-                        TaskType = db.TaskTypes.Single(t => t.Type == (int)Type.UploadResults),
+                        TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.UploadResults),
                         Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
                     });
 
             //mark registered tasks as done
-            var openUploadTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Type == (int)Type.UploadResults &&
+            var openUploadTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.UploadResults &&
             (i.Project.Attachements.Any(a => !a.Deleted) || !i.Project.BillingStatus.RequiresProjectResults || i.Project.State!=ProjectState.Published)).ToList();
             foreach (var openTask in openUploadTasks)
                 openTask.Done = true;
@@ -479,7 +479,7 @@ namespace ProStudCreator
             //which tasks must be sent?
             var tasksToMail = new List<Task>();
             foreach (var task in db.Tasks.Where(i => !i.Done && i.ResponsibleUser != null))
-                if ((DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).Ticks > task.TaskType.TicksBetweenReminds) || task.LastReminded == null)
+                if ((DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).TotalDays > task.TaskType.DaysBetweenReminds) || task.LastReminded == null)
                     tasksToMail.Add(task);
 
 
@@ -533,7 +533,7 @@ namespace ProStudCreator
                     smtpClient.Send(mail);
 
                     task.LastReminded = DateTime.Now;
-                    if (task.TaskType.TicksBetweenReminds == 0)
+                    if (task.TaskType.DaysBetweenReminds == 0)
                         task.Done = true;
 
                     db.SubmitChanges();

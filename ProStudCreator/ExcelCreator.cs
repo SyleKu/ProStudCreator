@@ -105,7 +105,7 @@ namespace ProStudCreator
             for (var i = 0; i < projects.Length; i++)
             {
                 var row = worksheet.CreateRow(1 + i);
-                projectToExcelRow(projects[i], row);
+                InsertProjectAsExcelRow(projects[i], row);
             }
 
             for (var i = 0; i < HEADERS.Length; i++)
@@ -115,7 +115,7 @@ namespace ProStudCreator
             workbook.Write(outStream);
         }
 
-        private static void projectToExcelRow(Project p, IRow row)
+        private static void InsertProjectAsExcelRow(Project p, IRow row)
         {
             var db = new ProStudentCreatorDBDataContext();
             p.Semester = p.Semester == null ? Semester.NextSemester(db) : p.Semester = p.Semester;

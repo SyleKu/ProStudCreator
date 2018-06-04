@@ -4950,9 +4950,7 @@ namespace ProStudCreator
 		
 		private string _Description;
 		
-		private int _GradesRegistered;
-		
-		private long _TicksBetweenReminds;
+		private int _DaysBetweenReminds;
 		
 		private EntitySet<Task> _Tasks;
 		
@@ -4964,10 +4962,8 @@ namespace ProStudCreator
     partial void OnIdChanged();
     partial void OnDescriptionChanging(string value);
     partial void OnDescriptionChanged();
-    partial void OnTypeChanging(int value);
-    partial void OnTypeChanged();
-    partial void OnTicksBetweenRemindsChanging(long value);
-    partial void OnTicksBetweenRemindsChanged();
+    partial void OnDaysBetweenRemindsChanging(int value);
+    partial void OnDaysBetweenRemindsChanged();
     #endregion
 		
 		public TaskType()
@@ -5016,42 +5012,22 @@ namespace ProStudCreator
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GradesRegistered", DbType="int NOT NULL")]
-		public int Type
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DaysBetweenReminds", DbType="int")]
+		public int DaysBetweenReminds
 		{
 			get
 			{
-				return this._GradesRegistered;
+				return this._DaysBetweenReminds;
 			}
 			set
 			{
-				if ((this._GradesRegistered != value))
+				if ((this._DaysBetweenReminds != value))
 				{
-					this.OnTypeChanging(value);
+					this.OnDaysBetweenRemindsChanging(value);
 					this.SendPropertyChanging();
-					this._GradesRegistered = value;
-					this.SendPropertyChanged("Type");
-					this.OnTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TicksBetweenReminds", DbType="bigint")]
-		public long TicksBetweenReminds
-		{
-			get
-			{
-				return this._TicksBetweenReminds;
-			}
-			set
-			{
-				if ((this._TicksBetweenReminds != value))
-				{
-					this.OnTicksBetweenRemindsChanging(value);
-					this.SendPropertyChanging();
-					this._TicksBetweenReminds = value;
-					this.SendPropertyChanged("TicksBetweenReminds");
-					this.OnTicksBetweenRemindsChanged();
+					this._DaysBetweenReminds = value;
+					this.SendPropertyChanged("DaysBetweenReminds");
+					this.OnDaysBetweenRemindsChanged();
 				}
 			}
 		}

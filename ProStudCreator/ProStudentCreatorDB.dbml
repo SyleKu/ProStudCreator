@@ -211,8 +211,7 @@
     <Type Name="TaskType">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
-      <Column Name="Type" Storage="_GradesRegistered" Type="int" DbType="int NOT NULL" CanBeNull="false" />
-      <Column Name="TicksBetweenReminds" Type="System.Int64" DbType="bigint" CanBeNull="false" />
+      <Column Name="DaysBetweenReminds" Type="System.Int32" DbType="int" CanBeNull="false" />
       <Association Name="TaskType_Task" Member="Tasks" ThisKey="Id" OtherKey="TaskTypeId" Type="Task" />
     </Type>
   </Table>
