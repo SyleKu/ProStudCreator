@@ -247,8 +247,7 @@ namespace ProStudCreator
                 if (SelectedSemester.SelectedValue == "") //Alle Semester
                 {
                     projectsToExport = db.Projects
-                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion && i.LogStudent1Mail != null &&
-                                    i.LogStudent1Mail != "")
+                        .Where(i => i.State == ProjectState.Published && i.IsMainVersion)
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
@@ -257,8 +256,7 @@ namespace ProStudCreator
                 {
                     var semesterId = int.Parse(SelectedSemester.SelectedValue);
                     projectsToExport = db.Projects
-                        .Where(i => i.SemesterId == semesterId && i.IsMainVersion && i.State == ProjectState.Published &&
-                                    i.LogStudent1Mail != null && i.LogStudent1Mail != "")
+                        .Where(i => i.SemesterId == semesterId && i.IsMainVersion && i.State == ProjectState.Published)
                         .OrderBy(i => i.Semester.Name)
                         .ThenBy(i => i.Department.DepartmentName)
                         .ThenBy(i => i.ProjectNr);
