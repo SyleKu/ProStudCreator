@@ -62,7 +62,7 @@
                     <a href="../Content/Externe_Projekteingabe.pdf" class="pdf">Formular für Projekte von externen Auftraggebern.</a>
                 </p>
                 <p>
-                    Handbuch für Studierende : <a style="cursor: pointer;" href="file:\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene\" class="pdf"> file:\\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene\ </a>
+                    Handbuch und Vorlagen unter \\fsemu18.edu.ds.fhnw.ch\e_18_data11$\E1811_Info\E1811_Info_I\Projektschiene\
                 </p>
             </div>
         </div>

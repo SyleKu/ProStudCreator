@@ -28,10 +28,9 @@ namespace ProStudCreator.Ext
                 " ",
                 "Projekteinreichung",
                 "Projektzuteilung",
-                "Abgabe IP5 (1 Sem.)",
-                "Abgabe IP5 (2 Sem.)",
-                "Abgabe IP6 (1 Sem.)<br/>Verteidigung",
-                "Abgabe IP6 (2 Sem.)<br/>Verteidigung",
+                "Abgabe IP5",
+                "Abgabe IP5 (BB/lang)",
+                "Abgabe IP6<br/>Verteidigung",
                 "Ausstellung Bachelorthesen"
             })
                 dt.Columns.Add(header);
@@ -44,9 +43,9 @@ namespace ProStudCreator.Ext
                     semester.SubmissionIP6Normal + "<br/>" + (semester.DefenseIP6Start == null
                         ? ""
                         : $"{semester.DefenseIP6Start} bis {semester.DefenseIP6End}"),
-                    semester.SubmissionIP6Variant2 + "<br/>" + (semester.DefenseIP6BStart == null
+                    /*semester.SubmissionIP6Variant2 + "<br/>" + (semester.DefenseIP6BStart == null
                         ? ""
-                        : $"{semester.DefenseIP6BStart} bis {semester.DefenseIP6BEnd}"),
+                        : $"{semester.DefenseIP6BStart} bis {semester.DefenseIP6BEnd}"),*/
                     semester.ExhibitionBachelorThesis);
 
 
