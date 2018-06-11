@@ -23,16 +23,11 @@ namespace ProStudCreator
             "2P_Type",
             "1P_Teamsize",
             "2P_Teamsize",
-            "Major",
-            "Wichtigkeit",
             "Betreuer",
             "Betreuer2",
-            "Modules",
             "Fixe Zuteilung",
             "Fixe Zuteilung 2",
-            "Kommentar",
             "ID",
-            "SingleSemester",
             "Continuation",
             "German",
             "English",
@@ -131,14 +126,10 @@ namespace ProStudCreator
             row.CreateCell(4).SetCellValue(p.PTwoType != null ? p.PTwoType.ExportValue : p.POneType.ExportValue);
             row.CreateCell(5).SetCellValue(p.POneTeamSize.ExportValue);
             row.CreateCell(6).SetCellValue(p.PTwoTeamSize != null ? p.PTwoTeamSize.ExportValue : p.POneTeamSize.ExportValue);
-            row.CreateCell(7).SetCellValue("-"); // Major undefined
-            row.CreateCell(8).SetCellValue(0); // Importance undefined
             row.CreateCell(9).SetCellValue(p.Advisor1?.Mail ?? "");
             row.CreateCell(10).SetCellValue(p.Advisor2?.Mail ?? "");
-            row.CreateCell(11).SetCellValue(""); // Modules undefined
             row.CreateCell(12).SetCellValue(p.Reservation1Mail);
             row.CreateCell(13).SetCellValue(p.Reservation2Mail);
-            row.CreateCell(14).SetCellValue(""); // Comment undefined
             row.CreateCell(15).SetCellValue(p.Id);
 
             row.CreateCell(16).SetCellValue(p.DurationOneSemester ? 1 : 0);
