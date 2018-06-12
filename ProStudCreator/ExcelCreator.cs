@@ -132,7 +132,6 @@ namespace ProStudCreator
             row.CreateCell(10).SetCellValue(p.Reservation2Mail);
             row.CreateCell(11).SetCellValue(p.Id);
 
-            row.CreateCell(12).SetCellValue(p.DurationOneSemester ? 1 : 0);
             row.CreateCell(13).SetCellValue(p.PreviousProject!=null ? 1 : 0);
             row.CreateCell(14).SetCellValue(p.LanguageGerman ? 1 : 0);
             row.CreateCell(15).SetCellValue(p.LanguageEnglish ? 1 : 0);
