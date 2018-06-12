@@ -132,17 +132,17 @@ namespace ProStudCreator
             row.CreateCell(10).SetCellValue(p.Reservation2Mail);
             row.CreateCell(11).SetCellValue(p.Id);
 
-            row.CreateCell(13).SetCellValue(p.PreviousProject!=null ? 1 : 0);
-            row.CreateCell(14).SetCellValue(p.LanguageGerman ? 1 : 0);
-            row.CreateCell(15).SetCellValue(p.LanguageEnglish ? 1 : 0);
-            row.CreateCell(16).SetCellValue(p.TypeAppWeb);
-            row.CreateCell(17).SetCellValue(p.TypeCGIP);
-            row.CreateCell(18).SetCellValue(p.TypeDBBigData);
-            row.CreateCell(19).SetCellValue(p.TypeDesignUX);
-            row.CreateCell(20).SetCellValue(p.TypeHW);
-            row.CreateCell(21).SetCellValue(p.TypeMlAlg);
-            row.CreateCell(22).SetCellValue(p.TypeSE);
-            row.CreateCell(23).SetCellValue(p.TypeSysSec);
+            row.CreateCell(12).SetCellValue(p.PreviousProject!=null ? 1 : 0);
+            row.CreateCell(13).SetCellValue(p.LanguageGerman ? 1 : 0);
+            row.CreateCell(14).SetCellValue(p.LanguageEnglish ? 1 : 0);
+            row.CreateCell(15).SetCellValue(p.TypeAppWeb);
+            row.CreateCell(16).SetCellValue(p.TypeCGIP);
+            row.CreateCell(17).SetCellValue(p.TypeDBBigData);
+            row.CreateCell(18).SetCellValue(p.TypeDesignUX);
+            row.CreateCell(19).SetCellValue(p.TypeHW);
+            row.CreateCell(20).SetCellValue(p.TypeMlAlg);
+            row.CreateCell(21).SetCellValue(p.TypeSE);
+            row.CreateCell(22).SetCellValue(p.TypeSysSec);
         }
 
 
