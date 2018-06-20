@@ -22,7 +22,6 @@ namespace ProStudCreator
         private Project project;
 
         private ProjectTypes type = ProjectTypes.NotDefined;
-        private bool userCanEditAfterStart;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -58,9 +57,6 @@ namespace ProStudCreator
             }
 
 
-            //All Admins or Owners
-            userCanEditAfterStart = project.UserCanEditAfterStart();
-
             //set the Semester if it isn't set already
             project.Semester = project.Semester ?? Semester.NextSemester(db);
 
@@ -95,11 +91,11 @@ namespace ProStudCreator
                     ExpertName.Text = !string.IsNullOrEmpty(project.LogExpertID.ToString())
                         ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
                           Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                        : "Wird noch organisiert.";
+                        : "Noch nicht entschieden";
                 else
-                    ExpertName.Text = "Noch nicht entschieden.";
+                    ExpertName.Text = "Noch nicht entschieden";
             else
-                ExpertName.Text = "Noch nicht entschieden.";
+                ExpertName.Text = "Noch nicht entschieden";
 
 
             //Set the Projecttype
@@ -144,7 +140,7 @@ namespace ProStudCreator
             else
                 drpLogLanguage.SelectedValue = "0";
 
-            drpLogLanguage.Items[0].Text = userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht entschieden";
+            drpLogLanguage.Items[0].Text = project.UserCanEditAfterStart() ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             //Set the Grades
             nbrGradeStudent1.Text = project?.LogGradeStudent1 == null
@@ -166,7 +162,7 @@ namespace ProStudCreator
             drpBillingstatus.DataSource = db.BillingStatus.OrderBy(i => i.DisplayName);
             drpBillingstatus.DataBind();
             drpBillingstatus.Items.Insert(0,
-                new ListItem(userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
+                new ListItem(project.UserCanEditAfterStart() ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
                     "ValueWhichNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ??
                                              "ValueWhichNeverWillBeGivenByTheDB";
@@ -193,7 +189,7 @@ namespace ProStudCreator
             txtClientEmail.Text = project?.ClientMail;
 
             //disable for unauthorized Users
-            ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
+            ProjectTitle.Enabled = project.UserCanEditAfterStart() && project.CanEditTitle();
 
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
@@ -201,7 +197,7 @@ namespace ProStudCreator
                         BtnSaveBetween.Enabled =
                             BtnSaveChanges.Enabled =
                                 drpBillingstatus.Enabled =
-                                    cbxWebSummaryChecked.Enabled = userCanEditAfterStart;
+                                    cbxWebSummaryChecked.Enabled = project.UserCanEditAfterStart();
 
 
             divExpert.Visible = project.Expert != null;
@@ -215,7 +211,7 @@ namespace ProStudCreator
             divGradeWarning.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name) || !string.IsNullOrEmpty(project?.LogStudent2Name);
 
             BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
-                                             userCanEditAfterStart;
+                                             project.UserCanEditAfterStart();
 
             divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1?.Mail ||
                                     ShibUser.GetEmail() == project.Advisor2?.Mail || ShibUser.CanEditAllProjects();
@@ -340,13 +336,11 @@ namespace ProStudCreator
 
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
-            userCanEditAfterStart = project.UserCanEditAfterStart();
-
             if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWhichNeverWillBeGivenByTheDB"
                 ? 0
                 : int.Parse(drpBillingstatus.SelectedValue)))
             {
-                BillAddressPlaceholder.Visible = userCanEditAfterStart;
+                BillAddressPlaceholder.Visible = project.UserCanEditAfterStart();
                 txtClientCompany.Text = project?.ClientCompany;
                 drpClientTitle.SelectedValue = project?.ClientAddressTitle == "Herr" ? "1" : "2";
                 txtClientName.Text = project?.ClientPerson;
@@ -377,10 +371,8 @@ namespace ProStudCreator
 
         private void SaveChanges(string redirectTo)
         {
-            userCanEditAfterStart = project.UserCanEditAfterStart();
-
             string validationMessage = null;
-            if (userCanEditAfterStart)
+            if (project.UserCanEditAfterStart())
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
 
@@ -481,20 +473,16 @@ namespace ProStudCreator
 
         protected void OnUploadComplete(object sender, AjaxFileUploadEventArgs e)
         {
-            if (db.Attachements.Any(
-                a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
-            {
-                SaveFileInDb(
-                    db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] &&
-                                                a.FileName == e.FileName && !a.Deleted), e.GetStreamContents());
-            }
-            else
-            {
-                var attachement = CreateNewAttach(e.FileSize, e.FileName);
-                SaveFileInDb(attachement, e.GetStreamContents());
-
-                e.GetStreamContents().Close();
-            }
+            using(var s = e.GetStreamContents())
+                if (db.Attachements.Any(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
+                {
+                    SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted), s);
+                }
+                else
+                {
+                    var attachement = CreateNewAttach(e.FileSize, e.FileName);
+                    SaveFileInDb(attachement, s);
+                }
 
             divDownloadBtn.Visible = true;
 
