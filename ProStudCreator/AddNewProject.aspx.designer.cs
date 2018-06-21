@@ -301,6 +301,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label txtClientEmailLabel;
         
         /// <summary>
+        /// divClientDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientDepartment;
+        
+        /// <summary>
         /// txtClientDepartment control.
         /// </summary>
         /// <remarks>
@@ -481,13 +490,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList Language;
         
         /// <summary>
-        /// updatePriotity control.
+        /// updatePriority control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updatePriotity;
+        protected global::System.Web.UI.UpdatePanel updatePriority;
         
         /// <summary>
         /// POneType control.

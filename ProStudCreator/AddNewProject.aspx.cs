@@ -26,7 +26,7 @@ namespace ProStudCreator
         private DateTime today = DateTime.Now;
         private bool imageChanged = false;
         private Binary picture;
-        private enum ClientType { INTERN, COMPANY, PRIVATEPERSON }
+        
         #region Timer tick
 
         protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
@@ -174,7 +174,7 @@ namespace ProStudCreator
 
                     FillDropPreviousProject(Semester.CurrentSemester(db));
                     dropPreviousProject.SelectedIndex = 0;
-                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    radioClientType.SelectedIndex = (int)ClientType.Internal;
                     divClientForm.Visible = false;
                     FillDropAdvisors();
                 }
@@ -1062,20 +1062,23 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+            switch (radioClientType.SelectedValue)
             {
-                divClientForm.Visible = true;
-                divClientCompany.Visible = true;
-            }
-            else if (radioClientType.SelectedIndex == (int)ClientType.INTERN)
-            {
-                divClientForm.Visible = false;
-                divClientCompany.Visible = false;
-            }
-            else
-            {
-                divClientForm.Visible = true;
-                divClientCompany.Visible = false;
+                case "Intern":
+                    divClientForm.Visible = false;
+                    break;
+                case "Company":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = true;
+                    divClientDepartment.Visible = true;
+                    break;
+                case "PrivatePerson":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = false;
+                    divClientDepartment.Visible = false;
+                    break;
+                default:
+                    throw new Exception($"Unexpected radioClientType {radioClientType.SelectedValue}");
             }
         }
         protected void BtnHistoryCollapse_OnClick(object sender, EventArgs e)
@@ -1101,16 +1104,16 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             else
                 project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
 
-            if (radioClientType.SelectedIndex != (int)ClientType.INTERN)
+            if (radioClientType.SelectedIndex != (int)ClientType.Internal)
             {
-                if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+                if (radioClientType.SelectedIndex == (int)ClientType.Company)
                 {
                     project.ClientCompany = txtClientCompany.Text.FixupParagraph();
-                    project.ClientType = (int)ClientType.COMPANY;
+                    project.ClientType = (int)ClientType.Company;
                 }
                 else
                 {
-                    project.ClientType = (int)ClientType.PRIVATEPERSON;
+                    project.ClientType = (int)ClientType.PrivatePerson;
                 }
                 project.ClientAddressTitle = drpClientTitle.SelectedItem.Text;
                 project.ClientPerson = txtClientName.Text.FixupParagraph();
@@ -1123,7 +1126,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
             else
             {
-                project.ClientType = (int)ClientType.INTERN;
+                project.ClientType = (int)ClientType.Internal;
                 project.ClientAddressTitle = "Herr";
 
                 project.ClientCompany =
@@ -1307,7 +1310,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                                             txtClientEmail.Text = "";
 
                 divClientForm.Visible = false;
-                radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                radioClientType.SelectedIndex = (int)ClientType.Internal;
             }
             else
             {
@@ -1382,20 +1385,20 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             switch (project.ClientType)
             {
 
-                case (int)ClientType.COMPANY:
+                case (int)ClientType.Company:
                     divClientCompany.Visible = divClientForm.Visible = true;
-                    radioClientType.SelectedIndex = (int)ClientType.COMPANY;
+                    radioClientType.SelectedIndex = (int)ClientType.Company;
                     break;
 
-                case (int)ClientType.PRIVATEPERSON:
+                case (int)ClientType.PrivatePerson:
                     divClientCompany.Visible = false;
                     divClientForm.Visible = true;
-                    radioClientType.SelectedIndex = (int)ClientType.PRIVATEPERSON;
+                    radioClientType.SelectedIndex = (int)ClientType.PrivatePerson;
                     break;
 
-                case (int)ClientType.INTERN:
+                case (int)ClientType.Internal:
                     divClientCompany.Visible = divClientForm.Visible = false;
-                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    radioClientType.SelectedIndex = (int)ClientType.Internal;
                     break;
             }
         }

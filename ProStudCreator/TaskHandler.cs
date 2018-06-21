@@ -26,7 +26,7 @@ namespace ProStudCreator
             PayExperts = 9,
             InsertNewSemesters = 10,
             SendGrades = 11,
-            SendMarKomBrochure = 12,
+            SendMarKomBrochure = 12, //TODO
             InvoiceCustomers = 13, //TODO
             EnterAssignedStudents = 14
         }
@@ -51,7 +51,12 @@ namespace ProStudCreator
 
                 SendGradesToAdmin(db);
                 SendPayExperts(db);
-                //SendInvoiceCustomers(db);
+
+                //vvvvvvvvvvvvv NOT YET IMPLEMENTED
+                //SendInvoiceCustomers(db); //<-- not yet implemented
+
+                //vvvvvvvvvvvvv NOT YET IMPLEMENTED
+                //SendMarKomBrochure(db); //<-- not yet implemented
             }
         }
 
@@ -166,6 +171,92 @@ namespace ProStudCreator
 
         //    db.SubmitChanges();
         //}
+
+
+
+
+        public static void SendMarKomBrochure(ProStudentCreatorDBDataContext db)
+        {
+            //DOES NOT YET WORK
+            var type = db.TaskTypes.Single(t => t.Id == (int)Type.SendMarKomBrochure);
+            var activeTask = db.Tasks.SingleOrDefault(t => !t.Done && t.TaskType == type);
+            if (activeTask == null)
+            {
+                activeTask = new Task()
+                {
+                    TaskType = type,
+                };
+                db.Tasks.InsertOnSubmit(activeTask);
+                db.SubmitChanges();
+            }
+
+            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).TotalDays > type.DaysBetweenReminds)
+            {
+                activeTask.LastReminded = DateTime.Now;
+
+                var unpaidExperts = db.Projects.Where(p => p.IsMainVersion && p.State == (int)ProjectState.Published && p.WebSummaryChecked && !p.LogExpertPaid && (p.LogGradeStudent1 != null || p.LogGradeStudent2 != null) && p.BillingStatus != null && p.Expert != null).OrderBy(p => p.Expert.Name).ThenBy(p => p.Semester.StartDate).ThenBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr).ToList();
+
+                unpaidExperts = unpaidExperts.Where(p => p.WasDefenseHeld()).ToList();
+                if (unpaidExperts.Any())
+                    using (var smtpClient = new SmtpClient())
+                    {
+                        var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
+                        mail.To.Add(new MailAddress(Global.PayExpertAdmin));
+                        mail.CC.Add(new MailAddress(Global.WebAdmin));
+                        mail.Subject = "Informatikprojekte P5/P6: Experten-Honorare auszahlen";
+                        mail.IsBodyHtml = true;
+
+                        var mailMessage = new StringBuilder();
+                        mailMessage.Append(
+                            "<div style=\"font-family: Arial\">" +
+                            "<p>Liebe Administration<p>" +
+                            "<p>Bitte die Auszahlung von den folgenden Expertenhonoraren veranlassen:</p>" +
+                            "<table>" +
+                            "<tr>" +
+                                "<th>Experte</th>" +
+                                "<th>Semester</th>" +
+                                "<th>Studierende</th>" +
+                                "<th>Betreuer</th>" +
+                                "<th>Projekttitel</th>" +
+                            "</tr>");
+
+                        foreach (var p in unpaidExperts)
+                        {
+                            p.LogExpertPaid = true;
+
+                            mailMessage.Append(
+                            "<tr>" +
+                                $"<td>{p.Expert.Name}</td>" +
+                                $"<td>{p.Semester.Name}</td>" +
+                                $"<td>{p.LogStudent1Mail + (p.LogStudent2Mail != null ? ", " + p.LogStudent2Mail : "")}</td>" +
+                                $"<td>{p.Advisor1.Mail}</td>" +
+                                $"<td>{p.GetFullTitle()}</td>" +
+                            "</tr>"
+                            );
+                        }
+
+                        mailMessage.Append(
+                            "</table>" +
+                            "<br/>" +
+                            "<p>Herzliche Grüsse,<br/>" +
+                            "Dein ProStud-Team</p>" +
+                            $"<p>Feedback an {Global.WebAdmin}</p>" +
+                            "</div>"
+                            );
+
+                        mail.Body = mailMessage.ToString();
+                        smtpClient.Send(mail);
+                    }
+            }
+
+            db.SubmitChanges();
+        }
+
+
+
+
+
+
 
 
         public static void SendPayExperts(ProStudentCreatorDBDataContext db)

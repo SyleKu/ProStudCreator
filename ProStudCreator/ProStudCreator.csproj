@@ -326,6 +326,7 @@
     <Compile Include="CheckAllTasks.aspx.designer.cs">
       <DependentUpon>CheckAllTasks.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ClientType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
