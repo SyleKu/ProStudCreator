@@ -199,6 +199,7 @@
       <Column Name="CanBeAdvisor1" Type="System.Boolean" CanBeNull="false" />
       <Column Name="IsSupervisor" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CanReserveProjects" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="UserDepartmentMap_Project" Member="Projects" ThisKey="Id" OtherKey="Advisor1Id" Type="Project" />
       <Association Name="UserDepartmentMap_Project1" Member="Projects1" ThisKey="Id" OtherKey="Advisor2Id" Type="Project" />
       <Association Name="UserDepartmentMap_Task" Member="Tasks" ThisKey="Id" OtherKey="SupervisorId" Type="Task" />

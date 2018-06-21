@@ -63,6 +63,7 @@ namespace ProStudCreator
             //Project title
             ProjectTitle.Text = project.Name;
 
+            chkNDA.Checked = project.UnderNDA;
 
             //Set the Students
             Student1Name.Text = !string.IsNullOrEmpty(project.LogStudent1Name)
@@ -189,6 +190,7 @@ namespace ProStudCreator
                         BtnSaveBetween.Enabled =
                             BtnSaveChanges.Enabled =
                                 drpBillingstatus.Enabled =
+                                    chkNDA.Enabled = 
                                     cbxWebSummaryChecked.Enabled = radioClientType.Enabled = txtClientCompany.Enabled = drpClientTitle.Enabled = txtClientName.Enabled = txtClientDepartment.Enabled = txtClientStreet.Enabled = txtClientPLZ.Enabled = txtClientCity.Enabled = txtClientReference.Enabled = txtClientEmail.Enabled = project.UserCanEditAfterStart();
 
 
@@ -355,8 +357,6 @@ namespace ProStudCreator
                     if (old != project.LogGradeStudent1)
                         project.GradeSentToAdmin = false;
                 }
-                //else
-                //    project.LogGradeStudent1 = null;
 
                 if (nbrGradeStudent2.Text != "")
                 {
@@ -366,8 +366,6 @@ namespace ProStudCreator
                     if (old != project.LogGradeStudent2)
                         project.GradeSentToAdmin = false;
                 }
-                //else
-                //    project.LogGradeStudent2 = null;
 
                 project.WebSummaryChecked = cbxWebSummaryChecked.Checked;
 
@@ -391,8 +389,10 @@ namespace ProStudCreator
                     ? (int?)null
                     : int.Parse(drpBillingstatus.SelectedValue);
 
+                project.UnderNDA = chkNDA.Checked;
+
                 //this sould always be under the project.BillingstatusId statement
-                    if (radioClientType.SelectedValue != "Intern" && (txtClientCompany.Text + txtClientName.Text == "" || txtClientStreet.Text == "" || txtClientPLZ.Text == "" || txtClientCity.Text == "" || txtClientEmail.Text == ""))
+                if (radioClientType.SelectedValue != "Intern" && (txtClientCompany.Text + txtClientName.Text == "" || txtClientStreet.Text == "" || txtClientPLZ.Text == "" || txtClientCity.Text == "" || txtClientEmail.Text == ""))
                 {
                     validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
                 }

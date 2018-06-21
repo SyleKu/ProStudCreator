@@ -192,6 +192,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group" style="text-align: left">
+                            <asp:Label runat="server" Text="Geheimhaltung:" CssClass="control-label col-sm-3"></asp:Label>
+                            <div class="col-sm-6">
+                                <asp:CheckBox runat="server" ID="chkNDA" CssClass="form-control" ToolTip="NDA-Projekte werden nicht in öffentlichen Broschüren aufgeführt" Text=" Projekt/Auftraggeber unter NDA" />
+                            </div>
+                        </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
                 <h6>Mit * markierte Felder sind Pflichtfelder.</h6>

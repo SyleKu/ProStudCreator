@@ -4423,6 +4423,8 @@ namespace ProStudCreator
 		
 		private bool _IsActive;
 		
+		private bool _CanReserveProjects;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -4465,6 +4467,8 @@ namespace ProStudCreator
     partial void OnIsSupervisorChanged();
     partial void OnIsActiveChanging(bool value);
     partial void OnIsActiveChanged();
+    partial void OnCanReserveProjectsChanging(bool value);
+    partial void OnCanReserveProjectsChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4757,6 +4761,26 @@ namespace ProStudCreator
 					this._IsActive = value;
 					this.SendPropertyChanged("IsActive");
 					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanReserveProjects", DbType="Bit NOT NULL")]
+		public bool CanReserveProjects
+		{
+			get
+			{
+				return this._CanReserveProjects;
+			}
+			set
+			{
+				if ((this._CanReserveProjects != value))
+				{
+					this.OnCanReserveProjectsChanging(value);
+					this.SendPropertyChanging();
+					this._CanReserveProjects = value;
+					this.SendPropertyChanged("CanReserveProjects");
+					this.OnCanReserveProjectsChanged();
 				}
 			}
 		}

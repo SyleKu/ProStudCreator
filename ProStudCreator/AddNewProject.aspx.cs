@@ -35,7 +35,7 @@ namespace ProStudCreator
             {
                 var pdfc = new PdfCreator();
 
-                FillprojectwithFormData(project);
+                UpdateProjectFromFormData(project);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -56,6 +56,8 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             AdminView.Visible = ShibUser.CanSeeCreationDetails();
+            updateReservation.Visible = ShibUser.CanReserveProjects();
+
             btnHistoryCollapse.CausesValidation = false;
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
@@ -164,7 +166,7 @@ namespace ProStudCreator
                     if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
                         PopulateHistoryGUI(project.Id);
                     else
-                        PopulateEditGUI();
+                        UpdateUIFromProjectObject();
                     PrepareClientForm(project);
                 }
                 else
@@ -499,7 +501,7 @@ namespace ProStudCreator
                 PrepareForm(true);
             }
         }
-        private void PopulateEditGUI()
+        private void UpdateUIFromProjectObject()
         {
             if (Request.QueryString["showChanges"] != null)
             {
@@ -575,6 +577,8 @@ namespace ProStudCreator
                 Language.SelectedIndex = 0;
 
             //DurationOneSemester.Checked = project.DurationOneSemester;
+
+            chkNDA.Checked = project.UnderNDA;
 
             InitialPositionContent.Text = project.InitialPosition;
             ProjectPicture.Visible = true;
@@ -658,7 +662,7 @@ namespace ProStudCreator
 
         private void UpdatePDFPageCount(Project project)
         {
-            FillprojectwithFormData(project);
+            UpdateProjectFromFormData(project);
             db.SubmitChanges(); // the next few lines depend on this submit
             project.BaseVersionId = project.Id;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
@@ -668,12 +672,10 @@ namespace ProStudCreator
         private void SaveProjectFromEditView()
         {
             if (!project.UserCanEdit())
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             Project oldProject = project;
-            FillprojectwithFormData(project, oldProject);
+            UpdateProjectFromFormData(project, oldProject);
             project = oldProject.SaveAsNewVersion(db);
             if (imageChanged)
             {
@@ -684,14 +686,13 @@ namespace ProStudCreator
                 project.Picture = oldProject.Picture;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             db.SubmitChanges();
-
         }
 
 
         private bool HasProjectChanged()
         {
             var comparisonProject = new Project();
-            FillprojectwithFormData(comparisonProject);
+            UpdateProjectFromFormData(comparisonProject);
             comparisonProject.Id = -1;
 
 
@@ -708,9 +709,8 @@ namespace ProStudCreator
             ///////////////////////////////////////////////
 
             if (!comparisonProject.IsModified(project) && !imageChanged)
-            {
                 return false;
-            }
+
             db.SubmitChanges();
             return true;
         }
@@ -910,7 +910,7 @@ namespace ProStudCreator
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-            FillprojectwithFormData(project);
+            UpdateProjectFromFormData(project);
             var validationMessage = project.GenerateValidationMessage(projectType);
             // Generate JavaScript alert with error message
             if (validationMessage != "")
@@ -1088,9 +1088,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #endregion
 
-        #region private methods
-
-        private void FillprojectwithFormData(Project project, Project oldProject = null)
+        private void UpdateProjectFromFormData(Project project, Project oldProject = null)
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
@@ -1166,9 +1164,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.LanguageEnglish = true;
             }
             else
-            {
-                throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
-            }
+                throw new Exception($"Unexpected language selection {Language.SelectedIndex}");
+
             // Duration
             //project.DurationOneSemester = DurationOneSemester.Checked;
 
@@ -1197,6 +1194,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
             project.References = ReferencesContent.Text.FixupParagraph();
             project.Remarks = RemarksContent.Text.FixupParagraph();
+
+            project.UnderNDA = chkNDA.Checked;
 
             // Student reservations
             project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
@@ -1279,14 +1278,12 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         {
             if (previousProject == null)
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                    Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
                 Reservation1Mail.Text = Reservation1Name.Text = Reservation2Mail.Text = Reservation2Name.Text = "";
             }
             else
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                    Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
                 Reservation1Mail.Text = previousProject.LogStudent1Mail;
                 Reservation2Mail.Text = previousProject.LogStudent2Mail;
                 Reservation1Name.Text = previousProject.LogStudent1Name;
@@ -1373,18 +1370,15 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         private void PrepareForm(bool hasPreviousProj)
         {
             //Priority
-            divPriorityTwo.Visible = POneTeamSize.Enabled =
-                POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
+            divPriorityTwo.Visible = POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
             //Reservations
-            Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
+            Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
         }
 
         private void PrepareClientForm(Project project)
         {
             switch (project.ClientType)
             {
-
                 case (int)ClientType.Company:
                     divClientCompany.Visible = divClientForm.Visible = true;
                     radioClientType.SelectedIndex = (int)ClientType.Company;
@@ -1402,6 +1396,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                     break;
             }
         }
+
         private void CollapseHistory(bool collapse)
         {
             Session["AddInfoCollapsed"] = collapse;
@@ -1422,14 +1417,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             {
                 this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked NO!')", true);
             }
-
-
         }
-
-
-
     }
-
 }
-
-#endregion

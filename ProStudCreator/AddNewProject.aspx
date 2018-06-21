@@ -238,7 +238,15 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <hr />
+
+
+            <div class="form-group" style="text-align: left">
+                <asp:Label runat="server" Text="Geheimhaltung:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox runat="server" ID="chkNDA" CssClass="form-control" ToolTip="NDA-Projekte werden nicht in öffentlichen Broschüren aufgeführt" Text=" Projekt/Auftraggeber unter NDA" />
+                </div>
+            </div>
+
             <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updateReservation">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
@@ -246,8 +254,9 @@
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
+                    <hr />
                     <div class="form-group">
-                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (Admin only):"></asp:Label>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
                             <asp:Label runat="server" ID="Reservation1NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>

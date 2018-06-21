@@ -418,6 +418,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox txtClientReference;
         
         /// <summary>
+        /// chkNDA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkNDA;
+        
+        /// <summary>
         /// BtnSaveChanges control.
         /// </summary>
         /// <remarks>
