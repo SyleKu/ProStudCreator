@@ -82,7 +82,7 @@ namespace ProStudCreator
 
         public bool IsSpringSemester()
         {
-            return this.Name.Contains("FS");
+            return Name.Contains("FS");
         }
 
         public override string ToString()

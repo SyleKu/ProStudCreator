@@ -26,9 +26,10 @@ namespace ProStudCreator
             PayExperts = 9,
             InsertNewSemesters = 10,
             SendGrades = 11,
-            SendMarKomBrochure = 12, //TODO
+            SendMarKomBrochure = 12,
             InvoiceCustomers = 13, //TODO
-            EnterAssignedStudents = 14
+            EnterAssignedStudents = 14,
+            DoubleCheckMarKomBrochureData = 15
         }
 
 
@@ -55,8 +56,8 @@ namespace ProStudCreator
                 //vvvvvvvvvvvvv NOT YET IMPLEMENTED
                 //SendInvoiceCustomers(db); //<-- not yet implemented
 
-                //vvvvvvvvvvvvv NOT YET IMPLEMENTED
-                //SendMarKomBrochure(db); //<-- not yet implemented
+                SendDoubleCheckMarKomBrochureData(db);
+                SendMarKomBrochure(db);
             }
         }
 
@@ -177,78 +178,74 @@ namespace ProStudCreator
 
         public static void SendMarKomBrochure(ProStudentCreatorDBDataContext db)
         {
-            //DOES NOT YET WORK
+            var lastSendDate = new DateTime(DateTime.Now.Year, 6, 1);
+            if (DateTime.Now < lastSendDate)
+                lastSendDate = lastSendDate.AddYears(-1);
+
             var type = db.TaskTypes.Single(t => t.Id == (int)Type.SendMarKomBrochure);
-            var activeTask = db.Tasks.SingleOrDefault(t => !t.Done && t.TaskType == type);
-            if (activeTask == null)
+            if(db.Tasks.Any(t => t.Done && t.TaskType == type && t.LastReminded>=lastSendDate))
+                return;
+
+            
+            var activeTask = new Task()
             {
-                activeTask = new Task()
-                {
-                    TaskType = type,
-                };
-                db.Tasks.InsertOnSubmit(activeTask);
-                db.SubmitChanges();
+                TaskType = type,
+                LastReminded = DateTime.Now
+            };
+            db.Tasks.InsertOnSubmit(activeTask);
+            db.SubmitChanges();
+
+            using (var smtpClient = new SmtpClient())
+            {
+                var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
+                mail.To.Add(new MailAddress(Global.MarKomAdmin));
+                mail.CC.Add(new MailAddress(Global.WebAdmin));
+                mail.Subject = "Informatikprojekte P6: Projektliste für Broschüre";
+                mail.IsBodyHtml = true;
+
+                var mailMessage = new StringBuilder();
+                mailMessage.Append(
+                    "<div style=\"font-family: Arial\">" +
+                    "<p>Liebes MarKom<p>" +
+                    $"<p>Hier die Liste aller Informatik-Bachelorarbeiten im { Semester.ActiveSemester(lastSendDate,db).Name }:</p>" +
+                    "<table>" +
+                    "<tr>" +
+                        "<th>Nachname</th>" +
+                        "<th>Vorname</th>" +
+                        "<th>Titel</th>" +
+                        "<th>Unternehmen</th>" +
+                        "<th>Unternehmensort</th>" +
+                        "<th>Nummer</th>" +
+                    "</tr>");
+
+                var projs = db.Projects.Where(p => p.IsMainVersion && p.LogProjectType.P6 && p.Semester.StartDate <= lastSendDate && p.Semester.EndDate >= lastSendDate && p.State == (int)ProjectState.Published && !p.UnderNDA).ToArray();
+
+                foreach (var p in projs.OrderBy(p => p.Student1LastName()))
+                    mailMessage.Append(
+                    "<tr>" +
+                        $"<td>{HttpUtility.HtmlEncode(p.Student1LastName()) + (p.LogStudent2Name!=null ? "<br/>"+HttpUtility.HtmlEncode(p.Student2LastName()) : "")}</td>" +
+                        $"<td>{HttpUtility.HtmlEncode(p.Student1FirstName()) + (p.LogStudent2Name != null ? "<br/>" + HttpUtility.HtmlEncode(p.Student2FirstName()) : "")}</td>" +
+                        $"<td>{HttpUtility.HtmlEncode(p.Name)}</td>" +
+                        $"<td>{(p.ClientType==(int)ClientType.Company ? HttpUtility.HtmlEncode(p.ClientCompany) : "")}</td>" +
+                        $"<td>{(p.ClientType == (int)ClientType.Company ? HttpUtility.HtmlEncode(p.ClientAddressCity) : "")}</td>" +
+                        $"<td>{HttpUtility.HtmlEncode(p.GetFullNr())}</td>" +
+                    "</tr>"
+                    );
+
+                mailMessage.Append(
+                    "</table>" +
+                    "<br/>" +
+                    "<p>Herzliche Grüsse,<br/>" +
+                    "Dein ProStud-Team</p>" +
+                    $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
+                    "</div>"
+                    );
+
+                mail.Body = mailMessage.ToString();
+                smtpClient.Send(mail);
             }
 
-            if (activeTask.LastReminded == null || (DateTime.Now - activeTask.LastReminded.Value).TotalDays > type.DaysBetweenReminds)
-            {
-                activeTask.LastReminded = DateTime.Now;
-
-                var unpaidExperts = db.Projects.Where(p => p.IsMainVersion && p.State == (int)ProjectState.Published && p.WebSummaryChecked && !p.LogExpertPaid && (p.LogGradeStudent1 != null || p.LogGradeStudent2 != null) && p.BillingStatus != null && p.Expert != null).OrderBy(p => p.Expert.Name).ThenBy(p => p.Semester.StartDate).ThenBy(p => p.Department.DepartmentName).ThenBy(p => p.ProjectNr).ToList();
-
-                unpaidExperts = unpaidExperts.Where(p => p.WasDefenseHeld()).ToList();
-                if (unpaidExperts.Any())
-                    using (var smtpClient = new SmtpClient())
-                    {
-                        var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
-                        mail.To.Add(new MailAddress(Global.PayExpertAdmin));
-                        mail.CC.Add(new MailAddress(Global.WebAdmin));
-                        mail.Subject = "Informatikprojekte P5/P6: Experten-Honorare auszahlen";
-                        mail.IsBodyHtml = true;
-
-                        var mailMessage = new StringBuilder();
-                        mailMessage.Append(
-                            "<div style=\"font-family: Arial\">" +
-                            "<p>Liebe Administration<p>" +
-                            "<p>Bitte die Auszahlung von den folgenden Expertenhonoraren veranlassen:</p>" +
-                            "<table>" +
-                            "<tr>" +
-                                "<th>Experte</th>" +
-                                "<th>Semester</th>" +
-                                "<th>Studierende</th>" +
-                                "<th>Betreuer</th>" +
-                                "<th>Projekttitel</th>" +
-                            "</tr>");
-
-                        foreach (var p in unpaidExperts)
-                        {
-                            p.LogExpertPaid = true;
-
-                            mailMessage.Append(
-                            "<tr>" +
-                                $"<td>{p.Expert.Name}</td>" +
-                                $"<td>{p.Semester.Name}</td>" +
-                                $"<td>{p.LogStudent1Mail + (p.LogStudent2Mail != null ? ", " + p.LogStudent2Mail : "")}</td>" +
-                                $"<td>{p.Advisor1.Mail}</td>" +
-                                $"<td>{p.GetFullTitle()}</td>" +
-                            "</tr>"
-                            );
-                        }
-
-                        mailMessage.Append(
-                            "</table>" +
-                            "<br/>" +
-                            "<p>Herzliche Grüsse,<br/>" +
-                            "Dein ProStud-Team</p>" +
-                            $"<p>Feedback an {Global.WebAdmin}</p>" +
-                            "</div>"
-                            );
-
-                        mail.Body = mailMessage.ToString();
-                        smtpClient.Send(mail);
-                    }
-            }
-
+            activeTask.Done = true;
             db.SubmitChanges();
         }
 
@@ -309,11 +306,11 @@ namespace ProStudCreator
 
                             mailMessage.Append(
                             "<tr>" +
-                                $"<td>{p.Expert.Name}</td>" +
-                                $"<td>{p.Semester.Name}</td>" +
-                                $"<td>{p.LogStudent1Mail + (p.LogStudent2Mail != null ? ", " + p.LogStudent2Mail : "")}</td>" +
-                                $"<td>{p.Advisor1.Mail}</td>" +
-                                $"<td>{p.GetFullTitle()}</td>" +
+                                $"<td>{HttpUtility.HtmlEncode(p.Expert.Name)}</td>" +
+                                $"<td>{HttpUtility.HtmlEncode(p.Semester.Name)}</td>" +
+                                $"<td>{HttpUtility.HtmlEncode(p.LogStudent1Mail + (p.LogStudent2Mail != null ? ", " + p.LogStudent2Mail : ""))}</td>" +
+                                $"<td>{HttpUtility.HtmlEncode(p.Advisor1.Mail)}</td>" +
+                                $"<td>{HttpUtility.HtmlEncode(p.GetFullTitle())}</td>" +
                             "</tr>"
                             );
                         }
@@ -323,7 +320,7 @@ namespace ProStudCreator
                             "<br/>" +
                             "<p>Herzliche Grüsse,<br/>" +
                             "Dein ProStud-Team</p>" +
-                            $"<p>Feedback an {Global.WebAdmin}</p>" +
+                            $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
                             "</div>"
                             );
 
@@ -386,24 +383,24 @@ namespace ProStudCreator
                             if (p.LogStudent1Mail != null && p.LogGradeStudent1 != null)
                                 mailMessage.Append(
                                 "<tr>" +
-                                    $"<td>{p.LogStudent1Mail}</td>" +
-                                    $"<td>{p.LogGradeStudent1.Value.ToString("F1")}</td>" +
-                                    $"<td>{p.LogProjectType.ExportValue}</td>" +
-                                    $"<td>{(p.LogLanguageGerman.Value ? "Deutsch" : "Englisch")}</td>" +
-                                    $"<td>{p.Advisor1.Mail}</td>" +
-                                    $"<td>{p.GetFullTitle()}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode(p.LogStudent1Mail)}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode(p.LogGradeStudent1.Value.ToString("F1"))}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode(p.LogProjectType.ExportValue)}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode((p.LogLanguageGerman.Value ? "Deutsch" : "Englisch"))}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode(p.Advisor1.Mail)}</td>" +
+                                    $"<td>{HttpUtility.HtmlEncode(p.GetFullTitle())}</td>" +
                                 "</tr>"
                                 );
 
                             if (p.LogStudent2Mail != null && p.LogGradeStudent2 != null)
                                 mailMessage.Append(
                                     "<tr>" +
-                                        $"<td>{p.LogStudent2Mail}</td>" +
-                                        $"<td>{p.LogGradeStudent2.Value.ToString("F1")}</td>" +
-                                        $"<td>{p.LogProjectType.ExportValue}</td>" +
-                                        $"<td>{(p.LogLanguageGerman.Value ? "Deutsch" : "Englisch")}</td>" +
-                                        $"<td>{p.Advisor1.Mail}</td>" +
-                                        $"<td>{p.GetFullTitle()}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode(p.LogStudent2Mail)}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode(p.LogGradeStudent2.Value.ToString("F1"))}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode(p.LogProjectType.ExportValue)}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode((p.LogLanguageGerman.Value ? "Deutsch" : "Englisch"))}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode(p.Advisor1.Mail)}</td>" +
+                                        $"<td>{HttpUtility.HtmlEncode(p.GetFullTitle())}</td>" +
                                     "</tr>"
                                     );
                         }
@@ -413,7 +410,7 @@ namespace ProStudCreator
                             "<br/>" +
                             "<p>Herzliche Grüsse,<br/>" +
                             "Dein ProStud-Team</p>" +
-                            $"<p>Feedback an {Global.WebAdmin}</p>" +
+                            $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
                             "</div>"
                             );
 
@@ -446,6 +443,39 @@ namespace ProStudCreator
 
             db.SubmitChanges();
         }
+
+
+
+
+
+        private static void SendDoubleCheckMarKomBrochureData(ProStudentCreatorDBDataContext db)
+        {
+            var lastCheckDate = new DateTime(DateTime.Now.Year, 5, 1);
+            if (lastCheckDate > DateTime.Now)
+                lastCheckDate = lastCheckDate.AddYears(-1);
+
+            if (lastCheckDate.Year <= 2018)
+                return;
+
+            //add new tasks for projects
+            var allExportProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion
+                && p.LogProjectType.P6 && p.Semester.StartDate >= lastCheckDate && p.Semester.EndDate <= lastCheckDate
+                && !db.Tasks.Any(t => t.Project == p && t.TaskType.Id == (int)Type.DoubleCheckMarKomBrochureData)).ToList();
+
+            foreach (var project in allExportProjects)
+                db.Tasks.InsertOnSubmit(new Task
+                {
+                    ProjectId = project.Id,
+                    ResponsibleUser = project.Advisor1,
+                    TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.DoubleCheckMarKomBrochureData),
+                    Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
+                });
+
+            db.SubmitChanges();
+        }
+
+
+
 
         private static void InfoStartProject(ProStudentCreatorDBDataContext db)
         {
@@ -587,7 +617,7 @@ namespace ProStudCreator
                     mail.Subject = "Erinnerung von ProStud";
                     mail.IsBodyHtml = true;
                     mailMessage.Append("<div style=\"font-family: Arial\">");
-                    mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {task.ResponsibleUser.Name.Split(' ')[0]}<p>"
+                    mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {HttpUtility.HtmlEncode(task.ResponsibleUser.Name.Split(' ')[0])}<p>"
                                         + "<p>Es stehen folgende Aufgaben im ProStud an:</p><ul>");
 
                     foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser))
@@ -596,16 +626,17 @@ namespace ProStudCreator
                             mail.CC.Add(underTask.Supervisor.Mail);
 
                         underTask.AlreadyChecked = true;
-                        mailMessage.Append(task.Project != null ? "<li>" + $"{underTask.TaskType.Description} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{underTask.Project.Name}</a></li>" : $"<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{task.TaskType.Description}</a></li>");
+                        mailMessage.Append(task.Project != null ? "<li>" + $"{HttpUtility.HtmlEncode(underTask.TaskType.Description)} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{HttpUtility.HtmlEncode(underTask.Project.Name)}</a></li>" : $"<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{HttpUtility.HtmlEncode(task.TaskType.Description)}</a></li>");
                     }
 
                     mailMessage.Append("</ul>"
                         + "<br/>"
                         + "<p>Freundliche Grüsse</p>"
-                        + "Dein ProStud-Team"
+                        + "Dein ProStud-Team</p>"
+                        + $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>"
+                        + "</div>"
                         );
 
-                    mailMessage.Append("</div>");
                     mail.Body = mailMessage.ToString();
                     emails.Add(Tuple.Create<Task, MailMessage>(task, mail));
                 }

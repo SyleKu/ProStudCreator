@@ -21,6 +21,8 @@ namespace ProStudCreator
             _p.IsMainVersion = true;
         }
 
+        public static string GetFullNr(this Project _p) => $"{_p.Semester.Name}_{_p.Department.DepartmentName}{_p.ProjectNr:D2}";
+
         public static string GetFullTitle(this Project _p) => $"{_p.Semester.Name}_{_p.Department.DepartmentName}{_p.ProjectNr:D2}: {_p.Name}";
 
         public static Project SaveAsNewVersion(this Project _p, ProStudentCreatorDBDataContext db)
@@ -518,13 +520,21 @@ namespace ProStudCreator
             }
         }
 
+        public static string Student1FirstName(this Project _p) => _p.LogStudent1Name?.Split(' ')?[0];
+        public static string Student2FirstName(this Project _p) => _p.LogStudent2Name?.Split(' ')?[0];
+
+        public static string Student1LastName(this Project _p) => _p.LogStudent1Name == null ? null : string.Join(" ", _p.LogStudent1Name.Split(' ').Skip(1).ToArray());
+        public static string Student2LastName(this Project _p) => _p.LogStudent2Name == null ? null : string.Join(" ", _p.LogStudent2Name.Split(' ').Skip(1).ToArray());
+
+
+
         public static bool WasDefenseHeld(this Project _p)
         {
             var def = _p.GetDefenseDate();
             if (def == null)
                 return false;
 
-            return _p.BillingStatus!=null && _p.WebSummaryChecked && _p.IsMainVersion && _p.LogGradeStudent1!=null && def.Value.AddDays(1) < DateTime.Now;
+            return _p.BillingStatus != null && _p.WebSummaryChecked && _p.IsMainVersion && _p.LogGradeStudent1 != null && def.Value.AddDays(1) < DateTime.Now;
         }
 
         public static DateTime? GetDefenseDate(this Project _p)
