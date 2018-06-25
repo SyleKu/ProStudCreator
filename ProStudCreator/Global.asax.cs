@@ -25,7 +25,7 @@ namespace ProStudCreator
         public static readonly string GradeAdmin = "simon.felix@fhnw.ch"; // "admin.technik@fhnw.ch";
         public static readonly string PayExpertAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
         public static readonly string InvoiceCustomersAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
-        public static readonly string MarKomAdmin = "simon.felix@fhnw.ch"; // "jadwiga.gabrys@fhnw.ch";
+        public static readonly string MarKomAdmin = "jadwiga.gabrys@fhnw.ch";
 
         private void Application_Start(object sender, EventArgs e)
         {
