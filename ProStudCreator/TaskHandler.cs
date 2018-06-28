@@ -160,7 +160,7 @@ namespace ProStudCreator
         //                    "</table>" +
         //                    "<br/>" +
         //                    "<p>Herzliche Grüsse,<br/>" +
-        //                    "Dein ProStud-Team</p>" +
+        //                    "ProStud-Team</p>" +
         //                    $"<p>Feedback an {Global.WebAdmin}</p>" +
         //                    "</div>"
         //                    );
@@ -236,7 +236,7 @@ namespace ProStudCreator
                     "</table>" +
                     "<br/>" +
                     "<p>Herzliche Grüsse,<br/>" +
-                    "Dein ProStud-Team</p>" +
+                    "ProStud-Team</p>" +
                     $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
                     "</div>"
                     );
@@ -319,7 +319,7 @@ namespace ProStudCreator
                             "</table>" +
                             "<br/>" +
                             "<p>Herzliche Grüsse,<br/>" +
-                            "Dein ProStud-Team</p>" +
+                            "ProStud-Team</p>" +
                             $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
                             "</div>"
                             );
@@ -409,7 +409,7 @@ namespace ProStudCreator
                             "</table>" +
                             "<br/>" +
                             "<p>Herzliche Grüsse,<br/>" +
-                            "Dein ProStud-Team</p>" +
+                            "ProStud-Team</p>" +
                             $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>" +
                             "</div>"
                             );
@@ -632,7 +632,7 @@ namespace ProStudCreator
                     mailMessage.Append("</ul>"
                         + "<br/>"
                         + "<p>Freundliche Grüsse</p>"
-                        + "Dein ProStud-Team</p>"
+                        + "ProStud-Team</p>"
                         + $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>"
                         + "</div>"
                         );

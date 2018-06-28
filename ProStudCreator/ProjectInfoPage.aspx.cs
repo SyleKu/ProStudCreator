@@ -412,7 +412,7 @@ namespace ProStudCreator
 
                 if (project.BillingStatus?.ShowAddressOnInfoPage == true && project.ClientType==(int)ClientType.Internal)
                 {
-                    validationMessage = "Verrechenbare Projekte benötigen externe Auftraggeber.";
+                    validationMessage = "Dieser Verrechnungsstatus ist nur bei externen Auftraggebern verfügbar.";
                 }
 
                 if (validationMessage == null)
