@@ -5102,6 +5102,8 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _SemesterId;
 		
+		private System.Nullable<System.DateTime> _FirstReminded;
+		
 		private EntityRef<TaskType> _TaskType1;
 		
 		private EntityRef<UserDepartmentMap> _UserDepartmentMap;
@@ -5134,6 +5136,8 @@ namespace ProStudCreator
     partial void OnDoneChanged();
     partial void OnSemesterIdChanging(System.Nullable<int> value);
     partial void OnSemesterIdChanged();
+    partial void OnFirstRemindedChanging(System.Nullable<System.DateTime> value);
+    partial void OnFirstRemindedChanged();
     #endregion
 		
 		public Task()
@@ -5342,6 +5346,26 @@ namespace ProStudCreator
 					this._SemesterId = value;
 					this.SendPropertyChanged("SemesterId");
 					this.OnSemesterIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstReminded", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FirstReminded
+		{
+			get
+			{
+				return this._FirstReminded;
+			}
+			set
+			{
+				if ((this._FirstReminded != value))
+				{
+					this.OnFirstRemindedChanging(value);
+					this.SendPropertyChanging();
+					this._FirstReminded = value;
+					this.SendPropertyChanged("FirstReminded");
+					this.OnFirstRemindedChanged();
 				}
 			}
 		}
