@@ -11,9 +11,12 @@
         <p>
             Als IP5 kommen viele Arbeiten in Frage: z.B. Webapplikationen ab einer gewissen Komplexität, Visualisierungen, Bildverarbeitung, …. Die
             Studierenden sollen ein klares Ziel haben und der Arbeitsumfang soll angemessen sein. Üblicherweise geht es darum, bestehende
-            Technologien/Algorithmen/Methoden anzuwenden und sich auf das IP6 vorzubereiten. Im IP6 werden die Weichen mehr Richtung Wissenschaft
-            gestellt. Laut Richtlinien sollen die Studierenden in der Bachelorthesis eine „bestimmte Aufgabe wissenschaftlich reflektiert, theoretisch
-            und praktisch sowie selbständig lösen“.
+            Technologien/Algorithmen/Methoden anzuwenden und sich auf das IP6 vorzubereiten.
+        </p>
+        <p>
+            Im IP6 werden die Weichen mehr Richtung Wissenschaft gestellt. Laut Richtlinien sollen die Studierenden in der Bachelorthesis eine
+            „bestimmte Aufgabe wissenschaftlich reflektiert, theoretisch und praktisch sowie selbständig lösen“. Es wird erwartet, dass die Problemstellung
+            eine eigene, kreative Lösungsfindung erfordert.
         </p>
         <p>
             Geradlinige Arbeiten sind (insbesondere für ein IP6) <b>NICHT</b> geeignet. Es soll nicht von vornherein klar sein, wie man die Aufgabe
@@ -42,7 +45,7 @@
             <a href="mailto:dominik.gruntz@fhnw.ch">Dominik Gruntz</a> für Projekte am IMVS.
         </p>
         <p id="i4ds2" visible="false" runat="server">
-            <a href="mailto:francesca.molendini@fhnw.ch">Francesca Molendini</a> für Projekte am I4DS.
+            <a href="mailto:simon.felix@fhnw.ch">Simon Felix</a> für Projekte am I4DS.
         </p>
         <p id="iit2" visible="false" runat="server">
             <a href="mailto:simon.schubiger@fhnw.ch">Simon Schubiger</a> für Projekte am IIT. 
@@ -53,10 +56,12 @@
             Interessenten doch bitte, dass einfache Programmierarbeiten nicht an die Studierenden ausgelagert werden können. Die könnten aber als IP1-4
             interessant sein! Für externe Projekte gelten dieselben Anforderungen wie für interne Projekte.
         </p>
-        <h4>Können Studierende eigene Projekte einreichen?</h4>
+        <h4>Wie können Studierende eigene Projekte einreichen?</h4>
         <p>
-            Studierende können Externe ermutigen ein Projekt einzureichen. Sie können selbst aber keine Projekte einreichen oder
-            Auftraggeber spielen.
+            Studierende können externe Auftraggeber ermutigen ein Projekt einzureichen (siehe vorherige Frage).
+            Sie selbst dürfen KEINE Projekte einreichen oder Auftraggeber spielen. Sie sollen auch keine Abmachungen
+            mit Betreuern im Vorfeld machen. Bitte deshalb nicht Projekte direkt von Studierenden annehmen oder
+            gar Versprechungen machen.
         </p>
         <h4>Wer darf Projekte betreuen?</h4>
         <p>
@@ -119,7 +124,7 @@
         </p>
         <h4>Was mache ich mit allen Unterlagen nach dem Ende der Arbeit?</h4>
         <p>
-            <b>Neu: Bitte lade alle Unterlagen auf der Projektinfoseite hoch. Papierunterlagen solltest Du bis 30 Tage nach Notenbekanntgabe aufbewahren, weil erst dann die Rekursfrist abläuft.</b>
+            Bitte lade alle Unterlagen auf der Projektinfoseite hoch. Papierunterlagen solltest Du bis 30 Tage nach Notenbekanntgabe aufbewahren, weil erst dann die Rekursfrist abläuft.
         </p>
         <h4 id="rekurs">Was tun, wenn sich eine ungenügende Note abzeichnet?</h4>
         <p>

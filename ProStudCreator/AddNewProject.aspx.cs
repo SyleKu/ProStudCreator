@@ -970,6 +970,17 @@ namespace ProStudCreator
             publishProject.Visible = false;
             duplicateProject.Visible = false;
             saveProject.Visible = false;
+
+            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde leider nicht gewählt. Bitte informiere allfällige externe Auftraggeber!\n"
+                                     + "\n"
+                                     + "Hier kannst Du das Projekt für das nächste Semester wieder einreichen:\n"
+                                     + "https://www.cs.technik.fhnw.ch/prostud/\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "Freundliche Grüsse\n"
+                                     + ShibUser.GetFirstName();
+
+            /*
             refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
                                      + "\n"
                                      + "Dies sind die Gründe dafür:\n"
@@ -978,6 +989,7 @@ namespace ProStudCreator
                                      + "\n"
                                      + "Freundliche Grüsse\n"
                                      + ShibUser.GetFirstName();
+                                     */
             refuseProjectUpdatePanel.Update();
             SetFocus(refusedReason);
         }

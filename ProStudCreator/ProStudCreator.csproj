@@ -228,7 +228,6 @@
     <Content Include="Content\Bewertungsbogen_P5_P9.xlsx" />
     <Content Include="Content\Externe_Projekteingabe.pdf" />
     <Content Include="Content\Poster_TemplateI_150923.pptx" />
-    <Content Include="Content\Vorlage_Bericht_2016.dot" />
     <Content Include="Content\Leitfaden_Berichte_4.01.pdf" />
     <Content Include="Content\Webauftritt_2015HS.pdf" />
     <Content Include="ProStudentCreatorDB.dbml">
@@ -238,6 +237,8 @@
     </Content>
     <Content Include="Content\P5_P6_Guide_20160906.pdf" />
     <Content Include="Content\IP56_Handbuch_Studierende_V170913.pdf" />
+    <Content Include="Content\Bewertungsbogen_P56_HS18.xlsx" />
+    <Content Include="Content\Vorlage_Bericht_17.dotx" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>

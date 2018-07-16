@@ -29,7 +29,8 @@ namespace ProStudCreator
             SendMarKomBrochure = 12,
             InvoiceCustomers = 13, //TODO
             EnterAssignedStudents = 14,
-            DoubleCheckMarKomBrochureData = 15
+            DoubleCheckMarKomBrochureData = 15,
+            CheckBillingStatus = 16
         }
 
 
@@ -39,6 +40,7 @@ namespace ProStudCreator
             {
                 CheckGradesRegistered(db);
                 CheckWebsummaryChecked(db);
+                CheckBillingStatus(db);
                 CheckUploadResults(db);
 
                 InfoStartProject(db);
@@ -52,6 +54,8 @@ namespace ProStudCreator
 
                 SendGradesToAdmin(db);
                 SendPayExperts(db);
+
+
 
                 //vvvvvvvvvvvvv NOT YET IMPLEMENTED
                 //SendInvoiceCustomers(db); //<-- not yet implemented
@@ -539,7 +543,7 @@ namespace ProStudCreator
             //mark registered tasks as done
             var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.RegisterGrades).ToList();
             foreach (var openTask in openGradeTasks)
-                if (openTask.Project.State!=ProjectState.Published || (openTask.Project.LogGradeStudent1.HasValue && (openTask.Project.LogGradeStudent2.HasValue || string.IsNullOrEmpty(openTask.Project.LogStudent2Mail))))
+                if (openTask.Project.State!=ProjectState.Published || !openTask.Project.IsMainVersion || (openTask.Project.LogGradeStudent1.HasValue && (openTask.Project.LogGradeStudent2.HasValue || string.IsNullOrEmpty(openTask.Project.LogStudent2Mail))))
                     openTask.Done = true;
 
             db.SubmitChanges();
@@ -549,7 +553,7 @@ namespace ProStudCreator
         {
             //add new tasks for projects
             var allActiveWebsummaryTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.CheckWebsummary).Select(i => i.ProjectId).ToList();
-            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && !p.WebSummaryChecked).ToList();
+            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && !p.WebSummaryChecked && p.BillingStatus.RequiresProjectResults).ToList();
             foreach (var project in allPublishedProjects.Where(p => p.ShouldBeGradedByNow(db, new DateTime(2017, 4, 1))))
                 if (!allActiveWebsummaryTasks.Contains(project.Id))
                     db.Tasks.InsertOnSubmit(new Task
@@ -561,13 +565,35 @@ namespace ProStudCreator
                     });
 
             //mark registered tasks as done
-            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.CheckWebsummary && (i.Project.WebSummaryChecked || i.Project.State!=ProjectState.Published)).ToList();
+            var openGradeTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.CheckWebsummary && (i.Project.WebSummaryChecked || i.Project.State!=ProjectState.Published || !i.Project.BillingStatus.RequiresProjectResults || !i.Project.IsMainVersion)).ToList();
             foreach (var openTask in openGradeTasks)
                 openTask.Done = true;
 
             db.SubmitChanges();
         }
 
+        private static void CheckBillingStatus(ProStudentCreatorDBDataContext db)
+        {
+            //add new tasks for projects
+            var allActiveBillingTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.CheckBillingStatus).Select(i => i.ProjectId).ToList();
+            var allPublishedProjects = db.Projects.Where(p => p.State == ProjectState.Published && p.IsMainVersion && p.BillingStatus==null).ToList();
+            foreach (var project in allPublishedProjects.Where(p => p.ShouldBeGradedByNow(db, new DateTime(2017, 4, 1))))
+                if (!allActiveBillingTasks.Contains(project.Id))
+                    db.Tasks.InsertOnSubmit(new Task
+                    {
+                        ProjectId = project.Id,
+                        ResponsibleUser = project.Advisor1,
+                        TaskType = db.TaskTypes.Single(t => t.Id == (int)Type.CheckBillingStatus),
+                        Supervisor = db.UserDepartmentMap.Single(i => i.IsSupervisor && i.Department == project.Department)
+                    });
+
+            //mark registered tasks as done
+            var completedBillingTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.CheckBillingStatus && (i.Project.BillingStatus!=null || i.Project.State != ProjectState.Published || !i.Project.IsMainVersion)).ToList();
+            foreach (var openTask in completedBillingTasks)
+                openTask.Done = true;
+
+            db.SubmitChanges();
+        }
 
 
         private static void CheckUploadResults(ProStudentCreatorDBDataContext db)
@@ -587,7 +613,7 @@ namespace ProStudCreator
 
             //mark registered tasks as done
             var openUploadTasks = db.Tasks.Where(i => !i.Done && i.TaskType.Id == (int)Type.UploadResults &&
-            (i.Project.Attachements.Any(a => !a.Deleted) || !i.Project.BillingStatus.RequiresProjectResults || i.Project.State!=ProjectState.Published)).ToList();
+            (i.Project.Attachements.Any(a => !a.Deleted) || !i.Project.BillingStatus.RequiresProjectResults || i.Project.State!=ProjectState.Published || !i.Project.IsMainVersion)).ToList();
             foreach (var openTask in openUploadTasks)
                 openTask.Done = true;
 
@@ -614,13 +640,14 @@ namespace ProStudCreator
                 {
                     var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
                     mail.To.Add(new MailAddress(task.ResponsibleUser.Mail));
+                    mail.CC.Add(new MailAddress(Global.WebAdmin));
                     mail.Subject = "Erinnerung von ProStud";
                     mail.IsBodyHtml = true;
                     mailMessage.Append("<div style=\"font-family: Arial\">");
                     mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {HttpUtility.HtmlEncode(task.ResponsibleUser.Name.Split(' ')[0])}<p>"
                                         + "<p>Es stehen folgende Aufgaben im ProStud an:</p><ul>");
 
-                    foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser))
+                    foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser).OrderBy(st => st.Project.ProjectNr))
                     {
                         if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate && underTask.Supervisor != null)
                             mail.CC.Add(underTask.Supervisor.Mail);
