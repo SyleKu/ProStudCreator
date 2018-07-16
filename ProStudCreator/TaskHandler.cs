@@ -50,8 +50,6 @@ namespace ProStudCreator
 
                 EnterAssignedStudents(db);
 
-                SendMailsToResponsibleUsers(db);
-
                 SendGradesToAdmin(db);
                 SendPayExperts(db);
 
@@ -62,6 +60,8 @@ namespace ProStudCreator
 
                 SendDoubleCheckMarKomBrochureData(db);
                 SendMarKomBrochure(db);
+
+                SendMailsToResponsibleUsers(db);
             }
         }
 
