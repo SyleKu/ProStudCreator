@@ -107,24 +107,16 @@ namespace ProStudCreator
             }
             else if (project.LogProjectType.P5 && !project.LogProjectType.P6)
             {
-                lblProjectType.Text = "IP5";
+                lblProjectType.Text = "IP5" + (project.LogProjectDuration==2 ? " (Lang)":"");
                 type = ProjectTypes.IP5;
             }
             else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
             {
-                lblProjectType.Text = "IP6";
+                lblProjectType.Text = "IP6" + (project.LogProjectDuration == 2 ? " (Lang)" : "");
                 type = ProjectTypes.IP6;
             }
             else
                 throw new Exception();
-
-            //set the Project duration
-            if (project.LogProjectDuration == 2)
-                lblProjectDuration.Text = "2 Semester";
-            else if (project.LogProjectDuration == 1)
-                lblProjectDuration.Text = "1 Semester";
-            else
-                lblProjectDuration.Text = "?";
 
             //Sets the DeliveryInfos
             SetProjectDeliveryLabels();

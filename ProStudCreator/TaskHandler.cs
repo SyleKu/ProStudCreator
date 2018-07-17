@@ -659,7 +659,7 @@ namespace ProStudCreator
                     mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {HttpUtility.HtmlEncode(task.ResponsibleUser.Name.Split(' ')[0])}<p>"
                                         + "<p>Es stehen folgende Aufgaben im ProStud an:</p><ul>");
 
-                    foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser).OrderBy(st => st.Project.ProjectNr))
+                    foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser).OrderBy(st => st.Project?.ProjectNr))
                     {
                         if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate && underTask.Supervisor != null)
                             mail.CC.Add(underTask.Supervisor.Mail);

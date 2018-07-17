@@ -39,11 +39,6 @@
                 <asp:Label runat="server" ID="lblProjectType" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <br />
                 <br />
-                <asp:Label runat="server" Text="Dauer:" CssClass="control-label col-sm-3"></asp:Label>
-                <asp:Label runat="server" ID="lblProjectDuration" CssClass="col-sm-3 alignbottom"></asp:Label>
-            </div>
-            <hr />
-            <div class="form-group">
                 <asp:Label runat="server" Text="Abgabe:" CssClass="control-label col-sm-3"></asp:Label>
                 <asp:Label runat="server" ID="ProjectDelivery" CssClass="col-sm-3 alignbottom"></asp:Label>
                 <div runat="server" id="divPresentation">
