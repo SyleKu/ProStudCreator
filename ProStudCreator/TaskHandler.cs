@@ -432,10 +432,10 @@ namespace ProStudCreator
 
         private static void InfoInsertNewSemesters(ProStudentCreatorDBDataContext db)
         {
-            var targetDate = DateTime.Now.AddMonths(18);
+            var targetDate = DateTime.Now.Date.AddMonths(18);
 
             var activeTasks = db.Tasks.Where(t => !t.Done && t.TaskType.Id == (int)Type.InsertNewSemesters);
-            var semesterMissing = !db.Semester.Any(s => s.StartDate <= targetDate && targetDate <= s.EndDate);
+            var semesterMissing = !db.Semester.Any(s => targetDate >= s.StartDate && targetDate < s.DayBeforeNextSemester);
 
             //add new tasks for projects
             if (semesterMissing && !activeTasks.Any())
