@@ -635,71 +635,56 @@ namespace ProStudCreator
 
         private static void SendMailsToResponsibleUsers(ProStudentCreatorDBDataContext db)
         {
-            //which tasks must be sent?
-            var tasksToMail = new List<Task>();
-            foreach (var task in db.Tasks.Where(i => !i.Done && i.ResponsibleUser != null))
-                if ((DateTime.Now.Subtract(task.LastReminded ?? DateTime.Now).TotalDays > task.TaskType.DaysBetweenReminds) || task.LastReminded == null)
-                    tasksToMail.Add(task);
+            var usersToMail = db.Tasks.Where(t => !t.Done && t.ResponsibleUser!=null && (t.LastReminded==null || t.LastReminded<=DateTime.Now.AddDays(-t.TaskType.DaysBetweenReminds))).Select(t => t.ResponsibleUser).Distinct();
 
-
-            //generate emails
-            var emails = new List<Tuple<Task, MailMessage>>();
-            foreach (var task in tasksToMail)
+            foreach (var user in usersToMail)
             {
+                var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
+                mail.To.Add(new MailAddress(user.Mail));
+                mail.CC.Add(new MailAddress(Global.WebAdmin));
+                mail.Subject = "Erinnerung von ProStud";
+                mail.IsBodyHtml = true;
+
                 var mailMessage = new StringBuilder();
+                mailMessage.Append("<div style=\"font-family: Arial\">");
+                mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {HttpUtility.HtmlEncode(user.Name.Split(' ')[0])}<p>"
+                                    + "<p>Es stehen folgende Aufgaben im ProStud an:</p><ul>");
 
-                if (!task.AlreadyChecked)
+                var tasks = db.Tasks.Where(t => t.ResponsibleUser == user && !t.Done).OrderBy(t => t.Project.ProjectNr).ToArray();
+                foreach (var task in tasks)
                 {
-                    var mail = new MailMessage { From = new MailAddress("noreply@fhnw.ch") };
-                    mail.To.Add(new MailAddress(task.ResponsibleUser.Mail));
-                    mail.CC.Add(new MailAddress(Global.WebAdmin));
-                    mail.Subject = "Erinnerung von ProStud";
-                    mail.IsBodyHtml = true;
-                    mailMessage.Append("<div style=\"font-family: Arial\">");
-                    mailMessage.Append($"<p style=\"font-size: 110%\">Hallo {HttpUtility.HtmlEncode(task.ResponsibleUser.Name.Split(' ')[0])}<p>"
-                                        + "<p>Es stehen folgende Aufgaben im ProStud an:</p><ul>");
+                    if (task.DueDate != null && DateTime.Now.AddDays(3) > task.DueDate && task.Supervisor != null)
+                        mail.CC.Add(task.Supervisor.Mail);
 
-                    foreach (var underTask in tasksToMail.Where(st => st.ResponsibleUser == task.ResponsibleUser).OrderBy(st => st.Project?.ProjectNr))
-                    {
-                        if (underTask.DueDate != null && DateTime.Now.AddDays(3) > underTask.DueDate && underTask.Supervisor != null)
-                            mail.CC.Add(underTask.Supervisor.Mail);
-
-                        underTask.AlreadyChecked = true;
-                        mailMessage.Append(task.Project != null ? "<li>" + $"{HttpUtility.HtmlEncode(underTask.TaskType.Description)} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={underTask.ProjectId}\">{HttpUtility.HtmlEncode(underTask.Project.Name)}</a></li>" : $"<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{HttpUtility.HtmlEncode(task.TaskType.Description)}</a></li>");
-                    }
-
-                    mailMessage.Append("</ul>"
-                        + "<br/>"
-                        + "<p>Freundliche Grüsse</p>"
-                        + "ProStud-Team</p>"
-                        + $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>"
-                        + "</div>"
-                        );
-
-                    mail.Body = mailMessage.ToString();
-                    emails.Add(Tuple.Create<Task, MailMessage>(task, mail));
+                    mailMessage.Append(task.Project != null ? "<li>" + $"{HttpUtility.HtmlEncode(task.TaskType.Description)} beim Projekt <a href=\"https://www.cs.technik.fhnw.ch/prostud/ProjectInfoPage?id={task.ProjectId}\">{HttpUtility.HtmlEncode(task.Project.Name)}</a></li>" : $"<li><a href=\"https://www.cs.technik.fhnw.ch/prostud/ \">{HttpUtility.HtmlEncode(task.TaskType.Description)}</a></li>");
                 }
-            }
 
-            foreach (var task in tasksToMail)
-                task.AlreadyChecked = false;
+                mailMessage.Append("</ul>"
+                    + "<br/>"
+                    + "<p>Freundliche Grüsse</p>"
+                    + "ProStud-Team</p>"
+                    + $"<p>Feedback an {HttpUtility.HtmlEncode(Global.WebAdmin)}</p>"
+                    + "</div>"
+                    );
+
+                mail.Body = mailMessage.ToString();
 
 #if !DEBUG
-            //send mails
-            using (var smtpClient = new SmtpClient())
-                foreach (var mailTaskTuple in emails)
+                using (var smtpClient = new SmtpClient())
                 {
-                    var mail = mailTaskTuple.Item2;
-                    var task = mailTaskTuple.Item1;
                     smtpClient.Send(mail);
 
-                    task.LastReminded = DateTime.Now;
-                    if (task.TaskType.DaysBetweenReminds == 0)
-                        task.Done = true;
+                    foreach (var task in tasks)
+                    {
+                        task.LastReminded = DateTime.Now;
+                        if (task.TaskType.DaysBetweenReminds == 0)
+                            task.Done = true;
 
-                    db.SubmitChanges();
+                        db.SubmitChanges();
+                    }
                 }
 #endif
+            }
         }
     }
 
