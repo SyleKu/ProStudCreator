@@ -224,6 +224,7 @@ namespace ProStudCreator
                         "<th>Nummer</th>" +
                     "</tr>");
 
+                //FIXME: should consider project enddate, not startdate of semester
                 var projs = db.Projects.Where(p => p.IsMainVersion && p.LogProjectType.P6 && p.Semester.StartDate <= lastSendDate && p.Semester.EndDate >= lastSendDate && p.State == (int)ProjectState.Published && !p.UnderNDA).ToArray();
 
                 foreach (var p in projs.OrderBy(p => p.Student1LastName()))
