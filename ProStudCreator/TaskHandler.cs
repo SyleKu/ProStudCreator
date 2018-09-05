@@ -33,9 +33,21 @@ namespace ProStudCreator
             CheckBillingStatus = 16
         }
 
+        private static readonly object TaskCheckLock = new object();
+        private static DateTime NextTaskCheck = DateTime.Today.AddHours(19);
 
         public static void CheckAllTasks() //register all Methods which check for tasks here.
         {
+            //protect against reentrancy-problems. this lock is enough as long as the method runs in less than 24h
+            lock (TaskCheckLock)
+            {
+                var now = DateTime.Now;
+                if (now < NextTaskCheck)
+                    return;
+
+                NextTaskCheck = now.Date.AddHours(24 + 19);
+            }
+
             using (var db = new ProStudentCreatorDBDataContext())
             {
                 CheckGradesRegistered(db);
@@ -52,8 +64,6 @@ namespace ProStudCreator
 
                 SendGradesToAdmin(db);
                 SendPayExperts(db);
-
-
 
                 //vvvvvvvvvvvvv NOT YET IMPLEMENTED
                 //SendInvoiceCustomers(db); //<-- not yet implemented

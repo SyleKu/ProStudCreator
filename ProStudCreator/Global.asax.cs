@@ -20,7 +20,7 @@ namespace ProStudCreator
         private const string DummyPage = "CheckAllTasks";
         public static readonly TimeSpan AllowTitleChangesBeforeSubmission = TimeSpan.FromDays(11*7);
         public static readonly TimeSpan ExpectFinalPresentationAfterSubmissionForIP5 = TimeSpan.FromDays(3*7);
-        public static readonly TimeSpan GradingDuration = TimeSpan.FromDays(2);
+        public static readonly TimeSpan GradingDuration = TimeSpan.FromDays(4);
         public static readonly string WebAdmin = "simon.felix@fhnw.ch";
         public static readonly string GradeAdmin = "admin.technik@fhnw.ch";
         public static readonly string PayExpertAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
@@ -38,7 +38,6 @@ namespace ProStudCreator
             Application.Add("dummyRequest", "");
 
             TaskHandler.CheckAllTasks();
-
         }
 
 
@@ -59,7 +58,6 @@ namespace ProStudCreator
         {
             HitPage();
 
-            // Do the service works
             TaskHandler.CheckAllTasks();
         }
 

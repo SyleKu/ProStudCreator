@@ -256,6 +256,10 @@
     <Content Include="Projectlist.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -329,6 +333,11 @@
     </Compile>
     <Compile Include="ClientType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Translator.cs" />
     <Compile Include="ProjectFilesDownload.aspx.cs">
       <DependentUpon>ProjectFilesDownload.aspx</DependentUpon>
