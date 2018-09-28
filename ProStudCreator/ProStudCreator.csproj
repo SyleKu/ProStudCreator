@@ -235,10 +235,10 @@
       <LastGenOutput>ProStudentCreatorDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\P5_P6_Guide_20160906.pdf" />
     <Content Include="Content\IP56_Handbuch_Studierende_V170913.pdf" />
     <Content Include="Content\Bewertungsbogen_P56_HS18.xlsx" />
     <Content Include="Content\Vorlage_Bericht_17.dotx" />
+    <Content Include="Content\P5_P6_Guide_20180914.pdf" />
     <None Include="Properties\PublishProfiles\prostudcreator.cs.technik.fhnw.ch.pubxml">
       <SubType>Designer</SubType>
     </None>
