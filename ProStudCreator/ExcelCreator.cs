@@ -13,7 +13,7 @@ namespace ProStudCreator
     {
         private static readonly string SHEET_NAME = "Projects";
         private static readonly string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
-
+        private static readonly string Billing_SHEET_NAME = "_Verrechnungs_Excel";
         private static readonly string[] HEADERS =
         {
             "Abbreviation",
@@ -81,6 +81,25 @@ namespace ProStudCreator
             "Interne DB-ID"
         };
 
+        private static readonly string[] Billing_HEADER =
+        {
+            "Semester",
+            "Projekt-ID",
+            "projekttittel*",
+            "Studierende*",
+            "Betreuer*",
+            "Projekt x*",
+            "Institut",
+            "Vertiefung",
+            "vertrag",
+            "Experte (P6)",
+            "Auftraggeber*",
+            "Verrechnung*",
+            "",
+            "",
+        };
+
+
         // References
         // - http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
 
@@ -105,6 +124,10 @@ namespace ProStudCreator
 
             for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
+
+            //sdf asdf asdf asdf asdf a
+            //asdfa sdf asdfa sdf asd fasdf asdf 
+            ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = System.Text.Encoding.Default.CodePage;
 
             // Save
             workbook.Write(outStream);
@@ -132,7 +155,7 @@ namespace ProStudCreator
             row.CreateCell(10).SetCellValue(p.Reservation2Mail);
             row.CreateCell(11).SetCellValue(p.Id);
 
-            row.CreateCell(12).SetCellValue(p.PreviousProject!=null ? 1 : 0);
+            row.CreateCell(12).SetCellValue(p.PreviousProject != null ? 1 : 0);
             row.CreateCell(13).SetCellValue(p.LanguageGerman ? 1 : 0);
             row.CreateCell(14).SetCellValue(p.LanguageEnglish ? 1 : 0);
             row.CreateCell(15).SetCellValue(p.TypeAppWeb);
@@ -208,7 +231,7 @@ namespace ProStudCreator
             cell1.SetCellValue(GetStartDate(p, db));
             var cell2 = row.CreateCell(i++);
             cell2.CellStyle = DateStyle;
-            if(p.GetDeliveryDate().HasValue)
+            if (p.GetDeliveryDate().HasValue)
                 cell2.SetCellValue(p.GetDeliveryDate().Value);
             row.CreateCell(i++).SetCellValue(p.ExhibitionBachelorThesis(db));
             row.CreateCell(i++).SetCellValue(p.LogStudent1Name ?? "");
@@ -288,7 +311,7 @@ namespace ProStudCreator
         {
             if (grade == null)
                 return -1;
-            return Math.Round((double) grade, 1);
+            return Math.Round((double)grade, 1);
         }
 
         private static string GetAbbreviationProject(Project p)
@@ -321,5 +344,193 @@ namespace ProStudCreator
 
             return address.ToString();
         }
-    }
+        public static void GenerateBillingList(Stream outStream, IEnumerable<Project> _projects,
+             ProStudentCreatorDBDataContext db, string semesterName)
+        {
+            var workbook = new XSSFWorkbook();
+            var worksheet = workbook.CreateSheet(Billing_SHEET_NAME);
+
+            var HeaderStyle = workbook.CreateCellStyle();
+            HeaderStyle.FillForegroundColor = HSSFColor.PaleBlue.Index;
+            HeaderStyle.FillPattern = FillPattern.SolidForeground;
+
+            var DateStyle = workbook.CreateCellStyle();
+            DateStyle.DataFormat = workbook.CreateDataFormat().GetFormat("dd.MM.yyyy");
+
+
+            // Header
+
+            worksheet.CreateRow(0);
+            for (var i = 0; i < Billing_HEADER.Length; i++)
+            {
+                if (i <= 10)
+                {
+                    var cell = worksheet.GetRow(0).CreateCell(i);
+                    NPOI.SS.Util.CellRangeAddress cra = new NPOI.SS.Util.CellRangeAddress(0, 2, i, i);
+                    cell.CellStyle = HeaderStyle;
+                    cell.SetCellValue(Billing_HEADER[i]);
+                    cell.CellStyle.WrapText = true;
+                    worksheet.AddMergedRegion(cra);
+
+                }
+
+                else
+                {
+                    var cell = worksheet.GetRow(0).CreateCell(i);
+                    cell.CellStyle = HeaderStyle;
+                    cell.SetCellValue(Billing_HEADER[i]);
+                }
+            }
+
+            // Project entries
+            var projects = _projects.ToArray();
+
+            for (var i = 0; i < projects.Length; i++)
+            {
+                var row = worksheet.CreateRow(3 + i);
+                ProjectToExcelBillingRow(projects[i], row, db, DateStyle, worksheet, workbook);
+            }
+
+            for (var i = 0; i < Billing_HEADER.Length; i++)
+                worksheet.AutoSizeColumn(i, true);
+
+
+
+
+
+            var CellStyleGreen = workbook.CreateCellStyle();
+            CellStyleGreen.FillForegroundColor = HSSFColor.BrightGreen.Index;
+            CellStyleGreen.FillPattern = FillPattern.SolidForeground;
+
+            var CellStyleRed = workbook.CreateCellStyle();
+            CellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
+            CellStyleRed.FillPattern = FillPattern.SolidForeground;
+
+            var j = 11;
+            var SecondHeaders = worksheet.CreateRow(1);
+            var SecondHeadersCells = worksheet.GetRow(1).CreateCell(j);
+
+            //Second Line
+            SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.SetCellValue("ja");
+
+            SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.SetCellValue("               ");
+
+            SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleRed;
+            SecondHeadersCells.SetCellValue("Nein");
+
+
+            //Third line
+            SecondHeaders = worksheet.CreateRow(2);
+
+            j = 11;
+
+            SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.SetCellValue("Kontaktperson");
+
+            SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.SetCellValue("Rechnungsadresse");
+
+            SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
+            SecondHeadersCells.CellStyle = CellStyleRed;
+            SecondHeadersCells.SetCellValue("Verrechenbar");
+
+
+
+
+
+            // Save
+
+            workbook.Write(outStream);
+
+
+        }
+
+        private static void ProjectToExcelBillingRow(Project p, IRow row, ProStudentCreatorDBDataContext db,
+            ICellStyle DateStyle, ISheet worksheet, IWorkbook workbook)
+        {
+            var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester + "_" +
+                                                                            p.Department.DepartmentName +
+                                                                            p.ProjectNr.ToString("D2"); var i = 0;
+
+            var students = p.LogStudent1Name + " / " + p.LogStudent2Name;
+
+            var adress = p.ClientAddressStreet +
+                               p.ClientAddressPostcode + p.ClientAddressCity;
+
+            var ColleredRows = row;
+
+            var ColleredRowCells = ColleredRows.CreateCell(i);
+
+            var CellStyleGreen = workbook.CreateCellStyle();
+            CellStyleGreen.FillForegroundColor = HSSFColor.Green.Index;
+            CellStyleGreen.FillPattern = FillPattern.SolidForeground;
+
+            var CellStyleRed = workbook.CreateCellStyle();
+            CellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
+            CellStyleRed.FillPattern = FillPattern.SolidForeground;
+
+
+            row.CreateCell(i++).SetCellValue(p.Semester.Name);
+            row.CreateCell(i++).SetCellValue(abbreviation);
+            row.CreateCell(i++).SetCellValue(p.Name);
+            row.CreateCell(i++).SetCellValue(students);
+            row.CreateCell(i++).SetCellValue(p.Advisor1?.Name ?? "");
+            row.CreateCell(i++).SetCellValue(p.POneType.ExportValue);
+            row.CreateCell(i++).SetCellValue(p.Department.DepartmentName);
+            row.CreateCell(i++).SetCellValue("");
+            row.CreateCell(i++).SetCellValue("");
+            row.CreateCell(i++).SetCellValue(p.Advisor1?.Mail ?? "");
+
+
+            
+            if (p.BillingStatus.Billable)
+            {
+                //Billable
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleGreen;
+                ColleredRowCells.SetCellValue(p.ClientCompany);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleGreen;
+                ColleredRowCells.SetCellValue(p.ClientPerson);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleGreen;
+                ColleredRowCells.SetCellValue(adress);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleGreen;
+                ColleredRowCells.SetCellValue(p.BillingStatus?.DisplayName ?? "");
+            }
+
+            else
+            {   //Not Billable
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleRed;
+                ColleredRowCells.SetCellValue(p.ClientCompany);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleRed;
+                ColleredRowCells.SetCellValue(p.ClientPerson);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleRed;
+                ColleredRowCells.SetCellValue(adress);
+
+                ColleredRowCells = row.CreateCell(i++);
+                ColleredRowCells.CellStyle = CellStyleRed;
+                ColleredRowCells.SetCellValue(p.BillingStatus?.DisplayName ?? "");
+            }
+
+
+
+        }
+    }       
 }

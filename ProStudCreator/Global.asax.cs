@@ -38,7 +38,17 @@ namespace ProStudCreator
             Application.Add("dummyRequest", "");
 
             TaskHandler.CheckAllTasks();
+
+            //Löst problem welches auftritt fals nicht das Gewünschte CodePage vorhanden ist
+            //Fehler giebt sonst nur 26byts Excel Tabellen raus
+            ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = System.Text.Encoding.Default.CodePage;
+
+
+            
+
         }
+
+
 
 
         private void RegisterChacheEntry()
