@@ -39,8 +39,8 @@ namespace ProStudCreator
 
             TaskHandler.CheckAllTasks();
 
-            //Löst problem welches auftritt fals nicht das Gewünschte CodePage vorhanden ist
-            //Fehler giebt sonst nur 26byts Excel Tabellen raus
+            //Solves problem which  occures if you installed a different language on your Pc 
+            //with out it the Encoding may not work on every Pc.
             ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = System.Text.Encoding.Default.CodePage;
 
 
