@@ -342,8 +342,7 @@ namespace ProStudCreator
         }
         public static void GenerateBillingList(Stream outStream, IEnumerable<Project> _projects,
              ProStudentCreatorDBDataContext db, string semesterName)
-        {
-           
+        {           
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(Billing_SHEET_NAME);
 
@@ -353,7 +352,6 @@ namespace ProStudCreator
             
             var DateStyle = workbook.CreateCellStyle();
             DateStyle.DataFormat = workbook.CreateDataFormat().GetFormat("dd.MM.yyyy");
-
 
             // Header
 
@@ -365,13 +363,11 @@ namespace ProStudCreator
                 cell.SetCellValue(Billing_HEADER[i]);
                 if (i < 11)
                 {
-
                     NPOI.SS.Util.CellRangeAddress cellRangeAdress = new NPOI.SS.Util.CellRangeAddress(0, 2, i, i);
                     cell.CellStyle.WrapText = true;
                     worksheet.AddMergedRegion(cellRangeAdress);
                 }
             }
-
             // Project entries
             var projects = _projects.ToArray();
 
@@ -525,6 +521,5 @@ namespace ProStudCreator
             row.CreateCell(i).CellStyle = k;
             row.GetCell(i++).SetCellValue(p.BillingStatus?.DisplayName ?? "");
         }        
-
     }       
 }
