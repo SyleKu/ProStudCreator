@@ -14,6 +14,14 @@ namespace ProStudCreator
         private static readonly string SHEET_NAME = "Projects";
         private static readonly string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
         private static readonly string Billing_SHEET_NAME = "_Verrechnungs_Excel";
+
+        private static readonly int GREEN = 0;
+        private static readonly int GREEN_THICK = 1;
+        private static readonly int RED = 2;
+        private static readonly int RED_THICK = 3;
+        private static readonly int BORDER = 4;
+        private static readonly int BORDER_THICK = 5;
+
         private static readonly string[] HEADERS =
         {
             "Abbreviation",
@@ -85,13 +93,13 @@ namespace ProStudCreator
         {
             "Semester",
             "Projekt-ID",
-            "projekttittel*",
+            "Projekttittel*",
             "Studierende*",
             "Betreuer*",
             "Projekt x*",
             "Institut",
             "Vertiefung",
-            "vertrag",
+            "Vertrag",
             "Experte (P6)",
             "Auftraggeber*",
             "Verrechnung*",
@@ -99,59 +107,59 @@ namespace ProStudCreator
             "",
         };
 
-        private static ICellStyle cellStyleGreen;
-        private static ICellStyle cellStyleGreenThick;
-        private static ICellStyle cellStyleRed;
-        public static ICellStyle cellStyleRedThick;
-        public static ICellStyle border;
-        public static ICellStyle borderThick;
+        //private static ICellStyle cellStyleGreen;
+        //private static ICellStyle cellStyleGreenThick;
+        //private static ICellStyle cellStyleRed;
+        //public static ICellStyle cellStyleRedThick;
+        //public static ICellStyle border;
+        //public static ICellStyle borderThick;
 
-        public static void InitCellStyle(IWorkbook workbook)
-        {
-            cellStyleGreen = workbook.CreateCellStyle();
-            cellStyleGreen.FillForegroundColor = HSSFColor.BrightGreen.Index;
-            cellStyleGreen.BorderBottom = BorderStyle.Thin;
-            cellStyleGreen.BorderTop = BorderStyle.Thin;
-            cellStyleGreen.BorderRight = BorderStyle.Thin;
-            cellStyleGreen.BorderLeft = BorderStyle.Thin;
-            cellStyleGreen.FillPattern = FillPattern.SolidForeground;
+        //public static void InitCellStyle(IWorkbook workbook)
+        //{
+        //    cellStyleGreen = workbook.CreateCellStyle();
+        //    cellStyleGreen.FillForegroundColor = HSSFColor.BrightGreen.Index;
+        //    cellStyleGreen.BorderBottom = BorderStyle.Thin;
+        //    cellStyleGreen.BorderTop = BorderStyle.Thin;
+        //    cellStyleGreen.BorderRight = BorderStyle.Thin;
+        //    cellStyleGreen.BorderLeft = BorderStyle.Thin;
+        //    cellStyleGreen.FillPattern = FillPattern.SolidForeground;
 
-            cellStyleGreenThick = workbook.CreateCellStyle();
-            cellStyleGreenThick.FillForegroundColor = HSSFColor.BrightGreen.Index;
-            cellStyleGreenThick.BorderBottom = BorderStyle.Thin;
-            cellStyleGreenThick.BorderTop = BorderStyle.Thick;
-            cellStyleGreenThick.BorderRight = BorderStyle.Thin;
-            cellStyleGreenThick.BorderLeft = BorderStyle.Thin;
-            cellStyleGreenThick.FillPattern = FillPattern.SolidForeground;
+        //    cellStyleGreenThick = workbook.CreateCellStyle();
+        //    cellStyleGreenThick.FillForegroundColor = HSSFColor.BrightGreen.Index;
+        //    cellStyleGreenThick.BorderBottom = BorderStyle.Thin;
+        //    cellStyleGreenThick.BorderTop = BorderStyle.Thick;
+        //    cellStyleGreenThick.BorderRight = BorderStyle.Thin;
+        //    cellStyleGreenThick.BorderLeft = BorderStyle.Thin;
+        //    cellStyleGreenThick.FillPattern = FillPattern.SolidForeground;
 
-            cellStyleRed = workbook.CreateCellStyle();
-            cellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
-            cellStyleRed.BorderBottom = BorderStyle.Thin;
-            cellStyleRed.BorderTop = BorderStyle.Thin;
-            cellStyleRed.BorderLeft = BorderStyle.Thin;
-            cellStyleRed.BorderRight = BorderStyle.Thin;
-            cellStyleRed.FillPattern = FillPattern.SolidForeground;
+        //    cellStyleRed = workbook.CreateCellStyle();
+        //    cellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
+        //    cellStyleRed.BorderBottom = BorderStyle.Thin;
+        //    cellStyleRed.BorderTop = BorderStyle.Thin;
+        //    cellStyleRed.BorderLeft = BorderStyle.Thin;
+        //    cellStyleRed.BorderRight = BorderStyle.Thin;
+        //    cellStyleRed.FillPattern = FillPattern.SolidForeground;
 
-            cellStyleRedThick = workbook.CreateCellStyle();
-            cellStyleRedThick.FillForegroundColor = HSSFColor.Red.Index;
-            cellStyleRedThick.BorderBottom = BorderStyle.Thin;
-            cellStyleRedThick.BorderTop = BorderStyle.Thick;
-            cellStyleRedThick.BorderLeft = BorderStyle.Thin;
-            cellStyleRedThick.BorderRight = BorderStyle.Thin;
-            cellStyleRedThick.FillPattern = FillPattern.SolidForeground;
+        //    cellStyleRedThick = workbook.CreateCellStyle();
+        //    cellStyleRedThick.FillForegroundColor = HSSFColor.Red.Index;
+        //    cellStyleRedThick.BorderBottom = BorderStyle.Thin;
+        //    cellStyleRedThick.BorderTop = BorderStyle.Thick;
+        //    cellStyleRedThick.BorderLeft = BorderStyle.Thin;
+        //    cellStyleRedThick.BorderRight = BorderStyle.Thin;
+        //    cellStyleRedThick.FillPattern = FillPattern.SolidForeground;
 
-            border = workbook.CreateCellStyle();
-            border.BorderBottom = BorderStyle.Thin;
-            border.BorderTop = BorderStyle.Thin;
-            border.BorderLeft = BorderStyle.Thin;
-            border.BorderRight = BorderStyle.Thin;
+        //    border = workbook.CreateCellStyle();
+        //    border.BorderBottom = BorderStyle.Thin;
+        //    border.BorderTop = BorderStyle.Thin;
+        //    border.BorderLeft = BorderStyle.Thin;
+        //    border.BorderRight = BorderStyle.Thin;
 
-            borderThick = workbook.CreateCellStyle();
-            borderThick.BorderBottom = BorderStyle.Thin;
-            borderThick.BorderTop = BorderStyle.Thick;
-            borderThick.BorderLeft = BorderStyle.Thin;
-            borderThick.BorderRight = BorderStyle.Thin;
-        }
+        //    borderThick = workbook.CreateCellStyle();
+        //    borderThick.BorderBottom = BorderStyle.Thin;
+        //    borderThick.BorderTop = BorderStyle.Thick;
+        //    borderThick.BorderLeft = BorderStyle.Thin;
+        //    borderThick.BorderRight = BorderStyle.Thin;
+        //}
         // References
         // - http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
 
@@ -176,6 +184,10 @@ namespace ProStudCreator
 
             for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
+
+            NPOI.SS.Util.CellRangeAddress rangeadress = new NPOI.SS.Util.CellRangeAddress(0, 0, 0, HEADERS.Length - 1);
+
+            worksheet.SetAutoFilter(rangeadress);
 
             // Save
             workbook.Write(outStream);
@@ -253,6 +265,10 @@ namespace ProStudCreator
 
             for (var i = 0; i < HEADERS.Length; i++)
                 worksheet.AutoSizeColumn(i);
+
+            NPOI.SS.Util.CellRangeAddress rangeadress = new NPOI.SS.Util.CellRangeAddress(0, 0, 0, MARKETING_HEADERS.Length - 1);
+
+            worksheet.SetAutoFilter(rangeadress);
 
             // Save
             workbook.Write(outStream);
@@ -397,6 +413,59 @@ namespace ProStudCreator
             var workbook = new XSSFWorkbook();
             var worksheet = workbook.CreateSheet(Billing_SHEET_NAME);
 
+            List<ICellStyle> cellStyles = new List<ICellStyle>();
+
+            var cellStyleGreen = workbook.CreateCellStyle();
+            cellStyleGreen.FillForegroundColor = HSSFColor.BrightGreen.Index;
+            cellStyleGreen.BorderBottom = BorderStyle.Thin;
+            cellStyleGreen.BorderTop = BorderStyle.Thin;
+            cellStyleGreen.BorderRight = BorderStyle.Thin;
+            cellStyleGreen.BorderLeft = BorderStyle.Thin;
+            cellStyleGreen.FillPattern = FillPattern.SolidForeground;
+
+           var cellStyleGreenThick = workbook.CreateCellStyle();
+            cellStyleGreenThick.FillForegroundColor = HSSFColor.BrightGreen.Index;
+            cellStyleGreenThick.BorderBottom = BorderStyle.Thin;
+            cellStyleGreenThick.BorderTop = BorderStyle.Thick;
+            cellStyleGreenThick.BorderRight = BorderStyle.Thin;
+            cellStyleGreenThick.BorderLeft = BorderStyle.Thin;
+            cellStyleGreenThick.FillPattern = FillPattern.SolidForeground;
+
+            var cellStyleRed = workbook.CreateCellStyle();
+            cellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
+            cellStyleRed.BorderBottom = BorderStyle.Thin;
+            cellStyleRed.BorderTop = BorderStyle.Thin;
+            cellStyleRed.BorderLeft = BorderStyle.Thin;
+            cellStyleRed.BorderRight = BorderStyle.Thin;
+            cellStyleRed.FillPattern = FillPattern.SolidForeground;
+
+            var cellStyleRedThick = workbook.CreateCellStyle();
+            cellStyleRedThick.FillForegroundColor = HSSFColor.Red.Index;
+            cellStyleRedThick.BorderBottom = BorderStyle.Thin;
+            cellStyleRedThick.BorderTop = BorderStyle.Thick;
+            cellStyleRedThick.BorderLeft = BorderStyle.Thin;
+            cellStyleRedThick.BorderRight = BorderStyle.Thin;
+            cellStyleRedThick.FillPattern = FillPattern.SolidForeground;
+
+            var border = workbook.CreateCellStyle();
+            border.BorderBottom = BorderStyle.Thin;
+            border.BorderTop = BorderStyle.Thin;
+            border.BorderLeft = BorderStyle.Thin;
+            border.BorderRight = BorderStyle.Thin;
+
+            var borderThick = workbook.CreateCellStyle();
+            borderThick.BorderBottom = BorderStyle.Thin;
+            borderThick.BorderTop = BorderStyle.Thick;
+            borderThick.BorderLeft = BorderStyle.Thin;
+            borderThick.BorderRight = BorderStyle.Thin;
+
+            cellStyles.Add(cellStyleGreen);
+            cellStyles.Add(cellStyleGreenThick);
+            cellStyles.Add(cellStyleRed);
+            cellStyles.Add(cellStyleRedThick);
+            cellStyles.Add(border);
+            cellStyles.Add(borderThick);
+            
             var HeaderStyle = workbook.CreateCellStyle();
             HeaderStyle.FillForegroundColor = HSSFColor.Grey25Percent.Index;
             HeaderStyle.FillPattern = FillPattern.SolidForeground;
@@ -425,28 +494,12 @@ namespace ProStudCreator
             for (var i = 0; i < projects.Length; i++)
             {
                 var row = worksheet.CreateRow(3 + i);
-                ProjectToExcelBillingRow(projects[i], row, db, DateStyle, worksheet, workbook);
+                ProjectToExcelBillingRow(projects[i], row, db, DateStyle, worksheet, workbook, cellStyles);
             }
 
             for (var i = 0; i < Billing_HEADER.Length; i++)
                 worksheet.AutoSizeColumn(i, true);
-
-            var CellStyleGreen = workbook.CreateCellStyle();
-            CellStyleGreen.FillForegroundColor = HSSFColor.LightGreen.Index;
-            CellStyleGreen.BorderBottom = BorderStyle.Thin;
-            CellStyleGreen.BorderTop = BorderStyle.Thin;
-            CellStyleGreen.BorderRight = BorderStyle.Thin;
-            CellStyleGreen.BorderLeft = BorderStyle.Thin;
-            CellStyleGreen.FillPattern = FillPattern.SolidForeground;
-
-            var CellStyleRed = workbook.CreateCellStyle();
-            CellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
-            CellStyleRed.BorderBottom = BorderStyle.Thin;
-            CellStyleRed.BorderTop = BorderStyle.Thin;
-            CellStyleRed.BorderLeft = BorderStyle.Thin;
-            CellStyleRed.BorderRight = BorderStyle.Thin;
-            CellStyleRed.FillPattern = FillPattern.SolidForeground;
-
+         
             //j = 11 because until the 11 column the Headers look the same 
             //thats why it has to start filling in with the 11th column 
             var j = 11;
@@ -455,15 +508,15 @@ namespace ProStudCreator
 
             //Second Line
             SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.CellStyle = cellStyleGreen;
             SecondHeadersCells.SetCellValue("ja");
 
             SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.CellStyle = cellStyleGreen;
             SecondHeadersCells.SetCellValue("               ");
 
             SecondHeadersCells = worksheet.GetRow(1).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleRed;
+            SecondHeadersCells.CellStyle = cellStyleRed;
             SecondHeadersCells.SetCellValue("Nein");
 
 
@@ -475,15 +528,15 @@ namespace ProStudCreator
 
             //Third line 
             SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.CellStyle = cellStyleGreen;
             SecondHeadersCells.SetCellValue("Kontaktperson");
 
             SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleGreen;
+            SecondHeadersCells.CellStyle = cellStyleGreen;
             SecondHeadersCells.SetCellValue("Rechnungsadresse");
 
             SecondHeadersCells = worksheet.GetRow(2).CreateCell(j++);
-            SecondHeadersCells.CellStyle = CellStyleRed;
+            SecondHeadersCells.CellStyle = cellStyleRed;
             SecondHeadersCells.SetCellValue("Verrechenbar");
 
             // Save
@@ -491,9 +544,8 @@ namespace ProStudCreator
         }
 
         private static void ProjectToExcelBillingRow(Project p, IRow row, ProStudentCreatorDBDataContext db,
-            ICellStyle DateStyle, ISheet worksheet, IWorkbook workbook)
+            ICellStyle DateStyle, ISheet worksheet, IWorkbook workbook, List<ICellStyle> cellStyls)
         {
-            InitCellStyle(workbook);
 
             var abbreviation = /*Semester.CurrentSemester.ToString() +*/ p.Semester + "_" +
             p.Department.DepartmentName +
@@ -507,14 +559,14 @@ namespace ProStudCreator
 
             var rowcount = row.RowNum;
             //Generates uncolored cells
-            var cellstyle = (rowcount == 3) ? (borderThick) : (border);
+            var cellstyleIndex = (rowcount == 3) ? (BORDER_THICK) : (BORDER);
 
             row.CreateCell(0).SetCellValue(p.Semester.Name);
             row.CreateCell(1).SetCellValue(abbreviation);
             row.CreateCell(2).SetCellValue(p.Name);
             row.CreateCell(3).SetCellValue(students);
             row.CreateCell(4).SetCellValue(p.Advisor1?.Name ?? "");
-            row.CreateCell(5).SetCellValue(p.POneType.ExportValue);
+            row.CreateCell(5).SetCellValue(p.POneType.Description);
             row.CreateCell(6).SetCellValue(p.Department.DepartmentName);
             row.CreateCell(7).SetCellValue("");
             row.CreateCell(8).SetCellValue("");
@@ -522,15 +574,15 @@ namespace ProStudCreator
 
             for (var cellcount = 0; cellcount < 10; cellcount++)
             {
-                row.GetCell(i++).CellStyle = cellstyle;
+                row.GetCell(i++).CellStyle = cellStyls[cellstyleIndex];
             }
 
             // Generates the special colerd cells needed            
-            var thinORthick = (p.BillingStatus.Billable) ? (cellStyleGreen) : (cellStyleRed);
+            var thinORthickindex = (p.BillingStatus.Billable) ? (GREEN) : (RED);
             //rowcount==3 becaus, 3rd row = row with projects
             if (rowcount == 3)
             {
-                thinORthick = (p.BillingStatus.Billable) ? (cellStyleGreenThick) : (cellStyleRedThick); ;
+                thinORthickindex = (p.BillingStatus.Billable) ? (GREEN_THICK) : (RED_THICK); ;
             }
 
             row.CreateCell(10).SetCellValue(p.ClientCompany);
@@ -540,7 +592,7 @@ namespace ProStudCreator
 
             for (var cellcount = 10; cellcount < 14; cellcount++)
             {
-                row.GetCell(i++).CellStyle = thinORthick;
+                row.GetCell(i++).CellStyle = cellStyls[thinORthickindex];
             }
         }
     }
