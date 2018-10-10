@@ -15,6 +15,7 @@ namespace ProStudCreator
         private static readonly string MARKETING_SHEET_NAME = "_IP56_Informatikprojekte";
         private static readonly string Billing_SHEET_NAME = "_Verrechnungs_Excel";
 
+        //cellstyls for  Billing_Excel
         private static readonly int GREEN = 0;
         private static readonly int GREEN_THICK = 1;
         private static readonly int RED = 2;
@@ -105,61 +106,8 @@ namespace ProStudCreator
             "Verrechnung*",
             "",
             "",
-        };
-
-        //private static ICellStyle cellStyleGreen;
-        //private static ICellStyle cellStyleGreenThick;
-        //private static ICellStyle cellStyleRed;
-        //public static ICellStyle cellStyleRedThick;
-        //public static ICellStyle border;
-        //public static ICellStyle borderThick;
-
-        //public static void InitCellStyle(IWorkbook workbook)
-        //{
-        //    cellStyleGreen = workbook.CreateCellStyle();
-        //    cellStyleGreen.FillForegroundColor = HSSFColor.BrightGreen.Index;
-        //    cellStyleGreen.BorderBottom = BorderStyle.Thin;
-        //    cellStyleGreen.BorderTop = BorderStyle.Thin;
-        //    cellStyleGreen.BorderRight = BorderStyle.Thin;
-        //    cellStyleGreen.BorderLeft = BorderStyle.Thin;
-        //    cellStyleGreen.FillPattern = FillPattern.SolidForeground;
-
-        //    cellStyleGreenThick = workbook.CreateCellStyle();
-        //    cellStyleGreenThick.FillForegroundColor = HSSFColor.BrightGreen.Index;
-        //    cellStyleGreenThick.BorderBottom = BorderStyle.Thin;
-        //    cellStyleGreenThick.BorderTop = BorderStyle.Thick;
-        //    cellStyleGreenThick.BorderRight = BorderStyle.Thin;
-        //    cellStyleGreenThick.BorderLeft = BorderStyle.Thin;
-        //    cellStyleGreenThick.FillPattern = FillPattern.SolidForeground;
-
-        //    cellStyleRed = workbook.CreateCellStyle();
-        //    cellStyleRed.FillForegroundColor = HSSFColor.Red.Index;
-        //    cellStyleRed.BorderBottom = BorderStyle.Thin;
-        //    cellStyleRed.BorderTop = BorderStyle.Thin;
-        //    cellStyleRed.BorderLeft = BorderStyle.Thin;
-        //    cellStyleRed.BorderRight = BorderStyle.Thin;
-        //    cellStyleRed.FillPattern = FillPattern.SolidForeground;
-
-        //    cellStyleRedThick = workbook.CreateCellStyle();
-        //    cellStyleRedThick.FillForegroundColor = HSSFColor.Red.Index;
-        //    cellStyleRedThick.BorderBottom = BorderStyle.Thin;
-        //    cellStyleRedThick.BorderTop = BorderStyle.Thick;
-        //    cellStyleRedThick.BorderLeft = BorderStyle.Thin;
-        //    cellStyleRedThick.BorderRight = BorderStyle.Thin;
-        //    cellStyleRedThick.FillPattern = FillPattern.SolidForeground;
-
-        //    border = workbook.CreateCellStyle();
-        //    border.BorderBottom = BorderStyle.Thin;
-        //    border.BorderTop = BorderStyle.Thin;
-        //    border.BorderLeft = BorderStyle.Thin;
-        //    border.BorderRight = BorderStyle.Thin;
-
-        //    borderThick = workbook.CreateCellStyle();
-        //    borderThick.BorderBottom = BorderStyle.Thin;
-        //    borderThick.BorderTop = BorderStyle.Thick;
-        //    borderThick.BorderLeft = BorderStyle.Thin;
-        //    borderThick.BorderRight = BorderStyle.Thin;
-        //}
+        };       
+        
         // References
         // - http://poi.apache.org/spreadsheet/quick-guide.html#NewWorkbook
 
@@ -519,7 +467,6 @@ namespace ProStudCreator
             SecondHeadersCells.CellStyle = cellStyleRed;
             SecondHeadersCells.SetCellValue("Nein");
 
-
             //j = 11 because until the 11 column the Headers look the same 
             //thats why it has to start filling in with the 11th column 
             SecondHeaders = worksheet.CreateRow(2);
@@ -542,7 +489,6 @@ namespace ProStudCreator
             // Save
             workbook.Write(outStream);
         }
-
         private static void ProjectToExcelBillingRow(Project p, IRow row, ProStudentCreatorDBDataContext db,
             ICellStyle DateStyle, ISheet worksheet, IWorkbook workbook, List<ICellStyle> cellStyls)
         {
@@ -589,7 +535,7 @@ namespace ProStudCreator
             row.CreateCell(11).SetCellValue(p.ClientPerson);
             row.CreateCell(12).SetCellValue(adress);
             row.CreateCell(13).SetCellValue(p.BillingStatus?.DisplayName ?? "");
-
+           
             for (var cellcount = 10; cellcount < 14; cellcount++)
             {
                 row.GetCell(i++).CellStyle = cellStyls[thinORthickindex];
