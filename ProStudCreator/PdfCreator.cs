@@ -1,28 +1,38 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.text.html;
-using System.Web.UI.WebControls;
 
 namespace ProStudCreator
 {
     public class PdfCreator
     {
-        ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        public const float LINE_HEIGHT = 1.1f;
+        public const float SPACING_BEFORE_TITLE = 16f;
 
-        public void CreatePDF(Document document, MemoryStream output, bool multiPDF, int idPDF, HttpRequest currentRequest, List<int> gridViewProjectsId)
+        private static readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+
+        public Font fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+        public Font fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+        public Font fontsmall = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+        private readonly HyphenationAuto hyph = new HyphenationAuto("de", "none", 2, 2);
+        public float SPACING_AFTER_TITLE = 2f;
+        public float SPACING_BEFORE_IMAGE = 16f;
+        private Translator translator = new Translator();
+        private string strLang;
+
+        public void AppendToPDF(Document document, Stream output, IEnumerable<Project> projects)
         {
-            PdfWriter writer = PdfWriter.GetInstance(document, output);
+            var writer = PdfWriter.GetInstance(document, output);
 
             // the image we're using for the page header      
-            iTextSharp.text.Image imageHeader = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/Logo.png"));
+            var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
 
             // instantiate the custom PdfPageEventHelper
-            MyPageEventHandler ef = new MyPageEventHandler()
+            var ef = new PdfHeaderFooterGenerator
             {
                 ImageHeader = imageHeader
             };
@@ -30,311 +40,502 @@ namespace ProStudCreator
             // and add it to the PdfWriter
             writer.PageEvent = ef;
             document.Open();
-            int projectCounter = 0;
-            var currentProjectType = "";
-            Rectangle defaultPageSize = PageSize.A4;
-            if (multiPDF)
+
+            foreach (var project in projects)
             {
-                Project currentProject;
-                foreach (int projectId in gridViewProjectsId)
-                {
-                    currentProject = db.Projects.Single(item => item.Id == projectId);
-                    projectCounter += 1;
-                    WritePDF(currentProject, currentProjectType, document, defaultPageSize, projectCounter, currentRequest);
-                }
-            }
-            else
-            {
-                projectCounter += 1;
-                var singleProject = db.Projects.Single(item => item.Id == idPDF);
-                WritePDF(singleProject, currentProjectType, document, defaultPageSize, projectCounter, currentRequest);
+                ef.CurrentProject = project;
+                WritePDF(project, document, writer);
+                writer.Flush();
+                output.Flush();
             }
         }
 
-        private void WritePDF(Project currentProject, String currentProjectType, Document document, Rectangle defaultPageSize, int projectCounter, HttpRequest currentRequest)
+        private void AppendToPDF(Stream output, IEnumerable<Project> projects, Layout layout, Document document)
         {
-            var fontHeading = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-            var fontRegular = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+            var writer = PdfWriter.GetInstance(document, output);
 
+            // the image we're using for the page header      
+            var imageHeader = Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/Logo.png"));
+
+            // instantiate the custom PdfPageEventHelper
+            var ef = new PdfHeaderFooterGenerator
+            {
+                ImageHeader = imageHeader
+            };
+
+            // and add it to the PdfWriter
+            writer.PageEvent = ef;
+            document.Open();
+
+            foreach (var project in projects)
+            {
+                ef.CurrentProject = project;
+                WritePDF(project, document, layout, writer);
+            }
+        }
+
+        private void WritePDF(Project currentProject, Document document, PdfWriter writer)
+        {
+            foreach (Layout l in Enum.GetValues(typeof(Layout)))
+                if (CalcNumberOfPages(currentProject, l) == 1)
+                {
+                    WritePDF(currentProject, document, l, writer);
+                    return;
+                }
+
+            WritePDF(currentProject, document, Layout.SmallPictureRight, writer);
+        }
+
+        private void WritePDF(Project currentProject, Document document, Layout layout, PdfWriter writer)
+        {
+            var fontRegularLink = new Font(fontRegular);
+            fontRegularLink.Color = BaseColor.BLUE;
+            fontRegularLink.SetStyle("underline");
+            translator.DetectLanguage(currentProject);
+            
+            //
+            // Header contents
+            //
 
             var proj = currentProject;
-            currentProjectType = getCurrentProjectTypeOne(proj);
-
-            iTextSharp.text.Image projectTypeImage = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin + 10);
+            var currentProjectType = GetCurrentProjectTypeOne(proj);
+            var projectTypeImage =
+                Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/" + currentProjectType));
+            projectTypeImage.SetAbsolutePosition(388, PageSize.A4.Height - document.TopMargin + 10);
 
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            currentProjectType = getCurrentProjectTypeTwo(proj);
-            projectTypeImage = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/" + currentProjectType));
-            projectTypeImage.SetAbsolutePosition(443, defaultPageSize.Height - document.TopMargin + 10);
+            currentProjectType = GetCurrentProjectTypeTwo(proj);
+            projectTypeImage =
+                Image.GetInstance(HttpContext.Current.Request.MapPath("~/pictures/" + currentProjectType));
+            projectTypeImage.SetAbsolutePosition(443, PageSize.A4.Height - document.TopMargin + 10);
             projectTypeImage.ScaleToFit(50f, 150f);
             document.Add(projectTypeImage);
 
-            PdfPTable tableTitle = new PdfPTable(1);
-            tableTitle.SpacingAfter = 8f;
-
-            Paragraph title;
-
-            if (projectCounter < 10)
-            {
-                title = new Paragraph(proj.Department.DepartmentName + "0" + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
-            }
-            else
-            {
-                title = new Paragraph(proj.Department.DepartmentName + projectCounter + ": " + proj.Name, FontFactory.GetFont("Arial", 16, Font.BOLD));
-            }
-
+            var title = new Paragraph(
+                proj.Department.DepartmentName + currentProject.ProjectNr.ToString("00") + ": " + proj.Name,
+                FontFactory.GetFont("Arial", 16, Font.BOLD)).Hyphenate(hyph);
             title.SpacingBefore = 8f;
-            tableTitle.DefaultCell.Border = Rectangle.NO_BORDER;
-            title.Alignment = Element.ALIGN_JUSTIFIED;
-            tableTitle.HorizontalAlignment = Element.ALIGN_LEFT;
-            tableTitle.WidthPercentage = 100f;
-            tableTitle.AddCell(title);
-            document.Add(tableTitle);
+            title.SpacingAfter = 16f;
+            title.SetLeading(0.0f, LINE_HEIGHT);
+            document.Add(title);
 
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(currentRequest.MapPath("~/pictures/projectTypTransparent.png"));
-            if (proj.Picture != null)
-            {
-                byte[] imageBytes = proj.Picture.ToArray();
-                image = iTextSharp.text.Image.GetInstance(imageBytes);
-                // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
-                // image.ScaleAbsoluteWidth(160f);
-                float h = image.ScaledHeight;
-                float w = image.ScaledWidth;
-                image.Alignment = iTextSharp.text.Image.TEXTWRAP | iTextSharp.text.Image.ALIGN_RIGHT;
-                //float scalePercent;
-
-                float width = defaultPageSize.Width - document.RightMargin - document.LeftMargin;
-                float height = defaultPageSize.Height - document.TopMargin - document.BottomMargin;
-
-                if (w > h)
-                {
-                    image.ScaleToFit(250f, 150f);
-                }
-                else if (h >= 300 || w >= 200)
-                {
-                    image.ScaleToFit(150f, 250f);
-                }
-
-                else
-                {
-                    image.ScaleToFit(100f, 200f);
-                }
-                /*
-            else if (h > w)
-            {
-                // only scale image if it's height is __greater__ than
-                // the document's height, accounting for margins
-                if (h > height)
-                {
-                    scalePercent = height / h;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
-                }
-            }
-            else
-            {
-                // same for image width        
-                if (w > width)
-                {
-                    scalePercent = width / w;
-                    image.ScaleAbsolute(w * scalePercent, h * scalePercent);
-                }
-            }
-            */
-                // image.SetAbsolutePosition(388, defaultPageSize.Height - document.TopMargin - image.ScaledHeight);
-            }
-
-            PdfPTable projectTable = new PdfPTable(5);
-            projectTable.SpacingAfter = 8f;
+            var projectTable = new PdfPTable(5) { SpacingAfter = 6f };
             projectTable.DefaultCell.Border = Rectangle.NO_BORDER;
             projectTable.HorizontalAlignment = Element.ALIGN_RIGHT;
-
             projectTable.WidthPercentage = 100f;
-            float[] widthProject = new float[] { 22, 50, 25, 25, 25 };
-            projectTable.SetWidths(widthProject);
+            projectTable.SetWidths(new float[] { 25, 50, 25, 25, 25 });
 
-
-
-            Paragraph text = new Paragraph();
-            text.Alignment = Element.ALIGN_JUSTIFIED | Element.ALIGN_LEFT;
-            text.SetLeading(1.0f, 2.0f);
-
-
-            PdfPCell advisorCell;
-            text = new Paragraph("BetreuerIn:", fontHeading);
-            advisorCell = new PdfPCell(text);
-            advisorCell.Border = Rectangle.NO_BORDER;
-            projectTable.AddCell(advisorCell);
-
-            projectTable.AddCell(new Paragraph(proj.Advisor + ", " + proj.AdvisorMail, fontRegular));
-
-            projectTable.AddCell(" ");
-            projectTable.AddCell(new Paragraph("Priorität 1", fontHeading));
-            projectTable.AddCell(new Paragraph("Priorität 2", fontHeading));
-
-            if (proj.Advisor2 != "")
-            {
-                projectTable.AddCell(" ");
-                projectTable.AddCell(new Paragraph(proj.Advisor2 + ", " + proj.AdvisorMail2, fontRegular));
-            }
-            else
-            {
-                projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
-            }
-
-            projectTable.AddCell(new Paragraph("Arbeitsumfang:", fontHeading));
-            projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
-            projectTable.AddCell(new Paragraph(proj.PTwoType.Description, fontRegular));
-
-
-            if (proj.Employer != "" && proj.Advisor2 != "")
-            {
-                projectTable.AddCell(new Paragraph("Auftraggeber:", fontHeading));
-                projectTable.AddCell(new Paragraph(proj.Employer, fontRegular));
-
-            }
-            else
-            {
-                for (int i = 0; i < 2; i++)
+            //  Row 1
+            projectTable.AddCell(new Paragraph(translator.GetHeadingAdvisor() + ":", fontHeading));
+            if (proj.Advisor1 != null)
+                projectTable.AddCell(new Anchor(proj.Advisor1.Name, fontRegularLink)
                 {
-                    projectTable.AddCell(" ");
-                }
+                    Reference = "mailto:" + proj.Advisor1.Mail
+                });
+            else
+                projectTable.AddCell(new Paragraph("?", fontRegular));
+
+            projectTable.AddCell("");
+            projectTable.AddCell(new Paragraph(translator.GetHeadingPriority()+" 1", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingPriority()+" 2", fontHeading));
+
+            // Row 2
+            if (proj.Advisor2 != null)
+            {
+                projectTable.AddCell("");
+                projectTable.AddCell(new Anchor(proj.Advisor2.Name, fontRegularLink)
+                {
+                    Reference = "mailto:" + proj.Advisor2.Mail
+                });
+            }
+            else if (proj.ClientCompany != "")
+            {
+                projectTable.AddCell(new Paragraph(translator.GetHeadingClient()+":", fontHeading));
+                projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
+            }
+            else
+            {
+                projectTable.AddCell("");
+                projectTable.AddCell("");
             }
 
+            projectTable.AddCell(new Paragraph(translator.GetHeadingWorkScope()+":", fontHeading));
+            projectTable.AddCell(new Paragraph(proj.POneType.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoType == null ? "---" : proj.PTwoType.Description, fontRegular));
 
+            // Row 3
+            if (proj.ClientCompany != "" && proj.Advisor2 != null)
+            {
+                projectTable.AddCell(new Paragraph(translator.GetHeadingClient()+":", fontHeading));
+                projectTable.AddCell(new Paragraph(proj.ClientCompany, fontRegular));
+            }
+            else
+            {
+                projectTable.AddCell("");
+                projectTable.AddCell("");
+            }
 
-            projectTable.AddCell(new Paragraph("Teamgrösse:", fontHeading));
+            projectTable.AddCell(new Paragraph(translator.GetHeadingTeamSize()+":", fontHeading));
             projectTable.AddCell(new Paragraph(proj.POneTeamSize.Description, fontRegular));
-            projectTable.AddCell(new Paragraph(proj.PTwoTeamSize.Description, fontRegular));
+            projectTable.AddCell(new Paragraph(proj.PTwoTeamSize == null ? "---" : proj.PTwoTeamSize.Description,
+                fontRegular));
 
+            // Row 4
+            strLang = "Deutsch oder Englisch";
+            if(currentProject.LanguageEnglish && !currentProject.LanguageGerman)
+            {
+                strLang = "Englisch";
+            }else if(currentProject.LanguageGerman && !currentProject.LanguageEnglish)
+            {
+                strLang = "Deutsch";
+            }
+            projectTable.AddCell(new Paragraph(translator.GetHeadingLangugages()+":", fontHeading));
+            projectTable.AddCell(new Paragraph(strLang, fontRegular));
+            projectTable.AddCell("");
+            projectTable.AddCell("");
+            projectTable.AddCell("");
+
+            // End header
             document.Add(projectTable);
 
+            //
+            // Body
+            //
+
+            //pdf with image
             if (proj.Picture != null)
             {
-                document.Add(image);
-            }
-
-            int paragraphSpacing = 20;
-
-            for (int i = 0; i < 5; i++)
-            {
-                switch (i)
+                try
                 {
-                    case 0:
-                        if (proj.InitialPosition != "")
-                        {
-                            text = new Paragraph("Ausgangslage:", fontHeading);
-                            document.Add(text);
+                    var img = Image.GetInstance(proj.Picture.ToArray());
 
-                            text = new Paragraph(proj.InitialPosition, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 1:
-                        if (proj.Objective != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Ziel der Arbeit:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.Objective, fontRegular);
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 2:
-                        if (proj.ProblemStatement != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Problemstellung:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.ProblemStatement, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 3:
-                        if (proj.References != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Technologien/Fachliche Schwerpunkte/Referenzen:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.References, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-                    case 4:
-                        if (proj.Remarks != "")
-                        {
-                            text = new Paragraph(paragraphSpacing, "Bemerkungen:", fontHeading);
-                            document.Add(text);
-
-                            text = new Paragraph(proj.Remarks, fontRegular);
-                            text.SpacingAfter = 1f;
-                            text.SetLeading(0.0f, 1.0f);
-                            text.Alignment = Element.ALIGN_JUSTIFIED;
-                            text.IndentationRight = 10f;
-                            document.Add(text);
-                        }
-                        break;
-
-                    /* CANCELLED PART!
-                    case 5:
-                    text = new Paragraph("Wichtigkeit:", fontHeading);
-                    document.Add(text);
-                    if (proj.Importance)
+                    //checks which layout should be used.
+                    switch (layout)
                     {
-                        text = new Paragraph("wichtig aus Sicht Institut oder FHNW", FontFactory.GetFont(FontFactory.HELVETICA, 10));
+                        case Layout.BigPictureInTheMiddle:
+                            PictureInTheMiddle(proj, img, document, ImageSize.Big);
+                            break;
+                        case Layout.BigPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Big, writer);
+                            break;
+                        case Layout.MediumPictureInTheMiddle:
+                            PictureInTheMiddle(proj, img, document, ImageSize.Medium);
+                            break;
+                        case Layout.MediumPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Medium, writer);
+                            break;
+                        case Layout.SmallPictureInTheMiddle:
+                            PictureInTheMiddle(proj, img, document, ImageSize.Small);
+                            break;
+                        case Layout.SmallPictureRight:
+                            PictureRightLayout(proj, img, document, ImageSize.Small, writer);
+                            break;
                     }
-                    else
-                    {
-                        text = new Paragraph("Normal", FontFactory.GetFont(FontFactory.HELVETICA, 10));
-                    }
-                    document.Add(text);
-                    break;
-                     */
-                    default:
-                        break;
                 }
-            }
-            if (proj.ReservationNameOne != "")
-            {
-                text = new Paragraph(paragraphSpacing, "Reservation:", fontHeading);
-                document.Add(text);
+                catch (IOException)
+                {
+                    //could not parse the image...
 
-                if (proj.ReservationNameTwo != "")
-                {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " und " + proj.ReservationNameTwo + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, 1.0f);
+                    //pdf without image
+                    AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+                    AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+                    AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+                    AddParagraph(proj.References, document, translator.GetHeadingTechnology(),
+                        proj.References);
                 }
-                else
-                {
-                    text = new Paragraph("Dieses Projekt ist für " + proj.ReservationNameOne + " reserviert.", FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED));
-                    text.SpacingAfter = 1f;
-                    text.SetLeading(0.0f, 1.0f);
-                }
-                document.Add(text);
             }
+            else
+            {
+                //pdf without image
+                AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+                AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+                AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+                AddParagraph(proj.References, document, translator.GetHeadingTechnology(),
+                    proj.References);
+            }
+
+
+            //
+            // Footer
+            //
+            var strReservations = "";
+            var strRemarks = "";
+            //var strOneSem = "";
+            if (proj.Remarks != "")
+                strRemarks += proj.Remarks + "\n\n";
+
+            if (proj.Reservation1Name != "")
+            {
+                strReservations += translator.GetReservedString(proj.Reservation1Name, proj.Reservation2Name);
+            }
+
+            /*if (proj.DurationOneSemester)
+            {
+                strOneSem = translator.GetHeadingOneSemester();
+            }*/
+
+            if (strReservations.Length > 0 || strRemarks.Length > 0 /* || strOneSem.Length > 0*/)
+            {
+                document.Add(new Paragraph(translator.GetHeadingAnnotation(), fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+                if (strRemarks.Length > 0)
+                    foreach (var text in strRemarks.ToLinkedParagraph(fontRegular, hyph))
+                    {
+                        text.SpacingAfter = 0f;
+                        text.SetLeading(0.0f, LINE_HEIGHT);
+                        text.Alignment = Element.ALIGN_JUSTIFIED;
+                        document.Add(text);
+                    }
+                /*if (strOneSem.Length > 0)
+                {
+                    var oneSem = new Paragraph(strOneSem, fontRegular);
+                    oneSem.SpacingAfter = 1f;
+                    oneSem.SetLeading(0.0f, LINE_HEIGHT);
+                    document.Add(oneSem);
+                }*/
+                if (strReservations.Length > 0)
+                {
+                    var fontRegularRed = new Font(fontRegular);
+                    fontRegularRed.Color = BaseColor.RED;
+
+                    var text = new Paragraph(strReservations, fontRegularRed);
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    document.Add(text);
+                }
+            }
+
             document.NewPage();
         }
 
-        private class MyPageEventHandler : PdfPageEventHelper
+        private string GetCurrentProjectTypeOne(Project proj)
+        {
+            if (proj.TypeDesignUX)
+                return "projectTypDesignUX.png";
+            if (proj.TypeHW)
+                return "projectTypHW.png";
+            if (proj.TypeCGIP)
+                return "projectTypCGIP.png";
+            if (proj.TypeMlAlg)
+                return "projectTypMlAlg.png";
+            if (proj.TypeAppWeb)
+                return "projectTypAppWeb.png";
+            if (proj.TypeDBBigData)
+                return "projectTypDBBigData.png";
+            if (proj.TypeSysSec)
+                return "projectTypSysSec.png";
+            return "projectTypSE.png";
+        }
+
+        private string GetCurrentProjectTypeTwo(Project proj)
+        {
+            // Note: Complicated conditional statements relate to the order of returns in GetCurrentProjectTypeOne
+            // TODO Consider extracting logic to a method that returns two project types. e.g. put in a list and pull out first two relevant types.
+
+            if (proj.TypeHW && proj.TypeDesignUX)
+                return "projectTypHW.png";
+            if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
+                return "projectTypCGIP.png";
+            if (proj.TypeMlAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
+                return "projectTypMlAlg.png";
+            if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg))
+                return "projectTypAppWeb.png";
+            if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
+                                       proj.TypeAppWeb))
+                return "projectTypDBBigData.png";
+            if (proj.TypeSysSec && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
+                                    proj.TypeAppWeb || proj.TypeDBBigData))
+                return "projectTypSysSec.png";
+            if (proj.TypeSE && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMlAlg ||
+                                proj.TypeAppWeb || proj.TypeDBBigData || proj.TypeSysSec))
+                return "projectTypSE.png";
+            return "projectTypTransparent.png";
+        }
+
+        public int CalcNumberOfPages(Project PDF)
+        {
+            var minimumNumberOfPages = int.MaxValue;
+            foreach (Layout l in Enum.GetValues(typeof(Layout)))
+                minimumNumberOfPages = Math.Min(minimumNumberOfPages, CalcNumberOfPages(PDF, l));
+            return minimumNumberOfPages;
+        }
+
+        private int CalcNumberOfPages(Project PDF, Layout layout)
+        {
+            using (var output = new MemoryStream())
+            {
+                using (var document = CreateDocument())
+                {
+                    AppendToPDF(output, Enumerable.Repeat(PDF, 1), layout, document);
+                }
+                using (var pdfReader = new PdfReader(output.ToArray()))
+                {
+                    return pdfReader.NumberOfPages;
+                }
+            }
+        }
+
+        private void PictureRightLayout(Project proj, Image img, Document document, ImageSize imgsize, PdfWriter writer)
+        {
+            // http://stackoverflow.com/questions/9272777/auto-scaling-of-images
+            // image.ScaleAbsoluteWidth(160f);
+
+            switch (imgsize)
+            {
+                case ImageSize.Big:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 300, 300));
+                    break;
+                case ImageSize.Medium:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 250, 250));
+                    break;
+                case ImageSize.Small:
+                    document.Add(DescribedImage(writer, img, proj.ImgDescription, 200, 200));
+                    break;
+            }
+
+            AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+            AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+            AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+            AddParagraph(proj.References, document, translator.GetHeadingTechnology(), proj.References);
+        }
+
+        public Image DescribedImage(PdfWriter writer, Image img, string description, float heighttoscale,
+            float widthtoscale)
+        {
+            img.ScaleToFit(heighttoscale, widthtoscale);
+            var width = img.ScaledWidth;
+            var height = img.ScaledHeight;
+
+            //height used for one line of imgdescription
+            var descriptionheight = 12f;
+
+            //set up template
+            var cb = writer.DirectContent;
+            var template = cb.CreateTemplate(width + 10f, height + descriptionheight * 5);
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                var linkedPara = new Paragraph();
+                linkedPara.AddRange(description.ToLinkedParagraph(fontsmall, hyph));
+
+                //set up ct for description
+                var ct = new ColumnText(template);
+                var imgDescription = new Phrase(linkedPara);
+                ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * 5, 10,
+                    Element.ALIGN_JUSTIFIED);
+                ct.Go(true);
+
+                //Get the lines used to write the comment
+                var lineswriten = ct.LinesWritten;
+
+                template.Height = height + lineswriten * descriptionheight;
+
+                //add the comment to the template
+                ct.SetSimpleColumn(imgDescription, 10f, 0, template.Width, descriptionheight * lineswriten, 10,
+                    Element.ALIGN_JUSTIFIED);
+                ct.Go(false);
+            }
+            else
+            {
+                template.Height = height + 5f;
+            }
+            //add img to template
+            template.AddImage(img, width, 0, 0, height, template.Width - width, template.Height - height);
+            var i = Image.GetInstance(template);
+
+            i.Alignment = Element.ALIGN_RIGHT | Image.TEXTWRAP;
+            return i;
+        }
+
+
+        private void AddParagraph(string test, Document document, string title, string content)
+        {
+            if (test != "")
+            {
+                document.Add(new Paragraph(title, fontHeading)
+                {
+                    SpacingBefore = SPACING_BEFORE_TITLE,
+                    SpacingAfter = SPACING_AFTER_TITLE
+                });
+
+
+                foreach (var text in content.ToLinkedParagraph(fontRegular, hyph))
+                {
+                    text.SpacingAfter = 1f;
+                    text.SetLeading(0.0f, LINE_HEIGHT);
+                    text.Alignment = Element.ALIGN_JUSTIFIED;
+                    document.Add(text);
+                }
+            }
+        }
+
+        private void PictureInTheMiddle(Project proj, Image img, Document document, ImageSize imgsize)
+        {
+            switch (imgsize)
+            {
+                case ImageSize.Big:
+                    img.ScaleToFit(480f, 480f);
+                    break;
+                case ImageSize.Medium:
+                    img.ScaleToFit(380f, 380f);
+                    break;
+                case ImageSize.Small:
+                    img.ScaleToFit(290f, 290f);
+                    break;
+            }
+
+            img.Alignment = Element.ALIGN_MIDDLE;
+            img.SpacingBefore = SPACING_BEFORE_IMAGE;
+
+            img.SpacingBefore = SPACING_BEFORE_TITLE;
+            document.Add(img);
+
+            if (proj.ImgDescription != "")
+            {
+                fontsmall.SetColor(100, 100, 100);
+
+                var p = new Paragraph(proj.ImgDescription, fontsmall);
+                p.PaddingTop = -1f;
+                p.Alignment = Element.ALIGN_CENTER;
+
+                document.Add(p);
+            }
+            AddParagraph(proj.InitialPosition, document, translator.GetHeadingInitialPosition(), proj.InitialPosition);
+            AddParagraph(proj.Objective, document, translator.GetHeadingObjective(), proj.Objective);
+            AddParagraph(proj.ProblemStatement, document, translator.GetHeadingProblemStatement(), proj.ProblemStatement);
+            AddParagraph(proj.References, document, translator.GetHeadingTechnology(), proj.References);
+        }
+
+        public static Document CreateDocument()
+        {
+            var margin = Utilities.MillimetersToPoints(20f);
+            return new Document(PageSize.A4, margin, margin, margin, margin);
+        }
+
+        private enum Layout
+        {
+            BigPictureInTheMiddle,
+            MediumPictureInTheMiddle,
+            BigPictureRight,
+            SmallPictureInTheMiddle,
+            MediumPictureRight,
+            SmallPictureRight
+        }
+
+        private enum ImageSize
+        {
+            Big,
+            Medium,
+            Small
+        }
+
+        private class PdfHeaderFooterGenerator : PdfPageEventHelper
         {
             /*
              * We use a __single__ Image instance that's assigned __once__;
@@ -342,7 +543,11 @@ namespace ProStudCreator
              * separate Image instances in OnEndPage()/OnEndPage(), for example,
              * you'll end up with a much bigger file size.
              */
-            public iTextSharp.text.Image ImageHeader { get; set; }
+            public Image ImageHeader { get; set; }
+
+            public Project CurrentProject { get; set; }
+
+            private Translator translator = new Translator(); //Sprache spielt keine Rolle, da die verwendete Methode diese selbst herausfindet.
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
@@ -351,151 +556,57 @@ namespace ProStudCreator
                 //////////////////////////////////////////////////////
 
                 // cell height 
-                float cellHeight = document.TopMargin;
+                var cellHeight = document.TopMargin;
                 // PDF document size      
-                Rectangle page = document.PageSize;
+                var page = document.PageSize;
 
                 // create two column table
-                PdfPTable head = new PdfPTable(1);
+                var head = new PdfPTable(1);
                 head.TotalWidth = page.Width + 2;
                 head.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 // add image; PdfPCell() overload sizes image to fit cell
-                PdfPCell c = new PdfPCell(ImageHeader, true);
+                var c = new PdfPCell(ImageHeader, true);
                 c.HorizontalAlignment = Element.ALIGN_MIDDLE;
                 c.FixedHeight = cellHeight - 15;
                 c.PaddingLeft = 35;
                 c.PaddingTop = 5;
                 c.PaddingBottom = 5;
-                c.Border = PdfPCell.NO_BORDER;
+                c.Border = Rectangle.NO_BORDER;
                 head.AddCell(c);
 
                 // since the table header is implemented using a PdfPTable, we call
                 // WriteSelectedRows(), which requires absolute positions!
                 head.WriteSelectedRows(
-                  0, -1,  // first/last row; -1 flags all write all rows
-                  -1,      // left offset
-                    // ** bottom** yPos of the table
-                  page.Height - cellHeight + head.TotalHeight,
-                  writer.DirectContent
+                    0, -1, // first/last row; -1 flags all write all rows
+                    -1, // left offset
+                        // ** bottom** yPos of the table
+                    page.Height - cellHeight + head.TotalHeight,
+                    writer.DirectContent
                 );
 
                 ///////////////////////////////////////////////////////
                 // FOOTER 
                 //////////////////////////////////////////////////////
 
-                // cell height 
-                float cellHeightFooter = document.TopMargin;
-                // PDF document size      
-                Rectangle page2 = document.PageSize;
+                translator.DetectLanguage(CurrentProject);
 
                 // create two column table
-                PdfPTable foot = new PdfPTable(1);
-                foot.TotalWidth = page2.Width + 2;
+                var foot = new PdfPTable(1);
+                foot.TotalWidth = document.PageSize.Width + 2;
                 foot.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                var today = DateTime.Now;
-                var projectSaison = "";
-                if (today.Month >= 1 && today.Month <= 5)
-                {
-                    projectSaison = "HS" + today.ToString("yy");
-                }
-                else
-                {
-                    projectSaison = "FS" + today.AddYears(+1).ToString("yy");
-                }
-
                 // add image; PdfPCell() overload sizes image to fit cell
-                PdfPCell cell = new PdfPCell(new Phrase("Studiengang Informatik / i4DS / Studierendenprojekte " + projectSaison, new Font(Font.FontFamily.HELVETICA, 8)));
+                var cell = new PdfPCell(new Phrase(translator.GetHeadingFooter(CurrentProject,db),new Font(Font.FontFamily.HELVETICA, 8)));
                 cell.HorizontalAlignment = Element.ALIGN_MIDDLE;
-                cell.FixedHeight = cellHeightFooter - 15;
+                cell.FixedHeight = document.TopMargin - 15;
                 cell.PaddingLeft = 58;
                 cell.PaddingTop = 8;
                 cell.PaddingBottom = 0;
-                cell.Border = PdfPCell.NO_BORDER;
+                cell.Border = Rectangle.NO_BORDER;
                 foot.AddCell(cell);
                 foot.WriteSelectedRows(0, -1, -1, 40, writer.DirectContent);
             }
-        }
-
-        private String getCurrentProjectTypeOne(Project proj)
-        {
-            var projectType = "";
-
-            if (proj.TypeDesignUX)
-            {
-                projectType = "projectTypDesignUX.png";
-            }
-            else if (proj.TypeHW)
-            {
-                projectType = "projectTypHW.png";
-            }
-            else if (proj.TypeCGIP)
-            {
-                projectType = "projectTypCGIP.png";
-            }
-            else if (proj.TypeMathAlg)
-            {
-                projectType = "projectTypMathAlg.png";
-            }
-            else if (proj.TypeAppWeb)
-            {
-                projectType = "projectTypAppWeb.png";
-            }
-            else
-            {
-                projectType = "projectTypDBBigData.png";
-            }
-
-            return projectType;
-        }
-
-        private String getCurrentProjectTypeTwo(Project proj)
-        {
-            var projectType = "";
-
-
-            if (proj.TypeHW && proj.TypeDesignUX)
-            {
-                projectType = "projectTypHW.png";
-            }
-            else if (proj.TypeCGIP && (proj.TypeDesignUX || proj.TypeHW))
-            {
-                projectType = "projectTypCGIP.png";
-            }
-            else if (proj.TypeMathAlg && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP))
-            {
-                projectType = "projectTypMathAlg.png";
-            }
-            else if (proj.TypeAppWeb && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg))
-            {
-                projectType = "projectTypAppWeb.png";
-            }
-            else if (proj.TypeDBBigData && (proj.TypeDesignUX || proj.TypeHW || proj.TypeCGIP || proj.TypeMathAlg || proj.TypeAppWeb))
-            {
-                projectType = "projectTypDBBigData.png";
-            }
-            else
-            {
-                projectType = "projectTypTransparent.png";
-            }
-
-            return projectType;
-        }
-        public int getNumberOfPDFPages(int idPDF, HttpRequest currentRequest)
-        {
-            float margin = Utilities.MillimetersToPoints(Convert.ToSingle(20));
-            int numberOfPages;
-            using (var output = new MemoryStream())
-            {
-                using (var document = new Document(iTextSharp.text.PageSize.A4, margin, margin, margin, margin))
-                {
-                    CreatePDF(document, output, false, idPDF, currentRequest, null);
-                }
-                PdfReader pdfReader = new PdfReader(output.ToArray());
-                numberOfPages = pdfReader.NumberOfPages;
-            }
-            return numberOfPages;
         }
     }
 }

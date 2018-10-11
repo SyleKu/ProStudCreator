@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Principal;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -14,6 +12,8 @@ namespace ProStudCreator
         private const string AntiXsrfTokenKey = "__AntiXsrfToken";
         private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
         private string _antiXsrfTokenValue;
+
+        public bool inDebugMode;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -38,37 +38,57 @@ namespace ProStudCreator
                     Value = _antiXsrfTokenValue
                 };
                 if (FormsAuthentication.RequireSSL && Request.IsSecureConnection)
-                {
                     responseCookie.Secure = true;
-                }
                 Response.Cookies.Set(responseCookie);
             }
 
-            Page.PreLoad += master_Page_PreLoad;
+            Page.PreLoad += Master_Page_PreLoad;
         }
 
-        protected void master_Page_PreLoad(object sender, EventArgs e)
+        protected void Master_Page_PreLoad(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 // Anti-XSRF-Token festlegen
                 ViewState[AntiXsrfTokenKey] = Page.ViewStateUserKey;
-                ViewState[AntiXsrfUserNameKey] = Context.User.Identity.Name ?? String.Empty;
+                ViewState[AntiXsrfUserNameKey] = Context.User.Identity.Name ?? string.Empty;
             }
             else
             {
                 // Anti-XSRF-Token überprüfen
                 if ((string)ViewState[AntiXsrfTokenKey] != _antiXsrfTokenValue
-                    || (string)ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? String.Empty))
-                {
+                    || (string)ViewState[AntiXsrfUserNameKey] != (Context.User.Identity.Name ?? string.Empty))
                     throw new InvalidOperationException("Fehler bei der Überprüfung des Anti-XSRF-Tokens.");
-                }
             }
+
+            if (!ShibUser.IsAuthenticated(new ProStudentCreatorDBDataContext()))
+            {
+                //throw new HttpException(403, "Nicht berechtigt");
+                Response.Redirect("error/AccessDenied.aspx");
+                Response.End();
+                return;
+            }
+
+
+            NavAdmin.Visible = ShibUser.CanVisitAdminPage();
         }
+
+        public readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
 
         protected void Page_Load(object sender, EventArgs e)
         {
+#if DEBUG
+            inDebugMode = true;
+#endif
+            //register new Users
+            /*if (!db.UserDepartmentMap.Select(i => i.Mail).Contains(ShibUser.GetEmail()))
+            {
+                db.UserDepartmentMap.InsertOnSubmit(new UserDepartmentMap(){DepartmentId = ShibUser.GetDepartment(db).Id, Mail = ShibUser.GetEmail(), Name = ShibUser.GetFullName()});
+            }*/
+        }
 
+        private void Page_Error(object sender, EventArgs e)
+        {
         }
 
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -77,5 +97,4 @@ namespace ProStudCreator
             Response.Redirect("/Account/Login.aspx");
         }
     }
-
 }

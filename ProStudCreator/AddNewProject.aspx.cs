@@ -1,301 +1,744 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Linq;
+using System.Data.Linq.Mapping;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Net.Mail;
+using System.Reflection;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.IO;
-using System.Net.Mail;
+using HtmlDiff;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace ProStudCreator
 {
-    public partial class AddNewProject : System.Web.UI.Page
+    public partial class AddNewProject : Page
     {
-        ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
-        bool[] projectType = new bool[6];
-        private static int id;
-        private Project projects;
-        ProjectType projectPriority = new ProjectType();
-        DateTime today = DateTime.Now;
+        public readonly ProStudentCreatorDBDataContext db = new ProStudentCreatorDBDataContext();
+        private int? id;
+        private Project project;
+        private ProjectType projectPriority = new ProjectType();
+        private bool[] projectType = new bool[8];
+        private DateTime today = DateTime.Now;
+        private bool imageChanged = false;
+        private Binary picture;
+        private enum ClientType { INTERN, COMPANY, PRIVATEPERSON }
+        #region Timer tick
+
+        protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
+        {
+            if (project != null)
+            {
+                var pdfc = new PdfCreator();
+
+                FillprojectwithFormData(project);
+
+                if (pdfc.CalcNumberOfPages(project) > 1)
+                {
+                    Pdfupdatelabel.Text = "Länge: Das PDF ist länger als eine Seite!";
+                    Pdfupdatelabel.ForeColor = Color.Red;
+                }
+                else
+                {
+                    Pdfupdatelabel.Text = "Länge: OK (1 Seite)";
+                    Pdfupdatelabel.ForeColor = Color.Green;
+                }
+            }
+        }
+        #endregion
+
+        #region Application logic
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (User.IsInRole("Admin"))
+            AdminView.Visible = ShibUser.CanSeeCreationDetails();
+            btnHistoryCollapse.CausesValidation = false;
+            // Retrieve the project from DB
+            if (Request.QueryString["id"] != null)
             {
-                AdminView.Visible = true;
+                id = int.Parse(Request.QueryString["id"]);
+                project = db.Projects.Single(p => (int?)p.Id == id);
+
+                if (!project.UserCanEdit())
+                {
+                    Response.Redirect("error/AccessDenied.aspx");
+                    Response.End();
+                }
+                var history = db.Projects.Where(p => p.BaseVersionId == project.BaseVersionId && !p.IsMainVersion);
+                if (history.ToList().Count > 0)
+                {
+                    historyListView.DataSource = history;
+                    historyListView.DataBind();
+                }
+                else
+                {
+                    DivHistoryCollapsable.InnerText = "Keine früheren Versionen vorhanden.";
+                }
+
             }
+            else
+            {
+                divHistory.Visible = false;
+                if (Request.QueryString["showChanges"] == null)
+                    duplicateProject.Visible = false;
+            }
+
+            // Project picture
+            if (project != null && project.Picture != null)
+            {
+                ProjectPicture.Visible = true;
+                ProjectPicture.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
+                DeleteImageButton.Visible = true;
+            }
+            else
+            {
+                ImageLabel.Visible = false;
+                ProjectPicture.Visible = false;
+
+            }
+
             if (IsPostBack)
             {
                 projectType = (bool[])ViewState["Types"];
             }
             else
             {
-                InitialPositionContent.Attributes.Add("placeholder", "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
-                ObjectivContent.Attributes.Add("placeholder", "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");
-                ProblemStatementContent.Attributes.Add("placeholder", "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
-                ReferencesContent.Attributes.Add("placeholder", "Beispiel: JavaScript, Komplexe Datenstrukturen, Three.js/WebGL");
-                RemarksContent.Attributes.Add("placeholder", "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
+                if (Session["AddInfoCollapsed"] == null)
+                    CollapseHistory(true);
+                else
+                    CollapseHistory((bool)Session["AddInfoCollapsed"]);
+
+                // Fix for unsupported maxlength on multi-line in ASP.NET
+                // Note: Recursive search of all controls is possible but not worthwhile (yet)
+                //InitialPositionContent.Attributes.Add("maxlength", InitialPositionContent.MaxLength.ToString());
+                //ObjectivContent.Attributes.Add("maxlength", ObjectivContent.MaxLength.ToString());
+                //ProblemStatementContent.Attributes.Add("maxlength", ProblemStatementContent.MaxLength.ToString());
+                //ReferencesContent.Attributes.Add("maxlength", ReferencesContent.MaxLength.ToString());
+                //RemarksContent.Attributes.Add("maxlength", RemarksContent.MaxLength.ToString());
+
+                InitialPositionContent.Attributes.Add("placeholder",
+                    "Beispiel: Die Open-Source WebGL-Library three.js stellt Benutzern einen einfachen Editor zum Erstellen von 3D-Szenen zur Verfügung. Eine Grundversion dieses Editors ist unter http://threejs.org/editor abrufbar. Dieser Editor wird als Basis für die hochschulübergreifende strategische Initiative „Playful Media Practices“ verwendet, wo er zum Design audiovisueller Szenen verwendet wird. Diesem Editor fehlt jedoch eine Undo-/Redo-Funktion, welche in diesem Projekt hinzuzufügen ist.");
+                ObjectivContent.Attributes.Add("placeholder",
+                    "Beispiel: Das Ziel dieser Arbeit ist die Erarbeitung eines Undo-/Redo-Konzepts für den three.js-Editor sowie dessen Implementation. Da three.js eine Library für die cutting-edge-Technologie WebGL ist, nutzt auch der three.js-Editor modernste Browsermittel wie LocalStorage oder FileAPI. Deshalb gilt es nicht, die Implementation kompatibel zu alten Browsern zu halten, sondern das Maximum aus aktuellen Browsern zu holen.");
+                ProblemStatementContent.Attributes.Add("placeholder",
+                    "Beispiel: Der three.js-Editor hat mittlerweile eine beachtliche Komplexität erreicht, entsprechend muss für verschiedene Bereiche anders mit Undo&Redo umgegangen werden. Wenn beispielsweise jemand neue Texturen hochlädt, müssen die vorherigen Texturen im Speicher behalten werden.");
+                ReferencesContent.Attributes.Add("placeholder",
+                    "Beispiel:\n- JavaScript\n- Komplexe Datenstrukturen\n- Three.js/WebGL");
+                RemarksContent.Attributes.Add("placeholder",
+                    "Beispiel: Ein Pullrequest der Implementation wird diese Erweiterung einem weltweiten Publikum öffentlich zugänglich machen. Sie leisten damit einen entscheidenden Beitrag für die Open-Source Community von three.js!");
 
                 POneType.DataSource = db.ProjectTypes;
                 POneTeamSize.DataSource = db.ProjectTeamSizes;
+                PTwoType.DataSource = Enumerable.Repeat(new ProjectType
+                {
+                    Description = "-",
+                    Id = -1
+                }, 1).Concat(db.ProjectTypes);
+                PTwoTeamSize.DataSource = Enumerable.Repeat(new ProjectTeamSize
+                {
+                    Description = "-",
+                    Id = -1
+                }, 1).Concat(db.ProjectTeamSizes);
 
-                PTwoType.DataSource = Enumerable.Repeat(new ProjectType() { Description="-",Id=-1 }, 1).Concat(db.ProjectTypes);
-                PTwoTeamSize.DataSource = Enumerable.Repeat(new ProjectTeamSize() { Description="-",Id=-1 }, 1).Concat(db.ProjectTeamSizes);
+                Department.DataSource = db.Departments;
+                var dep = ShibUser.GetDepartment(db);
+                if (dep != null)
+                    Department.SelectedValue = dep.Id.ToString();
 
-                Department.DataSource = db.Departments.Select(i => i.DepartmentName);
                 DataBind();
 
+                POneTeamSize.SelectedIndex = 1;
+                PTwoTeamSize.SelectedIndex = 0;
+
                 ViewState["Types"] = projectType;
-                AddPictureLabel.Text = "Add image";
-                SiteTitle.Text = "Create new project";
-                saveProject.Text = "Save";
+                AddPictureLabel.Text = "Bild hinzufügen:";
 
-                if (Request.QueryString["id"] != null)
+                if (id.HasValue)
                 {
-                    id = int.Parse(Request.QueryString["id"]);
-                    getDataToEdit();
+                    Page.Title = "Projekt bearbeiten";
+                    SiteTitle.Text = "Projekt bearbeiten";
+                    if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
+                        PopulateHistoryGUI(project.Id);
+                    else
+                        PopulateEditGUI();
+                    PrepareClientForm(project);
                 }
+                else
+                {
+                    Page.Title = "Neues Projekt";
+                    SiteTitle.Text = "Neues Projekt anlegen";
 
-                if (Request.QueryString["show"] != null)
-                {
-                    showOnlyContent();
+                    FillDropPreviousProject(Semester.CurrentSemester(db));
+                    dropPreviousProject.SelectedIndex = 0;
+                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    divClientForm.Visible = false;
+                    FillDropAdvisors();
                 }
+                if (Request.QueryString["showChanges"] == null)
+                    ToggleReservationTwoVisible();
             }
         }
-
-        private void getDataToEdit()
+        private void FillDropAdvisors()
         {
-            var proj = db.Projects.Single(i => i.Id == id);
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1 && i.IsActive).OrderBy(a => a.Name);
+            dropAdvisor1.DataBind();
+            dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor1.SelectedIndex = 0;
+            dropAdvisor2.DataSource = db.UserDepartmentMap.Where(i => i.IsActive).OrderBy(a => a.Name);
+            dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor2.SelectedValue = db.UserDepartmentMap.Single(i => i.Mail == ShibUser.GetEmail()).Id.ToString();
+        }
 
-            Page.Title = "Edit project";
-            SiteTitle.Text = "Edit project";
-            CreatorID.Text = proj.Creator + "/" + proj.CreateDate.ToString("dd.MM.yyyy");
-            saveProject.Visible = true;
-            saveProject.Text = "Save changes";
-            AddPictureLabel.Text = "Change image:";
-            saveProject.Width = 120;
+        private void FillDropPreviousProject(Semester projectSemester)
+        {
+            var lastSem = Semester.LastSemester(projectSemester, db);
+            //var beforeLastSem = Semester.LastSemester(lastSem, db);
+            dropPreviousProject.DataSource = db.Projects.Where(p =>
+                p.LogProjectType.P5 && !p.LogProjectType.P6
+                && p.State == ProjectState.Published
+                && (p.SemesterId == projectSemester.Id || p.SemesterId == lastSem.Id && p.LogProjectDuration == 2));
+            dropPreviousProject.DataBind();
+            dropPreviousProject.Items.Insert(0, new ListItem("-", "dropPreviousProjectImpossibleValue"));
+        }
 
-            if (User.IsInRole("Admin") && !proj.Published && Request.QueryString["show"] != null)
+        private string CreateSimpleDiffString(string oldText, string newText)
+        {
+            if (oldText != newText)
+                return "<del class='diffmod'>" + oldText + "</del> " + "<ins class='diffmod'>" + newText + "</ins>";
+            else
+                return newText;
+        }
+
+        private string CreateDiffString(string oldText, string newText)
+        {
+            string diffString;
+            try
             {
-                publishProject.Visible = true;
-                refuseProject.Visible = true;
+                HtmlDiff.HtmlDiff h = new HtmlDiff.HtmlDiff(oldText, newText);
+                diffString = h.Build();
+            }
+            catch
+            {
+                return " ";
+            }
+            return diffString;
+        }
+
+        private void GetControlList<T>(ControlCollection controlCollection, List<Control> resultCollection) where T : Control
+        {
+            foreach (Control control in controlCollection)
+            {
+                if (control is T)
+                    resultCollection.Add(control);
+
+                if (control.HasControls())
+                    GetControlList<T>(control.Controls, resultCollection);
+            }
+        }
+        private void ShowAllLabelsForComparison()
+        {
+            List<Control> labelList = new List<Control>();
+            GetControlList<Label>(Controls, labelList);
+            foreach (Label l in labelList)
+                l.Visible = true;
+
+            //additional controls 
+            ProjectPicturePrevious.Visible = true;
+        }
+        private void HideTextboxesAndDropdownsForComparison()
+        {
+            List<Control> controlList = new List<Control>();
+            GetControlList<DropDownList>(Controls, controlList);
+            GetControlList<TextBox>(Controls, controlList);
+            foreach (var control in controlList)
+                control.Visible = false;
+            ProjectPicture.Visible = false;
+        }
+        private void PopulateHistoryGUI(int BaseVersionId = 0)
+        {
+            var pid = 0;
+
+            if (BaseVersionId == 0)
+                pid = int.Parse(Request.QueryString["showChanges"]);
+            else
+                pid = BaseVersionId;
+
+            var currentProject = db.Projects.Single(p => p.Id == pid);
+
+            ShowAllLabelsForComparison();
+            HideTextboxesAndDropdownsForComparison();
+
+            CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
+            AddPictureLabel.Text = "Bild ändern:";
+            ProjectNameLabel.Text = CreateSimpleDiffString(project.Name, currentProject.Name);
+            dropAdvisor1Label.Text = CreateSimpleDiffString(project.Advisor1?.Name ?? "", currentProject.Advisor1?.Name ?? "");
+            dropAdvisor2Label.Text = CreateSimpleDiffString(project.Advisor2?.Name ?? "", currentProject.Advisor2?.Name ?? "");
+
+            if (currentProject.TypeDesignUX)
+            {
+                DesignUX.ImageUrl = "pictures/projectTypDesignUX.png";
+                projectType[0] = true;
+
+                if (!project.TypeDesignUX)
+                {
+                    DesignUX.BorderStyle = BorderStyle.Solid;
+                    DesignUX.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeDesignUX)
+                {
+                    DesignUX.BorderStyle = BorderStyle.Solid;
+                    DesignUX.BorderColor = Color.Red;
+                }
             }
 
-            ProjectName.Text = proj.Name;
-            Employer.Text = proj.Employer;
-            EmployerMail.Text = proj.EmployerEmail;
-            NameBetreuer1.Text = proj.Advisor;
-            EMail1.Text = proj.AdvisorMail;
-            NameBetreuer2.Text = proj.Advisor2;
-            EMail2.Text = proj.AdvisorMail2;
-
-            if (proj.TypeDesignUX)
+            if (currentProject.TypeHW)
             {
-                DesignUX.ImageUrl = "/pictures/projectTypDesignUX.png";
+                HW.ImageUrl = "pictures/projectTypHW.png";
+                projectType[1] = true;
+                if (!project.TypeHW)
+                {
+                    HW.BorderStyle = BorderStyle.Solid;
+                    HW.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeHW)
+                {
+                    HW.BorderStyle = BorderStyle.Solid;
+                    HW.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeCGIP)
+            {
+                CGIP.ImageUrl = "pictures/projectTypCGIP.png";
+                projectType[2] = true;
+                if (!project.TypeCGIP)
+                {
+                    CGIP.BorderStyle = BorderStyle.Solid;
+                    CGIP.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeCGIP)
+                {
+                    CGIP.BorderStyle = BorderStyle.Solid;
+                    CGIP.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeMlAlg)
+            {
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
+                projectType[3] = true;
+                if (!project.TypeMlAlg)
+                {
+                    MlAlg.BorderStyle = BorderStyle.Solid;
+                    MlAlg.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeMlAlg)
+                {
+                    MlAlg.BorderStyle = BorderStyle.Solid;
+                    MlAlg.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeAppWeb)
+            {
+                AppWeb.ImageUrl = "pictures/projectTypAppWeb.png";
+                projectType[4] = true;
+                if (!project.TypeAppWeb)
+                {
+                    AppWeb.BorderStyle = BorderStyle.Solid;
+                    AppWeb.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeAppWeb)
+                {
+                    AppWeb.BorderStyle = BorderStyle.Solid;
+                    AppWeb.BorderColor = Color.Red;
+                }
+            }
+            if (currentProject.TypeDBBigData)
+            {
+                DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
+                projectType[5] = true;
+                if (!project.TypeDBBigData)
+                {
+                    DBBigData.BorderStyle = BorderStyle.Solid;
+                    DBBigData.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeDBBigData)
+                {
+                    DBBigData.BorderStyle = BorderStyle.Solid;
+                    DBBigData.BorderColor = Color.Red;
+                }
+            }
+            if (currentProject.TypeSysSec)
+            {
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
+                if (!project.TypeSysSec)
+                {
+                    SysSec.BorderStyle = BorderStyle.Solid;
+                    SysSec.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeSysSec)
+                {
+                    SysSec.BorderStyle = BorderStyle.Solid;
+                    SysSec.BorderColor = Color.Red;
+                }
+            }
+
+            if (currentProject.TypeSE)
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
+                if (!project.TypeSE)
+                {
+                    SE.BorderStyle = BorderStyle.Solid;
+                    SE.BorderColor = Color.Green;
+                }
+            }
+            else
+            {
+                if (project.TypeSE)
+                {
+                    SE.BorderStyle = BorderStyle.Solid;
+                    SE.BorderColor = Color.Red;
+                }
+            }
+
+            POneType.SelectedValue = project.POneType.Id.ToString();
+            PTwoType.SelectedValue = project.PTwoType?.Id.ToString();
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+            PTwoTeamSize.SelectedValue = project.PTwoTeamSize?.Id.ToString();
+
+            if (project.LanguageEnglish && !project.LanguageGerman)
+                Language.SelectedIndex = 2;
+            else if (!project.LanguageEnglish && project.LanguageGerman)
+                Language.SelectedIndex = 1;
+            else
+                Language.SelectedIndex = 0;
+
+            //DurationOneSemester.Checked = project.DurationOneSemester;
+            InitialPositionContentLabel.Text = CreateDiffString(project.InitialPosition, currentProject.InitialPosition);
+
+            ObjectivContentLabel.Text = CreateDiffString(project.Objective, currentProject.Objective);
+
+            ProblemStatementContentLabel.Text = CreateDiffString(project.ProblemStatement, currentProject.ProblemStatement);
+
+            ReferencesContentLabel.Text = CreateDiffString(project.References, currentProject.References);
+
+            RemarksContentLabel.Text = CreateDiffString(project.Remarks, currentProject.Remarks);
+
+
+            Reservation1NameLabel.Text = CreateSimpleDiffString(project.Reservation1Name, currentProject.Reservation1Name);
+
+            Reservation1MailLabel.Text = CreateSimpleDiffString(project.Reservation1Mail, currentProject.Reservation1Mail);
+
+            Reservation2NameLabel.Text = CreateSimpleDiffString(project.Reservation2Name, currentProject.Reservation2Name);
+
+            Reservation2MailLabel.Text = CreateSimpleDiffString(project.Reservation2Mail, currentProject.Reservation2Mail);
+
+            DepartmentLabel.Text = CreateSimpleDiffString(project.Department.DepartmentName, currentProject.Department.DepartmentName);
+
+            // Button visibility
+            saveProject.Visible = false;
+            submitProject.Visible = false;
+            publishProject.Visible = false;
+            refuseProject.Visible = false;
+            rollbackProject.Visible = false;
+            saveCloseProject.Visible = false;
+            duplicateProject.Visible = false;
+
+            POneTypeLabel.Text = CreateSimpleDiffString(project.POneType.Description, currentProject.POneType.Description);
+            POneTeamSize.SelectedValue = CreateSimpleDiffString(project.POneTeamSize.Description, currentProject.POneTeamSize.Description);
+
+            Reservation1MailLabel.Text = CreateSimpleDiffString(project?.Reservation1Mail, currentProject?.Reservation1Mail);
+            Reservation1NameLabel.Text = CreateSimpleDiffString(project.Reservation1Name, currentProject?.Reservation1Name);
+            Reservation2MailLabel.Text = CreateSimpleDiffString(project.Reservation2Mail, currentProject?.Reservation2Mail);
+            Reservation2NameLabel.Text = CreateSimpleDiffString(project.Reservation2Name, currentProject?.Reservation2Name);
+
+            PopulateClientWithDiffStrings(project, currentProject);
+
+            PrepareClientForm(project);
+
+            FillDropPreviousProject(project.Semester);
+
+            if (project.PreviousProjectID == null)
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID.ToString();
+                PrepareForm(false);
+            }
+            else
+            {
+                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ??
+                                                    "dropPreviousProjectImpossibleValue";
+                PrepareForm(true);
+            }
+        }
+        private void PopulateEditGUI()
+        {
+            if (Request.QueryString["showChanges"] != null)
+            {
+                PopulateHistoryGUI();
+                return;
+            }
+            var activeStartdate = Semester.ActiveSemester(DateTime.Now, db).StartDate;
+            CreatorID.Text = project.Creator + "/" + project.CreateDate.ToString("yyyy-MM-dd");
+            AddPictureLabel.Text = "Bild ändern:";
+
+            ProjectName.Text = project.Name;
+
+            dropAdvisor1.DataSource = db.UserDepartmentMap.Where(i => i.CanBeAdvisor1 && (i.IsActive || i.Id == project.Advisor1Id)).OrderBy(a => a.Name);
+            dropAdvisor1.DataBind();
+            dropAdvisor1.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor1.SelectedValue = project.Advisor1?.Id.ToString() ?? "ImpossibleValue";
+            dropAdvisor2.DataSource = db.UserDepartmentMap.Where(i => i.IsActive || i.Id == project.Advisor2Id).OrderBy(a => a.Name);
+            dropAdvisor2.DataBind();
+            dropAdvisor2.Items.Insert(0, new ListItem("-", "ImpossibleValue"));
+            dropAdvisor2.SelectedValue = project.Advisor2?.Id.ToString() ?? "ImpossibleValue";
+
+            if (project.TypeDesignUX)
+            {
+                DesignUX.ImageUrl = "pictures/projectTypDesignUX.png";
                 projectType[0] = true;
             }
-
-            if (proj.TypeHW)
+            if (project.TypeHW)
             {
-                HW.ImageUrl = "/pictures/projectTypHW.png";
+                HW.ImageUrl = "pictures/projectTypHW.png";
                 projectType[1] = true;
             }
-
-            if (proj.TypeCGIP)
+            if (project.TypeCGIP)
             {
-                CGIP.ImageUrl = "/pictures/projectTypCGIP.png";
+                CGIP.ImageUrl = "pictures/projectTypCGIP.png";
                 projectType[2] = true;
             }
-
-            if (proj.TypeMathAlg)
+            if (project.TypeMlAlg)
             {
-                MathAlg.ImageUrl = "/pictures/projectTypMathAlg.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
                 projectType[3] = true;
             }
-
-            if (proj.TypeAppWeb)
+            if (project.TypeAppWeb)
             {
-                AppWeb.ImageUrl = "/pictures/projectTypAppWeb.png";
+                AppWeb.ImageUrl = "pictures/projectTypAppWeb.png";
                 projectType[4] = true;
             }
-
-            if (proj.TypeDBBigData)
+            if (project.TypeDBBigData)
             {
-                DBBigData.ImageUrl = "/pictures/projectTypDBBigData.png";
+                DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
                 projectType[5] = true;
             }
-
-            // Priority 1
-            POneType.Text = proj.POneType.Description;
-
-            //  Priority 2
-            PTwoType.Text = proj.PTwoType.Description;
-
-            // Teamsize Priority 1
-            POneTeamSize.Text = proj.POneTeamSize.Description;
-
-            // Teamsize Priority 2
-            PTwoTeamSize.Text = proj.PTwoTeamSize.Description;
-
-            InitialPositionContent.Text = proj.InitialPosition;
-
-            Image1.Visible = true;
-
-            if (proj.Picture != null)
+            if (project.TypeSysSec)
             {
-                Image1.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(proj.Picture.ToArray());
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
+            }
+            if (project.TypeSE)
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
+            }
+
+            POneType.SelectedValue = project.POneType.Id.ToString();
+            PTwoType.SelectedValue = project.PTwoType?.Id.ToString();
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+            PTwoTeamSize.SelectedValue = project.PTwoTeamSize?.Id.ToString();
+
+            if (project.LanguageEnglish && !project.LanguageGerman)
+                Language.SelectedIndex = 2;
+            else if (!project.LanguageEnglish && project.LanguageGerman)
+                Language.SelectedIndex = 1;
+            else
+                Language.SelectedIndex = 0;
+
+            //DurationOneSemester.Checked = project.DurationOneSemester;
+
+            InitialPositionContent.Text = project.InitialPosition;
+            ProjectPicture.Visible = true;
+            if (project.Picture != null)
+            {
+                ProjectPicture.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(project.Picture.ToArray());
                 DeleteImageButton.Visible = true;
+                imgdescription.Text = project.ImgDescription;
             }
             else
             {
                 ImageLabel.Visible = false;
-                Image1.Visible = false;
+                ProjectPicture.Visible = false;
             }
 
-            ObjectivContent.Text = proj.Objective;
-            ProblemStatementContent.Text = proj.ProblemStatement;
-            ReferencesContent.Text = proj.References;
-            RemarksContent.Text = proj.Remarks;
+            ObjectivContent.Text = project.Objective;
+            ProblemStatementContent.Text = project.ProblemStatement;
+            ReferencesContent.Text = project.References;
+            RemarksContent.Text = project.Remarks;
 
-            if (Request.QueryString["id"] != null && proj.InProgress)
+            Reservation1Name.Text = project.Reservation1Name;
+            Reservation1Mail.Text = project.Reservation1Mail;
+            Reservation2Name.Text = project.Reservation2Name;
+            Reservation2Mail.Text = project.Reservation2Mail;
+
+            Department.SelectedValue = project.Department.Id.ToString();
+
+            // Button visibility
+            saveProject.Visible = true;
+            submitProject.Visible = id.HasValue && project.UserCanSubmit();
+            publishProject.Visible = project.UserCanPublish();
+            refuseProject.Visible = project.UserCanReject();
+            rollbackProject.Visible = project.UserCanUnpublish() || project.UserCanUnsubmit();
+
+            POneType.SelectedValue = project?.POneType.Id.ToString();
+            POneTeamSize.SelectedValue = project.POneTeamSize.Id.ToString();
+
+            Reservation1Mail.Text = project.Reservation1Mail;
+            Reservation1Name.Text = project.Reservation1Name;
+            Reservation2Mail.Text = project.Reservation2Mail;
+            Reservation2Name.Text = project.Reservation2Name;
+
+            DisplayClient(project);
+
+
+
+            FillDropPreviousProject(project.Semester);
+
+            if (project.PreviousProjectID == null)
             {
-                submitProject.Visible = true;
+                dropPreviousProject.SelectedValue = project.PreviousProjectID.ToString();
+                PrepareForm(false);
             }
             else
             {
-                submitProject.Visible = false;
+                dropPreviousProject.SelectedValue = project.PreviousProjectID?.ToString() ??
+                                                    "dropPreviousProjectImpossibleValue";
+                PrepareForm(true);
             }
-
-            /* CANCELLED PART!
-            if (proj.Importance)
-            {
-                ImportanceContent.Text = "wichtig aus Sicht Institut oder FHNW";
-            }
-            else
-            {
-                ImportanceContent.Text = "Normal";
-            }
-            */
-            ReservationNameOne.Text = proj.ReservationNameOne;
-            if (proj.ReservationNameTwo != "")
-            {
-                ReservationNameTwo.Text = proj.ReservationNameTwo;
-                ReservationNameTwo.Visible = true;
-            }
-
-            Department.Text = proj.Department.DepartmentName;
         }
 
-        private void showOnlyContent()
+
+        /// <summary>
+        ///     Saves changes to the project in the database.
+        /// </summary>
+        private void SaveProject()
         {
-            var proj = db.Projects.Single(i => i.Id == id);
-
-            Page.Title = "View project";
-            SiteTitle.Text = "View project";
-            saveProject.Visible = false;
-            editProject.Visible = true;
-
-            if (User.IsInRole("Admin") && !proj.Published && !proj.InProgress)
+            if (project == null) // New project
             {
-                publishProject.Visible = true;
-                refuseProject.Visible = true;
-                submitProject.Visible = false;
+                project = ProjectExtensions.CreateNewProject(db);
+                project.IsMainVersion = true;
+                UpdatePDFPageCount(project);
             }
-            else if (User.IsInRole("Admin") && !proj.Published && proj.InProgress)
+            else if (HasProjectChanged())
             {
-                publishProject.Visible = false;
-                refuseProject.Visible = false;
-                submitProject.Visible = true;
-            }
-            else if (!proj.Published && proj.InProgress)
-            {
-                submitProject.Visible = true;
-            }
-            else
-            {
-                saveProject.Visible = false;
-                publishProject.Visible = false;
-                refuseProject.Visible = false;
-                submitProject.Visible = false;
-            }
 
-            if (proj.OverOnePage)
-            {
-                submitProject.Enabled = false;
-            }
+                SaveProjectFromEditView();
 
-            ProjectName.ReadOnly = true;
-            Employer.ReadOnly = true;
-            EmployerMail.ReadOnly = true;
-            NameBetreuer1.ReadOnly = true;
-            EMail1.ReadOnly = true;
-            NameBetreuer2.ReadOnly = true;
-            EMail2.ReadOnly = true;
-
-            DesignUX.Enabled = false;
-            HW.Enabled = false;
-            CGIP.Enabled = false;
-            MathAlg.Enabled = false;
-            AppWeb.Enabled = false;
-            DBBigData.Enabled = false;
-
-            POneType.Enabled = false;
-            POneTeamSize.Enabled = false;
-            PTwoType.Enabled = false;
-            PTwoTeamSize.Enabled = false;
-            InitialPositionContent.ReadOnly = true;
-
-            ObjectivContent.ReadOnly = true;
-            AddPictureLabel.Visible = false;
-            ImageLabel.Text = "Image:";
-            AddPicture.Visible = false;
-            DeleteImageButton.Visible = false;
-
-            ObjectivContent.ReadOnly = true;
-            ProblemStatementContent.ReadOnly = true;
-            ReferencesContent.ReadOnly = true;
-            RemarksContent.ReadOnly = true;
-            ImportanceContent.Enabled = false;
-            ReservationNameOne.Enabled = false;
-            ReservationNameTwo.Enabled = false;
-            Department.Enabled = false;
-
-            if (proj.Published)
-            {
-                newProjectDiv.Attributes.Add("class", "publishedProjectBackground well newProjectSettings non-selectable");
-
-                if (User.IsInRole("Admin"))
-                {
-                    rollbackProject.Visible = true;
-                    saveProject.Visible = true;
-                }
-                else
-                {
-                    saveProject.Visible = false;
-                }
-
-                moveProjectToTheNextSemester.Visible = true;
-            }
-
-            if (proj.Refused)
-            {
-                newProjectDiv.Attributes.Add("class", "refusedProjectBackground well newProjectSettings non-selectable");
             }
         }
+
+        private void UpdatePDFPageCount(Project project)
+        {
+            FillprojectwithFormData(project);
+            db.SubmitChanges(); // the next few lines depend on this submit
+            project.BaseVersionId = project.Id;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
+        }
+
+        private void SaveProjectFromEditView()
+        {
+            if (!project.UserCanEdit())
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            Project oldProject = project;
+            FillprojectwithFormData(project, oldProject);
+            project = oldProject.SaveAsNewVersion(db);
+            if (imageChanged)
+            {
+                project.Picture = picture;
+            }
+            db.SubmitChanges(); // the next few lines depend on this submit    
+            if (oldProject.Picture != null && project.Picture == null)
+                project.Picture = oldProject.Picture;
+            project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
+            db.SubmitChanges();
+
+        }
+
+
+        private bool HasProjectChanged()
+        {
+            var comparisonProject = new Project();
+            FillprojectwithFormData(comparisonProject);
+            comparisonProject.Id = -1;
+
+
+            ///////////////////////////////////////
+            if (comparisonProject.Picture != null)
+            {
+                picture = comparisonProject.Picture; //Hack because the picture data will be lost after the first read 
+            }                                        //so this will save it for later use
+            ///////////////////////////////////////
+
+            ///////////////////////////////////////////////
+            db.Projects.InsertOnSubmit(comparisonProject); //Hack so that the project is not submitted
+            db.Projects.DeleteOnSubmit(comparisonProject);
+            ///////////////////////////////////////////////
+
+            if (!comparisonProject.IsModified(project) && !imageChanged)
+            {
+                return false;
+            }
+            db.SubmitChanges();
+            return true;
+        }
+
+
+
+        private void ToggleReservationTwoVisible()
+        {
+            var showResTwo = POneTeamSize.SelectedIndex != 0 ||
+                             PTwoTeamSize.SelectedIndex != 0 && PTwoTeamSize.SelectedIndex != 1;
+            Reservation2Name.Visible = showResTwo;
+            Reservation2Mail.Visible = showResTwo;
+        }
+
+        #endregion
+
+        #region Click handlers: Project categories
 
         protected void DesignUX_Click(object sender, ImageClickEventArgs e)
         {
-            if (DesignUX.ImageUrl == "/pictures/projectTypDesignUXUnchecked.png")
+            if (DesignUX.ImageUrl == "pictures/projectTypDesignUXUnchecked.png")
             {
-                DesignUX.ImageUrl = "/pictures/projectTypDesignUX.png";
+                DesignUX.ImageUrl = "pictures/projectTypDesignUX.png";
                 projectType[0] = true;
             }
             else
             {
-                DesignUX.ImageUrl = "/pictures/projectTypDesignUXUnchecked.png";
+                DesignUX.ImageUrl = "pictures/projectTypDesignUXUnchecked.png";
                 projectType[0] = false;
             }
             ViewState["Types"] = projectType;
@@ -303,14 +746,14 @@ namespace ProStudCreator
 
         protected void HW_Click(object sender, ImageClickEventArgs e)
         {
-            if (HW.ImageUrl == "/pictures/projectTypHWUnchecked.png")
+            if (HW.ImageUrl == "pictures/projectTypHWUnchecked.png")
             {
-                HW.ImageUrl = "/pictures/projectTypHW.png";
+                HW.ImageUrl = "pictures/projectTypHW.png";
                 projectType[1] = true;
             }
             else
             {
-                HW.ImageUrl = "/pictures/projectTypHWUnchecked.png";
+                HW.ImageUrl = "pictures/projectTypHWUnchecked.png";
                 projectType[1] = false;
             }
             ViewState["Types"] = projectType;
@@ -318,29 +761,29 @@ namespace ProStudCreator
 
         protected void CGIP_Click(object sender, ImageClickEventArgs e)
         {
-            if (CGIP.ImageUrl == "/pictures/projectTypCGIPUnchecked.png")
+            if (CGIP.ImageUrl == "pictures/projectTypCGIPUnchecked.png")
             {
-                CGIP.ImageUrl = "/pictures/projectTypCGIP.png";
+                CGIP.ImageUrl = "pictures/projectTypCGIP.png";
                 projectType[2] = true;
             }
             else
             {
-                CGIP.ImageUrl = "/pictures/projectTypCGIPUnchecked.png";
+                CGIP.ImageUrl = "pictures/projectTypCGIPUnchecked.png";
                 projectType[2] = false;
             }
             ViewState["Types"] = projectType;
         }
 
-        protected void MathAlg_Click(object sender, ImageClickEventArgs e)
+        protected void MlAlg_Click(object sender, ImageClickEventArgs e)
         {
-            if (MathAlg.ImageUrl == "/pictures/projectTypMathAlgUnchecked.png")
+            if (MlAlg.ImageUrl == "pictures/projectTypMlAlgUnchecked.png")
             {
-                MathAlg.ImageUrl = "/pictures/projectTypMathAlg.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlg.png";
                 projectType[3] = true;
             }
             else
             {
-                MathAlg.ImageUrl = "/pictures/projectTypMathAlgUnchecked.png";
+                MlAlg.ImageUrl = "pictures/projectTypMlAlgUnchecked.png";
                 projectType[3] = false;
             }
             ViewState["Types"] = projectType;
@@ -348,14 +791,14 @@ namespace ProStudCreator
 
         protected void AppWeb_Click(object sender, ImageClickEventArgs e)
         {
-            if (AppWeb.ImageUrl == "/pictures/projectTypAppWebUnchecked.png")
+            if (AppWeb.ImageUrl == "pictures/projectTypAppWebUnchecked.png")
             {
-                AppWeb.ImageUrl = "/pictures/projectTypAppWeb.png";
+                AppWeb.ImageUrl = "pictures/projectTypAppWeb.png";
                 projectType[4] = true;
             }
             else
             {
-                AppWeb.ImageUrl = "/pictures/projectTypAppWebUnchecked.png";
+                AppWeb.ImageUrl = "pictures/projectTypAppWebUnchecked.png";
                 projectType[4] = false;
             }
             ViewState["Types"] = projectType;
@@ -363,130 +806,448 @@ namespace ProStudCreator
 
         protected void DBBigData_Click(object sender, ImageClickEventArgs e)
         {
-            if (DBBigData.ImageUrl == "/pictures/projectTypDBBigDataUnchecked.png")
+            if (DBBigData.ImageUrl == "pictures/projectTypDBBigDataUnchecked.png")
             {
-                DBBigData.ImageUrl = "/pictures/projectTypDBBigData.png";
+                DBBigData.ImageUrl = "pictures/projectTypDBBigData.png";
                 projectType[5] = true;
             }
             else
             {
-                DBBigData.ImageUrl = "/pictures/projectTypDBBigDataUnchecked.png";
+                DBBigData.ImageUrl = "pictures/projectTypDBBigDataUnchecked.png";
                 projectType[5] = false;
             }
             ViewState["Types"] = projectType;
         }
 
-        protected void editProject_Click(object sender, EventArgs e)
+        protected void SysSec_Click(object sender, ImageClickEventArgs e)
         {
-            var id = Request.QueryString["id"];
-            Response.Redirect("/AddNewProject?id=" + id);
-        }
-
-        protected void saveProjectButton(object sender, EventArgs e)
-        {
-            string fileExt = System.IO.Path.GetExtension(AddPicture.FileName.ToUpper());
-            if (fileExt == ".JPEG" || fileExt == ".JPG" || fileExt == ".PNG" || fileExt == "")
+            if (SysSec.ImageUrl == "pictures/projectTypSysSecUnchecked.png")
             {
-                saveCurrentProject();
-                Response.Redirect("/projectlist");
+                SysSec.ImageUrl = "pictures/projectTypSysSec.png";
+                projectType[6] = true;
             }
             else
             {
-                string message = "Wrong File-Extensions! Only .JPEG, .JPG and .PNG allowed.";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                SysSec.ImageUrl = "pictures/projectTypSysSecUnchecked.png";
+                projectType[6] = false;
+            }
+            ViewState["Types"] = projectType;
+        }
+
+        protected void SE_Click(object sender, ImageClickEventArgs e)
+        {
+            if (SE.ImageUrl == "pictures/projectTypSEUnchecked.png")
+            {
+                SE.ImageUrl = "pictures/projectTypSE.png";
+                projectType[7] = true;
+            }
+            else
+            {
+                SE.ImageUrl = "pictures/projectTypSEUnchecked.png";
+                projectType[7] = false;
+            }
+            ViewState["Types"] = projectType;
+        }
+
+        public bool CheckVisibility(int id)
+        {
+            var paramId = Request.QueryString.Get("id");
+            return paramId == id.ToString();
+        }
+
+        #endregion
+
+        #region Click handlers: Buttons (user)
+
+        protected void ProjectRowClick(object sender, ListViewCommandEventArgs e)
+        {
+
+
+            var pid = Convert.ToInt32(e.CommandArgument);
+            switch (e.CommandName)
+            {
+                case "revertProject":
+                    var currentProject = db.Projects.Single(p => p.BaseVersionId == project.BaseVersionId && p.IsMainVersion && p.State != ProjectState.Deleted);
+                    currentProject.IsMainVersion = false;
+                    db.SubmitChanges();
+                    var revertedProject = db.Projects.Single(p => p.Id == pid);
+                    revertedProject.IsMainVersion = true;
+                    db.SubmitChanges();
+                    Response.Redirect("~/AddNewProject.aspx?id=" + pid);
+                    break;
+                case "showChanges":
+                    var mainProject = db.Projects.Single(p => p.BaseVersionId == project.BaseVersionId && p.IsMainVersion && p.State != ProjectState.Deleted).Id;
+                    Response.Redirect("~/AddNewProject.aspx?id=" + pid + "&showChanges=" + mainProject);
+                    break;
+                default:
+                    throw new Exception("Unknown command " + e.CommandName);
+            }
+        }
+
+        /// <summary>
+        ///     Saves the current state of the form and continue editing.
+        /// </summary>
+        protected void SaveProjectButton(object sender, EventArgs e)
+        {
+            SaveProject();
+            Response.Redirect("AddNewProject?id=" + project.Id);
+        }
+
+        /// <summary>
+        ///     Save the current state of the form and return to project list.
+        /// </summary>
+        protected void SaveCloseProjectButton(object sender, EventArgs e)
+        {
+            SaveProject();
+            Response.Redirect("projectlist");
+        }
+
+
+        protected void CancelNewProject_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("projectlist");
+        }
+
+        protected void SubmitProject_Click(object sender, EventArgs e)
+        {
+            FillprojectwithFormData(project);
+            var validationMessage = project.GenerateValidationMessage(projectType);
+            // Generate JavaScript alert with error message
+            if (validationMessage != "")
+            {
+                var sb = new StringBuilder();
                 sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
                 sb.Append("alert('");
-                sb.Append(message);
-                sb.Append("')};");
+                sb.Append(validationMessage);
+                sb.Append("');");
                 sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                ScriptManager.RegisterStartupScript(Page, Page.GetType()
+                                                      , "alert", sb.ToString(), false);
+            }
+            else
+            {
+
+                project.Submit();
+                project.SaveAsNewVersion(db);
+                Response.Redirect("projectlist");
             }
         }
 
-        private void saveCurrentProject()
+        #endregion
+
+        #region Click handlers: Buttons (admin only)
+
+        protected void PublishProject_Click(object sender, EventArgs e)
         {
-            if (Request.QueryString["id"] != null)
+            project.Publish(db);
+            SaveProject();
+#if !DEBUG // Notification e-mail
+            var mailMessage = new MailMessage();
+            mailMessage.To.Add(project.Creator);
+            if (project.Advisor1?.Mail != null && project.Advisor1.Mail.IsValidEmail() && project.Advisor1.Mail != project.Creator)
+                mailMessage.To.Add(project.Advisor1.Mail);
+            if (project.Advisor2?.Mail != null && project.Advisor2.Mail.IsValidEmail() && project.Advisor2.Mail != project.Creator)
+                mailMessage.To.Add(project.Advisor2.Mail);
+            mailMessage.From = new MailAddress(ShibUser.GetEmail());
+            mailMessage.Subject = $"Projekt '{project.Name}' veröffentlicht";
+            mailMessage.Body = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} veröffentlicht.\n"
+                + "\n"
+                + "----------------------\n"
+                + "Automatische Nachricht von ProStudCreator\n"
+                + "https://www.cs.technik.fhnw.ch/prostud/";
+
+            var smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
+#endif
+
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+        }
+
+        protected void RefuseProject_Click(object sender, EventArgs e)
+        {
+            refusedReason.Visible = true;
+            refuseProject.Visible = false;
+            publishProject.Visible = false;
+            duplicateProject.Visible = false;
+            saveProject.Visible = false;
+            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
+                                     + "\n"
+                                     + "Dies sind die Gründe dafür:\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "Freundliche Grüsse\n"
+                                     + ShibUser.GetFirstName();
+            refuseProjectUpdatePanel.Update();
+            SetFocus(refusedReason);
+        }
+
+        protected void RefuseDefinitiveNewProject_Click(object sender, EventArgs e)
+        {
+            project.Reject();
+            db.Projects.Single(p => p.Id == id).Ablehnungsgrund = refusedReasonText.Text;
+            SaveProject();
+#if !DEBUG
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.To.Add(project.Creator);
+            if (project.Advisor1?.Mail != null && project.Advisor1.Mail.IsValidEmail() && project.Advisor1.Mail != project.Creator)
+                mailMessage.To.Add(project.Advisor1.Mail);
+            if (project.Advisor2?.Mail != null && project.Advisor2.Mail.IsValidEmail() && project.Creator != project.Advisor2.Mail)
+                mailMessage.To.Add(project.Advisor2.Mail);
+            mailMessage.From = new MailAddress(ShibUser.GetEmail());
+            mailMessage.CC.Add(ShibUser.GetEmail());
+            mailMessage.Subject = $"Projekt '{project.Name}' abgelehnt";
+            mailMessage.Body =
+refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von ProStudCreator\nhttps://www.cs.technik.fhnw.ch/prostud/";
+            var smtpClient = new SmtpClient();
+            smtpClient.Send(mailMessage);
+#endif
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+        }
+
+        protected void CancelRefusion_Click(object sender, EventArgs e)
+        {
+            saveProject.Visible = true;
+            refusedReason.Visible = false;
+            refuseProject.Visible = true;
+            publishProject.Visible = true;
+            duplicateProject.Visible = true;
+        }
+
+        protected void RollbackProject_Click(object sender, EventArgs e)
+        {
+            if (project.UserCanUnpublish())
+                project.Unpublish();
+            if (project.UserCanUnsubmit())
+                project.Unsubmit();
+            db.SubmitChanges();
+            Response.Redirect(Session["LastPage"] == null ? "projectlist" : (string)Session["LastPage"]);
+        }
+
+        #endregion
+
+        #region Other view event handlers
+
+        protected void DeleteImage_Click(object sender, EventArgs e)
+        {
+            SaveProject();
+            project.Picture = null;
+            db.SubmitChanges();
+            Response.Redirect("~/AddNewProject?id=" + project.Id);
+        }
+
+        protected void TeamSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ToggleReservationTwoVisible();
+        }
+
+        protected void DropPreviousProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (dropPreviousProject.SelectedValue == "dropPreviousProjectImpossibleValue")
             {
-                projects = db.Projects.Single(i => i.Id == id);
-                projects.ModificationDate = DateTime.Now;
-                projects.LastEditedBy = User.Identity.Name;
+                DisplayClient(null);
+                DisplayPriority(null);
+                DisplayReservations(null);
             }
             else
             {
-                projects = new Project();
-                projects.Creator = User.Identity.Name;
-                projects.InProgress = true;
-                projects.Published = false;
-                projects.CreateDate = DateTime.Now;
-                projects.ModificationDate = DateTime.Now;
-                projects.PublishedDate = null;
-                projects.LastEditedBy = User.Identity.Name;
-                projects.StateDeleted = false;
-                projects.Refused = false;
+                var previousProject = db.Projects.Single(p => p.Id == int.Parse(dropPreviousProject.SelectedValue));
+                DisplayClient(previousProject);
+                DisplayReservations(previousProject);
+                DisplayPriority(previousProject);
             }
+            updateReservation.Update();
+            updateClient.Update();
+        }
 
-            projects.Name = ProjectName.Text;
-            projects.Employer = Employer.Text;
-            projects.EmployerEmail = EmployerMail.Text;
-            projects.Advisor = NameBetreuer1.Text;
-            projects.AdvisorMail = EMail1.Text;
-
-            if (NameBetreuer2.Text != "" && EMail2.Text != "")
+        protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
             {
-                projects.Advisor2 = NameBetreuer2.Text;
-                projects.AdvisorMail2 = EMail2.Text;
+                divClientForm.Visible = true;
+                divClientCompany.Visible = true;
+            }
+            else if (radioClientType.SelectedIndex == (int)ClientType.INTERN)
+            {
+                divClientForm.Visible = false;
+                divClientCompany.Visible = false;
             }
             else
             {
-                projects.Advisor2 = "";
-                projects.AdvisorMail2 = "";
+                divClientForm.Visible = true;
+                divClientCompany.Visible = false;
+            }
+        }
+        protected void BtnHistoryCollapse_OnClick(object sender, EventArgs e)
+        {
+            CollapseHistory(!(bool)Session["AddInfoCollapsed"]);
+        }
+
+        #endregion
+
+        #region private methods
+
+        private void FillprojectwithFormData(Project project, Project oldProject = null)
+        {
+            project.Name = ProjectName.Text.FixupParagraph();
+
+            if (dropAdvisor1.SelectedValue == "ImpossibleValue")
+                project.Advisor1Id = null;
+            else
+                project.Advisor1Id = int.Parse(dropAdvisor1.SelectedValue);
+
+            if (dropAdvisor2.SelectedValue == "ImpossibleValue")
+                project.Advisor2Id = null;
+            else
+                project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
+
+            if (radioClientType.SelectedIndex != (int)ClientType.INTERN)
+            {
+                if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+                {
+                    project.ClientCompany = txtClientCompany.Text.FixupParagraph();
+                    project.ClientType = (int)ClientType.COMPANY;
+                }
+                else
+                {
+                    project.ClientType = (int)ClientType.PRIVATEPERSON;
+                }
+                project.ClientAddressTitle = drpClientTitle.SelectedItem.Text;
+                project.ClientPerson = txtClientName.Text.FixupParagraph();
+                project.ClientAddressDepartment = txtClientDepartment.Text.FixupParagraph();
+                project.ClientAddressStreet = txtClientStreet.Text.FixupParagraph();
+                project.ClientAddressPostcode = txtClientPLZ.Text.FixupParagraph();
+                project.ClientAddressCity = txtClientCity.Text.FixupParagraph();
+                project.ClientReferenceNumber = txtClientReference.Text.FixupParagraph();
+                project.ClientMail = txtClientEmail.Text.Trim().ToLowerInvariant();
+            }
+            else
+            {
+                project.ClientType = (int)ClientType.INTERN;
+                project.ClientAddressTitle = "Herr";
+
+                project.ClientCompany =
+                    project.ClientPerson =
+                        project.ClientAddressDepartment =
+                            project.ClientAddressStreet =
+                                project.ClientAddressPostcode =
+                                    project.ClientAddressCity =
+                                        project.ClientReferenceNumber =
+                                            project.ClientMail = "";
             }
 
-            applyProjectType(projects);
+            // Project categories
+            project.TypeDesignUX = projectType[0];
+            project.TypeHW = projectType[1];
+            project.TypeCGIP = projectType[2];
+            project.TypeMlAlg = projectType[3];
+            project.TypeAppWeb = projectType[4];
+            project.TypeDBBigData = projectType[5];
+            project.TypeSysSec = projectType[6];
+            project.TypeSE = projectType[7];
 
-            projects.POneTypeId = int.Parse(POneType.SelectedValue);
-            projects.POneTeamSizeId = POneTeamSize.SelectedIndex + 1;
+            // Languages
+            if (Language.SelectedIndex == 0)
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = true;
+            }
+            else if (Language.SelectedIndex == 1)
+            {
+                project.LanguageGerman = true;
+                project.LanguageEnglish = false;
+            }
+            else if (Language.SelectedIndex == 2)
+            {
+                project.LanguageGerman = false;
+                project.LanguageEnglish = true;
+            }
+            else
+            {
+                throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
+            }
+            // Duration
+            //project.DurationOneSemester = DurationOneSemester.Checked;
 
+            // Team size
+            project.P1TypeId = int.Parse(POneType.SelectedValue);
+            project.P1TeamSizeId = int.Parse(POneTeamSize.SelectedValue);
             if (PTwoType.SelectedIndex == 0 || PTwoTeamSize.SelectedIndex == 0)
             {
-                projects.PTwoTypeId = null;
-                projects.PTwoTeamSizeId = null;
+                project.P2TypeId = null;
+                project.P2TeamSizeId = null;
             }
             else
             {
-                projects.PTwoTypeId = PTwoType.SelectedIndex;
-                projects.PTwoTeamSizeId = PTwoTeamSize.SelectedIndex;
+                project.P2TypeId = int.Parse(PTwoType.SelectedValue);
+                project.P2TeamSizeId = int.Parse(PTwoTeamSize.SelectedValue);
+            }
+            if (project.P1TeamSizeId == project.P2TeamSizeId && project.P1TypeId == project.P2TypeId)
+            {
+                project.P2TeamSizeId = null;
+                project.P2TypeId = null;
             }
 
-            projects.InitialPosition = InitialPositionContent.Text;
-            projects.Objective = ObjectivContent.Text;
-            projects.ProblemStatement = ProblemStatementContent.Text;
-            projects.References = ReferencesContent.Text;
-            projects.Remarks = RemarksContent.Text;
-            projects.ReservationNameOne = ReservationNameOne.Text;
+            // Long texts (description etc.)
+            project.InitialPosition = InitialPositionContent.Text.FixupParagraph();
+            project.Objective = ObjectivContent.Text.FixupParagraph();
+            project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
+            project.References = ReferencesContent.Text.FixupParagraph();
+            project.Remarks = RemarksContent.Text.FixupParagraph();
 
-            if (ReservationNameTwo.Visible)
+            // Student reservations
+            project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
+            project.Reservation1Mail = Reservation1Mail.Text.Trim().ToLowerInvariant();
+
+            if (Reservation2Name.Visible
+            ) // TODO Check team size instead of visibility (just because it makes more sense)
             {
-                projects.ReservationNameTwo = ReservationNameTwo.Text;
+                project.Reservation2Name = Reservation2Name.Text.FixupParagraph();
+                project.Reservation2Mail = Reservation2Mail.Text.Trim().ToLowerInvariant();
             }
             else
             {
-                projects.ReservationNameTwo = "";
+                project.Reservation2Name = "";
+                project.Reservation2Mail = "";
             }
 
-            /* CANCELLED PART!
-            applyImportance(projects);
-            */
+            // Move reservation 2 to 1 if 1 isn't specified
+            if (project.Reservation1Name == "" && project.Reservation2Name != "")
+            {
+                project.Reservation1Name = project.Reservation2Name;
+                project.Reservation2Name = "";
+            }
 
-            projects.DepartmentId = Department.SelectedIndex;
+            int oldDepartmentId = oldProject != null ? oldProject.DepartmentId : -1;
+            project.Department = db.Departments.Single(d => d.Id == int.Parse(Department.SelectedValue));
+
+            // If project changed departments & already has a ProjectNr, generate a new one
+            if (project.DepartmentId != oldDepartmentId && project.ProjectNr > 0)
+            {
+                project.ProjectNr = 0; // 'Remove' project number to allow finding a new one.
+                project.GenerateProjectNr(db);
+            }
+
+            if (project.Semester == null)
+                if (db.Projects.Where(p => p.BaseVersionId == project.BaseVersionId).Count() == 0)
+                    project.Semester = Semester.NextSemester(db);
+
+            //picture description
+            project.ImgDescription = imgdescription.Text.FixupParagraph();
 
             if (AddPicture.HasFile)
             {
+                var fileExtension = AddPicture.FileName.Split('.').Last().ToLower();
+                if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png")
+                {
+                    return;
+                }
+                imageChanged = true;
                 using (var input = AddPicture.PostedFile.InputStream)
                 {
                     var data = new byte[AddPicture.PostedFile.ContentLength];
-                    for (var offset = 0; ; )
+                    var offset = 0;
+                    for (; ; )
                     {
                         var read = input.Read(data, offset, data.Length - offset);
                         if (read == 0)
@@ -494,278 +1255,178 @@ namespace ProStudCreator
 
                         offset += read;
                     }
-                    projects.Picture = new System.Data.Linq.Binary(data);
+                    project.Picture = new Binary(data);
                 }
             }
 
-            if (Request.QueryString["id"] == null)
-            {
-                db.Projects.InsertOnSubmit(projects);
-            }
-            db.SubmitChanges();
+            //Previous Project
 
-            int lastinsertedId;
-
-            if (Request.QueryString["id"] == null)
+            if (dropPreviousProject.SelectedValue == "dropPreviousProjectImpossibleValue")
             {
-                lastinsertedId = projects.Id;
+                project.PreviousProjectID = null;
             }
             else
             {
-                lastinsertedId = id;
+                var PreviousProjectID = int.Parse(dropPreviousProject.SelectedValue);
+                project.PreviousProject = db.Projects.Single(p => p.Id == PreviousProjectID);
             }
-
-            PdfCreator pdfCreator = new PdfCreator();
-            int amountPages = pdfCreator.getNumberOfPDFPages(lastinsertedId, Request);
-
-            if (amountPages > 1)
-            {
-                projects.OverOnePage = true;
-            }
-            else
-            {
-                projects.OverOnePage = false;
-            }
-
-            db.SubmitChanges();
         }
 
-        private void applyProjectType(Project _is)
+        private void DisplayReservations(Project previousProject)
         {
-            for (int i = 0; i < 6; i++)
+            if (previousProject == null)
             {
-                if (projectType[i])
+                Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                    Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
+                Reservation1Mail.Text = Reservation1Name.Text = Reservation2Mail.Text = Reservation2Name.Text = "";
+            }
+            else
+            {
+                Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                    Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
+                Reservation1Mail.Text = previousProject.LogStudent1Mail;
+                Reservation2Mail.Text = previousProject.LogStudent2Mail;
+                Reservation1Name.Text = previousProject.LogStudent1Name;
+                Reservation2Name.Text = previousProject.LogStudent2Name;
+            }
+        }
+
+        private void DisplayClient(Project project)
+        {
+            if (project == null)
+            {
+                drpClientTitle.SelectedIndex = 0; //Default
+
+                txtClientCompany.Text =
+                    txtClientName.Text =
+                        txtClientDepartment.Text =
+                            txtClientStreet.Text =
+                                txtClientPLZ.Text =
+                                    txtClientCity.Text =
+                                        txtClientReference.Text =
+                                            txtClientEmail.Text = "";
+
+                divClientForm.Visible = false;
+                radioClientType.SelectedIndex = (int)ClientType.INTERN;
+            }
+            else
+            {
+                txtClientCompany.Text = project?.ClientCompany;
+                if (project?.ClientAddressTitle != null)
                 {
-                    switch (i)
-                    {
-                        case 0:
-                            _is.TypeDesignUX = true;
-                            break;
-                        case 1:
-                            _is.TypeHW = true;
-                            break;
-                        case 2:
-                            _is.TypeCGIP = true;
-                            break;
-                        case 3:
-                            _is.TypeMathAlg = true;
-                            break;
-                        case 4:
-                            _is.TypeAppWeb = true;
-                            break;
-                        case 5:
-                            _is.TypeDBBigData = true;
-                            break;
-                        default:
-                            break;
-                    }
+                    drpClientTitle.SelectedIndex = project?.ClientAddressTitle == "Herr" ? 1 : 2;
                 }
                 else
                 {
-                    switch (i)
-                    {
-                        case 0:
-                            _is.TypeDesignUX = false;
-                            break;
-                        case 1:
-                            _is.TypeHW = false;
-                            break;
-                        case 2:
-                            _is.TypeCGIP = false;
-                            break;
-                        case 3:
-                            _is.TypeMathAlg = false;
-                            break;
-                        case 4:
-                            _is.TypeAppWeb = false;
-                            break;
-                        case 5:
-                            _is.TypeDBBigData = false;
-                            break;
-                        default:
-                            break;
-                    }
+                    drpClientTitle.SelectedIndex = 0;
                 }
+                txtClientName.Text = project?.ClientPerson;
+                txtClientDepartment.Text = project?.ClientAddressDepartment;
+                txtClientStreet.Text = project?.ClientAddressStreet;
+                txtClientPLZ.Text = project?.ClientAddressPostcode;
+                txtClientCity.Text = project?.ClientAddressCity;
+                txtClientReference.Text = project?.ClientReferenceNumber;
+                txtClientEmail.Text = project?.ClientMail;
+
+                PrepareClientForm(project);
             }
         }
 
-        /* CANCELLED PART!
-        private void applyImportance(Project _is)
+        private void PopulateClientWithDiffStrings(Project project, Project currentProject)
         {
-            if (ImportanceContent.Text == "Normal")
-            {
-                _is.Importance = false;
-            }
-            else
-                _is.Importance = true;
-        }
-        */
-        protected void cancelNewProject_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("/projectlist.aspx");
+            txtClientCompanyLabel.Text = CreateDiffString(project?.ClientCompany, currentProject?.ClientCompany);
+            drpClientTitleLabel.Text = CreateDiffString(project?.ClientAddressTitle, currentProject?.ClientAddressTitle);
+            txtClientNameLabel.Text = CreateDiffString(project?.ClientPerson, currentProject?.ClientPerson);
+            txtClientDepartmentLabel.Text = CreateDiffString(project?.ClientAddressDepartment, currentProject?.ClientAddressDepartment);
+            txtClientStreetLabel.Text = CreateDiffString(project?.ClientAddressStreet, currentProject?.ClientAddressStreet);
+            txtClientPLZLabel.Text = CreateDiffString(project?.ClientAddressPostcode, currentProject?.ClientAddressPostcode);
+            txtClientCityLabel.Text = CreateDiffString(project?.ClientAddressCity, currentProject?.ClientAddressCity);
+            txtClientReferenceLabel.Text = CreateDiffString(project?.ClientReferenceNumber, currentProject?.ClientReferenceNumber);
+            txtClientEmailLabel.Text = CreateDiffString(project?.ClientMail, currentProject?.ClientMail);
         }
 
-        protected void publishProject_Click(object sender, EventArgs e)
+        private void DisplayPriority(Project project)
         {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-            proj.Published = true;
-            proj.PublishedDate = DateTime.Now;
-            db.SubmitChanges();
-
-            try
+            if (project == null)
             {
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.To.Add(proj.Creator);
-                mailMessage.From = new MailAddress(User.Identity.Name);
-                mailMessage.Subject = "Projekt '" + proj.Name + "' veröffentlicht";
-                mailMessage.Body = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " veröffentlicht.\r\n\n----------------------\n Automatische Antwort von ProStudCreator\n\n http://prostudcreator.cs.technik.fhnw.ch/";
-                SmtpClient smtpClient = new SmtpClient();
-                smtpClient.Send(mailMessage);
-                Response.Write("E-mail sent!");
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Could not send the e-mail - error: " + ex.Message);
-            }
-
-
-            Response.Redirect("/projectlist");
-        }
-
-        protected void refuseProject_Click(object sender, EventArgs e)
-        {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-
-            refusedReason.Visible = true;
-            refuseProject.Visible = false;
-            publishProject.Visible = false;
-            saveProject.Visible = false;
-            refusedReasonText.Text = "Ihr Projekt '" + proj.Name + "' wurde von " + User.Identity.Name + " abgelehnt.\r\n\nDies sind die Gründe dafür:\n\n\n\nFreundliche Grüsse\n" + User.Identity.Name;
-        }
-
-        protected void refuseDefinitiveNewProject_Click(object sender, EventArgs e)
-        {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-
-            proj.Published = false;
-            proj.InProgress = true;
-            proj.Refused = true;
-            db.SubmitChanges();
-
-            try
-            {
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.To.Add(proj.Creator);
-                mailMessage.From = new MailAddress(User.Identity.Name);
-                mailMessage.Subject = "Projekt '" + proj.Name + "' abgelehnt";
-                mailMessage.Body = refusedReasonText.Text + "\n\n----------------------\n Automatische Antwort von ProStudCreator\n\n http://prostudcreator.cs.technik.fhnw.ch/";
-                SmtpClient smtpClient = new SmtpClient();
-                smtpClient.Send(mailMessage);
-                Response.Write("E-mail sent!");
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Could not send the e-mail - error: " + ex.Message);
-            }
-
-            Response.Redirect("/projectlist");
-        }
-
-        protected void submitProject_Click(object sender, EventArgs e)
-        {
-            if (!(projectType.Count(a => a) < 1) && !(projectType.Count(a => a) > 2))
-            {
-                saveCurrentProject();
-                var id = int.Parse(Request.QueryString["id"]);
-                var proj = db.Projects.Single(i => i.Id == id);
-                proj.Published = false;
-                proj.InProgress = false;
-                proj.Refused = false;
-                db.SubmitChanges();
-                Response.Redirect("/projectlist");
+                POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = true;
+                POneType.SelectedValue = db.ProjectTypes.Single(p => p.P5 && p.P6).Id.ToString();
+                POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => p.Size1 && p.Size2).Id.ToString();
+                divPriorityTwo.Visible = true;
             }
             else
             {
-                string message = "You have to choose 1 or 2 projecttypes, before you can submit this project.";
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.Append("<script type = 'text/javascript'>");
-                sb.Append("window.onload=function(){");
-                sb.Append("alert('");
-                sb.Append(message);
-                sb.Append("')};");
-                sb.Append("</script>");
-                ClientScript.RegisterClientScriptBlock(this.GetType(), "alert", sb.ToString());
+                divPriorityTwo.Visible = false;
+                POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = false;
+                POneType.SelectedValue = db.ProjectTypes.Single(p => !p.P5 && p.P6).Id.ToString();
+                if (string.IsNullOrEmpty(project.LogStudent2Mail))
+                    POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => p.Size1 && !p.Size2).Id.ToString();
+                else
+                    POneTeamSize.SelectedValue = db.ProjectTeamSizes.Single(p => !p.Size1 && p.Size2).Id.ToString();
             }
         }
 
-        protected void deleteImage_Click(object sender, EventArgs e)
+
+        private void PrepareForm(bool hasPreviousProj)
         {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-            proj.Picture = null;
-            db.SubmitChanges();
-            Response.Redirect(Request.RawUrl);
+            //Priority
+            divPriorityTwo.Visible = POneTeamSize.Enabled =
+                POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
+            //Reservations
+            Reservation1Name.Enabled = Reservation1Mail.Enabled =
+                Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
         }
 
-        protected void POneTeamSize_SelectedIndexChanged(object sender, EventArgs e)
+        private void PrepareClientForm(Project project)
         {
-            if (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1 || POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0)
+            switch (project.ClientType)
             {
-                ReservationNameTwo.Visible = false;
+
+                case (int)ClientType.COMPANY:
+                    divClientCompany.Visible = divClientForm.Visible = true;
+                    radioClientType.SelectedIndex = (int)ClientType.COMPANY;
+                    break;
+
+                case (int)ClientType.PRIVATEPERSON:
+                    divClientCompany.Visible = false;
+                    divClientForm.Visible = true;
+                    radioClientType.SelectedIndex = (int)ClientType.PRIVATEPERSON;
+                    break;
+
+                case (int)ClientType.INTERN:
+                    divClientCompany.Visible = divClientForm.Visible = false;
+                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    break;
+            }
+        }
+        private void CollapseHistory(bool collapse)
+        {
+            Session["AddInfoCollapsed"] = collapse;
+            DivHistoryCollapsable.Visible = !collapse;
+            btnHistoryCollapse.Text = collapse ? "◄" : "▼";
+        }
+
+        protected void DuplicatProject_Click(object sender, EventArgs e)
+        {
+            var duplicate = project.DuplicateAndUseAsTemplate(db);
+
+            string confirmValue = Request.Form["confirm_value"];
+            if (confirmValue == "Yes")
+            {
+                Response.Redirect("~/AddNewProject.aspx?id=" + duplicate.Id);
             }
             else
             {
-                ReservationNameTwo.Visible = true;
+                this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked NO!')", true);
             }
-        }
 
-        protected void PTwoTeamSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 1 || POneTeamSize.SelectedIndex == 0 && PTwoTeamSize.SelectedIndex == 0)
-            {
-                ReservationNameTwo.Visible = false;
-            }
-            else
-            {
-                ReservationNameTwo.Visible = true;
-            }
-        }
 
-        protected void rollbackProject_Click(object sender, EventArgs e)
-        {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-            proj.Published = false;
-            proj.InProgress = false;
-            proj.Refused = false;
-            db.SubmitChanges();
-            Response.Redirect("/projectlist");
         }
 
 
-
-        protected void cancelRefusion_Click(object sender, EventArgs e)
-        {
-            saveProject.Visible = true;
-            refusedReason.Visible = false;
-            refuseProject.Visible = true;
-            publishProject.Visible = true;
-        }
-
-        protected void moveProjectToTheNextSemester_Click(object sender, EventArgs e)
-        {
-            var id = int.Parse(Request.QueryString["id"]);
-            var proj = db.Projects.Single(i => i.Id == id);
-            proj.Published = false;
-            proj.PublishedDate = null;
-            proj.InProgress = false;
-            proj.Refused = false;
-            db.SubmitChanges();
-            Response.Redirect("/projectlist");
-        }
 
     }
+
 }
+
+#endregion

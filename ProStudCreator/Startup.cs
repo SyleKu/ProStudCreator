@@ -1,12 +1,15 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using ProStudCreator;
 
-[assembly: OwinStartupAttribute(typeof(ProStudCreator.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
+
 namespace ProStudCreator
 {
-    public partial class Startup {
-        public void Configuration(IAppBuilder app) {
-            ConfigureAuth(app);
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
         }
     }
 }

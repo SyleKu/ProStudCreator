@@ -68,6 +68,7 @@ a:focus {
 a:active,
 a:hover {
   outline: 0;
+  text-underline-position: below;
 }
 
 h1 {
@@ -233,7 +234,7 @@ table {
   }
   a,
   a:visited {
-    text-decoration: underline;
+    text-decoration: none;
   }
   a[href]:after {
     content: " (" attr(href) ")";
@@ -339,11 +340,7 @@ a {
   text-decoration: none;
 }
 
-a:hover,
-a:focus {
-  color: #2a6496;
-  text-decoration: underline;
-}
+
 
 a:focus {
   outline: thin dotted #333;

@@ -13,13 +13,22 @@ namespace ProStudCreator {
     public partial class SiteMaster {
         
         /// <summary>
-        /// Stylesheets control.
+        /// NavAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder Stylesheets;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl NavAdmin;
+        
+        /// <summary>
+        /// tasksToDo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tasksToDo;
         
         /// <summary>
         /// MainContent control.

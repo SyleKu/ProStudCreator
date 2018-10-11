@@ -10,43 +10,43 @@
 namespace ProStudCreator {
     
     
-    public partial class projectlist {
+    public partial class Projectlist {
         
         /// <summary>
-        /// AdminView control.
+        /// dropSemester control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder AdminView;
+        protected global::System.Web.UI.WebControls.DropDownList dropSemester;
         
         /// <summary>
-        /// CheckProjects control.
+        /// whichOwner control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView CheckProjects;
+        protected global::System.Web.UI.WebControls.RadioButtonList whichOwner;
         
         /// <summary>
-        /// newProject control.
+        /// filterText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button newProject;
+        protected global::System.Web.UI.WebControls.TextBox filterText;
         
         /// <summary>
-        /// AdminViewPDF control.
+        /// filterBtn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder AdminViewPDF;
+        protected global::System.Web.UI.WebControls.Button filterBtn;
         
         /// <summary>
         /// AllProjectsAsPDF control.
@@ -58,21 +58,12 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Button AllProjectsAsPDF;
         
         /// <summary>
-        /// ProjectsFilterAllProjects control.
+        /// AllProjectsAsExcel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList ProjectsFilterAllProjects;
-        
-        /// <summary>
-        /// AllProjects control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView AllProjects;
+        protected global::System.Web.UI.WebControls.Button AllProjectsAsExcel;
     }
 }

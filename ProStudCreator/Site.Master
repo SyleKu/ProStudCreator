@@ -1,88 +1,97 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ProStudCreator.SiteMaster" %>
-
+<%@ Import Namespace="ProStudCreator" %>
 <!DOCTYPE html>
-
 <html lang="de">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title><%: Page.Title %></title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <style>
-        .menuBar {
-            margin-top: 15px;
-            font-size: 20px;
-        }
-    </style>
-    <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+    <webopt:BundleReference runat="server" Path="~/Content/css"/>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <%--<asp:ContentPlaceHolder ID="Stylesheets" runat="server">
         <link rel="stylesheet" href="/Content/Site.css" type="text/css" />
-    </asp:ContentPlaceHolder>
+    </asp:ContentPlaceHolder>--%>
 </head>
 <body>
-    <form runat="server">
-        <asp:ScriptManager runat="server">
-            <Scripts>
-                <%--Weitere Informationen zum Bundling von Skripts in ScriptManager finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=301884". --%>
-                <%--Framework-Skripts--%>
-                <asp:ScriptReference Name="jquery" />
-                <asp:ScriptReference Name="bootstrap" />
-                <asp:ScriptReference Name="respond" />
-                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
-                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
-                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
-                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
-                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
-                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
-                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
-                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
-                <asp:ScriptReference Name="WebFormsBundle" />
-                <%--Websiteskripts--%>
-            </Scripts>
-        </asp:ScriptManager>
+<form runat="server">
+    <asp:ScriptManager runat="server">
+        <Scripts>
+            <%--Weitere Informationen zum Bundling von Skripts in ScriptManager finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=301884". --%>
+            <%--Framework-Skripts--%>
+            <asp:ScriptReference Name="jquery"/>
+            <asp:ScriptReference Name="bootstrap"/>
+            <asp:ScriptReference Name="respond"/>
+            <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js"/>
+            <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js"/>
+            <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js"/>
+            <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js"/>
+            <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js"/>
+            <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js"/>
+            <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js"/>
+            <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js"/>
+            <asp:ScriptReference Name="WebFormsBundle"/>
+            <%--Websiteskripts--%>
+        </Scripts>
+    </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top non-selectable" style="background-color: #f5f5f5">
-            <div class="container">
-                <div class="navbar-header">
-                    <img class="navbar-brand" runat="server" src="pictures/Logo.png" />
-                </div>
-                <div class="navbar-collapse collapse">
-                    <asp:LoginView runat="server" ViewStateMode="Disabled">
-                        <AnonymousTemplate>
-                            <ul class="nav navbar-nav navbar-right menuBar">
-                                <li><a runat="server" href="~/Account/Register">Register</a></li>
-                                <li><a runat="server" href="~/Account/Login">Login</a></li>
-                            </ul>
-                        </AnonymousTemplate>
-                        <LoggedInTemplate>
-                            <ul class="nav navbar-nav navbar-left menuBar">
-                                <li><a runat="server" href="/projectlist.aspx">Projectlist</a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right menuBar">
-                                <li><a runat="server" href="~/Account/ManagePassword" title="Manage your account"><%: Context.User.Identity.GetUserName()  %></a></li>
-                                <li><p style="font-size: 20px; margin-top: 8px;">|</p></li>
-                                <li>
-                                    <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Logout" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
-                                </li>
-                            </ul>
-                        </LoggedInTemplate>
-                    </asp:LoginView>
+    <div class="navbar navbar-inverse navbar-fixed-top non-selectable" style="background-color: #f5f5f5">
+        <div class="container">
+            <div class="navbar-header" style="width: 100%">
+                <div class="navbar-brand" style="width: 100%">
+                    <img runat="server" src="pictures/Logo.png"/>
+                    <a href="projectlist" style="margin-left: 5%;">
+                        <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">IP5/IP6 Projekte</h2>
+                    </a>
+                    <a href="Termine" style="margin-left: 5%;">
+                        <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">Termine</h2>
+                    </a>
+                    <a href="Ablauf" style="margin-left: 5%;">
+                        <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">Ablauf</h2>
+                    </a>
+                    <a href="FAQ" style="margin-left: 5%;">
+                        <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">FAQ</h2>
+                    </a>
+                    <div runat="server" id="NavAdmin" class="display-inline">
+                        <a href="AdminPage.aspx" style="margin-left: 5%;">
+                            <h2 style="color: #000; display: inline; text-decoration: none; vertical-align: middle;">Admin</h2>
+                        </a>
+                        <div runat="server" id="tasksToDo" class="display-inline" Visible="False">
+                            <img src="pictures/danger.png" height="32" width="32"/>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <%-- <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav menuBar">
+                        <li>
+                        </li>
+                    </ul>
+                </div>--%>
         </div>
-        <div class="container body-content">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
-            <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz</p>
-            </footer>
-        </div>
-    </form>
+    </div>
+    <div class="container body-content">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+        <hr/>
+        <footer>
+            <div class="pull-left">
+                &copy;<%: DateTime.Now.Year %> - Fachhochschule Nordwestschweiz
+            </div>
+            <div class="pull-right">
+                Angemeldet als <%: ShibUser.GetEmail() + " (" + ShibUser.GetDepartment().DepartmentName + ")" %> <%: ShibUser.IsAdmin() ? " (Admin)" : "" %>
+                <% if (inDebugMode)
+                   { %>
+                    <strong style="color: red">(DEBUG MODE)</strong>
+                <% } %>
+            </div>
+        </footer>
+    </div>
+</form>
 </body>
 </html>
