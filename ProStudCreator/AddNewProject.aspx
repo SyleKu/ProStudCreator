@@ -203,7 +203,7 @@
                                 <asp:Label runat="server" ID="txtClientEmailLabel" CssClass="form-control" Visible="false"></asp:Label>
                             </div>
                         </div>
-                        <div class="form-group" style="text-align: left">
+                        <div class="form-group" style="text-align: left" runat="server" id="divClientDepartment">
                             <asp:Label runat="server" Text="Abteilung:" CssClass="control-label col-sm-3"></asp:Label>
                             <div class="col-sm-6 col-md-7">
                                 <asp:TextBox runat="server" ID="txtClientDepartment" CssClass="form-control maxWidth" Placeholder="Falls vorhanden" MaxLength="50"></asp:TextBox>
@@ -238,7 +238,15 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <hr />
+
+
+            <div class="form-group" style="text-align: left">
+                <asp:Label runat="server" Text="Geheimhaltung:" CssClass="control-label col-sm-3"></asp:Label>
+                <div class="col-sm-6">
+                    <asp:CheckBox runat="server" ID="chkNDA" CssClass="form-control" ToolTip="NDA-Projekte werden nicht in öffentlichen Broschüren aufgeführt" Text=" Projekt/Auftraggeber unter NDA" />
+                </div>
+            </div>
+
             <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updateReservation">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="POneTeamSize" EventName="SelectedIndexChanged" />
@@ -246,8 +254,9 @@
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
+                    <hr />
                     <div class="form-group">
-                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (optional):"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Reserviert für (Admin only):"></asp:Label>
                         <div class="col-sm-3">
                             <asp:TextBox runat="server" ID="Reservation1Name" CssClass="col-sm-9 form-control" placeholder="(Vorname Nachname)"></asp:TextBox>
                             <asp:Label runat="server" ID="Reservation1NameLabel" CssClass="col-sm-9 form-control" Visible="false"></asp:Label>
@@ -273,7 +282,7 @@
             </asp:UpdatePanel>
             <hr />
             <div class="form-group">
-                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprachen:"></asp:Label>
+                <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Sprache:"></asp:Label>
                 <div class="col-sm-3">
                     <asp:DropDownList runat="server" ID="Language" DataValueField="Id" DataTextField="Description" CssClass="form-control">
                         <asp:ListItem Text="Deutsch oder Englisch" />
@@ -288,13 +297,13 @@
                     <asp:CheckBox ID="DurationOneSemester" CssClass="checkbox" Text="Projekt muss in 1 Semester durchgeführt werden." Checked="true" runat="server" />
                 </div>
             </div>--%>
-            <asp:UpdatePanel ID="updatePriotity" runat="server">
+            <asp:UpdatePanel ID="updatePriority" runat="server">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="dropPreviousProject" EventName="SelectedIndexChanged" />
                 </Triggers>
                 <ContentTemplate>
                     <div class="form-group">
-                        <asp:Label runat="server" CssClass="control-label col-sm-4" Text="Priorität 1:"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 1:"></asp:Label>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="POneType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
                             <asp:Label runat="server" ID="POneTypeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
@@ -306,7 +315,7 @@
                         <div class="col-sm-3"></div>
                     </div>
                     <div class="form-group" runat="server" id="divPriorityTwo">
-                        <asp:Label runat="server" CssClass="control-label col-sm-4" Text="Priorität 2:"></asp:Label>
+                        <asp:Label runat="server" CssClass="control-label col-sm-3" Text="Priorität 2:"></asp:Label>
                         <div class="col-sm-3">
                             <asp:DropDownList runat="server" ID="PTwoType" DataValueField="Id" DataTextField="Description" CssClass="form-control" Width="200px" />
                             <asp:Label runat="server" ID="PTwoTypeLabel" CssClass="form-control ellipsisLabel" Width="250px" Visible="false"></asp:Label>
@@ -425,7 +434,7 @@
             </div>
            
                     <asp:Button runat="server" ID="publishProject" Visible="false" CssClass="btn btn-default publishProject" Width="113px" Text="Veröffentlichen" OnClick="PublishProject_Click" OnClientClick="return confirmSaving('Projekt wirklich veröffentlichen?');"></asp:Button>
-                    <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click" OnClientClick="return confirmSaving('Projekt wirklich ablehnen?');"></asp:Button>
+                    <asp:Button runat="server" ID="refuseProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default refuseProject" Width="113px" Text="Ablehnen" OnClick="RefuseProject_Click"></asp:Button>
                     <asp:Button runat="server" ID="rollbackProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default rollbackMarginRight redButton" Text="Zurückziehen" OnClick="RollbackProject_Click" OnClientClick="return confirmSaving('Projekt wirklich zurückziehen?');"></asp:Button>
                     <asp:Button runat="server" ID="submitProject" Visible="false" Style="margin-right: 0px;" CssClass="btn btn-default greenButton" Text="Einreichen" OnClick="SubmitProject_Click" OnClientClick="return confirmSaving('Dieses Projekt einreichen?');"></asp:Button>
                     <asp:Button runat="server" AutoPostBack="true" ID="duplicateProject" Style="margin-right: 0px;" CssClass="btn btn-default" Text="Duplizieren" OnClick="DuplicatProject_Click" OnClientClick="return Confirm();" />
@@ -453,7 +462,7 @@
                                             <asp:Label runat="server"><%#"<img style='width:35px;' src='http://www.gravatar.com/avatar.php?gravatar_id="+ShibUser.GetGravatar(Item.LastEditedBy)+"'/> " + Item.LastEditedBy %></asp:Label>
                                         </div>
                                         <div class="col-xs-12 col-md-2" style="height: 100%;">
-                                            <asp:Label runat="server"><%#Eval("ModificationDate") %></asp:Label>
+                                            <asp:Label runat="server"><%#DataBinder.Eval(Container.DataItem,"ModificationDate") %></asp:Label>
                                         </div>
                                         <div class="col-xs-12 col-md-2">
                                             <asp:Label runat="server"><%#Item.StateAsString %></asp:Label>

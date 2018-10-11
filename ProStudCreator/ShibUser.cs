@@ -162,6 +162,24 @@ namespace ProStudCreator
 #endif
         }
 
+        public static bool CanReserveProjects()
+        {
+#if DEBUG
+            return true;
+#else
+            if (HttpContext.Current.Items["CanReserveProjects"] == null)
+            {
+                using (var db = new ProStudentCreatorDBDataContext())
+                {
+                    HttpContext.Current.Items["CanReserveProjects"] =
+                        db.UserDepartmentMap.SingleOrDefault(u => u.Mail == ShibUser.GetEmail())?.CanReserveProjects ==
+                        true;
+                }
+            }
+            return (bool)HttpContext.Current.Items["CanReserveProjects"];
+#endif
+        }
+
         public static bool CanVisitAdminPage()
         {
 #if DEBUG

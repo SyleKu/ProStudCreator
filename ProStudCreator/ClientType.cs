@@ -5,8 +5,10 @@ using System.Web;
 
 namespace ProStudCreator
 {
-    public partial class Task
+    public enum ClientType
     {
-        public bool AlreadyChecked { get; set; } = false;
+        Internal,
+        Company,
+        PrivatePerson
     }
 }

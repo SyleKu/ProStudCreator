@@ -66,7 +66,7 @@ namespace ProStudCreator
     #endregion
 		
 		public ProStudentCreatorDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["aspnet_ProStudCreator_20140818043155ConnectionString"].ConnectionString, mappingSource)
+				base(global::ProStudCreator.Properties.Settings.Default.Database1ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -1078,6 +1078,8 @@ namespace ProStudCreator
 		
 		private bool _RequiresProjectResults;
 		
+		private bool _Billable;
+		
 		private EntitySet<Project> _Projects;
 		
     #region Extensibility Method Definitions
@@ -1092,6 +1094,8 @@ namespace ProStudCreator
     partial void OnShowAddressOnInfoPageChanged();
     partial void OnRequiresProjectResultsChanging(bool value);
     partial void OnRequiresProjectResultsChanged();
+    partial void OnBillableChanging(bool value);
+    partial void OnBillableChanged();
     #endregion
 		
 		public BillingStatus()
@@ -1176,6 +1180,26 @@ namespace ProStudCreator
 					this._RequiresProjectResults = value;
 					this.SendPropertyChanged("RequiresProjectResults");
 					this.OnRequiresProjectResultsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Billable", DbType="bit NOT NULL")]
+		public bool Billable
+		{
+			get
+			{
+				return this._Billable;
+			}
+			set
+			{
+				if ((this._Billable != value))
+				{
+					this.OnBillableChanging(value);
+					this.SendPropertyChanging();
+					this._Billable = value;
+					this.SendPropertyChanged("Billable");
+					this.OnBillableChanged();
 				}
 			}
 		}
@@ -4423,6 +4447,8 @@ namespace ProStudCreator
 		
 		private bool _IsActive;
 		
+		private bool _CanReserveProjects;
+		
 		private EntitySet<Project> _Projects;
 		
 		private EntitySet<Project> _Projects1;
@@ -4465,6 +4491,8 @@ namespace ProStudCreator
     partial void OnIsSupervisorChanged();
     partial void OnIsActiveChanging(bool value);
     partial void OnIsActiveChanged();
+    partial void OnCanReserveProjectsChanging(bool value);
+    partial void OnCanReserveProjectsChanged();
     #endregion
 		
 		public UserDepartmentMap()
@@ -4757,6 +4785,26 @@ namespace ProStudCreator
 					this._IsActive = value;
 					this.SendPropertyChanged("IsActive");
 					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CanReserveProjects", DbType="Bit NOT NULL")]
+		public bool CanReserveProjects
+		{
+			get
+			{
+				return this._CanReserveProjects;
+			}
+			set
+			{
+				if ((this._CanReserveProjects != value))
+				{
+					this.OnCanReserveProjectsChanging(value);
+					this.SendPropertyChanging();
+					this._CanReserveProjects = value;
+					this.SendPropertyChanged("CanReserveProjects");
+					this.OnCanReserveProjectsChanged();
 				}
 			}
 		}
@@ -5078,6 +5126,8 @@ namespace ProStudCreator
 		
 		private System.Nullable<int> _SemesterId;
 		
+		private System.Nullable<System.DateTime> _FirstReminded;
+		
 		private EntityRef<TaskType> _TaskType1;
 		
 		private EntityRef<UserDepartmentMap> _UserDepartmentMap;
@@ -5110,6 +5160,8 @@ namespace ProStudCreator
     partial void OnDoneChanged();
     partial void OnSemesterIdChanging(System.Nullable<int> value);
     partial void OnSemesterIdChanged();
+    partial void OnFirstRemindedChanging(System.Nullable<System.DateTime> value);
+    partial void OnFirstRemindedChanged();
     #endregion
 		
 		public Task()
@@ -5318,6 +5370,26 @@ namespace ProStudCreator
 					this._SemesterId = value;
 					this.SendPropertyChanged("SemesterId");
 					this.OnSemesterIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstReminded", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FirstReminded
+		{
+			get
+			{
+				return this._FirstReminded;
+			}
+			set
+			{
+				if ((this._FirstReminded != value))
+				{
+					this.OnFirstRemindedChanging(value);
+					this.SendPropertyChanging();
+					this._FirstReminded = value;
+					this.SendPropertyChanged("FirstReminded");
+					this.OnFirstRemindedChanged();
 				}
 			}
 		}

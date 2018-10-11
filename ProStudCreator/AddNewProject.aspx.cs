@@ -26,7 +26,7 @@ namespace ProStudCreator
         private DateTime today = DateTime.Now;
         private bool imageChanged = false;
         private Binary picture;
-        private enum ClientType { INTERN, COMPANY, PRIVATEPERSON }
+        
         #region Timer tick
 
         protected void Pdfupdatetimer_Tick(object sender, EventArgs e) //function for better workflow with long texts
@@ -35,7 +35,7 @@ namespace ProStudCreator
             {
                 var pdfc = new PdfCreator();
 
-                FillprojectwithFormData(project);
+                UpdateProjectFromFormData(project);
 
                 if (pdfc.CalcNumberOfPages(project) > 1)
                 {
@@ -56,6 +56,8 @@ namespace ProStudCreator
         protected void Page_Load(object sender, EventArgs e)
         {
             AdminView.Visible = ShibUser.CanSeeCreationDetails();
+            updateReservation.Visible = ShibUser.CanReserveProjects();
+
             btnHistoryCollapse.CausesValidation = false;
             // Retrieve the project from DB
             if (Request.QueryString["id"] != null)
@@ -164,7 +166,7 @@ namespace ProStudCreator
                     if (!project.IsMainVersion && Request.QueryString["showChanges"] == null)
                         PopulateHistoryGUI(project.Id);
                     else
-                        PopulateEditGUI();
+                        UpdateUIFromProjectObject();
                     PrepareClientForm(project);
                 }
                 else
@@ -174,7 +176,7 @@ namespace ProStudCreator
 
                     FillDropPreviousProject(Semester.CurrentSemester(db));
                     dropPreviousProject.SelectedIndex = 0;
-                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    radioClientType.SelectedIndex = (int)ClientType.Internal;
                     divClientForm.Visible = false;
                     FillDropAdvisors();
                 }
@@ -499,7 +501,7 @@ namespace ProStudCreator
                 PrepareForm(true);
             }
         }
-        private void PopulateEditGUI()
+        private void UpdateUIFromProjectObject()
         {
             if (Request.QueryString["showChanges"] != null)
             {
@@ -575,6 +577,8 @@ namespace ProStudCreator
                 Language.SelectedIndex = 0;
 
             //DurationOneSemester.Checked = project.DurationOneSemester;
+
+            chkNDA.Checked = project.UnderNDA;
 
             InitialPositionContent.Text = project.InitialPosition;
             ProjectPicture.Visible = true;
@@ -658,7 +662,7 @@ namespace ProStudCreator
 
         private void UpdatePDFPageCount(Project project)
         {
-            FillprojectwithFormData(project);
+            UpdateProjectFromFormData(project);
             db.SubmitChanges(); // the next few lines depend on this submit
             project.BaseVersionId = project.Id;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
@@ -668,12 +672,10 @@ namespace ProStudCreator
         private void SaveProjectFromEditView()
         {
             if (!project.UserCanEdit())
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             Project oldProject = project;
-            FillprojectwithFormData(project, oldProject);
+            UpdateProjectFromFormData(project, oldProject);
             project = oldProject.SaveAsNewVersion(db);
             if (imageChanged)
             {
@@ -684,14 +686,13 @@ namespace ProStudCreator
                 project.Picture = oldProject.Picture;
             project.OverOnePage = new PdfCreator().CalcNumberOfPages(project) > 1;
             db.SubmitChanges();
-
         }
 
 
         private bool HasProjectChanged()
         {
             var comparisonProject = new Project();
-            FillprojectwithFormData(comparisonProject);
+            UpdateProjectFromFormData(comparisonProject);
             comparisonProject.Id = -1;
 
 
@@ -708,9 +709,8 @@ namespace ProStudCreator
             ///////////////////////////////////////////////
 
             if (!comparisonProject.IsModified(project) && !imageChanged)
-            {
                 return false;
-            }
+
             db.SubmitChanges();
             return true;
         }
@@ -910,7 +910,7 @@ namespace ProStudCreator
 
         protected void SubmitProject_Click(object sender, EventArgs e)
         {
-            FillprojectwithFormData(project);
+            UpdateProjectFromFormData(project);
             var validationMessage = project.GenerateValidationMessage(projectType);
             // Generate JavaScript alert with error message
             if (validationMessage != "")
@@ -970,6 +970,17 @@ namespace ProStudCreator
             publishProject.Visible = false;
             duplicateProject.Visible = false;
             saveProject.Visible = false;
+
+            refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde leider nicht gewählt. Bitte informiere allfällige externe Auftraggeber!\n"
+                                     + "\n"
+                                     + "Hier kannst Du das Projekt für das nächste Semester wieder einreichen:\n"
+                                     + "https://www.cs.technik.fhnw.ch/prostud/\n"
+                                     + "\n"
+                                     + "\n"
+                                     + "Freundliche Grüsse\n"
+                                     + ShibUser.GetFirstName();
+
+            /*
             refusedReasonText.Text = $"Dein Projekt '{project.Name}' wurde von {ShibUser.GetFirstName()} abgelehnt.\n"
                                      + "\n"
                                      + "Dies sind die Gründe dafür:\n"
@@ -978,6 +989,7 @@ namespace ProStudCreator
                                      + "\n"
                                      + "Freundliche Grüsse\n"
                                      + ShibUser.GetFirstName();
+                                     */
             refuseProjectUpdatePanel.Update();
             SetFocus(refusedReason);
         }
@@ -1062,20 +1074,23 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+            switch (radioClientType.SelectedValue)
             {
-                divClientForm.Visible = true;
-                divClientCompany.Visible = true;
-            }
-            else if (radioClientType.SelectedIndex == (int)ClientType.INTERN)
-            {
-                divClientForm.Visible = false;
-                divClientCompany.Visible = false;
-            }
-            else
-            {
-                divClientForm.Visible = true;
-                divClientCompany.Visible = false;
+                case "Intern":
+                    divClientForm.Visible = false;
+                    break;
+                case "Company":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = true;
+                    divClientDepartment.Visible = true;
+                    break;
+                case "PrivatePerson":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = false;
+                    divClientDepartment.Visible = false;
+                    break;
+                default:
+                    throw new Exception($"Unexpected radioClientType {radioClientType.SelectedValue}");
             }
         }
         protected void BtnHistoryCollapse_OnClick(object sender, EventArgs e)
@@ -1085,9 +1100,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
 
         #endregion
 
-        #region private methods
-
-        private void FillprojectwithFormData(Project project, Project oldProject = null)
+        private void UpdateProjectFromFormData(Project project, Project oldProject = null)
         {
             project.Name = ProjectName.Text.FixupParagraph();
 
@@ -1101,16 +1114,16 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             else
                 project.Advisor2Id = int.Parse(dropAdvisor2.SelectedValue);
 
-            if (radioClientType.SelectedIndex != (int)ClientType.INTERN)
+            if (radioClientType.SelectedIndex != (int)ClientType.Internal)
             {
-                if (radioClientType.SelectedIndex == (int)ClientType.COMPANY)
+                if (radioClientType.SelectedIndex == (int)ClientType.Company)
                 {
                     project.ClientCompany = txtClientCompany.Text.FixupParagraph();
-                    project.ClientType = (int)ClientType.COMPANY;
+                    project.ClientType = (int)ClientType.Company;
                 }
                 else
                 {
-                    project.ClientType = (int)ClientType.PRIVATEPERSON;
+                    project.ClientType = (int)ClientType.PrivatePerson;
                 }
                 project.ClientAddressTitle = drpClientTitle.SelectedItem.Text;
                 project.ClientPerson = txtClientName.Text.FixupParagraph();
@@ -1123,7 +1136,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             }
             else
             {
-                project.ClientType = (int)ClientType.INTERN;
+                project.ClientType = (int)ClientType.Internal;
                 project.ClientAddressTitle = "Herr";
 
                 project.ClientCompany =
@@ -1163,9 +1176,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                 project.LanguageEnglish = true;
             }
             else
-            {
-                throw new ArgumentException("Es muss eine Sprache ausgewählt werden.", "original");
-            }
+                throw new Exception($"Unexpected language selection {Language.SelectedIndex}");
+
             // Duration
             //project.DurationOneSemester = DurationOneSemester.Checked;
 
@@ -1194,6 +1206,8 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             project.ProblemStatement = ProblemStatementContent.Text.FixupParagraph();
             project.References = ReferencesContent.Text.FixupParagraph();
             project.Remarks = RemarksContent.Text.FixupParagraph();
+
+            project.UnderNDA = chkNDA.Checked;
 
             // Student reservations
             project.Reservation1Name = Reservation1Name.Text.FixupParagraph();
@@ -1276,14 +1290,12 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         {
             if (previousProject == null)
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                    Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = true;
                 Reservation1Mail.Text = Reservation1Name.Text = Reservation2Mail.Text = Reservation2Name.Text = "";
             }
             else
             {
-                Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                    Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
+                Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = false;
                 Reservation1Mail.Text = previousProject.LogStudent1Mail;
                 Reservation2Mail.Text = previousProject.LogStudent2Mail;
                 Reservation1Name.Text = previousProject.LogStudent1Name;
@@ -1307,7 +1319,7 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
                                             txtClientEmail.Text = "";
 
                 divClientForm.Visible = false;
-                radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                radioClientType.SelectedIndex = (int)ClientType.Internal;
             }
             else
             {
@@ -1370,35 +1382,33 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
         private void PrepareForm(bool hasPreviousProj)
         {
             //Priority
-            divPriorityTwo.Visible = POneTeamSize.Enabled =
-                POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
+            divPriorityTwo.Visible = POneTeamSize.Enabled = POneType.Enabled = PTwoTeamSize.Enabled = PTwoType.Enabled = !hasPreviousProj;
             //Reservations
-            Reservation1Name.Enabled = Reservation1Mail.Enabled =
-                Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
+            Reservation1Name.Enabled = Reservation1Mail.Enabled = Reservation2Mail.Enabled = Reservation2Name.Enabled = !hasPreviousProj;
         }
 
         private void PrepareClientForm(Project project)
         {
             switch (project.ClientType)
             {
-
-                case (int)ClientType.COMPANY:
+                case (int)ClientType.Company:
                     divClientCompany.Visible = divClientForm.Visible = true;
-                    radioClientType.SelectedIndex = (int)ClientType.COMPANY;
+                    radioClientType.SelectedIndex = (int)ClientType.Company;
                     break;
 
-                case (int)ClientType.PRIVATEPERSON:
+                case (int)ClientType.PrivatePerson:
                     divClientCompany.Visible = false;
                     divClientForm.Visible = true;
-                    radioClientType.SelectedIndex = (int)ClientType.PRIVATEPERSON;
+                    radioClientType.SelectedIndex = (int)ClientType.PrivatePerson;
                     break;
 
-                case (int)ClientType.INTERN:
+                case (int)ClientType.Internal:
                     divClientCompany.Visible = divClientForm.Visible = false;
-                    radioClientType.SelectedIndex = (int)ClientType.INTERN;
+                    radioClientType.SelectedIndex = (int)ClientType.Internal;
                     break;
             }
         }
+
         private void CollapseHistory(bool collapse)
         {
             Session["AddInfoCollapsed"] = collapse;
@@ -1419,14 +1429,6 @@ refusedReasonText.Text + "\n\n----------------------\nAutomatische Nachricht von
             {
                 this.Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('You clicked NO!')", true);
             }
-
-
         }
-
-
-
     }
-
 }
-
-#endregion

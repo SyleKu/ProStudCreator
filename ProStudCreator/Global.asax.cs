@@ -20,12 +20,12 @@ namespace ProStudCreator
         private const string DummyPage = "CheckAllTasks";
         public static readonly TimeSpan AllowTitleChangesBeforeSubmission = TimeSpan.FromDays(11*7);
         public static readonly TimeSpan ExpectFinalPresentationAfterSubmissionForIP5 = TimeSpan.FromDays(3*7);
-        public static readonly TimeSpan GradingDuration = TimeSpan.FromDays(2);
+        public static readonly TimeSpan GradingDuration = TimeSpan.FromDays(3);
         public static readonly string WebAdmin = "simon.felix@fhnw.ch";
-        public static readonly string GradeAdmin = "simon.felix@fhnw.ch"; // "admin.technik@fhnw.ch";
-        public static readonly string PayExpertAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
+        public static readonly string GradeAdmin = "admin.technik@fhnw.ch";
+        public static readonly string PayExpertAdmin = "hannelore.gerber@fhnw.ch";
         public static readonly string InvoiceCustomersAdmin = "simon.felix@fhnw.ch"; // "hannelore.gerber@fhnw.ch";
-        public static readonly string MarKomAdmin = "simon.felix@fhnw.ch"; // "jadwiga.gabrys@fhnw.ch";
+        public static readonly string MarKomAdmin = "jadwiga.gabrys@fhnw.ch";
 
         private void Application_Start(object sender, EventArgs e)
         {
@@ -39,7 +39,16 @@ namespace ProStudCreator
 
             TaskHandler.CheckAllTasks();
 
+            //Solves problem which  occures if you installed a different language on your Pc 
+            //with out it the Encoding may not work on every Pc.
+            ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = System.Text.Encoding.Default.CodePage;
+
+
+            
+
         }
+
+
 
 
         private void RegisterChacheEntry()
@@ -59,7 +68,6 @@ namespace ProStudCreator
         {
             HitPage();
 
-            // Do the service works
             TaskHandler.CheckAllTasks();
         }
 

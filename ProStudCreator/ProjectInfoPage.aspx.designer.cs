@@ -103,15 +103,6 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.Label lblProjectType;
         
         /// <summary>
-        /// lblProjectDuration control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProjectDuration;
-        
-        /// <summary>
         /// ProjectDelivery control.
         /// </summary>
         /// <remarks>
@@ -274,13 +265,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.DropDownList drpBillingstatus;
         
         /// <summary>
-        /// BillAddressForm control.
+        /// Label2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel BillAddressForm;
+        protected global::System.Web.UI.WebControls.Label Label2;
         
         /// <summary>
         /// BillAddressPlaceholder control.
@@ -292,6 +283,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.PlaceHolder BillAddressPlaceholder;
         
         /// <summary>
+        /// updateClientCompany control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updateClientCompany;
+        
+        /// <summary>
         /// radioClientType control.
         /// </summary>
         /// <remarks>
@@ -301,13 +301,13 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.RadioButtonList radioClientType;
         
         /// <summary>
-        /// updateClientCompany control.
+        /// divClientForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updateClientCompany;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientForm;
         
         /// <summary>
         /// divClientCompany control.
@@ -355,6 +355,15 @@ namespace ProStudCreator {
         protected global::System.Web.UI.WebControls.TextBox txtClientEmail;
         
         /// <summary>
+        /// divClientDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divClientDepartment;
+        
+        /// <summary>
         /// txtClientDepartment control.
         /// </summary>
         /// <remarks>
@@ -398,6 +407,15 @@ namespace ProStudCreator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtClientReference;
+        
+        /// <summary>
+        /// chkNDA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkNDA;
         
         /// <summary>
         /// BtnSaveChanges control.

@@ -22,7 +22,6 @@ namespace ProStudCreator
         private Project project;
 
         private ProjectTypes type = ProjectTypes.NotDefined;
-        private bool userCanEditAfterStart;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -58,15 +57,13 @@ namespace ProStudCreator
             }
 
 
-            //All Admins or Owners
-            userCanEditAfterStart = project.UserCanEditAfterStart();
-
             //set the Semester if it isn't set already
             project.Semester = project.Semester ?? Semester.NextSemester(db);
 
             //Project title
             ProjectTitle.Text = project.Name;
 
+            chkNDA.Checked = project.UnderNDA;
 
             //Set the Students
             Student1Name.Text = !string.IsNullOrEmpty(project.LogStudent1Name)
@@ -95,11 +92,11 @@ namespace ProStudCreator
                     ExpertName.Text = !string.IsNullOrEmpty(project.LogExpertID.ToString())
                         ? "<a href=\"mailto:" + project.Expert.Mail + "\">" +
                           Server.HtmlEncode(project.Expert.Name).Replace(" ", "&nbsp;") + "</a>"
-                        : "Wird noch organisiert.";
+                        : "Noch nicht entschieden";
                 else
-                    ExpertName.Text = "Noch nicht entschieden.";
+                    ExpertName.Text = "Noch nicht entschieden";
             else
-                ExpertName.Text = "Noch nicht entschieden.";
+                ExpertName.Text = "Noch nicht entschieden";
 
 
             //Set the Projecttype
@@ -110,24 +107,16 @@ namespace ProStudCreator
             }
             else if (project.LogProjectType.P5 && !project.LogProjectType.P6)
             {
-                lblProjectType.Text = "IP5";
+                lblProjectType.Text = "IP5" + (project.LogProjectDuration==2 ? " (Lang)":"");
                 type = ProjectTypes.IP5;
             }
             else if (!project.LogProjectType.P5 && project.LogProjectType.P6)
             {
-                lblProjectType.Text = "IP6";
+                lblProjectType.Text = "IP6" + (project.LogProjectDuration == 2 ? " (Lang)" : "");
                 type = ProjectTypes.IP6;
             }
             else
                 throw new Exception();
-
-            //set the Project duration
-            if (project?.LogProjectDuration == 2 && project?.LogProjectType?.P6 == true)
-                lblProjectDuration.Text = "2 Semester";
-            else if (project?.LogProjectDuration == 1)
-                lblProjectDuration.Text = "1 Semester";
-            else
-                lblProjectDuration.Text = "?";
 
             //Sets the DeliveryInfos
             SetProjectDeliveryLabels();
@@ -144,13 +133,13 @@ namespace ProStudCreator
             else
                 drpLogLanguage.SelectedValue = "0";
 
-            drpLogLanguage.Items[0].Text = userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht entschieden";
+            drpLogLanguage.Items[0].Text = project.UserCanEditAfterStart() ? "(Bitte Auswählen)" : "Noch nicht entschieden";
 
             //Set the Grades
-            nbrGradeStudent1.Text = project?.LogGradeStudent1 == null
+            nbrGradeStudent1.Text = project.LogGradeStudent1 == null
                 ? ""
                 : project?.LogGradeStudent1.Value.ToString("N1", CultureInfo.InvariantCulture);
-            nbrGradeStudent2.Text = project?.LogGradeStudent2 == null
+            nbrGradeStudent2.Text = project.LogGradeStudent2 == null
                 ? ""
                 : project?.LogGradeStudent2.Value.ToString("N1", CultureInfo.InvariantCulture);
 
@@ -158,42 +147,34 @@ namespace ProStudCreator
             cbxWebSummaryChecked.Checked = project.WebSummaryChecked;
 
             //set the Labels to the Grades
-            lblGradeStudent1.Text = $"Note von {project?.LogStudent1Name ?? "Student/in 1"}:";
-            lblGradeStudent2.Text = $"Note von {project?.LogStudent2Name ?? "Student/in 2"}:";
-
+            lblGradeStudent1.Text = $"Note von {project.LogStudent1Name ?? "Student/in 1"}:";
+            lblGradeStudent2.Text = $"Note von {project.LogStudent2Name ?? "Student/in 2"}:";
 
             //fill the Billingstatus dropdown with Data
             drpBillingstatus.DataSource = db.BillingStatus.OrderBy(i => i.DisplayName);
             drpBillingstatus.DataBind();
             drpBillingstatus.Items.Insert(0,
-                new ListItem(userCanEditAfterStart ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
+                new ListItem(project.UserCanEditAfterStart() ? "(Bitte Auswählen)" : "Noch nicht eingetragen",
                     "ValueWhichNeverWillBeGivenByTheDB"));
             drpBillingstatus.SelectedValue = project?.BillingStatusID?.ToString() ??
                                              "ValueWhichNeverWillBeGivenByTheDB";
 
             //Set the data from the addressform
-            if (string.IsNullOrEmpty(project.ClientCompany))
-            {
-                radioClientType.SelectedValue = "PrivatePerson";
-                divClientCompany.Visible = false;
-            }
-            else
-            {
-                radioClientType.SelectedValue = "Company";
-                divClientCompany.Visible = true;
-            }
-            txtClientCompany.Text = project?.ClientCompany;
-            drpClientTitle.SelectedValue = project?.ClientAddressTitle == "Herr" ? "1" : "2";
-            txtClientName.Text = project?.ClientPerson;
-            txtClientDepartment.Text = project?.ClientAddressDepartment;
-            txtClientStreet.Text = project?.ClientAddressStreet;
-            txtClientPLZ.Text = project?.ClientAddressPostcode;
-            txtClientCity.Text = project?.ClientAddressCity;
-            txtClientReference.Text = project?.ClientReferenceNumber;
-            txtClientEmail.Text = project?.ClientMail;
+            radioClientType.SelectedIndex = project.ClientType;
+            txtClientCompany.Text = project.ClientCompany;
+            drpClientTitle.SelectedValue = project.ClientAddressTitle == "Herr" ? "1" : "2";
+            txtClientName.Text = project.ClientPerson;
+            txtClientDepartment.Text = project.ClientAddressDepartment;
+            txtClientStreet.Text = project.ClientAddressStreet;
+            txtClientPLZ.Text = project.ClientAddressPostcode;
+            txtClientCity.Text = project.ClientAddressCity;
+            txtClientReference.Text = project.ClientReferenceNumber;
+            txtClientEmail.Text = project.ClientMail;
+
+            UpdateClientInfoFormVisibility();
 
             //disable for unauthorized Users
-            ProjectTitle.Enabled = userCanEditAfterStart && project.CanEditTitle();
+            ProjectTitle.Enabled = project.UserCanEditAfterStart() && project.CanEditTitle();
 
             drpLogLanguage.Enabled =
                 nbrGradeStudent1.Enabled =
@@ -201,21 +182,17 @@ namespace ProStudCreator
                         BtnSaveBetween.Enabled =
                             BtnSaveChanges.Enabled =
                                 drpBillingstatus.Enabled =
-                                    cbxWebSummaryChecked.Enabled = userCanEditAfterStart;
+                                    chkNDA.Enabled = 
+                                    cbxWebSummaryChecked.Enabled = radioClientType.Enabled = txtClientCompany.Enabled = drpClientTitle.Enabled = txtClientName.Enabled = txtClientDepartment.Enabled = txtClientStreet.Enabled = txtClientPLZ.Enabled = txtClientCity.Enabled = txtClientReference.Enabled = txtClientEmail.Enabled = project.UserCanEditAfterStart();
 
 
             divExpert.Visible = project.Expert != null;
 
-            //divPresentation.Visible = project.LogDefenceDate != null;
+            divBachelor.Visible = project.LogProjectType?.P6 ?? false;
 
-            divBachelor.Visible = project?.LogProjectType?.P6 ?? false;
-
-            divGradeStudent1.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name);
-            divGradeStudent2.Visible = !string.IsNullOrEmpty(project?.LogStudent2Name);
-            divGradeWarning.Visible = !string.IsNullOrEmpty(project?.LogStudent1Name) || !string.IsNullOrEmpty(project?.LogStudent2Name);
-
-            BillAddressPlaceholder.Visible = project?.BillingStatus?.ShowAddressOnInfoPage == true &&
-                                             userCanEditAfterStart;
+            divGradeStudent1.Visible = !string.IsNullOrEmpty(project.LogStudent1Name);
+            divGradeStudent2.Visible = !string.IsNullOrEmpty(project.LogStudent2Name);
+            divGradeWarning.Visible = !string.IsNullOrEmpty(project.LogStudent1Name) || !string.IsNullOrEmpty(project.LogStudent2Name);
 
             divFileUpload.Visible = ShibUser.GetEmail() == project.Advisor1?.Mail ||
                                     ShibUser.GetEmail() == project.Advisor2?.Mail || ShibUser.CanEditAllProjects();
@@ -338,37 +315,19 @@ namespace ProStudCreator
             Response.Redirect("Projectlist");
         }
 
+        
         protected void DrpBillingstatusChanged(object sender, EventArgs e)
         {
-            userCanEditAfterStart = project.UserCanEditAfterStart();
+            if (drpBillingstatus.SelectedValue == "ValueWhichNeverWillBeGivenByTheDB")
+                return;
 
-            if (ShowAddressForm(drpBillingstatus.SelectedValue == "ValueWhichNeverWillBeGivenByTheDB"
-                ? 0
-                : int.Parse(drpBillingstatus.SelectedValue)))
+            if (db.BillingStatus.Single(bs => bs.Id == int.Parse(drpBillingstatus.SelectedValue)).ShowAddressOnInfoPage && radioClientType.SelectedIndex == (int)ClientType.Internal)
             {
-                BillAddressPlaceholder.Visible = userCanEditAfterStart;
-                txtClientCompany.Text = project?.ClientCompany;
-                drpClientTitle.SelectedValue = project?.ClientAddressTitle == "Herr" ? "1" : "2";
-                txtClientName.Text = project?.ClientPerson;
-                txtClientDepartment.Text = project?.ClientAddressDepartment;
-                txtClientStreet.Text = project?.ClientAddressStreet;
-                txtClientPLZ.Text = project?.ClientAddressPostcode;
-                txtClientCity.Text = project?.ClientAddressCity;
-                txtClientReference.Text = project?.ClientReferenceNumber;
+                radioClientType.SelectedIndex = (int)ClientType.Company;
+                UpdateClientInfoFormVisibility();
             }
-            else
-            {
-                BillAddressPlaceholder.Visible = false;
-            }
-            BillAddressForm.Update();
         }
-
-        private bool ShowAddressForm(int id)
-        {
-            var allBillingstatuswhichShowForm = db.BillingStatus.Where(s => s.ShowAddressOnInfoPage).ToArray();
-
-            return allBillingstatuswhichShowForm.Any(billingStatus => billingStatus.Id == id);
-        }
+        
 
         protected void BtnSaveBetween_OnClick(object sender, EventArgs e)
         {
@@ -377,36 +336,28 @@ namespace ProStudCreator
 
         private void SaveChanges(string redirectTo)
         {
-            userCanEditAfterStart = project.UserCanEditAfterStart();
-
             string validationMessage = null;
-            if (userCanEditAfterStart)
+            if (project.UserCanEditAfterStart())
             {
                 project.Name = ProjectTitle.Text.FixupParagraph();
 
                 if (nbrGradeStudent1.Text != "")
                 {
                     var old = project.LogGradeStudent1;
-                    project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",", "."),
-                        CultureInfo.InvariantCulture);
+                    project.LogGradeStudent1 = float.Parse(nbrGradeStudent1.Text.Replace(",", "."), CultureInfo.InvariantCulture);
 
                     if (old != project.LogGradeStudent1)
                         project.GradeSentToAdmin = false;
                 }
-                //else
-                //    project.LogGradeStudent1 = null;
 
                 if (nbrGradeStudent2.Text != "")
                 {
                     var old = project.LogGradeStudent2;
-                    project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",", "."),
-                        CultureInfo.InvariantCulture);
+                    project.LogGradeStudent2 = float.Parse(nbrGradeStudent2.Text.Replace(",", "."), CultureInfo.InvariantCulture);
 
                     if (old != project.LogGradeStudent2)
                         project.GradeSentToAdmin = false;
                 }
-                //else
-                //    project.LogGradeStudent2 = null;
 
                 project.WebSummaryChecked = cbxWebSummaryChecked.Checked;
 
@@ -430,30 +381,31 @@ namespace ProStudCreator
                     ? (int?)null
                     : int.Parse(drpBillingstatus.SelectedValue);
 
+                project.UnderNDA = chkNDA.Checked;
+
                 //this sould always be under the project.BillingstatusId statement
-                if (project?.BillingStatus?.ShowAddressOnInfoPage == true)
-                    if (radioClientType.SelectedValue == "Company" && txtClientCompany.Text == "" ||
-                        txtClientName.Text == "" || txtClientStreet.Text == "" ||
-                        txtClientPLZ.Text == "" || txtClientCity.Text == "" || txtClientEmail.Text == "")
-                    {
-                        validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
-                    }
-                    else
-                    {
-                        project.ClientCompany = txtClientCompany.Text;
-                        project.ClientAddressTitle = drpClientTitle.SelectedValue == "1" ? "Herr" : "Frau";
-                        project.ClientPerson = txtClientName.Text;
-                        project.ClientMail = txtClientEmail.Text;
-                        project.ClientAddressDepartment = txtClientDepartment.Text == ""
-                            ? null
-                            : txtClientDepartment.Text;
-                        project.ClientAddressStreet = txtClientStreet.Text == "" ? null : txtClientStreet.Text;
-                        project.ClientAddressPostcode = txtClientPLZ.Text == "" ? null : txtClientPLZ.Text;
-                        project.ClientAddressCity = txtClientCity.Text == "" ? null : txtClientCity.Text;
-                        project.ClientReferenceNumber = txtClientReference.Text == ""
-                            ? null
-                            : txtClientReference.Text;
-                    }
+                if (radioClientType.SelectedValue != "Intern" && (txtClientCompany.Text + txtClientName.Text == "" || txtClientStreet.Text == "" || txtClientPLZ.Text == "" || txtClientCity.Text == "" || txtClientEmail.Text == ""))
+                {
+                    validationMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+                }
+                else
+                {
+                    project.ClientType = radioClientType.SelectedIndex;
+                    project.ClientCompany = txtClientCompany.Text;
+                    project.ClientAddressTitle = drpClientTitle.SelectedValue == "1" ? "Herr" : "Frau";
+                    project.ClientPerson = txtClientName.Text;
+                    project.ClientMail = txtClientEmail.Text;
+                    project.ClientAddressDepartment = txtClientDepartment.Text == "" ? null : txtClientDepartment.Text;
+                    project.ClientAddressStreet = txtClientStreet.Text == "" ? null : txtClientStreet.Text;
+                    project.ClientAddressPostcode = txtClientPLZ.Text == "" ? null : txtClientPLZ.Text;
+                    project.ClientAddressCity = txtClientCity.Text == "" ? null : txtClientCity.Text;
+                    project.ClientReferenceNumber = txtClientReference.Text == "" ? null : txtClientReference.Text;
+                }
+
+                if (project.BillingStatus?.ShowAddressOnInfoPage == true && project.ClientType==(int)ClientType.Internal)
+                {
+                    validationMessage = "Dieser Verrechnungsstatus ist nur bei externen Auftraggebern verfügbar.";
+                }
 
                 if (validationMessage == null)
                 {
@@ -476,25 +428,43 @@ namespace ProStudCreator
 
         protected void RadioClientType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            divClientCompany.Visible = radioClientType.SelectedValue == "Company";
+            UpdateClientInfoFormVisibility();
+        }
+
+        private void UpdateClientInfoFormVisibility()
+        {
+            switch (radioClientType.SelectedValue)
+            {
+                case "Intern":
+                    divClientForm.Visible = false;
+                    break;
+                case "Company":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = true;
+                    divClientDepartment.Visible = true;
+                    break;
+                case "PrivatePerson":
+                    divClientForm.Visible = true;
+                    divClientCompany.Visible = false;
+                    divClientDepartment.Visible = false;
+                    break;
+                default:
+                    throw new Exception($"Unexpected radioClientType {radioClientType.SelectedValue}");
+            }
         }
 
         protected void OnUploadComplete(object sender, AjaxFileUploadEventArgs e)
         {
-            if (db.Attachements.Any(
-                a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
-            {
-                SaveFileInDb(
-                    db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] &&
-                                                a.FileName == e.FileName && !a.Deleted), e.GetStreamContents());
-            }
-            else
-            {
-                var attachement = CreateNewAttach(e.FileSize, e.FileName);
-                SaveFileInDb(attachement, e.GetStreamContents());
-
-                e.GetStreamContents().Close();
-            }
+            using(var s = e.GetStreamContents())
+                if (db.Attachements.Any(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted))
+                {
+                    SaveFileInDb(db.Attachements.Single(a => a.ProjectId.ToString() == Request.QueryString["id"] && a.FileName == e.FileName && !a.Deleted), s);
+                }
+                else
+                {
+                    var attachement = CreateNewAttach(e.FileSize, e.FileName);
+                    SaveFileInDb(attachement, s);
+                }
 
             divDownloadBtn.Visible = true;
 
